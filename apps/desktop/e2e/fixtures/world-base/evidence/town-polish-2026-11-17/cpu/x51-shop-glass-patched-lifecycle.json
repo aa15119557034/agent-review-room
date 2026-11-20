@@ -1,0 +1,138 @@
+{
+  "head": "9a392e23e2d8b6800cc91f2b1995d639f22ff3ca",
+  "sourceHashes": {
+    "src/city.js": "66bbb360909cc71c0f5683192a5a2fcd746c4201530471ce0c78865884563b21",
+    "src/city-apartments.js": "57426f4e1e7a4947b7f02f3055c7088c68e24611c9720c422751cfa6816641e7",
+    "src/station.js": "45dfa8e6011e4bb0f7b3515428b25ec5d3496478a4593516c89a5105dc9c80ef",
+    "upstream/sakuragaoka/src/core/materials.js": "167c859795e828dd281f7628ffadfc5342bae4ef16c307d0eb7188816358733b",
+    "upstream/petalwake/vendor/three/build/three.module.js": "104f56145899722094556490d787aae0617cc2fc3382f31df02d724ea1aee341",
+    "upstream/petalwake/vendor/three/build/three.core.js": "613e370f76638fdef83926642bf256dc9615684922de1ce1f63a8583e5d78578"
+  },
+  "driverSha256": "8f09ba4ce653d6e1609e3ea4ea9cbd37ee68833da78747a14964a1b58f3ff9a4",
+  "runtime": {
+    "node": "24.19.0",
+    "three": "187"
+  },
+  "method": "Actual Three module and actual material factory; exact current clipMaterials, city clone/proxy/shop/dispose source fragments evaluated in VM. Exact buildLaundryShop called with a recording geometry sink. Three real Mesh panes share the dedicated glass. Not a full station build or GPU allocation/release measurement.",
+  "checks": {
+    "threeDistinctMaterials": true,
+    "uniformsAreIndependent": true,
+    "prototypeUniformsUnchanged": true,
+    "residentialUniformsUnchanged": true,
+    "desiredShopUniforms": true,
+    "hooksPreserved": true,
+    "stationClipUnchanged": true,
+    "bothCityClonesUnclipped": true,
+    "cityOwnsShop": true,
+    "builderUsesDedicatedGlassForThreePanes": true,
+    "stationCacheKeysUnchanged": true,
+    "noShopCacheKey": true,
+    "shopDisposedExactlyOnce": true,
+    "houseDisposedExactlyOnce": true,
+    "stationPrototypeNotDisposed": true,
+    "sourceUnchanged": true
+  },
+  "firstDispose": {
+    "shop": 1,
+    "house": 1,
+    "prototype": 0
+  },
+  "secondDispose": {
+    "shop": 1,
+    "house": 1,
+    "prototype": 0
+  },
+  "cacheKeysBefore": [
+    "glass|{\"tint\":\"#8fa6bb\",\"opacity\":0.38}"
+  ],
+  "cacheKeysAfter": [
+    "glass|{\"tint\":\"#8fa6bb\",\"opacity\":0.38}"
+  ],
+  "uniformValues": {
+    "prototype": {
+      "fogDensity": 0.00025,
+      "fogNear": 1,
+      "fogFar": 2000,
+      "fogColor": [
+        1,
+        1,
+        1
+      ],
+      "uTint": [
+        0.2746773120495699,
+        0.3813260114221238,
+        0.4969329950515914
+      ],
+      "uSkyTop": [
+        0.33245153633549385,
+        0.55201140150344,
+        0.8227857543924378
+      ],
+      "uSkyLow": [
+        0.8148465722120952,
+        0.85499260812105,
+        0.8879231178794776
+      ],
+      "uOpacity": 0.38,
+      "uStreaks": 1,
+      "uFrost": 0
+    },
+    "house": {
+      "fogDensity": 0.00025,
+      "fogNear": 1,
+      "fogFar": 2000,
+      "fogColor": [
+        1,
+        1,
+        1
+      ],
+      "uTint": [
+        0.2746773120495699,
+        0.3813260114221238,
+        0.4969329950515914
+      ],
+      "uSkyTop": [
+        0.33245153633549385,
+        0.55201140150344,
+        0.8227857543924378
+      ],
+      "uSkyLow": [
+        0.8148465722120952,
+        0.85499260812105,
+        0.8879231178794776
+      ],
+      "uOpacity": 0.38,
+      "uStreaks": 1,
+      "uFrost": 0
+    },
+    "shop": {
+      "fogDensity": 0.00025,
+      "fogNear": 1,
+      "fogFar": 2000,
+      "fogColor": [
+        1,
+        1,
+        1
+      ],
+      "uTint": [
+        0.7912979403281551,
+        0.85499260812105,
+        0.8713671191959567
+      ],
+      "uSkyTop": [
+        0.33245153633549385,
+        0.55201140150344,
+        0.8227857543924378
+      ],
+      "uSkyLow": [
+        0.8148465722120952,
+        0.85499260812105,
+        0.8879231178794776
+      ],
+      "uOpacity": 0.14,
+      "uStreaks": 0,
+      "uFrost": 0
+    }
+  },
+  "passed": true
+}

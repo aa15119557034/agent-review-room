@@ -1,0 +1,67 @@
+#!/usr/bin/env python3
+"""Re-bake the Petalwake terrain sun-shadow channel for the evening sun (#254 C19).
+
+Writes <petalwake>/assets/terrain/light-evening.png next to the original light.png:
+R = sun shadow for src/evening.json's sun (heightfield march + prop shadows, same
+functions and parameters as Petalwake's tools/terrain/bake.py), G/B/A copied
+unchanged from light.png. The output stays in the local, ignored checkout.
+
+Usage: python3 scripts/bake-evening-light.py [path/to/.local/petalwake-<sha>]
+       python3 scripts/bake-evening-light.py --fingerprint [path/to/.local/petalwake-<sha>]
+Needs numpy, scipy, pillow and numba (as Petalwake's own bake does).
+"""
+import hashlib, json, math, os, sys, time
+from PIL import Image
+
+HERE = os.path.dirname(os.path.abspath(__file__))
+FIXTURE = os.path.dirname(HERE)
+fingerprint = sys.argv[1:2] == ['--fingerprint']
+args = sys.argv[2:] if fingerprint else sys.argv[1:]
+if len(args) > 1:
+    sys.exit('Expected at most one Petalwake source directory.')
+with open(os.path.join(FIXTURE, 'sources.json'), encoding='utf-8') as source_file:
+    commit = json.load(source_file)['petalwake']['commit']
+root = args[0] if args else os.path.join(FIXTURE, '.local', 'petalwake-' + commit)
+if not os.path.isdir(os.path.join(root, 'tools', 'terrain')):
+    sys.exit('Petalwake checkout not found; pass its path (the .local/petalwake-<sha> folder).')
+evening = json.load(open(os.path.join(FIXTURE, 'src', 'evening.json')))
+path = os.path.join(root, 'assets', evening['lightMap'])
+if fingerprint:
+    with Image.open(path) as image:
+        pixels = image.convert('RGBA')
+        digest = hashlib.sha256(pixels.tobytes()).hexdigest()
+        print(f'Evening RGBA {pixels.width}x{pixels.height} SHA-256 {digest}')
+    sys.exit(0)
+
+meta = json.load(open(os.path.join(root, 'assets', 'terrain', 'meta.json')))
+N = int(meta['n'])
+
+# bake.py reads N from argv and the sun from module globals; import it as a library.
+sys.argv = ['bake.py', str(N), '--keep-props']
+sys.path.insert(0, os.path.join(root, 'tools', 'terrain'))
+import numpy as np
+from scipy import ndimage
+import bake
+
+elev, az = math.radians(evening['sunElevDeg']), math.radians(evening['sunAzDeg'])
+SUN = np.array([math.sin(az) * math.cos(elev), math.sin(elev), math.cos(az) * math.cos(elev)])
+bake.SUN = SUN
+t0 = time.time()
+q = np.fromfile(os.path.join(root, 'assets', 'terrain', 'height.u16'), dtype='<u2').reshape(N, N)
+h = (meta['hMin'] + q.astype(np.float32) * ((meta['hMax'] - meta['hMin']) / 65535.0)).astype(np.float32)
+light = np.array(Image.open(os.path.join(root, 'assets', 'terrain', 'light.png')).convert('RGBA'))
+ML = light.shape[0]
+hL = h if ML == N else bake.resize_f(h, ML)
+cellL = meta['world'] / ML
+shadow = bake.bake_shadow(hL, cellL, SUN[0], SUN[1], SUN[2], 2600.0, 9.0)
+shadow = ndimage.gaussian_filter(shadow, 1.0)
+print(f'sun shadow {time.time() - t0:.1f}s')
+props = json.load(open(os.path.join(root, 'assets', 'terrain', 'props.json')))
+scratch_ao = np.ones_like(shadow)  # contact AO is already in G; only the shadow is re-stamped
+bake.stamp_shadows(shadow, scratch_ao, h, props, ML)
+print(f'prop shadows {time.time() - t0:.1f}s')
+out = light.copy()
+out[..., 0] = bake.to_u8(shadow)
+Image.fromarray(out, 'RGBA').save(path, optimize=True)
+print('wrote', path, 'sun', SUN.round(4).tolist())
+print(f'Evening RGBA {out.shape[1]}x{out.shape[0]} SHA-256 {hashlib.sha256(out).hexdigest()}')

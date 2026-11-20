@@ -1,0 +1,61 @@
+{
+  "source": "1677ea3167905a180d8b26c48a4b0c0ffece4325",
+  "artifactDirectory": "artifacts/gpu-look-c13-v1",
+  "method": "Read already-produced capture-2 JPEGs using view_image; no own GPU/CPU rendering.",
+  "images": [
+    {
+      "file": "21-front-eye-ao-on-capture-2.jpg",
+      "sha256": "4ac503a2c877db662997bcf2aa644984d40e851e23daaa2dbedccaf962970760",
+      "bytes": 88272
+    },
+    {
+      "file": "laundry-details-ao-on-capture-2.jpg",
+      "sha256": "a0188d308e40f7deb08bf650bf5ac410a1dff33395e8d378904cda66bf5c9ec3",
+      "bytes": 66907
+    },
+    {
+      "file": "service-corner-ao-on-capture-2.jpg",
+      "sha256": "1ec184279132d93165f6f2301124468e4edd56b0127c12c9d5b406f8736d9e1f",
+      "bytes": 94841
+    },
+    {
+      "file": "20-rear-eye-ao-on-capture-2.jpg",
+      "sha256": "23c9e356c19eeae9b0eee1f51ba67d80d4fe27e14b107a5b2508f9dfe4eb6c87",
+      "bytes": 167196
+    },
+    {
+      "file": "street-detail-ao-on-capture-2.jpg",
+      "sha256": "88dcd02dd328c11e02f65e08ae91977a469217d016418bfeca20e19d32d599cf",
+      "bytes": 100935
+    }
+  ],
+  "structuralBlockerFound": false,
+  "observations": [
+    {
+      "view": "23service",
+      "finding": "New muted body/lid palette gives the two bins a legible top edge and calmer relationship to crate/shed. Existing clear door route preserved; dustpan remains mostly hidden."
+    },
+    {
+      "view": "24laundry",
+      "finding": "Old arc/ring marks no longer visible on the right apartment wall, but grey blotches and dark dots still form prominent texture. Do not describe as refined fine grain."
+    },
+    {
+      "view": "21front",
+      "finding": "Distant5Fsunlit wall shows noticeable repeated dark blotches between floor divisions; this competes with architectural form."
+    },
+    {
+      "view": "20rear",
+      "finding": "The5Fgrey wall reads more strongly mottled over its large area; warm4Fwall also has noticeable blotches. Existing housekeeping/door/stair arrangement unchanged; parcels remain behind parapet."
+    },
+    {
+      "view": "street-detail",
+      "finding": "Existing meter/pipe remains legible, porch/shopfront unchanged to visual inspection; no new obstruction. Pixel equivalence is not asserted by this visual review."
+    }
+  ],
+  "recommendation": "Return a focused visual request to C: reduce map contrast only in a separate apartment-wall material that reuses the existing texture. Preserve wall base tones, structural light/shadow and current global lighting; do not modify shared M.concrete or cap/prop materials. Further UV scaling alone does not address contrast.",
+  "limits": [
+    "A local art refinement, not a functional/physics failure or proof the whole scene is accepted.",
+    "Texture contains blotches/speckles and thin seam lines; CPU does not prove perceived dirtiness. This judgment is from listed real-material local GPU images.",
+    "Static images cannot establish all camera movement/depth stability; geometric side-gap proof is in separate CPU audit."
+  ]
+}

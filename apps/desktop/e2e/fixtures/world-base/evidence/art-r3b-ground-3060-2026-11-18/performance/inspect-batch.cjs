@@ -1,0 +1,5 @@
+module.exports=function assets(){
+ const w=window.worldBase,station=w.station,counts={},cards=[],byType={};
+ station.root.traverse(o=>{if(!o.isMesh)return;const ms=Array.isArray(o.material)?o.material:[o.material];for(const m of ms){const name=m.name||'',map=m.map?.name||'';if(m.isMeshBasicMaterial||m.isMeshToonMaterial)byType[m.type]=(byType[m.type]||0)+1;if(/art-r3-(board|w1-zone)-/i.test(name+' '+map))cards.push({material:name,map,noBatch:o.userData.noBatch===true,meshType:o.type});}counts.meshes=(counts.meshes||0)+1;if(o.userData.noBatch)counts.noBatch=(counts.noBatch||0)+1;});
+ const plan=w.weatheringDecals;return{staticBatch:station.batch,batchTimeMs:station.timings.batchMs,stationRenderMeshes:counts,stationMaterialTypes:byType,looseNamedCards:cards,art:station.artR1.stats,decals:{source:plan.stats.source,rays:plan.stats.rays,planMs:plan.stats.planMs,fingerprint:plan.plan.fingerprint},evening:w.island.timeOfDay,style:w.styleState,canvas:[w.renderer.domElement.width,w.renderer.domElement.height]};
+};

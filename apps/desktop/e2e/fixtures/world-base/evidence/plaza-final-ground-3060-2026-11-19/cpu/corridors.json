@@ -1,0 +1,363 @@
+{
+  "sha": "7ffb5a118e5e05e8f584955b67813ac383f29c99",
+  "baseline": "47a5c12",
+  "sourceMethods": {
+    "lampLine": "rear.box(M.lamp, null, .24, .065, .08, x + .75, y + 2.42, .045, { shadow: false });",
+    "slabLine": "F.boxB(plaster, trim, w, .14, 1.05, 0, y, back - .525, { uv: { world: 1.5 } });",
+    "floorHeight": 2.85,
+    "floorOffset": 0.14
+  },
+  "buildings": {
+    "town-apartment-3f": {
+      "origin": [
+        263,
+        13.318040148417158,
+        776.5
+      ],
+      "width": 11,
+      "depth": 9,
+      "stats": {
+        "pipes": 2,
+        "cardboard": 4,
+        "notices": 1
+      },
+      "doorTop": 15.558040148417158,
+      "lampTop": 15.770540148417158,
+      "finishFloor": 13.458040148417158,
+      "slabUnderside": 16.168040148417155,
+      "slabWorldBounds": [
+        [
+          257.5,
+          16.168040148417155,
+          766.45
+        ],
+        [
+          268.5,
+          16.308040148417156,
+          767.5
+        ]
+      ],
+      "horizontalPipes": [
+        {
+          "id": "town-apartment-3f-cyl-4",
+          "min": [
+            258.1,
+            15.864040146569412,
+            767.3659999981522
+          ],
+          "max": [
+            267.9,
+            15.932040150264903,
+            767.4340000018477
+          ],
+          "lampGap": 0.09349999815225374,
+          "doorGap": 0.3059999981522541,
+          "slabGap": 0.23599999815225203,
+          "overlapsSlabXZ": true
+        },
+        {
+          "id": "town-apartment-3f-cyl-12",
+          "min": [
+            258.1,
+            16.011040147716802,
+            767.3729999992996
+          ],
+          "max": [
+            267.9,
+            16.06504014911751,
+            767.4270000007003
+          ],
+          "lampGap": 0.24049999929964372,
+          "doorGap": 0.4529999992996441,
+          "slabGap": 0.10299999929964443,
+          "overlapsSlabXZ": true
+        }
+      ],
+      "clips": {
+        "count": 14,
+        "minLampGap": 0.07749999999999879,
+        "minSlabGap": 0.0799999999999983,
+        "embedded": 0
+      },
+      "cardboardMinDoorHorizontalGap": 0.4583672361335266,
+      "noticeMinDoorHorizontalGap": 0.2105065545742809,
+      "actualClearances": {
+        "door": {
+          "pipes": {
+            "pairs": 30,
+            "minY": 0.30599999815225587,
+            "overlapXZ": 0
+          },
+          "clips": {
+            "pairs": 210,
+            "minY": 0.2900000000000009,
+            "overlapXZ": 4
+          }
+        },
+        "lamps": {
+          "pipes": {
+            "pairs": 6,
+            "minY": 0.09349999815225374,
+            "overlapXZ": 6
+          },
+          "clips": {
+            "pairs": 42,
+            "minY": 0.07749999999999879,
+            "overlapXZ": 0
+          }
+        },
+        "boxes": {
+          "pipes": {
+            "pairs": 8,
+            "minY": 1.425999998152255,
+            "overlapXZ": 6
+          },
+          "clips": {
+            "pairs": 56,
+            "minY": 1.4100000000000001,
+            "overlapXZ": 2
+          }
+        },
+        "notice": {
+          "pipes": {
+            "pairs": 2,
+            "minY": 0.792658122062452,
+            "overlapXZ": 0
+          },
+          "clips": {
+            "pairs": 14,
+            "minY": 0.7766581239101971,
+            "overlapXZ": 0
+          }
+        },
+        "slab": {
+          "pipes": {
+            "pairs": 2,
+            "minY": 0.10299999929964443,
+            "overlapXZ": 2
+          },
+          "clips": {
+            "pairs": 14,
+            "minY": 0.0799999999999983,
+            "overlapXZ": 14
+          }
+        }
+      }
+    },
+    "town-apartment-4f": {
+      "origin": [
+        282,
+        12.764808464050294,
+        778
+      ],
+      "width": 12,
+      "depth": 9,
+      "stats": {
+        "fence": 2,
+        "cardboardStacks": 4,
+        "pipeRuns": 3,
+        "spots": 3
+      },
+      "doorTop": 15.004808464050294,
+      "lampTop": 15.217308464050294,
+      "finishFloor": 12.904808464050294,
+      "slabUnderside": 15.614808464050293,
+      "slabWorldBounds": [
+        [
+          276,
+          15.614808464050293,
+          767.95
+        ],
+        [
+          288,
+          15.754808464050294,
+          769
+        ]
+      ],
+      "horizontalPipes": [
+        {
+          "id": "town-apartment-4f-cyl-38",
+          "min": [
+            276.09999999999997,
+            15.325999998152255,
+            768.8659999981522
+          ],
+          "max": [
+            282.3,
+            15.394000001847743,
+            768.9340000018477
+          ],
+          "lampGap": 0.1086915341019612,
+          "doorGap": 0.32119153410196155,
+          "slabGap": 0.2208084622025499,
+          "overlapsSlabXZ": true
+        },
+        {
+          "id": "town-apartment-4f-cyl-44",
+          "min": [
+            276.09999999999997,
+            15.472999999299645,
+            768.8729999992996
+          ],
+          "max": [
+            282.3,
+            15.527000000700355,
+            768.9270000007003
+          ],
+          "lampGap": 0.2556915352493512,
+          "doorGap": 0.46819153524935153,
+          "slabGap": 0.08780846334993875,
+          "overlapsSlabXZ": true
+        }
+      ],
+      "clips": {
+        "count": 10,
+        "minLampGap": 0.09269153594970447,
+        "minSlabGap": 0.06480846405029261,
+        "embedded": 0
+      },
+      "cardboardMinDoorHorizontalGap": 0,
+      "noticeMinDoorHorizontalGap": null
+    },
+    "town-apartment-5f": {
+      "origin": [
+        302,
+        12.643957901000977,
+        779
+      ],
+      "width": 12,
+      "depth": 10,
+      "stats": {
+        "pipes": 2,
+        "cardboard": 4,
+        "notices": 1
+      },
+      "doorTop": 14.883957901000977,
+      "lampTop": 15.096457901000978,
+      "finishFloor": 12.783957901000978,
+      "slabUnderside": 15.493957901000977,
+      "slabWorldBounds": [
+        [
+          296,
+          15.493957901000977,
+          767.95
+        ],
+        [
+          308,
+          15.633957901000977,
+          769
+        ]
+      ],
+      "horizontalPipes": [
+        {
+          "id": "town-apartment-5f-cyl-55",
+          "min": [
+            296.6,
+            15.189957899153232,
+            768.8659999981522
+          ],
+          "max": [
+            307.4,
+            15.257957902848723,
+            768.9340000018477
+          ],
+          "lampGap": 0.09349999815225374,
+          "doorGap": 0.3059999981522541,
+          "slabGap": 0.2359999981522538,
+          "overlapsSlabXZ": true
+        },
+        {
+          "id": "town-apartment-5f-cyl-64",
+          "min": [
+            296.6,
+            15.336957900300622,
+            768.8729999992996
+          ],
+          "max": [
+            307.4,
+            15.390957901701334,
+            768.9270000007003
+          ],
+          "lampGap": 0.24049999929964372,
+          "doorGap": 0.4529999992996441,
+          "slabGap": 0.10299999929964265,
+          "overlapsSlabXZ": true
+        }
+      ],
+      "clips": {
+        "count": 16,
+        "minLampGap": 0.07749999999999879,
+        "minSlabGap": 0.0799999999999983,
+        "embedded": 0
+      },
+      "cardboardMinDoorHorizontalGap": 0.6250339028001554,
+      "noticeMinDoorHorizontalGap": 0.2130955081918705,
+      "actualClearances": {
+        "door": {
+          "pipes": {
+            "pairs": 30,
+            "minY": 0.30599999815225587,
+            "overlapXZ": 0
+          },
+          "clips": {
+            "pairs": 240,
+            "minY": 0.2900000000000009,
+            "overlapXZ": 2
+          }
+        },
+        "lamps": {
+          "pipes": {
+            "pairs": 6,
+            "minY": 0.09349999815225374,
+            "overlapXZ": 6
+          },
+          "clips": {
+            "pairs": 48,
+            "minY": 0.07749999999999879,
+            "overlapXZ": 2
+          }
+        },
+        "boxes": {
+          "pipes": {
+            "pairs": 8,
+            "minY": 1.425999998152255,
+            "overlapXZ": 6
+          },
+          "clips": {
+            "pairs": 64,
+            "minY": 1.4100000000000001,
+            "overlapXZ": 4
+          }
+        },
+        "notice": {
+          "pipes": {
+            "pairs": 2,
+            "minY": 0.7945766331573765,
+            "overlapXZ": 0
+          },
+          "clips": {
+            "pairs": 16,
+            "minY": 0.7785766350051215,
+            "overlapXZ": 0
+          }
+        },
+        "slab": {
+          "pipes": {
+            "pairs": 2,
+            "minY": 0.10299999929964265,
+            "overlapXZ": 2
+          },
+          "clips": {
+            "pairs": 16,
+            "minY": 0.0799999999999983,
+            "overlapXZ": 16
+          }
+        }
+      }
+    }
+  },
+  "fourFloorComparedToR3": {
+    "groups": 16,
+    "sameIndicesAndVertexCoordinates": true
+  }
+}

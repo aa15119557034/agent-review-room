@@ -1,0 +1,2297 @@
+{
+  "source": "4a8903840677d589f08e6a9934680b3b7b5f3d9c",
+  "size": [
+    1440,
+    900
+  ],
+  "fixedTime": 14,
+  "ao": 0.55,
+  "materials": {
+    "apartment-pbr-plaster": {
+      "type": "MeshStandardMaterial",
+      "maps": {
+        "map": {
+          "url": "/apartment-assets/white_plaster_02/white_plaster_02_diff_1k.jpg",
+          "width": 1024,
+          "height": 1024,
+          "textureName": "apartment-plaster-diff"
+        },
+        "normalMap": {
+          "url": "/apartment-assets/white_plaster_02/white_plaster_02_nor_gl_1k.jpg",
+          "width": 1024,
+          "height": 1024,
+          "textureName": "apartment-plaster-nor_gl"
+        },
+        "roughnessMap": {
+          "url": "/apartment-assets/white_plaster_02/white_plaster_02_arm_1k.jpg",
+          "width": 1024,
+          "height": 1024,
+          "textureName": "apartment-plaster-arm"
+        },
+        "metalnessMap": {
+          "url": "/apartment-assets/white_plaster_02/white_plaster_02_arm_1k.jpg",
+          "width": 1024,
+          "height": 1024,
+          "textureName": "apartment-plaster-arm"
+        },
+        "aoMap": {
+          "url": "/apartment-assets/white_plaster_02/white_plaster_02_arm_1k.jpg",
+          "width": 1024,
+          "height": 1024,
+          "textureName": "apartment-plaster-arm"
+        }
+      }
+    },
+    "apartment-pbr-metal": {
+      "type": "MeshStandardMaterial",
+      "maps": {
+        "map": {
+          "url": "/apartment-assets/worn_shutter/textures/worn_shutter_diff_1k.jpg",
+          "width": 1024,
+          "height": 1024,
+          "textureName": "apartment-metal-diff"
+        },
+        "normalMap": {
+          "url": "/apartment-assets/worn_shutter/textures/worn_shutter_nor_gl_1k.jpg",
+          "width": 1024,
+          "height": 1024,
+          "textureName": "apartment-metal-nor_gl"
+        },
+        "roughnessMap": {
+          "url": "/apartment-assets/worn_shutter/textures/worn_shutter_arm_1k.jpg",
+          "width": 1024,
+          "height": 1024,
+          "textureName": "apartment-metal-arm"
+        },
+        "metalnessMap": {
+          "url": "/apartment-assets/worn_shutter/textures/worn_shutter_arm_1k.jpg",
+          "width": 1024,
+          "height": 1024,
+          "textureName": "apartment-metal-arm"
+        },
+        "aoMap": {
+          "url": "/apartment-assets/worn_shutter/textures/worn_shutter_arm_1k.jpg",
+          "width": 1024,
+          "height": 1024,
+          "textureName": "apartment-metal-arm"
+        }
+      }
+    },
+    "apartment-pbr-tile": {
+      "type": "MeshStandardMaterial",
+      "maps": {
+        "map": {
+          "url": "/apartment-assets/rectangular_facade_tiles/rectangular_facade_tiles_diff_1k.jpg",
+          "width": 1024,
+          "height": 1024,
+          "textureName": "apartment-tile-diff"
+        },
+        "normalMap": {
+          "url": "/apartment-assets/rectangular_facade_tiles/rectangular_facade_tiles_nor_gl_1k.jpg",
+          "width": 1024,
+          "height": 1024,
+          "textureName": "apartment-tile-nor_gl"
+        },
+        "roughnessMap": {
+          "url": "/apartment-assets/rectangular_facade_tiles/rectangular_facade_tiles_arm_1k.jpg",
+          "width": 1024,
+          "height": 1024,
+          "textureName": "apartment-tile-arm"
+        },
+        "metalnessMap": {
+          "url": "/apartment-assets/rectangular_facade_tiles/rectangular_facade_tiles_arm_1k.jpg",
+          "width": 1024,
+          "height": 1024,
+          "textureName": "apartment-tile-arm"
+        },
+        "aoMap": {
+          "url": "/apartment-assets/rectangular_facade_tiles/rectangular_facade_tiles_arm_1k.jpg",
+          "width": 1024,
+          "height": 1024,
+          "textureName": "apartment-tile-arm"
+        }
+      }
+    },
+    "apartment-pbr-roof": {
+      "type": "MeshStandardMaterial",
+      "maps": {
+        "map": {
+          "url": "/apartment-assets/worn_shutter/textures/worn_shutter_diff_1k.jpg",
+          "width": 1024,
+          "height": 1024,
+          "textureName": "apartment-metal-diff"
+        },
+        "normalMap": {
+          "url": "/apartment-assets/worn_shutter/textures/worn_shutter_nor_gl_1k.jpg",
+          "width": 1024,
+          "height": 1024,
+          "textureName": "apartment-metal-nor_gl"
+        },
+        "roughnessMap": {
+          "url": "/apartment-assets/worn_shutter/textures/worn_shutter_arm_1k.jpg",
+          "width": 1024,
+          "height": 1024,
+          "textureName": "apartment-metal-arm"
+        },
+        "metalnessMap": {
+          "url": "/apartment-assets/worn_shutter/textures/worn_shutter_arm_1k.jpg",
+          "width": 1024,
+          "height": 1024,
+          "textureName": "apartment-metal-arm"
+        },
+        "aoMap": {
+          "url": "/apartment-assets/worn_shutter/textures/worn_shutter_arm_1k.jpg",
+          "width": 1024,
+          "height": 1024,
+          "textureName": "apartment-metal-arm"
+        }
+      }
+    }
+  },
+  "sessions": {
+    "evening-off": {
+      "exit": 1,
+      "assetFiles": 9,
+      "exceptions": 0,
+      "httpErrors": 0,
+      "transportClean": false,
+      "requests": [
+        {
+          "resource": "plastic_crate_02.bin",
+          "error": "net::ERR_ABORTED",
+          "canceled": true
+        }
+      ]
+    },
+    "evening-on": {
+      "exit": 1,
+      "assetFiles": 9,
+      "exceptions": 0,
+      "httpErrors": 0,
+      "transportClean": false,
+      "requests": [
+        {
+          "resource": "boulders.glb",
+          "error": "net::ERR_ABORTED",
+          "canceled": true
+        },
+        {
+          "resource": "plastic_crate_02_1k.gltf",
+          "error": "net::ERR_ABORTED",
+          "canceled": true
+        }
+      ]
+    },
+    "afternoon-off": {
+      "exit": 1,
+      "assetFiles": 9,
+      "exceptions": 0,
+      "httpErrors": 0,
+      "transportClean": false,
+      "requests": [
+        {
+          "resource": "boulders.glb",
+          "error": "net::ERR_ABORTED",
+          "canceled": true
+        }
+      ]
+    },
+    "afternoon-on": {
+      "exit": 1,
+      "assetFiles": 9,
+      "exceptions": 0,
+      "httpErrors": 0,
+      "transportClean": false,
+      "requests": [
+        {
+          "resource": "plastic_crate_02_1k.gltf",
+          "error": "net::ERR_ABORTED",
+          "canceled": true
+        }
+      ]
+    },
+    "shops-off": {
+      "exit": 1,
+      "assetFiles": 9,
+      "exceptions": 0,
+      "httpErrors": 0,
+      "transportClean": false,
+      "requests": [
+        {
+          "resource": "menhir.glb",
+          "error": "net::ERR_ABORTED",
+          "canceled": true
+        }
+      ]
+    },
+    "shops-on": {
+      "exit": 1,
+      "assetFiles": 9,
+      "exceptions": 0,
+      "httpErrors": 0,
+      "transportClean": false,
+      "requests": [
+        {
+          "resource": "menhir.glb",
+          "error": "net::ERR_ABORTED",
+          "canceled": true
+        },
+        {
+          "resource": "boulders.glb",
+          "error": "net::ERR_ABORTED",
+          "canceled": true
+        },
+        {
+          "resource": "plastic_crate_02_1k.gltf",
+          "error": "net::ERR_ABORTED",
+          "canceled": true
+        },
+        {
+          "resource": "plastic_crate_02.bin",
+          "error": "net::ERR_ABORTED",
+          "canceled": true
+        }
+      ]
+    }
+  },
+  "pairs": {
+    "evening": [
+      {
+        "view": "service-corner",
+        "camera": {
+          "position": [
+            308.4,
+            9.612,
+            872.9
+          ],
+          "quaternion": [
+            -0.08432325046436126,
+            0.5331397072650681,
+            0.05351200213385738,
+            0.8401119613456697
+          ],
+          "fov": 55
+        },
+        "off": {
+          "file": "images/evening-service-corner-off.jpg",
+          "pngSha256": "53148bd18ff282480aa552ccfe850ea0598e2f14a9c0f0fe001a537eb7d1a819",
+          "jpegSha256": "3fff2a42af2f76d07846b7241a73e1b384a6c70e1d3aedd8efb0a828024edfd7",
+          "shadow": {
+            "enabled": false,
+            "box": null,
+            "patched": 0,
+            "cameraAmount": 0,
+            "aoTint": [
+              1,
+              1,
+              1
+            ],
+            "range": [
+              0.06,
+              0.42,
+              1
+            ]
+          }
+        },
+        "on": {
+          "file": "images/evening-service-corner-on.jpg",
+          "pngSha256": "aa08357b53184a02cbd12399397e75f3bc8c7b41d1f11048ec92347a6d795950",
+          "jpegSha256": "59f634254623bc47862693a35f4f565b173b4188920b33051f233f21d26eb175",
+          "shadow": {
+            "enabled": true,
+            "box": [
+              260.9,
+              7,
+              902.2,
+              275.5,
+              15,
+              915.8
+            ],
+            "patched": 7,
+            "cameraAmount": 1,
+            "aoTint": [
+              0.94,
+              0.97,
+              1.1
+            ],
+            "range": [
+              0.05,
+              0.38,
+              0.5
+            ]
+          }
+        },
+        "diff": {
+          "pixels": 1296000,
+          "changed": 1273977,
+          "above4": 1243639,
+          "above8": 1201644,
+          "maximum": 65,
+          "meanRGBChange": [
+            11.302,
+            12.327,
+            23.644
+          ],
+          "meanYBefore": 82.344,
+          "meanYAfter": 95.269
+        },
+        "offVsC23": {
+          "pixels": 1296000,
+          "changed": 0,
+          "above4": 0,
+          "above8": 0,
+          "maximum": 0,
+          "meanRGBChange": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "meanYBefore": 82.344,
+          "meanYAfter": 82.344
+        },
+        "c23Png": "53148bd18ff282480aa552ccfe850ea0598e2f14a9c0f0fe001a537eb7d1a819"
+      },
+      {
+        "view": "laundry-details",
+        "camera": {
+          "position": [
+            288,
+            14.384808464050293,
+            777.9
+          ],
+          "quaternion": [
+            -0.15522850149956677,
+            0.6173580660361093,
+            0.12595148976979553,
+            0.7608609287163607
+          ],
+          "fov": 55
+        },
+        "off": {
+          "file": "images/evening-laundry-details-off.jpg",
+          "pngSha256": "df58a15d4beb2cea636381d793ea471d5889ebbc4204d9f5c94fb84528fb7af8",
+          "jpegSha256": "54b868268823cbcca3de8419c737662df4286079ae8cf0778c5a40e7f5566f4e",
+          "shadow": {
+            "enabled": false,
+            "box": null,
+            "patched": 0,
+            "cameraAmount": 0,
+            "aoTint": [
+              1,
+              1,
+              1
+            ],
+            "range": [
+              0.06,
+              0.42,
+              1
+            ]
+          }
+        },
+        "on": {
+          "file": "images/evening-laundry-details-on.jpg",
+          "pngSha256": "fbd02a33fce963dbc9c02f44a06f045dfef72b779e3c86179571d5e632667b83",
+          "jpegSha256": "98232eed263e02e14940c235c57d3c23d46d411f36f8ce6e3a6e5631df983186",
+          "shadow": {
+            "enabled": true,
+            "box": [
+              260.9,
+              7,
+              902.2,
+              275.5,
+              15,
+              915.8
+            ],
+            "patched": 7,
+            "cameraAmount": 1,
+            "aoTint": [
+              0.94,
+              0.97,
+              1.1
+            ],
+            "range": [
+              0.05,
+              0.38,
+              0.5
+            ]
+          }
+        },
+        "diff": {
+          "pixels": 1296000,
+          "changed": 1276595,
+          "above4": 1237324,
+          "above8": 953099,
+          "maximum": 61,
+          "meanRGBChange": [
+            6.805,
+            7.312,
+            14.497
+          ],
+          "meanYBefore": 78.26,
+          "meanYAfter": 85.983
+        },
+        "offVsC23": {
+          "pixels": 1296000,
+          "changed": 0,
+          "above4": 0,
+          "above8": 0,
+          "maximum": 0,
+          "meanRGBChange": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "meanYBefore": 78.26,
+          "meanYAfter": 78.26
+        },
+        "c23Png": "df58a15d4beb2cea636381d793ea471d5889ebbc4204d9f5c94fb84528fb7af8"
+      },
+      {
+        "view": "shop-interior",
+        "camera": {
+          "position": [
+            271.7,
+            9.9134,
+            908
+          ],
+          "quaternion": [
+            -0.015701859235384273,
+            0.7069324236562871,
+            0.015701859235384273,
+            0.7069324236562871
+          ],
+          "fov": 58
+        },
+        "off": {
+          "file": "images/evening-shop-interior-off.jpg",
+          "pngSha256": "c213a0c5cf4b178a6c6e0c5c5850bd5a0ea37285181a6c0631eb6d0c85963dd0",
+          "jpegSha256": "2649470f827d7de97b230dc4cb9c1ceaa83ea5967af04feeff97136079856bff",
+          "shadow": {
+            "enabled": false,
+            "box": null,
+            "patched": 0,
+            "cameraAmount": 0,
+            "aoTint": [
+              1,
+              1,
+              1
+            ],
+            "range": [
+              0.06,
+              0.42,
+              1
+            ]
+          }
+        },
+        "on": {
+          "file": "images/evening-shop-interior-on.jpg",
+          "pngSha256": "c213a0c5cf4b178a6c6e0c5c5850bd5a0ea37285181a6c0631eb6d0c85963dd0",
+          "jpegSha256": "2649470f827d7de97b230dc4cb9c1ceaa83ea5967af04feeff97136079856bff",
+          "shadow": {
+            "enabled": true,
+            "box": [
+              260.9,
+              7,
+              902.2,
+              275.5,
+              15,
+              915.8
+            ],
+            "patched": 7,
+            "cameraAmount": 0,
+            "aoTint": [
+              0.94,
+              0.97,
+              1.1
+            ],
+            "range": [
+              0.05,
+              0.38,
+              0.5
+            ]
+          }
+        },
+        "diff": {
+          "pixels": 1296000,
+          "changed": 0,
+          "above4": 0,
+          "above8": 0,
+          "maximum": 0,
+          "meanRGBChange": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "meanYBefore": 161.53,
+          "meanYAfter": 161.53
+        },
+        "offVsC23": {
+          "pixels": 1296000,
+          "changed": 0,
+          "above4": 0,
+          "above8": 0,
+          "maximum": 0,
+          "meanRGBChange": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "meanYBefore": 161.53,
+          "meanYAfter": 161.53
+        },
+        "c23Png": "c213a0c5cf4b178a6c6e0c5c5850bd5a0ea37285181a6c0631eb6d0c85963dd0"
+      },
+      {
+        "view": "20-rear-eye",
+        "camera": {
+          "position": [
+            273,
+            14.755245542526229,
+            758
+          ],
+          "quaternion": [
+            -0.00013011891877658623,
+            0.9145142483742376,
+            -0.00029414054360230415,
+            -0.40455356390830466
+          ],
+          "fov": 58
+        },
+        "off": {
+          "file": "images/evening-20-rear-eye-off.jpg",
+          "pngSha256": "2ab1f31d47cfc63d4cd20386346009a5300e5faf004286a0d992daf5011a2767",
+          "jpegSha256": "17c7cf8bf1681b3aa53fda26e68b35a1604442945d5db4c3160357433620b67d",
+          "shadow": {
+            "enabled": false,
+            "box": null,
+            "patched": 0,
+            "cameraAmount": 0,
+            "aoTint": [
+              1,
+              1,
+              1
+            ],
+            "range": [
+              0.06,
+              0.42,
+              1
+            ]
+          }
+        },
+        "on": {
+          "file": "images/evening-20-rear-eye-on.jpg",
+          "pngSha256": "f55e7a63d30bc49b62b5ef33033cb2850735b8e00da153bce1a07c47abc0ce2d",
+          "jpegSha256": "b66708683c25e00a26ad10afd7208a9437ddfe2b992ffbf76e3cd9892d579c71",
+          "shadow": {
+            "enabled": true,
+            "box": [
+              260.9,
+              7,
+              902.2,
+              275.5,
+              15,
+              915.8
+            ],
+            "patched": 7,
+            "cameraAmount": 1,
+            "aoTint": [
+              0.94,
+              0.97,
+              1.1
+            ],
+            "range": [
+              0.05,
+              0.38,
+              0.5
+            ]
+          }
+        },
+        "diff": {
+          "pixels": 1296000,
+          "changed": 1097360,
+          "above4": 733158,
+          "above8": 521682,
+          "maximum": 64,
+          "meanRGBChange": [
+            4.158,
+            4.276,
+            8.363
+          ],
+          "meanYBefore": 86.221,
+          "meanYAfter": 90.767
+        },
+        "offVsC23": {
+          "pixels": 1296000,
+          "changed": 0,
+          "above4": 0,
+          "above8": 0,
+          "maximum": 0,
+          "meanRGBChange": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "meanYBefore": 86.221,
+          "meanYAfter": 86.221
+        },
+        "c23Png": "2ab1f31d47cfc63d4cd20386346009a5300e5faf004286a0d992daf5011a2767",
+        "surfaceRegions": {
+          "backWall": {
+            "rect": [
+              970,
+              495,
+              1015,
+              540
+            ],
+            "pixels": 2025,
+            "changed": 2025,
+            "above4": 2025,
+            "above8": 2024,
+            "maximum": 16,
+            "meanRGBChange": [
+              8.398,
+              8.037,
+              12.517
+            ],
+            "meanYBefore": 43.253,
+            "meanYAfter": 51.69
+          },
+          "door": {
+            "rect": [
+              1048,
+              473,
+              1083,
+              520
+            ],
+            "pixels": 1645,
+            "changed": 1645,
+            "above4": 1645,
+            "above8": 1645,
+            "maximum": 36,
+            "meanRGBChange": [
+              16.661,
+              18.078,
+              35.597
+            ],
+            "meanYBefore": 96.138,
+            "meanYAfter": 115.179
+          }
+        }
+      },
+      {
+        "view": "21-front-eye",
+        "camera": {
+          "position": [
+            274,
+            12.87812709172567,
+            783
+          ],
+          "quaternion": [
+            0.07422133960767584,
+            -0.5103582416049142,
+            0.044271975994965136,
+            0.8556083508909221
+          ],
+          "fov": 58
+        },
+        "off": {
+          "file": "images/evening-21-front-eye-off.jpg",
+          "pngSha256": "b2c7f4e0b27fa56d03ae072a05a75c728a204f0c619c294c9cfae4efcdcb345a",
+          "jpegSha256": "f4ec6cd76a7910b5642e7e91f7f64d16a4b45e3393b8492a0ee1a11ab816b0c3",
+          "shadow": {
+            "enabled": false,
+            "box": null,
+            "patched": 0,
+            "cameraAmount": 0,
+            "aoTint": [
+              1,
+              1,
+              1
+            ],
+            "range": [
+              0.06,
+              0.42,
+              1
+            ]
+          }
+        },
+        "on": {
+          "file": "images/evening-21-front-eye-on.jpg",
+          "pngSha256": "598bb6329c49bc04f41908e8bef5fc0f9062f5323156dca5d17a3cd30b583420",
+          "jpegSha256": "07c4d082e9c46f37dd796e7b26c8864239d3527ff7eb4ecd29a6c979462e256a",
+          "shadow": {
+            "enabled": true,
+            "box": [
+              260.9,
+              7,
+              902.2,
+              275.5,
+              15,
+              915.8
+            ],
+            "patched": 7,
+            "cameraAmount": 1,
+            "aoTint": [
+              0.94,
+              0.97,
+              1.1
+            ],
+            "range": [
+              0.05,
+              0.38,
+              0.5
+            ]
+          }
+        },
+        "diff": {
+          "pixels": 1296000,
+          "changed": 1024850,
+          "above4": 866828,
+          "above8": 512205,
+          "maximum": 62,
+          "meanRGBChange": [
+            3.204,
+            3.633,
+            7.53
+          ],
+          "meanYBefore": 89.393,
+          "meanYAfter": 93.216
+        },
+        "offVsC23": {
+          "pixels": 1296000,
+          "changed": 0,
+          "above4": 0,
+          "above8": 0,
+          "maximum": 0,
+          "meanRGBChange": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "meanYBefore": 89.393,
+          "meanYAfter": 89.393
+        },
+        "c23Png": "b2c7f4e0b27fa56d03ae072a05a75c728a204f0c619c294c9cfae4efcdcb345a"
+      },
+      {
+        "view": "station-street",
+        "camera": {
+          "position": [
+            278.8,
+            10.4,
+            936
+          ],
+          "quaternion": [
+            -0.003277842930440423,
+            -0.009834585659995631,
+            -3.2237959341941705e-05,
+            0.9999462663720154
+          ],
+          "fov": 58
+        },
+        "off": {
+          "file": "images/evening-station-street-off.jpg",
+          "pngSha256": "9d6f43d37db9646c952550109035f925ac90a8411e5bb249387fb331859cdcdc",
+          "jpegSha256": "2ce64d38fd091fb0b11ee9164f3fce066d9aa3c6a05ce1fe890c704adaf07beb",
+          "shadow": {
+            "enabled": false,
+            "box": null,
+            "patched": 0,
+            "cameraAmount": 0,
+            "aoTint": [
+              1,
+              1,
+              1
+            ],
+            "range": [
+              0.06,
+              0.42,
+              1
+            ]
+          }
+        },
+        "on": {
+          "file": "images/evening-station-street-on.jpg",
+          "pngSha256": "2c450b32eaf398bc2b68e11c47352f7f2f3fe89f929ef334d4aea5bddd73ba78",
+          "jpegSha256": "4e47895bb0951a963cc94e2f07469a00350aa00b46222ce1237122e7ab7242e1",
+          "shadow": {
+            "enabled": true,
+            "box": [
+              260.9,
+              7,
+              902.2,
+              275.5,
+              15,
+              915.8
+            ],
+            "patched": 7,
+            "cameraAmount": 1,
+            "aoTint": [
+              0.94,
+              0.97,
+              1.1
+            ],
+            "range": [
+              0.05,
+              0.38,
+              0.5
+            ]
+          }
+        },
+        "diff": {
+          "pixels": 1296000,
+          "changed": 1244774,
+          "above4": 1148686,
+          "above8": 1085937,
+          "maximum": 59,
+          "meanRGBChange": [
+            9.621,
+            9.759,
+            19.827
+          ],
+          "meanYBefore": 90.188,
+          "meanYAfter": 100.645
+        },
+        "offVsC23": {
+          "pixels": 1296000,
+          "changed": 0,
+          "above4": 0,
+          "above8": 0,
+          "maximum": 0,
+          "meanRGBChange": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "meanYBefore": 90.188,
+          "meanYAfter": 90.188
+        },
+        "c23Png": "9d6f43d37db9646c952550109035f925ac90a8411e5bb249387fb331859cdcdc",
+        "roadRegion": {
+          "pixels": 31625,
+          "changed": 31625,
+          "above4": 31625,
+          "above8": 31625,
+          "maximum": 26,
+          "meanRGBChange": [
+            10.581,
+            10.498,
+            21.796
+          ],
+          "meanYBefore": 71.033,
+          "meanYAfter": 82.364,
+          "rect": [
+            715,
+            720,
+            990,
+            835
+          ]
+        }
+      },
+      {
+        "view": "street-detail",
+        "camera": {
+          "position": [
+            284.4,
+            10.281286274509803,
+            924
+          ],
+          "quaternion": [
+            -0.12465537443110519,
+            -0.38126635888515065,
+            -0.05196769176958736,
+            0.914547079280253
+          ],
+          "fov": 58
+        },
+        "off": {
+          "file": "images/evening-street-detail-off.jpg",
+          "pngSha256": "7ba4dd5417b14a3dc152a268c317ee9c4654eefa9acfaae8940ef19fd3cc95ef",
+          "jpegSha256": "7e8585bef031c66499fc84620f09c5526282fd1d8b38b58f0abca83ff17334e3",
+          "shadow": {
+            "enabled": false,
+            "box": null,
+            "patched": 0,
+            "cameraAmount": 0,
+            "aoTint": [
+              1,
+              1,
+              1
+            ],
+            "range": [
+              0.06,
+              0.42,
+              1
+            ]
+          }
+        },
+        "on": {
+          "file": "images/evening-street-detail-on.jpg",
+          "pngSha256": "7be6f4fbe7fb18757d34449f086298e8368a91642efc41fd558be7a52fe6e84d",
+          "jpegSha256": "ee89236cc713046f833d22e8514b447d59fc77771e9970148fc3582e7e130333",
+          "shadow": {
+            "enabled": true,
+            "box": [
+              260.9,
+              7,
+              902.2,
+              275.5,
+              15,
+              915.8
+            ],
+            "patched": 7,
+            "cameraAmount": 1,
+            "aoTint": [
+              0.94,
+              0.97,
+              1.1
+            ],
+            "range": [
+              0.05,
+              0.38,
+              0.5
+            ]
+          }
+        },
+        "diff": {
+          "pixels": 1296000,
+          "changed": 1295325,
+          "above4": 1290661,
+          "above8": 1114615,
+          "maximum": 54,
+          "meanRGBChange": [
+            10.894,
+            10.845,
+            20.842
+          ],
+          "meanYBefore": 77.474,
+          "meanYAfter": 89.052
+        },
+        "offVsC23": {
+          "pixels": 1296000,
+          "changed": 0,
+          "above4": 0,
+          "above8": 0,
+          "maximum": 0,
+          "meanRGBChange": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "meanYBefore": 77.474,
+          "meanYAfter": 77.474
+        },
+        "c23Png": "7ba4dd5417b14a3dc152a268c317ee9c4654eefa9acfaae8940ef19fd3cc95ef"
+      },
+      {
+        "view": "shop-door-eye",
+        "camera": {
+          "position": [
+            271.7,
+            9.9134,
+            908
+          ],
+          "quaternion": [
+            0.015701859235384273,
+            0.7069324236562871,
+            0.015701859235384273,
+            -0.7069324236562871
+          ],
+          "fov": 58
+        },
+        "off": {
+          "file": "images/evening-shop-door-eye-off.jpg",
+          "pngSha256": "11a7256455c77a53542b77f2ecaf9e87b9b52769469f5e185b8e3ddaf239caed",
+          "jpegSha256": "3b704d5187055d0a5f6606ad7b2e29ae9ca1e088dd798299d5a94c93266e4635",
+          "shadow": {
+            "enabled": false,
+            "box": null,
+            "patched": 0,
+            "cameraAmount": 0,
+            "aoTint": [
+              1,
+              1,
+              1
+            ],
+            "range": [
+              0.06,
+              0.42,
+              1
+            ]
+          }
+        },
+        "on": {
+          "file": "images/evening-shop-door-eye-on.jpg",
+          "pngSha256": "f94cb8ff5c106560f78e4ba95933a30ed50258641bd23e7b51c313f25d91629e",
+          "jpegSha256": "60d6bdef9d149d688a7aff5cd385fec0001a72aac3997be6829c42b48662a7b3",
+          "shadow": {
+            "enabled": true,
+            "box": [
+              260.9,
+              7,
+              902.2,
+              275.5,
+              15,
+              915.8
+            ],
+            "patched": 7,
+            "cameraAmount": 0,
+            "aoTint": [
+              0.94,
+              0.97,
+              1.1
+            ],
+            "range": [
+              0.05,
+              0.38,
+              0.5
+            ]
+          }
+        },
+        "diff": {
+          "pixels": 1296000,
+          "changed": 751493,
+          "above4": 509478,
+          "above8": 443520,
+          "maximum": 49,
+          "meanRGBChange": [
+            4.0,
+            3.869,
+            6.595
+          ],
+          "meanYBefore": 103.32,
+          "meanYAfter": 107.414
+        }
+      },
+      {
+        "view": "van-side",
+        "camera": {
+          "position": [
+            276.3147277851227,
+            11.210013480772632,
+            971.1462175645175
+          ],
+          "quaternion": [
+            -0.029182465008512196,
+            -0.7830517056478151,
+            -0.03684648464040197,
+            0.6201779958912754
+          ],
+          "fov": 47
+        },
+        "off": {
+          "file": "images/evening-van-side-off.jpg",
+          "pngSha256": "96b3a32adb95e44028a14d8bccef18d591784c2fb40376db21e8ab5eb7fcc64b",
+          "jpegSha256": "3f3a45ae1c0376daf8d06ff5997db3d07fd9f9c7d6c6c118c47804babdf5f48b",
+          "shadow": {
+            "enabled": false,
+            "box": null,
+            "patched": 0,
+            "cameraAmount": 0,
+            "aoTint": [
+              1,
+              1,
+              1
+            ],
+            "range": [
+              0.06,
+              0.42,
+              1
+            ]
+          }
+        },
+        "on": {
+          "file": "images/evening-van-side-on.jpg",
+          "pngSha256": "83a553ed5f3a1e92510b4e31450bc8a757396942871537613adc1f7f51e87ad2",
+          "jpegSha256": "bba9709c75f8994a1ac7e790a50574a1db25a6ee322dff4fc055e255eef000e2",
+          "shadow": {
+            "enabled": true,
+            "box": [
+              260.9,
+              7,
+              902.2,
+              275.5,
+              15,
+              915.8
+            ],
+            "patched": 7,
+            "cameraAmount": 1,
+            "aoTint": [
+              0.94,
+              0.97,
+              1.1
+            ],
+            "range": [
+              0.05,
+              0.38,
+              0.5
+            ]
+          }
+        },
+        "diff": {
+          "pixels": 1296000,
+          "changed": 1250114,
+          "above4": 1033762,
+          "above8": 962651,
+          "maximum": 63,
+          "meanRGBChange": [
+            9.035,
+            9.645,
+            18.398
+          ],
+          "meanYBefore": 89.611,
+          "meanYAfter": 99.758
+        },
+        "offVsC23": {
+          "pixels": 1296000,
+          "changed": 5,
+          "above4": 0,
+          "above8": 0,
+          "maximum": 1,
+          "meanRGBChange": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "meanYBefore": 89.611,
+          "meanYAfter": 89.611
+        },
+        "c23Png": "e929fe4b9a42954e22b28452861b77d6661818a0d383e5d5e60955d7ed1d47e6"
+      }
+    ],
+    "afternoon": [
+      {
+        "view": "station-street",
+        "camera": {
+          "position": [
+            278.8,
+            10.4,
+            936
+          ],
+          "quaternion": [
+            -0.003277842930440423,
+            -0.009834585659995631,
+            -3.2237959341941705e-05,
+            0.9999462663720154
+          ],
+          "fov": 58
+        },
+        "off": {
+          "file": "images/afternoon-station-street-off.jpg",
+          "pngSha256": "8066116359cd79b7fd849c84260e85a1912adbe7273d0c05cc6863d7a9169a80",
+          "jpegSha256": "c2a12edd8162ed259e00f15bcec8ca736034aeb1a8b8f7720e5bb4cb6e3123c0",
+          "shadow": {
+            "enabled": false,
+            "box": null,
+            "patched": 0,
+            "cameraAmount": 0,
+            "aoTint": [
+              1,
+              1,
+              1
+            ],
+            "range": [
+              0.06,
+              0.42,
+              1
+            ]
+          }
+        },
+        "on": {
+          "file": "images/afternoon-station-street-on.jpg",
+          "pngSha256": "6305e1f7dda660a6a9696e61270a58ab6bc1c1e6a434daffe933023666eede63",
+          "jpegSha256": "f486ecc0a93c75df937b7be8dde8a57defecb6d29830618559eb17a8e70e5271",
+          "shadow": {
+            "enabled": true,
+            "box": [
+              260.9,
+              7,
+              902.2,
+              275.5,
+              15,
+              915.8
+            ],
+            "patched": 7,
+            "cameraAmount": 1,
+            "aoTint": [
+              0.95,
+              0.98,
+              1.09
+            ],
+            "range": [
+              0.05,
+              0.38,
+              0.5
+            ]
+          }
+        },
+        "diff": {
+          "pixels": 1296000,
+          "changed": 1213912,
+          "above4": 1057460,
+          "above8": 1001369,
+          "maximum": 72,
+          "meanRGBChange": [
+            8.819,
+            10.706,
+            17.572
+          ],
+          "meanYBefore": 97.807,
+          "meanYAfter": 108.607
+        },
+        "offVsC23": {
+          "pixels": 1296000,
+          "changed": 0,
+          "above4": 0,
+          "above8": 0,
+          "maximum": 0,
+          "meanRGBChange": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "meanYBefore": 97.807,
+          "meanYAfter": 97.807
+        },
+        "c23Png": "8066116359cd79b7fd849c84260e85a1912adbe7273d0c05cc6863d7a9169a80",
+        "roadRegion": {
+          "pixels": 31625,
+          "changed": 31625,
+          "above4": 31622,
+          "above8": 31494,
+          "maximum": 27,
+          "meanRGBChange": [
+            10.204,
+            12.612,
+            21.474
+          ],
+          "meanYBefore": 71.581,
+          "meanYAfter": 84.321,
+          "rect": [
+            715,
+            720,
+            990,
+            835
+          ]
+        }
+      },
+      {
+        "view": "20-rear-eye",
+        "camera": {
+          "position": [
+            273,
+            14.755245542526229,
+            758
+          ],
+          "quaternion": [
+            -0.00013011891877658623,
+            0.9145142483742376,
+            -0.00029414054360230415,
+            -0.40455356390830466
+          ],
+          "fov": 58
+        },
+        "off": {
+          "file": "images/afternoon-20-rear-eye-off.jpg",
+          "pngSha256": "7d84202b135bdc651ba43c6331bca6480da74f455f55731027a0c6bcabfea9db",
+          "jpegSha256": "b2599babe854c89f5d38660a318d908035101acaf3e2258f4978d29ea905fbdc",
+          "shadow": {
+            "enabled": false,
+            "box": null,
+            "patched": 0,
+            "cameraAmount": 0,
+            "aoTint": [
+              1,
+              1,
+              1
+            ],
+            "range": [
+              0.06,
+              0.42,
+              1
+            ]
+          }
+        },
+        "on": {
+          "file": "images/afternoon-20-rear-eye-on.jpg",
+          "pngSha256": "139f61339be25a51f991a69b68aec8db6b85db50f3f4008ecdbaecc24ecd4d33",
+          "jpegSha256": "c63d5aa19e5145332caf2a046746aab5ef64e666e53c507fa6e0bc85ee4bca0f",
+          "shadow": {
+            "enabled": true,
+            "box": [
+              260.9,
+              7,
+              902.2,
+              275.5,
+              15,
+              915.8
+            ],
+            "patched": 7,
+            "cameraAmount": 1,
+            "aoTint": [
+              0.95,
+              0.98,
+              1.09
+            ],
+            "range": [
+              0.05,
+              0.38,
+              0.5
+            ]
+          }
+        },
+        "diff": {
+          "pixels": 1296000,
+          "changed": 964711,
+          "above4": 530684,
+          "above8": 262895,
+          "maximum": 58,
+          "meanRGBChange": [
+            1.72,
+            2.482,
+            4.569
+          ],
+          "meanYBefore": 110.876,
+          "meanYAfter": 113.346
+        },
+        "offVsC23": {
+          "pixels": 1296000,
+          "changed": 0,
+          "above4": 0,
+          "above8": 0,
+          "maximum": 0,
+          "meanRGBChange": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "meanYBefore": 110.876,
+          "meanYAfter": 110.876
+        },
+        "c23Png": "7d84202b135bdc651ba43c6331bca6480da74f455f55731027a0c6bcabfea9db",
+        "surfaceRegions": {
+          "backWall": {
+            "rect": [
+              970,
+              495,
+              1015,
+              540
+            ],
+            "pixels": 2025,
+            "changed": 2025,
+            "above4": 1776,
+            "above8": 0,
+            "maximum": 6,
+            "meanRGBChange": [
+              1.007,
+              2.109,
+              4.943
+            ],
+            "meanYBefore": 78.3,
+            "meanYAfter": 80.379
+          },
+          "door": {
+            "rect": [
+              1048,
+              473,
+              1083,
+              520
+            ],
+            "pixels": 1645,
+            "changed": 430,
+            "above4": 0,
+            "above8": 0,
+            "maximum": 3,
+            "meanRGBChange": [
+              -0.088,
+              0.0,
+              0.189
+            ],
+            "meanYBefore": 183.634,
+            "meanYAfter": 183.629
+          }
+        }
+      },
+      {
+        "view": "shop-interior",
+        "camera": {
+          "position": [
+            271.7,
+            9.9134,
+            908
+          ],
+          "quaternion": [
+            -0.015701859235384273,
+            0.7069324236562871,
+            0.015701859235384273,
+            0.7069324236562871
+          ],
+          "fov": 58
+        },
+        "off": {
+          "file": "images/afternoon-shop-interior-off.jpg",
+          "pngSha256": "16f4da4850f84b2008fe32cb69737ee8494514bab9690ea0b94926799bb65a05",
+          "jpegSha256": "0ab31c00c53b54baedb7f8eddbd38942b269bb5c232d75d94a94d6799c0435e3",
+          "shadow": {
+            "enabled": false,
+            "box": null,
+            "patched": 0,
+            "cameraAmount": 0,
+            "aoTint": [
+              1,
+              1,
+              1
+            ],
+            "range": [
+              0.06,
+              0.42,
+              1
+            ]
+          }
+        },
+        "on": {
+          "file": "images/afternoon-shop-interior-on.jpg",
+          "pngSha256": "16f4da4850f84b2008fe32cb69737ee8494514bab9690ea0b94926799bb65a05",
+          "jpegSha256": "0ab31c00c53b54baedb7f8eddbd38942b269bb5c232d75d94a94d6799c0435e3",
+          "shadow": {
+            "enabled": true,
+            "box": [
+              260.9,
+              7,
+              902.2,
+              275.5,
+              15,
+              915.8
+            ],
+            "patched": 7,
+            "cameraAmount": 0,
+            "aoTint": [
+              0.95,
+              0.98,
+              1.09
+            ],
+            "range": [
+              0.05,
+              0.38,
+              0.5
+            ]
+          }
+        },
+        "diff": {
+          "pixels": 1296000,
+          "changed": 0,
+          "above4": 0,
+          "above8": 0,
+          "maximum": 0,
+          "meanRGBChange": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "meanYBefore": 156.299,
+          "meanYAfter": 156.299
+        }
+      },
+      {
+        "view": "shop-door-eye",
+        "camera": {
+          "position": [
+            271.7,
+            9.9134,
+            908
+          ],
+          "quaternion": [
+            0.015701859235384273,
+            0.7069324236562871,
+            0.015701859235384273,
+            -0.7069324236562871
+          ],
+          "fov": 58
+        },
+        "off": {
+          "file": "images/afternoon-shop-door-eye-off.jpg",
+          "pngSha256": "5121525ca7853aa3285011e88aa14b371dc9fbb2393a01f689e55318d03816a7",
+          "jpegSha256": "e91aea5106908ca04005d0363e78ad31b78d8473abfe0c7ffddb9be13684a67a",
+          "shadow": {
+            "enabled": false,
+            "box": null,
+            "patched": 0,
+            "cameraAmount": 0,
+            "aoTint": [
+              1,
+              1,
+              1
+            ],
+            "range": [
+              0.06,
+              0.42,
+              1
+            ]
+          }
+        },
+        "on": {
+          "file": "images/afternoon-shop-door-eye-on.jpg",
+          "pngSha256": "029c8b3b8f33956ae7d8067b5a9362de39e0eeb0dddb4f586c68b7c0a6b45b9d",
+          "jpegSha256": "ee561e7d94e9bd180a6d24bc2b63cf0777bb057c50832d9ea04ceb656204bbf6",
+          "shadow": {
+            "enabled": true,
+            "box": [
+              260.9,
+              7,
+              902.2,
+              275.5,
+              15,
+              915.8
+            ],
+            "patched": 7,
+            "cameraAmount": 0,
+            "aoTint": [
+              0.95,
+              0.98,
+              1.09
+            ],
+            "range": [
+              0.05,
+              0.38,
+              0.5
+            ]
+          }
+        },
+        "diff": {
+          "pixels": 1296000,
+          "changed": 452478,
+          "above4": 288395,
+          "above8": 247988,
+          "maximum": 44,
+          "meanRGBChange": [
+            2.402,
+            2.74,
+            3.826
+          ],
+          "meanYBefore": 114.212,
+          "meanYAfter": 116.958
+        }
+      },
+      {
+        "view": "van-side",
+        "camera": {
+          "position": [
+            276.3147277851227,
+            11.210013480772632,
+            971.1462175645175
+          ],
+          "quaternion": [
+            -0.029182465008512196,
+            -0.7830517056478151,
+            -0.03684648464040197,
+            0.6201779958912754
+          ],
+          "fov": 47
+        },
+        "off": {
+          "file": "images/afternoon-van-side-off.jpg",
+          "pngSha256": "a37e640acb7ea82d203a680b118b8a6868fced9ecb415a7b2cfeb5c9bcf5544a",
+          "jpegSha256": "25fa72428a895bddd7b42c242ebca1afe64dde5cec72baa8e69758a1434b7fde",
+          "shadow": {
+            "enabled": false,
+            "box": null,
+            "patched": 0,
+            "cameraAmount": 0,
+            "aoTint": [
+              1,
+              1,
+              1
+            ],
+            "range": [
+              0.06,
+              0.42,
+              1
+            ]
+          }
+        },
+        "on": {
+          "file": "images/afternoon-van-side-on.jpg",
+          "pngSha256": "1d8fd61ef2f380e935472ecd3ebbdd7035ccf072dbf0e6fda26748cd6587ea57",
+          "jpegSha256": "0076f68eba7c876d9c9846a7557aa939d5e44ebfd8d471b5831ad2f715b66c54",
+          "shadow": {
+            "enabled": true,
+            "box": [
+              260.9,
+              7,
+              902.2,
+              275.5,
+              15,
+              915.8
+            ],
+            "patched": 7,
+            "cameraAmount": 1,
+            "aoTint": [
+              0.95,
+              0.98,
+              1.09
+            ],
+            "range": [
+              0.05,
+              0.38,
+              0.5
+            ]
+          }
+        },
+        "diff": {
+          "pixels": 1296000,
+          "changed": 1158842,
+          "above4": 946852,
+          "above8": 863245,
+          "maximum": 56,
+          "meanRGBChange": [
+            9.059,
+            11.106,
+            17.389
+          ],
+          "meanYBefore": 92.198,
+          "meanYAfter": 103.322
+        },
+        "offVsC23": {
+          "pixels": 1296000,
+          "changed": 2,
+          "above4": 0,
+          "above8": 0,
+          "maximum": 1,
+          "meanRGBChange": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "meanYBefore": 92.198,
+          "meanYAfter": 92.198
+        },
+        "c23Png": "3f8ac882e442a4a1c5fb46337b2e411f67f5369558ea28bc38454f36e180ea97"
+      }
+    ],
+    "shops": [
+      {
+        "view": "W2",
+        "camera": {
+          "position": [
+            271.2,
+            10.072,
+            918.2
+          ],
+          "quaternion": [
+            -0.030263252125431236,
+            0.6335032752046837,
+            0.0248099322013837,
+            0.7727497674796766
+          ],
+          "fov": 58
+        },
+        "off": {
+          "file": "images/shops-W2-off.jpg",
+          "pngSha256": "b8b08942c378a5ec25e40fe435139e2b5cfa34400597594ebc49d638c818b2a8",
+          "jpegSha256": "53dfd7c404cb56913b325987c0f0e80504999a7e95e6f50383edc215c39614fa",
+          "shadow": {
+            "enabled": false,
+            "box": null,
+            "patched": 0,
+            "cameraAmount": 0,
+            "aoTint": [
+              1,
+              1,
+              1
+            ],
+            "range": [
+              0.06,
+              0.42,
+              1
+            ]
+          }
+        },
+        "on": {
+          "file": "images/shops-W2-on.jpg",
+          "pngSha256": "ab5b0f5c1d187ff95efa4957724ac3ddb826046b83e20eb11e8c889b511daff9",
+          "jpegSha256": "c0b588d92acfc7edd98ef0b430e96889730624c7cad3972899fb280402093ba5",
+          "shadow": {
+            "enabled": true,
+            "box": [
+              260.9,
+              7,
+              902.2,
+              275.5,
+              15,
+              915.8
+            ],
+            "patched": 7,
+            "cameraAmount": 1,
+            "aoTint": [
+              0.94,
+              0.97,
+              1.1
+            ],
+            "range": [
+              0.05,
+              0.38,
+              0.5
+            ]
+          }
+        },
+        "diff": {
+          "pixels": 1296000,
+          "changed": 1275673,
+          "above4": 1258898,
+          "above8": 1223661,
+          "maximum": 47,
+          "meanRGBChange": [
+            10.008,
+            11.509,
+            24.568
+          ],
+          "meanYBefore": 132.606,
+          "meanYAfter": 144.739
+        },
+        "poseCheck": {
+          "kind": "flower",
+          "localXZ": [
+            0.8,
+            -4
+          ],
+          "floor": 0.552,
+          "capsuleRadius": 0.3
+        }
+      },
+      {
+        "view": "W4",
+        "camera": {
+          "position": [
+            271.3063173841728,
+            10.584561368764852,
+            935.9831848596035
+          ],
+          "quaternion": [
+            -0.029931856222571915,
+            0.6436868290597327,
+            0.02520875141921839,
+            0.7642878181221926
+          ],
+          "fov": 58
+        },
+        "off": {
+          "file": "images/shops-W4-off.jpg",
+          "pngSha256": "3eec5a469a07e359725ff7769ec54908de912448074726ec6279df1a61ebd927",
+          "jpegSha256": "436dda9b6af886e984e0a6357c40f8aa30ed99bd7246c264299d807d18688583",
+          "shadow": {
+            "enabled": false,
+            "box": null,
+            "patched": 0,
+            "cameraAmount": 0,
+            "aoTint": [
+              1,
+              1,
+              1
+            ],
+            "range": [
+              0.06,
+              0.42,
+              1
+            ]
+          }
+        },
+        "on": {
+          "file": "images/shops-W4-on.jpg",
+          "pngSha256": "d1a5dba332539f6a12620a3e2e97ab925a5e227f07f3626679f45a66fd7408c3",
+          "jpegSha256": "bbca06f267b0b69226af8c49f24a6f4cd49c144b1f5213618cfe4f536de4e147",
+          "shadow": {
+            "enabled": true,
+            "box": [
+              260.9,
+              7,
+              902.2,
+              275.5,
+              15,
+              915.8
+            ],
+            "patched": 7,
+            "cameraAmount": 1,
+            "aoTint": [
+              0.94,
+              0.97,
+              1.1
+            ],
+            "range": [
+              0.05,
+              0.38,
+              0.5
+            ]
+          }
+        },
+        "diff": {
+          "pixels": 1296000,
+          "changed": 1277095,
+          "above4": 1262804,
+          "above8": 998790,
+          "maximum": 45,
+          "meanRGBChange": [
+            8.682,
+            9.129,
+            20.313
+          ],
+          "meanYBefore": 109.131,
+          "meanYAfter": 118.973
+        },
+        "poseCheck": {
+          "kind": "bookstore",
+          "localXZ": [
+            0,
+            -4
+          ],
+          "floor": 1.0645613687648532,
+          "capsuleRadius": 0.3
+        }
+      },
+      {
+        "view": "W6",
+        "camera": {
+          "position": [
+            272.3545853242057,
+            11.09226360616534,
+            954.9902279951181
+          ],
+          "quaternion": [
+            -0.02926252502762423,
+            0.6634495717742954,
+            0.025982721067131176,
+            0.747196940938237
+          ],
+          "fov": 58
+        },
+        "off": {
+          "file": "images/shops-W6-off.jpg",
+          "pngSha256": "6e0419b01c4f4336d516f3dd2259eda09cf4d59afbcd47e55a85c7d8042d4978",
+          "jpegSha256": "74fc3c93837ab4d6b3142e9aca6ae33673e30b0b165bb2902913f61f39131ba9",
+          "shadow": {
+            "enabled": false,
+            "box": null,
+            "patched": 0,
+            "cameraAmount": 0,
+            "aoTint": [
+              1,
+              1,
+              1
+            ],
+            "range": [
+              0.06,
+              0.42,
+              1
+            ]
+          }
+        },
+        "on": {
+          "file": "images/shops-W6-on.jpg",
+          "pngSha256": "efd00a9600b1ddabe2d7adeec5ab5945b54e80241eec31bf95f023a3237f9920",
+          "jpegSha256": "d82000a2acf5a0b050d65f9b1c17bb1d5a99694d5b96b8eeab80022b8d7f0d7a",
+          "shadow": {
+            "enabled": true,
+            "box": [
+              260.9,
+              7,
+              902.2,
+              275.5,
+              15,
+              915.8
+            ],
+            "patched": 7,
+            "cameraAmount": 1,
+            "aoTint": [
+              0.94,
+              0.97,
+              1.1
+            ],
+            "range": [
+              0.05,
+              0.38,
+              0.5
+            ]
+          }
+        },
+        "diff": {
+          "pixels": 1296000,
+          "changed": 1295918,
+          "above4": 1295597,
+          "above8": 1294626,
+          "maximum": 54,
+          "meanRGBChange": [
+            8.453,
+            11.638,
+            28.353
+          ],
+          "meanYBefore": 116.422,
+          "meanYAfter": 128.59
+        },
+        "poseCheck": {
+          "kind": "bicycle",
+          "localXZ": [
+            -0.8,
+            -4
+          ],
+          "floor": 1.5722636061653388,
+          "capsuleRadius": 0.3
+        }
+      },
+      {
+        "view": "E1",
+        "camera": {
+          "position": [
+            290.4,
+            9.94115,
+            908.5
+          ],
+          "quaternion": [
+            -0.0248099322013837,
+            -0.7727497674796765,
+            -0.030263252125431236,
+            0.6335032752046837
+          ],
+          "fov": 58
+        },
+        "off": {
+          "file": "images/shops-E1-off.jpg",
+          "pngSha256": "69adeab14adb229d5656f56757c5f25a83e5e87dcd6e10f185c18ec9961989db",
+          "jpegSha256": "688712361f714f92a29bcebfb01677f3ec22f24fa09dfd5c2d08108e57622fc4",
+          "shadow": {
+            "enabled": false,
+            "box": null,
+            "patched": 0,
+            "cameraAmount": 0,
+            "aoTint": [
+              1,
+              1,
+              1
+            ],
+            "range": [
+              0.06,
+              0.42,
+              1
+            ]
+          }
+        },
+        "on": {
+          "file": "images/shops-E1-on.jpg",
+          "pngSha256": "335516fdad6e5d07c5a9ebe326ec73d31cd26f013cdaab33ee9478ba45459cd0",
+          "jpegSha256": "7efcf5cf70125690073a738baee20bcfcff0d882de3594cadabc752addf8e2a2",
+          "shadow": {
+            "enabled": true,
+            "box": [
+              260.9,
+              7,
+              902.2,
+              275.5,
+              15,
+              915.8
+            ],
+            "patched": 7,
+            "cameraAmount": 1,
+            "aoTint": [
+              0.94,
+              0.97,
+              1.1
+            ],
+            "range": [
+              0.05,
+              0.38,
+              0.5
+            ]
+          }
+        },
+        "diff": {
+          "pixels": 1296000,
+          "changed": 1282252,
+          "above4": 1056076,
+          "above8": 689916,
+          "maximum": 40,
+          "meanRGBChange": [
+            7.131,
+            7.79,
+            16.608
+          ],
+          "meanYBefore": 108.647,
+          "meanYAfter": 116.934
+        },
+        "poseCheck": {
+          "kind": "cafe",
+          "localXZ": [
+            0,
+            -5.6
+          ],
+          "floor": 0.42115,
+          "capsuleRadius": 0.3
+        }
+      },
+      {
+        "view": "E2",
+        "camera": {
+          "position": [
+            288.8,
+            10.129,
+            918.25
+          ],
+          "quaternion": [
+            -0.0248099322013837,
+            -0.7727497674796765,
+            -0.030263252125431236,
+            0.6335032752046837
+          ],
+          "fov": 58
+        },
+        "off": {
+          "file": "images/shops-E2-off.jpg",
+          "pngSha256": "fc9f0c5e8b42b8fb461bf0b545c8e3b4cc63cdb76422ce530c5190560c7033e9",
+          "jpegSha256": "84350c527780c89dbea5fee13f24c0eea5a980409245fb2d236849f895487440",
+          "shadow": {
+            "enabled": false,
+            "box": null,
+            "patched": 0,
+            "cameraAmount": 0,
+            "aoTint": [
+              1,
+              1,
+              1
+            ],
+            "range": [
+              0.06,
+              0.42,
+              1
+            ]
+          }
+        },
+        "on": {
+          "file": "images/shops-E2-on.jpg",
+          "pngSha256": "9d99643568c3a1c7fe23ad9f12b4b7b1bab0ac0fd385ba260d345f9a6f893cd4",
+          "jpegSha256": "aab8899d1a04390ad9876297a61d99d98b3dd6443f309d96b8ecf19073287ad9",
+          "shadow": {
+            "enabled": true,
+            "box": [
+              260.9,
+              7,
+              902.2,
+              275.5,
+              15,
+              915.8
+            ],
+            "patched": 7,
+            "cameraAmount": 1,
+            "aoTint": [
+              0.94,
+              0.97,
+              1.1
+            ],
+            "range": [
+              0.05,
+              0.38,
+              0.5
+            ]
+          }
+        },
+        "diff": {
+          "pixels": 1296000,
+          "changed": 1292038,
+          "above4": 1286714,
+          "above8": 1146593,
+          "maximum": 43,
+          "meanRGBChange": [
+            9.577,
+            10.936,
+            22.844
+          ],
+          "meanYBefore": 111.064,
+          "meanYAfter": 122.57
+        },
+        "poseCheck": {
+          "kind": "wagashi",
+          "localXZ": [
+            0,
+            -4
+          ],
+          "floor": 0.609,
+          "capsuleRadius": 0.3
+        }
+      },
+      {
+        "view": "E3",
+        "camera": {
+          "position": [
+            288.8,
+            10.327,
+            927.05
+          ],
+          "quaternion": [
+            -0.0248099322013837,
+            -0.7727497674796765,
+            -0.030263252125431236,
+            0.6335032752046837
+          ],
+          "fov": 58
+        },
+        "off": {
+          "file": "images/shops-E3-off.jpg",
+          "pngSha256": "405688ea4e78907f3c71ba153caede314029ff095db2a8de9d0171dd173f1da4",
+          "jpegSha256": "7d31b7244a988e3727f53538a640fa584c83d2da0d6d382e08a1662c8736358a",
+          "shadow": {
+            "enabled": false,
+            "box": null,
+            "patched": 0,
+            "cameraAmount": 0,
+            "aoTint": [
+              1,
+              1,
+              1
+            ],
+            "range": [
+              0.06,
+              0.42,
+              1
+            ]
+          }
+        },
+        "on": {
+          "file": "images/shops-E3-on.jpg",
+          "pngSha256": "c20b619cb950ec3abe02fe92d322c1cbca4a06c1ad6efab306945d95a423069e",
+          "jpegSha256": "72d88d5b791870334a29a4f9908080d0eb9cb1161144bcac4c16b145798f3427",
+          "shadow": {
+            "enabled": true,
+            "box": [
+              260.9,
+              7,
+              902.2,
+              275.5,
+              15,
+              915.8
+            ],
+            "patched": 7,
+            "cameraAmount": 1,
+            "aoTint": [
+              0.94,
+              0.97,
+              1.1
+            ],
+            "range": [
+              0.05,
+              0.38,
+              0.5
+            ]
+          }
+        },
+        "diff": {
+          "pixels": 1296000,
+          "changed": 1296000,
+          "above4": 1293870,
+          "above8": 1188030,
+          "maximum": 55,
+          "meanRGBChange": [
+            8.854,
+            11.746,
+            26.656
+          ],
+          "meanYBefore": 112.492,
+          "meanYAfter": 124.7
+        },
+        "poseCheck": {
+          "kind": "general",
+          "localXZ": [
+            0.8,
+            -4
+          ],
+          "floor": 0.8069999999999999,
+          "capsuleRadius": 0.3
+        }
+      },
+      {
+        "view": "E5",
+        "camera": {
+          "position": [
+            290.02224216336197,
+            10.807663604813587,
+            943.5630050933889
+          ],
+          "quaternion": [
+            -0.025568214388427005,
+            -0.7564623630849011,
+            -0.029625387390414152,
+            0.6528654502046825
+          ],
+          "fov": 58
+        },
+        "off": {
+          "file": "images/shops-E5-off.jpg",
+          "pngSha256": "b8b8f4af8d8b5b9771f6ee9c273445962776b9461ab448c88edd4cfd7016f0a3",
+          "jpegSha256": "1706fe66524c935a9d986d4c156d9b170b4a8db551ad8010074214060f7622bd",
+          "shadow": {
+            "enabled": false,
+            "box": null,
+            "patched": 0,
+            "cameraAmount": 0,
+            "aoTint": [
+              1,
+              1,
+              1
+            ],
+            "range": [
+              0.06,
+              0.42,
+              1
+            ]
+          }
+        },
+        "on": {
+          "file": "images/shops-E5-on.jpg",
+          "pngSha256": "f3539e19dde3eff1a190d759de6dab362d0b5f0af04e12fec74464398a28645b",
+          "jpegSha256": "c669ee7f58edc247fe51b38bdf856f6594558eddd48f4147d8a0c0d2b91013e3",
+          "shadow": {
+            "enabled": true,
+            "box": [
+              260.9,
+              7,
+              902.2,
+              275.5,
+              15,
+              915.8
+            ],
+            "patched": 7,
+            "cameraAmount": 1,
+            "aoTint": [
+              0.94,
+              0.97,
+              1.1
+            ],
+            "range": [
+              0.05,
+              0.38,
+              0.5
+            ]
+          }
+        },
+        "diff": {
+          "pixels": 1296000,
+          "changed": 1270586,
+          "above4": 1247900,
+          "above8": 1245764,
+          "maximum": 53,
+          "meanRGBChange": [
+            7.895,
+            11.143,
+            26.808
+          ],
+          "meanYBefore": 132.63,
+          "meanYAfter": 144.214
+        },
+        "poseCheck": {
+          "kind": "ramen",
+          "localXZ": [
+            0.8,
+            -4.8
+          ],
+          "floor": 1.287663604813587,
+          "capsuleRadius": 0.3
+        }
+      }
+    ]
+  }
+}

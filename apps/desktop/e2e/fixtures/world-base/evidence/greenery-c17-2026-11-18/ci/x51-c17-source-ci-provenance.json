@@ -1,0 +1,69 @@
+{
+  "head": "0184c79d94094c7d76378302592572bf367be6c7",
+  "recordedAt": "2026-11-17T17:42:09.858Z",
+  "run": 44138755049,
+  "job": 134235405975,
+  "url": "https://github.com/aa15119557034/agent-review-room/actions/runs/44138755049/job/134235405975",
+  "actualCheckout": {
+    "ref": "refs/remotes/pull/254/merge",
+    "sha": "fb7ffa12150c02713867817d4951c24e8d83c551",
+    "sourceHead": "0184c79d94094c7d76378302592572bf367be6c7",
+    "baseHead": "e8c37d659ae3e73934efb6e2a21fc822da9610e8",
+    "scope": "CI is associated with exact API head_sha; actual tested checkout is GitHub PR synthetic merge, not direct source-head checkout."
+  },
+  "command": "node D:/codex/2026-11-16/world-implementation/handoff/x51-c17-source-ci-summary.cjs",
+  "summaryExit": 0,
+  "results": {
+    "testGroups": 9,
+    "tests": 1615,
+    "passed": 1615,
+    "types": 9,
+    "builds": 2,
+    "allExitZero": true,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0
+  },
+  "limitations": [
+    "runs.json captures initial in_progress; final check/jobs/run metadata completed success.",
+    "Actual job log saved as JSON string; counters and exits parsed from actual summary rows.",
+    "GitHub Actions Windows, not local tests or GPU acceptance; no CI rerun/source/GitHub writes."
+  ],
+  "files": [
+    {
+      "path": "D:/codex/2026-11-16/world-implementation/handoff/x51-c17-source-ci-checks.json",
+      "bytes": 5322,
+      "sha256": "7262c7dfdc2c62f474d3fa81abb9b99e5849ef6dd4d881db7617eb824c990398"
+    },
+    {
+      "path": "D:/codex/2026-11-16/world-implementation/handoff/x51-c17-source-ci-runs.json",
+      "bytes": 17242,
+      "sha256": "30f5118ecb330cbcc1040b0ed730fa342371fa5da03b389485f1d7da84a733da"
+    },
+    {
+      "path": "D:/codex/2026-11-16/world-implementation/handoff/x51-c17-source-ci-jobs.json",
+      "bytes": 4139,
+      "sha256": "534d7fc534447f4387cd83c90c88bdab0f42c4778974374a6b101671f606c04b"
+    },
+    {
+      "path": "D:/codex/2026-11-16/world-implementation/handoff/x51-c17-source-ci-run.json",
+      "bytes": 16199,
+      "sha256": "2aa7d49d5121d8ff15883bd1883b8e346787b378000b62acb1ba3adcc6986076"
+    },
+    {
+      "path": "D:/codex/2026-11-16/world-implementation/handoff/x51-c17-source-ci-log.json",
+      "bytes": 31853,
+      "sha256": "7ded88d056f27d3e22392a5bf23d5d98c0ec6c2558aeca9057c95b722b91c101"
+    },
+    {
+      "path": "D:/codex/2026-11-16/world-implementation/handoff/x51-c17-source-ci-summary.cjs",
+      "bytes": 2521,
+      "sha256": "a74f03734ac14d9873d6ff4d961b9cc364a30dc057308684598ddde223ec9fa0"
+    },
+    {
+      "path": "D:/codex/2026-11-16/world-implementation/handoff/x51-c17-source-ci-summary.json",
+      "bytes": 6774,
+      "sha256": "476f67e8c5436122861d495c817ec6f7116c782c13ed84b256aaa187758e88f6"
+    }
+  ]
+}

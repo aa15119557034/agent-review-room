@@ -1,0 +1,216 @@
+{
+  "source": "47a5c12eba910682ccbf8bc9138510bc01737bf3",
+  "stationOffset": [
+    280,
+    8,
+    900
+  ],
+  "dy": -0.14,
+  "method": "Source-mesh bounds, per primitive. Guaranteed vertical gap above obstacles / below slab across every pair, plus count of pairs whose X and Z extents intersect. Door assemblies include slab, printed face, jambs and threshold.",
+  "town-apartment-3f": {
+    "count": 16,
+    "doors": {
+      "all": {
+        "pairs": 240,
+        "overlapXZ": 4,
+        "minVerticalGap": 0.28999999999999915,
+        "boundIntersections": 0
+      },
+      "pipes": {
+        "pairs": 30,
+        "overlapXZ": 0,
+        "minVerticalGap": 0.30599999815225587,
+        "boundIntersections": 0
+      },
+      "clips": {
+        "pairs": 210,
+        "overlapXZ": 4,
+        "minVerticalGap": 0.28999999999999915,
+        "boundIntersections": 0
+      }
+    },
+    "lamps": {
+      "all": {
+        "pairs": 48,
+        "overlapXZ": 6,
+        "minVerticalGap": 0.07749999999999702,
+        "boundIntersections": 0
+      },
+      "pipes": {
+        "pairs": 6,
+        "overlapXZ": 6,
+        "minVerticalGap": 0.09349999815225374,
+        "boundIntersections": 0
+      },
+      "clips": {
+        "pairs": 42,
+        "overlapXZ": 0,
+        "minVerticalGap": 0.07749999999999702,
+        "boundIntersections": 0
+      }
+    },
+    "boxes": {
+      "all": {
+        "pairs": 64,
+        "overlapXZ": 8,
+        "minVerticalGap": 1.4099999999999984,
+        "boundIntersections": 0
+      },
+      "pipes": {
+        "pairs": 8,
+        "overlapXZ": 6,
+        "minVerticalGap": 1.425999998152255,
+        "boundIntersections": 0
+      },
+      "clips": {
+        "pairs": 56,
+        "overlapXZ": 2,
+        "minVerticalGap": 1.4099999999999984,
+        "boundIntersections": 0
+      }
+    },
+    "notice": {
+      "all": {
+        "pairs": 16,
+        "overlapXZ": 0,
+        "minVerticalGap": 0.7766581239101953,
+        "boundIntersections": 0
+      },
+      "pipes": {
+        "pairs": 2,
+        "overlapXZ": 0,
+        "minVerticalGap": 0.792658122062452,
+        "boundIntersections": 0
+      },
+      "clips": {
+        "pairs": 14,
+        "overlapXZ": 0,
+        "minVerticalGap": 0.7766581239101953,
+        "boundIntersections": 0
+      }
+    },
+    "slab": {
+      "all": {
+        "pairs": 16,
+        "overlapXZ": 16,
+        "minVerticalGap": 0.0799999999999983,
+        "boundIntersections": 0
+      },
+      "pipes": {
+        "pairs": 2,
+        "overlapXZ": 2,
+        "minVerticalGap": 0.10299999929964443,
+        "boundIntersections": 0
+      },
+      "clips": {
+        "pairs": 14,
+        "overlapXZ": 14,
+        "minVerticalGap": 0.0799999999999983,
+        "boundIntersections": 0
+      }
+    }
+  },
+  "town-apartment-5f": {
+    "count": 18,
+    "doors": {
+      "all": {
+        "pairs": 270,
+        "overlapXZ": 2,
+        "minVerticalGap": 0.2900000000000009,
+        "boundIntersections": 0
+      },
+      "pipes": {
+        "pairs": 30,
+        "overlapXZ": 0,
+        "minVerticalGap": 0.30599999815225587,
+        "boundIntersections": 0
+      },
+      "clips": {
+        "pairs": 240,
+        "overlapXZ": 2,
+        "minVerticalGap": 0.2900000000000009,
+        "boundIntersections": 0
+      }
+    },
+    "lamps": {
+      "all": {
+        "pairs": 54,
+        "overlapXZ": 8,
+        "minVerticalGap": 0.07749999999999879,
+        "boundIntersections": 0
+      },
+      "pipes": {
+        "pairs": 6,
+        "overlapXZ": 6,
+        "minVerticalGap": 0.09349999815225374,
+        "boundIntersections": 0
+      },
+      "clips": {
+        "pairs": 48,
+        "overlapXZ": 2,
+        "minVerticalGap": 0.07749999999999879,
+        "boundIntersections": 0
+      }
+    },
+    "boxes": {
+      "all": {
+        "pairs": 72,
+        "overlapXZ": 10,
+        "minVerticalGap": 1.4100000000000001,
+        "boundIntersections": 0
+      },
+      "pipes": {
+        "pairs": 8,
+        "overlapXZ": 6,
+        "minVerticalGap": 1.425999998152255,
+        "boundIntersections": 0
+      },
+      "clips": {
+        "pairs": 64,
+        "overlapXZ": 4,
+        "minVerticalGap": 1.4100000000000001,
+        "boundIntersections": 0
+      }
+    },
+    "notice": {
+      "all": {
+        "pairs": 18,
+        "overlapXZ": 0,
+        "minVerticalGap": 0.7785766350051215,
+        "boundIntersections": 0
+      },
+      "pipes": {
+        "pairs": 2,
+        "overlapXZ": 0,
+        "minVerticalGap": 0.7945766331573765,
+        "boundIntersections": 0
+      },
+      "clips": {
+        "pairs": 16,
+        "overlapXZ": 0,
+        "minVerticalGap": 0.7785766350051215,
+        "boundIntersections": 0
+      }
+    },
+    "slab": {
+      "all": {
+        "pairs": 18,
+        "overlapXZ": 18,
+        "minVerticalGap": 0.08000000000000007,
+        "boundIntersections": 0
+      },
+      "pipes": {
+        "pairs": 2,
+        "overlapXZ": 2,
+        "minVerticalGap": 0.10299999929964443,
+        "boundIntersections": 0
+      },
+      "clips": {
+        "pairs": 16,
+        "overlapXZ": 16,
+        "minVerticalGap": 0.08000000000000007,
+        "boundIntersections": 0
+      }
+    }
+  }
+}

@@ -1,0 +1,182 @@
+{
+  "cases": [
+    {
+      "case": "hidden-before",
+      "file": "src/city.js",
+      "recordedHead": "0904d870068e0138ba633b47faaf927feb684194",
+      "dirtySource": false,
+      "recordedSha256": "d775f90d80c3ee5ffc0eaf0ec7add66881e9cd01d43e90253f50b49a6142f937",
+      "verifiedBytesAtCommit": "0904d870068e0138ba633b47faaf927feb684194",
+      "scope": "Byte identity verified; original recorded run head/dirty status preserved."
+    },
+    {
+      "case": "hidden-before",
+      "file": "src/city-apartments.js",
+      "recordedHead": "0904d870068e0138ba633b47faaf927feb684194",
+      "dirtySource": false,
+      "recordedSha256": "eb8cba0634bbd52235ea9ccbe6a3f1cace0b85f3109db2f0fb4e4ca6e4bc2584",
+      "verifiedBytesAtCommit": "0904d870068e0138ba633b47faaf927feb684194",
+      "scope": "Byte identity verified; original recorded run head/dirty status preserved."
+    },
+    {
+      "case": "hidden-before",
+      "file": "src/streetscape.js",
+      "recordedHead": "0904d870068e0138ba633b47faaf927feb684194",
+      "dirtySource": false,
+      "recordedSha256": "c145191868bb32538dde34daee7229b8b04117b3713e7c2865506596d3d35998",
+      "verifiedBytesAtCommit": "0904d870068e0138ba633b47faaf927feb684194",
+      "scope": "Byte identity verified; original recorded run head/dirty status preserved."
+    },
+    {
+      "case": "hidden-before",
+      "file": "src/look.js",
+      "recordedHead": "0904d870068e0138ba633b47faaf927feb684194",
+      "dirtySource": false,
+      "recordedSha256": "3bb978f9ef4222dea0ec102b2dc9d8667faa06f8a5c099dbcbc73e75342fcc6a",
+      "verifiedBytesAtCommit": "0904d870068e0138ba633b47faaf927feb684194",
+      "scope": "Byte identity verified; original recorded run head/dirty status preserved."
+    },
+    {
+      "case": "hidden-before",
+      "file": "upstream/sakuragaoka/src/world/houses/gb.js",
+      "recordedHead": "0904d870068e0138ba633b47faaf927feb684194",
+      "dirtySource": false,
+      "recordedSha256": "1eff740f7c981529cfbdf4dd070309905d147cf4d9897a5bffcda5040ea2c1c5",
+      "verifiedBytesAtCommit": "0904d870068e0138ba633b47faaf927feb684194",
+      "scope": "Byte identity verified; original recorded run head/dirty status preserved."
+    },
+    {
+      "case": "hidden-before",
+      "file": "upstream/sakuragaoka/src/world/houses/props.js",
+      "recordedHead": "0904d870068e0138ba633b47faaf927feb684194",
+      "dirtySource": false,
+      "recordedSha256": "9dec02c33081cfefa6d302dd5d91a3f1b05ff618c0dcf2c3000d198df127f4f2",
+      "verifiedBytesAtCommit": "0904d870068e0138ba633b47faaf927feb684194",
+      "scope": "Byte identity verified; original recorded run head/dirty status preserved."
+    },
+    {
+      "case": "hidden-after",
+      "file": "src/city.js",
+      "recordedHead": "0904d870068e0138ba633b47faaf927feb684194",
+      "dirtySource": true,
+      "recordedSha256": "cb5ff70b8d7a6e98dd50d9c66b8af1dbb531e72bba7c51dab2a4f30c7143587e",
+      "verification": "Frozen intermediate report and proof input hashes only; intermediate source bytes not separately retained or represented as final commit."
+    },
+    {
+      "case": "hidden-after",
+      "file": "src/city-apartments.js",
+      "recordedHead": "0904d870068e0138ba633b47faaf927feb684194",
+      "dirtySource": true,
+      "recordedSha256": "bc5c88f6124672b7fd59ec1476c5f0c8e3049ba7553840b392b225096d198139",
+      "verification": "Frozen intermediate report and proof input hashes only; intermediate source bytes not separately retained or represented as final commit."
+    },
+    {
+      "case": "hidden-after",
+      "file": "src/streetscape.js",
+      "recordedHead": "0904d870068e0138ba633b47faaf927feb684194",
+      "dirtySource": true,
+      "recordedSha256": "c145191868bb32538dde34daee7229b8b04117b3713e7c2865506596d3d35998",
+      "verifiedBytesAtCommit": "0904d870068e0138ba633b47faaf927feb684194",
+      "scope": "Byte identity verified; original recorded run head/dirty status preserved."
+    },
+    {
+      "case": "hidden-after",
+      "file": "src/look.js",
+      "recordedHead": "0904d870068e0138ba633b47faaf927feb684194",
+      "dirtySource": true,
+      "recordedSha256": "3bb978f9ef4222dea0ec102b2dc9d8667faa06f8a5c099dbcbc73e75342fcc6a",
+      "verifiedBytesAtCommit": "0904d870068e0138ba633b47faaf927feb684194",
+      "scope": "Byte identity verified; original recorded run head/dirty status preserved."
+    },
+    {
+      "case": "hidden-after",
+      "file": "upstream/sakuragaoka/src/world/houses/gb.js",
+      "recordedHead": "0904d870068e0138ba633b47faaf927feb684194",
+      "dirtySource": true,
+      "recordedSha256": "1eff740f7c981529cfbdf4dd070309905d147cf4d9897a5bffcda5040ea2c1c5",
+      "verifiedBytesAtCommit": "0904d870068e0138ba633b47faaf927feb684194",
+      "scope": "Byte identity verified; original recorded run head/dirty status preserved."
+    },
+    {
+      "case": "hidden-after",
+      "file": "upstream/sakuragaoka/src/world/houses/props.js",
+      "recordedHead": "0904d870068e0138ba633b47faaf927feb684194",
+      "dirtySource": true,
+      "recordedSha256": "9dec02c33081cfefa6d302dd5d91a3f1b05ff618c0dcf2c3000d198df127f4f2",
+      "verifiedBytesAtCommit": "0904d870068e0138ba633b47faaf927feb684194",
+      "scope": "Byte identity verified; original recorded run head/dirty status preserved."
+    },
+    {
+      "case": "final-facade",
+      "file": "src/city.js",
+      "recordedHead": "0904d870068e0138ba633b47faaf927feb684194",
+      "dirtySource": true,
+      "recordedSha256": "5df31a8d2ae981e8c962bc7a5b9a5d76c9caeb4bae97990b65def4ca6b116ebe",
+      "verifiedBytesAtCommit": "96ddf39ce4ca6448acf1a59dcc49dbf4ca4908ac",
+      "scope": "Byte identity verified; original recorded run head/dirty status preserved."
+    },
+    {
+      "case": "final-facade",
+      "file": "src/city-apartments.js",
+      "recordedHead": "0904d870068e0138ba633b47faaf927feb684194",
+      "dirtySource": true,
+      "recordedSha256": "adeb135b172fe99e3482df2eca15f1451598b94600916f24e4ca496520f93cc0",
+      "verifiedBytesAtCommit": "96ddf39ce4ca6448acf1a59dcc49dbf4ca4908ac",
+      "scope": "Byte identity verified; original recorded run head/dirty status preserved."
+    },
+    {
+      "case": "final-facade",
+      "file": "src/streetscape.js",
+      "recordedHead": "0904d870068e0138ba633b47faaf927feb684194",
+      "dirtySource": true,
+      "recordedSha256": "3df4cc67dcf9a54ccf9ac924a6b0771da43e530d0669cc3051f16b0f3d924a9c",
+      "verifiedBytesAtCommit": "96ddf39ce4ca6448acf1a59dcc49dbf4ca4908ac",
+      "scope": "Byte identity verified; original recorded run head/dirty status preserved."
+    },
+    {
+      "case": "final-facade",
+      "file": "src/look.js",
+      "recordedHead": "0904d870068e0138ba633b47faaf927feb684194",
+      "dirtySource": true,
+      "recordedSha256": "3bb978f9ef4222dea0ec102b2dc9d8667faa06f8a5c099dbcbc73e75342fcc6a",
+      "verifiedBytesAtCommit": "96ddf39ce4ca6448acf1a59dcc49dbf4ca4908ac",
+      "scope": "Byte identity verified; original recorded run head/dirty status preserved."
+    },
+    {
+      "case": "final-facade",
+      "file": "upstream/sakuragaoka/src/world/houses/gb.js",
+      "recordedHead": "0904d870068e0138ba633b47faaf927feb684194",
+      "dirtySource": true,
+      "recordedSha256": "1eff740f7c981529cfbdf4dd070309905d147cf4d9897a5bffcda5040ea2c1c5",
+      "verifiedBytesAtCommit": "96ddf39ce4ca6448acf1a59dcc49dbf4ca4908ac",
+      "scope": "Byte identity verified; original recorded run head/dirty status preserved."
+    },
+    {
+      "case": "final-facade",
+      "file": "upstream/sakuragaoka/src/world/houses/props.js",
+      "recordedHead": "0904d870068e0138ba633b47faaf927feb684194",
+      "dirtySource": true,
+      "recordedSha256": "9dec02c33081cfefa6d302dd5d91a3f1b05ff618c0dcf2c3000d198df127f4f2",
+      "verifiedBytesAtCommit": "96ddf39ce4ca6448acf1a59dcc49dbf4ca4908ac",
+      "scope": "Byte identity verified; original recorded run head/dirty status preserved."
+    },
+    {
+      "case": "final-service",
+      "file": "src/streetscape.js",
+      "recordedHead": null,
+      "dirtySource": true,
+      "recordedSha256": "3df4cc67dcf9a54ccf9ac924a6b0771da43e530d0669cc3051f16b0f3d924a9c",
+      "verifiedBytesAtCommit": "96ddf39ce4ca6448acf1a59dcc49dbf4ca4908ac",
+      "scope": "Byte identity verified; original recorded run head/dirty status preserved."
+    },
+    {
+      "case": "earlier-service",
+      "file": "src/streetscape.js",
+      "recordedSha256": "8282f4e04774aaddd5a77d378a6b44e85d1938efb60a8024ca9815c54113e862",
+      "verification": "Historical dirty report hash; no assertion that this intermediate source equals final commit."
+    }
+  ],
+  "failureScope": "Original ctx.onUpdate driver failure stderr retained. Corrected current CPU driver is not claimed to be the failing driver original bytes; no source snapshot was stored for that failure.",
+  "serviceActualExit": 0,
+  "cpuScope": "CPU geometry/material construction and recorded assertions; canvas/image pixels mocked. No GPU visual proof. Hidden proof applies only to its before/after pair."
+}

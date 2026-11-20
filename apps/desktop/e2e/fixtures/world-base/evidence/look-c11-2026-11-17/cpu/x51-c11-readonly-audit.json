@@ -1,0 +1,367 @@
+{
+  "head": "e1f32af2cfcde2e1e958a0dffb87f8d219886d5c",
+  "comparedFrom": "83516e8",
+  "sourceHashes": {
+    "src/city.js": "8bd6dfcb83665105d9e97982effe82dd06520c1f4e0d82958d6851487e576f4c",
+    "src/city-apartments.js": "fbf11779e1d1eb7160f202ac821f917840566a2670eed5388cd8ef4d940f6fbc",
+    "src/look.js": "3bb978f9ef4222dea0ec102b2dc9d8667faa06f8a5c099dbcbc73e75342fcc6a",
+    "upstream/sakuragaoka/src/world/houses/gb.js": "1eff740f7c981529cfbdf4dd070309905d147cf4d9897a5bffcda5040ea2c1c5",
+    "upstream/sakuragaoka/src/world/houses/props.js": "9dec02c33081cfefa6d302dd5d91a3f1b05ff618c0dcf2c3000d198df127f4f2"
+  },
+  "commands": [
+    {
+      "command": "node D:/codex/2026-11-16/world-implementation/handoff/x51-c11-city-shadow-driver.mjs",
+      "exitCode": 0,
+      "result": "x51-c11-city-shadow-result.json"
+    }
+  ],
+  "driverSha256": "dff06ccf805edc066e47e97adcd233b4c465ea6f15e8d1ad94f0bf67340522ff",
+  "resultSha256": "5706be10b1c316f72dfd045c9d69bc09e15720be01575ab5bd8f8f3729583168",
+  "geometry": {
+    "totalTriangles": 28857,
+    "nonCastingToonBins": [
+      {
+        "role": "concrete",
+        "triangles": 796,
+        "components": {
+          "fiveFoundations": 60,
+          "fiveBuildingEntryStairs": 552,
+          "leveeStairs": 120,
+          "twoPoleShafts": 64
+        }
+      },
+      {
+        "role": "plain",
+        "triangles": 564,
+        "components": {
+          "fiveCopings": 60,
+          "twoCrossarms": 24,
+          "fourInsulators": 96,
+          "twoWires32BeamSegments": 384
+        }
+      },
+      {
+        "role": "asphalt",
+        "triangles": 708,
+        "components": {
+          "twoConnectingRoads": 708
+        }
+      },
+      {
+        "role": "plain/noOutline",
+        "triangles": 565,
+        "components": {
+          "tenBushFlowerClusters": 550,
+          "laundryPotFlowers": 15
+        }
+      }
+    ],
+    "allNonCastingMeshes": [
+      {
+        "name": "town-edge-kit",
+        "uuid": "e3d8ac0f-d23a-4a81-93e9-eb07fdd464f9",
+        "materialUUID": "c7c9362f-f0a4-4fec-b527-e1789bd42eda",
+        "role": "concrete",
+        "type": "MeshToonMaterial",
+        "castShadow": false,
+        "receiveShadow": true,
+        "instanceCount": 1,
+        "triangles": 796,
+        "worldBounds": {
+          "min": [
+            225.83338165283203,
+            9.326889872550964,
+            765.0500030517578
+          ],
+          "max": [
+            317,
+            18.584674835205078,
+            805.4700012207031
+          ]
+        }
+      },
+      {
+        "name": "town-edge-kit",
+        "uuid": "7a1a1418-72cf-4d95-8a2e-93a8ec18174b",
+        "materialUUID": "67e03a91-fb87-4cb5-8f5a-f103afe70561",
+        "role": "plain",
+        "type": "MeshToonMaterial",
+        "castShadow": false,
+        "receiveShadow": true,
+        "instanceCount": 1,
+        "triangles": 564,
+        "worldBounds": {
+          "min": [
+            225.7933807373047,
+            12.195555686950684,
+            765.0099945068359
+          ],
+          "max": [
+            311.3999996185303,
+            18.39716148376465,
+            783.8600006103516
+          ]
+        }
+      },
+      {
+        "name": "town-edge-kit",
+        "uuid": "00fe03e7-f73e-4c8e-a996-df1d3b0b0b0e",
+        "materialUUID": "60c06e8f-4c28-4486-9ade-f444fe43213d",
+        "role": "glass",
+        "type": "ShaderMaterial",
+        "castShadow": false,
+        "receiveShadow": true,
+        "instanceCount": 1,
+        "triangles": 110,
+        "worldBounds": {
+          "min": [
+            257.4619998931885,
+            12.973958015441895,
+            770.8549957275391
+          ],
+          "max": [
+            308.0380001068115,
+            26.233957290649414,
+            777.7880020141602
+          ]
+        }
+      },
+      {
+        "name": "town-edge-kit",
+        "uuid": "e93f7844-f096-4497-9c9a-34bdd623a9c1",
+        "materialUUID": "b5720fc2-910c-4242-a979-4d35a6717aa4",
+        "role": "lamp",
+        "type": "MeshBasicMaterial",
+        "castShadow": false,
+        "receiveShadow": true,
+        "instanceCount": 1,
+        "triangles": 480,
+        "worldBounds": {
+          "min": [
+            258.4933338165283,
+            14.908957958221436,
+            767.3650054931641
+          ],
+          "max": [
+            305.3999996185303,
+            26.378957748413086,
+            777.8899993896484
+          ]
+        }
+      },
+      {
+        "name": "town-edge-kit",
+        "uuid": "4d80b29b-12f8-476f-b395-036dfd810ffd",
+        "materialUUID": "e135c662-3a81-4ddc-9e05-e7518972e5c8",
+        "role": "glass",
+        "type": "ShaderMaterial",
+        "castShadow": false,
+        "receiveShadow": true,
+        "instanceCount": 1,
+        "triangles": 36,
+        "worldBounds": {
+          "min": [
+            279.02999997138977,
+            12.94480848312378,
+            776.7689971923828
+          ],
+          "max": [
+            284.96999979019165,
+            15.084808349609375,
+            776.7809982299805
+          ]
+        }
+      },
+      {
+        "name": "town-edge-kit",
+        "uuid": "1e329fe5-b879-4d62-8b05-8362d47ad56a",
+        "materialUUID": "7329ec28-79a8-42b1-9c29-a877f9942abb",
+        "role": "lamp",
+        "type": "MeshBasicMaterial",
+        "castShadow": false,
+        "receiveShadow": true,
+        "instanceCount": 1,
+        "triangles": 12,
+        "worldBounds": {
+          "min": [
+            279.02499997615814,
+            14.919808387756348,
+            777.7925033569336
+          ],
+          "max": [
+            279.67500001192093,
+            15.469808578491211,
+            777.8375015258789
+          ]
+        }
+      },
+      {
+        "name": "town-edge-kit",
+        "uuid": "739bdf8f-112f-4b7a-8412-f797fd0ea893",
+        "materialUUID": "e0e93942-a6d1-4142-82a5-a4c16879f237",
+        "role": "asphalt",
+        "type": "MeshToonMaterial",
+        "castShadow": false,
+        "receiveShadow": true,
+        "instanceCount": 1,
+        "triangles": 708,
+        "worldBounds": {
+          "min": [
+            224,
+            9.477016687393188,
+            781.5
+          ],
+          "max": [
+            317,
+            11.667486667633057,
+            799
+          ]
+        }
+      },
+      {
+        "name": "town-edge-kit",
+        "uuid": "345b4670-89d7-49de-9dba-73e1769c5004",
+        "materialUUID": "67e03a91-fb87-4cb5-8f5a-f103afe70561",
+        "role": "plain",
+        "type": "MeshToonMaterial",
+        "castShadow": false,
+        "receiveShadow": true,
+        "instanceCount": 1,
+        "triangles": 565,
+        "worldBounds": {
+          "min": [
+            225.2731056213379,
+            12.530353546142578,
+            763.6920166015625
+          ],
+          "max": [
+            308.9848575592041,
+            14.409939765930176,
+            777.4785766601562
+          ]
+        }
+      }
+    ],
+    "scopeCorrection": "Four bins are not all upstream decorative parts. They contain fixture foundations, coping, all six front/levee access stair groups, roads and utility poles/wires, in addition to upstream flowers. Upper apartment rear steel stairs, walls, balcony solids and major props retain cast/receive=true after final traversal.",
+    "resourceOwnership": {
+      "textureDisposals": 0,
+      "geometryDisposals": 23,
+      "materialDisposals": 20
+    },
+    "ownershipLimit": "Dispose event counters observe root geometry and material sets and borrowed texture collection; customDepthMaterial not separately instrumented here. Existing ownership code itself unchanged."
+  },
+  "ao": {
+    "nearSamples": [
+      {
+        "h": -0.05,
+        "near": 0
+      },
+      {
+        "h": -0.04,
+        "near": 0
+      },
+      {
+        "h": -0.03,
+        "near": 0.15625000000000006
+      },
+      {
+        "h": -0.02,
+        "near": 0.5
+      },
+      {
+        "h": -0.01,
+        "near": 0.84375
+      },
+      {
+        "h": 0,
+        "near": 1
+      },
+      {
+        "h": 0.12,
+        "near": 0.84375
+      },
+      {
+        "h": 0.24,
+        "near": 0.5
+      },
+      {
+        "h": 0.36,
+        "near": 0.15625
+      },
+      {
+        "h": 0.48,
+        "near": 0
+      }
+    ],
+    "riseSamples": [
+      {
+        "rise": 0,
+        "heightGate": 0
+      },
+      {
+        "rise": 0.02,
+        "heightGate": 0
+      },
+      {
+        "rise": 0.03,
+        "heightGate": 0
+      },
+      {
+        "rise": 0.06,
+        "heightGate": 0.25925925925925924
+      },
+      {
+        "rise": 0.075,
+        "heightGate": 0.5
+      },
+      {
+        "rise": 0.12,
+        "heightGate": 1
+      }
+    ],
+    "distanceSamples": [
+      {
+        "L": 1,
+        "cutoff": 1
+      },
+      {
+        "L": 1.2,
+        "cutoff": 1
+      },
+      {
+        "L": 1.4,
+        "cutoff": 0.84375
+      },
+      {
+        "L": 1.6,
+        "cutoff": 0.4999999999999999
+      },
+      {
+        "L": 1.8,
+        "cutoff": 0.15624999999999978
+      },
+      {
+        "L": 2,
+        "cutoff": 0
+      }
+    ],
+    "normalization": {
+      "eightFullTaps": 0.30000000000000004,
+      "sixteenFullTaps": 0
+    },
+    "scope": "Scalar arithmetic only, not GPU/visual verification; full weight additionally depends on angular/rise gates, sample visibility and distance cutoff."
+  },
+  "textCorrections": [
+    "h<0 gets nothing is too broad: h in (-.04,0) has a nonzero soft gate; h=-.02 gives .5. h<=-.04 is excluded.",
+    "Only the near(h) factor is independent of sampled point on an exact plane; full contribution also multiplies up(rise/length,rise) and L cutoff and depends on which samples reach that plane. Do not prove full-image monotonicity from h alone.",
+    "Coefficient1.4 gives70% at exactly eight full-weight taps. It is not a strict universal occlusion maximum: more full taps can saturate at1."
+  ],
+  "limitations": [
+    "CPU builds actual city/upstream GB/materials/GLTF geometry from current source; image pixels/canvas painting are placeholders.",
+    "No shader/GPU execution, no visual acceptance. Actual topology/mesh flags and primitive origin stacks are captured after city final traversal.",
+    "No fixture write, no GPU, no install, read-only Git diff only.",
+    "Current CPU traces establish final object flags/topology; visual shadow impact requires root/runtime GPU images.",
+    "No previous C10 CPU assertion result is claimed as a C11 test."
+  ],
+  "next": "Ready to read-only review the separate actual-GPU tap driver for new formula fidelity."
+}

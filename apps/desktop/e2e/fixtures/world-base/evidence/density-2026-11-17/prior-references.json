@@ -1,0 +1,14 @@
+[
+  {
+    "file": "../look-c12-2026-11-17/README.md",
+    "presentInCommit": "0d97731bd7cb4f4634f4c9fdc0e1033ae7585f2a",
+    "sha256": "779e86d43f712106ed2df20bc95688a3becb208a9f15dac5725ca1419a7a4a2e",
+    "copied": false
+  },
+  {
+    "file": "../look-c12-2026-11-17/diagnostic/look-report.json.gz",
+    "presentInCommit": "0d97731bd7cb4f4634f4c9fdc0e1033ae7585f2a",
+    "sha256": "731023453ee71365e9d9437976f4068bba035203cca4fdbc072f6a5effdac1c3",
+    "copied": false
+  }
+]

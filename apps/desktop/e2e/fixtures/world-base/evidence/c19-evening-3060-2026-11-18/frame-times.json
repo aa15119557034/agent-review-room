@@ -1,0 +1,307 @@
+{
+  "method": "Original RAF intervals incl. all-pass draw counters; FPS = 1000n/sum(ms); p95 = sorted[ceil(.95n)-1]. 3 seconds requested on each conventional segment and 10 on each town segment. Display sync and instrumentation included.",
+  "sourceBefore": "b0259599bd51178c2d4980243a9c87553eac1a66",
+  "sourceAfter": "6e6d3eb1e05bbb3f37491eed2cc183ff9f385385",
+  "segments": {
+    "20": {
+      "before": {
+        "sample": "frames-20.json",
+        "sha256": "49eec9494225580b666c953f0aaa205b10beda85cc0a5609971a598b878d1a7a",
+        "frames": 655,
+        "totalMs": 10107.800000000003,
+        "fps": 64.8014404717149,
+        "p95Ms": 15.5,
+        "maxMs": 30.80000000000291,
+        "over20ms": 2,
+        "emptyDraws": 0,
+        "meanDrawCalls": 1275.5007633587786,
+        "meanTriangles": 9649010.923664123,
+        "meetsBudget": true
+      },
+      "after": {
+        "sample": "frames-20.json",
+        "sha256": "3a0e73a807b03d614878ec9314f796e5bf4b89e0b08d622ca39d991022292cec",
+        "frames": 657,
+        "totalMs": 10107.800000000003,
+        "fps": 64.99930746552165,
+        "p95Ms": 15.5,
+        "maxMs": 15.69999999999709,
+        "over20ms": 0,
+        "emptyDraws": 0,
+        "meanDrawCalls": 1275.3394216133943,
+        "meanTriangles": 9648998.242009133,
+        "meetsBudget": true
+      }
+    },
+    "21": {
+      "before": {
+        "sample": "frames-21.json",
+        "sha256": "d98cf9bbfc076443f7d47233b434d4ac47fb38fcc24dfb7f8b16fb7b6f9e4a9d",
+        "frames": 655,
+        "totalMs": 10107.800000000003,
+        "fps": 64.8014404717149,
+        "p95Ms": 15.5,
+        "maxMs": 30.700000000004366,
+        "over20ms": 2,
+        "emptyDraws": 0,
+        "meanDrawCalls": 847.0885496183206,
+        "meanTriangles": 8769087.667175572,
+        "meetsBudget": true
+      },
+      "after": {
+        "sample": "frames-21.json",
+        "sha256": "10433a1a69cb4093738912df4e9f6eb4228a0b7447ba1144e9a43d7b48c47fdb",
+        "frames": 657,
+        "totalMs": 10107.699999999997,
+        "fps": 64.99995053276217,
+        "p95Ms": 15.5,
+        "maxMs": 15.700000000004366,
+        "over20ms": 0,
+        "emptyDraws": 0,
+        "meanDrawCalls": 847.1978691019787,
+        "meanTriangles": 8769094.663622526,
+        "meetsBudget": true
+      }
+    },
+    "23": {
+      "before": {
+        "sample": "frames-23.json",
+        "sha256": "7d4c512ca9b045587f9561e1988dda171c4de9c0a570212b17147edec45cf44b",
+        "frames": 652,
+        "totalMs": 10107.899999999994,
+        "fps": 64.50400182035837,
+        "p95Ms": 15.5,
+        "maxMs": 30.80000000000291,
+        "over20ms": 5,
+        "emptyDraws": 0,
+        "meanDrawCalls": 1155.8819018404909,
+        "meanTriangles": 7599545.386503068,
+        "meetsBudget": true
+      },
+      "after": {
+        "sample": "frames-23.json",
+        "sha256": "b2474e384dd2e434e1e35a747d743594c175f2f0b61a4938db9236f728b49572",
+        "frames": 657,
+        "totalMs": 10107.800000000003,
+        "fps": 64.99930746552165,
+        "p95Ms": 15.5,
+        "maxMs": 15.69999999999709,
+        "over20ms": 0,
+        "emptyDraws": 0,
+        "meanDrawCalls": 1155.124809741248,
+        "meanTriangles": 7591300.484018265,
+        "meetsBudget": true
+      }
+    },
+    "24": {
+      "before": {
+        "sample": "frames-24.json",
+        "sha256": "5b3d9cdf39b9efe91403c7af824ee67e4d45ed513ce7507d7f59b6e0962798ce",
+        "frames": 657,
+        "totalMs": 10107.699999999997,
+        "fps": 64.99995053276217,
+        "p95Ms": 15.5,
+        "maxMs": 15.700000000011642,
+        "over20ms": 0,
+        "emptyDraws": 0,
+        "meanDrawCalls": 904.0426179604261,
+        "meanTriangles": 8838589.337899543,
+        "meetsBudget": true
+      },
+      "after": {
+        "sample": "frames-24.json",
+        "sha256": "6dba83b140cdfce2723f659b9826634ff74c81adc213af96936809890f0bf975",
+        "frames": 658,
+        "totalMs": 10123.099999999991,
+        "fps": 64.99985182404605,
+        "p95Ms": 15.5,
+        "maxMs": 15.60000000000582,
+        "over20ms": 0,
+        "emptyDraws": 0,
+        "meanDrawCalls": 906.2720364741641,
+        "meanTriangles": 8848510.458966566,
+        "meetsBudget": true
+      }
+    },
+    "station-street": {
+      "before": {
+        "sample": "frame-samples-station-street.json",
+        "sha256": "d2ed7bdd8f2a3737ec9e02952fb7f4106f03e1cc408ceb8fa55d743de38441a8",
+        "frames": 201,
+        "totalMs": 3107.7000000000044,
+        "fps": 64.6780577275798,
+        "p95Ms": 15.5,
+        "maxMs": 30.80000000000291,
+        "over20ms": 1,
+        "emptyDraws": 0,
+        "meanDrawCalls": 1602,
+        "meanTriangles": 8386120,
+        "meetsBudget": true
+      },
+      "after": {
+        "sample": "frame-samples-station-street.json",
+        "sha256": "a3456b59674f134b6466a9f078a138553a3b4b5a6f2ee85ed99c970fb4925ac8",
+        "frames": 201,
+        "totalMs": 3107.699999999997,
+        "fps": 64.67805772757994,
+        "p95Ms": 15.5,
+        "maxMs": 30.700000000004366,
+        "over20ms": 1,
+        "emptyDraws": 0,
+        "meanDrawCalls": 1601.5621890547263,
+        "meanTriangles": 8386098.985074627,
+        "meetsBudget": true
+      }
+    },
+    "station-port": {
+      "before": {
+        "sample": "frame-samples-station-port.json",
+        "sha256": "2866724ed701d6e5902cb31b49c6d480493b44b6ef0afcbb2fdfd29e58ac8d02",
+        "frames": 202,
+        "totalMs": 3107.7000000000044,
+        "fps": 64.99983910930905,
+        "p95Ms": 15.5,
+        "maxMs": 16.299999999995634,
+        "over20ms": 0,
+        "emptyDraws": 0,
+        "meanDrawCalls": 868,
+        "meanTriangles": 7992760,
+        "meetsBudget": true
+      },
+      "after": {
+        "sample": "frame-samples-station-port.json",
+        "sha256": "984dfcbb79288f79d9fb17bb2df0c9f2ccf290253aca5d591ab384106dfb4089",
+        "frames": 202,
+        "totalMs": 3107.600000000006,
+        "fps": 65.00193075041821,
+        "p95Ms": 15.5,
+        "maxMs": 15.599999999998545,
+        "over20ms": 0,
+        "emptyDraws": 0,
+        "meanDrawCalls": 868.2623762376238,
+        "meanTriangles": 7992772.594059406,
+        "meetsBudget": true
+      }
+    },
+    "island-aerial": {
+      "before": {
+        "sample": "frame-samples-island-aerial.json",
+        "sha256": "c73f11720fcade4d14d9f8aad11e6ac395f0cd9f18d15c4b718ece7d9a4341fb",
+        "frames": 203,
+        "totalMs": 3123.0999999999913,
+        "fps": 64.99951970798263,
+        "p95Ms": 15.5,
+        "maxMs": 15.60000000000582,
+        "over20ms": 0,
+        "emptyDraws": 0,
+        "meanDrawCalls": 1774,
+        "meanTriangles": 7410334,
+        "meetsBudget": true
+      },
+      "after": {
+        "sample": "frame-samples-island-aerial.json",
+        "sha256": "4482a872ef2dce9452f060c6bf89ef68f287a4a2c3b46b8cb3ec47183a540558",
+        "frames": 200,
+        "totalMs": 3138.5999999999913,
+        "fps": 63.72267890142119,
+        "p95Ms": 15.5,
+        "maxMs": 30.80000000000291,
+        "over20ms": 4,
+        "emptyDraws": 0,
+        "meanDrawCalls": 1771.485,
+        "meanTriangles": 7379581.58,
+        "meetsBudget": true
+      }
+    },
+    "shop-interior": {
+      "before": {
+        "sample": "frame-samples-shop-interior.json",
+        "sha256": "4da30a76426251f4e9fb59a0ee4cd0fd3201518d4fcbaceef5e455cbc9e9abc3",
+        "frames": 203,
+        "totalMs": 3123.100000000006,
+        "fps": 64.99951970798233,
+        "p95Ms": 15.5,
+        "maxMs": 15.5,
+        "over20ms": 0,
+        "emptyDraws": 0,
+        "meanDrawCalls": 940.320197044335,
+        "meanTriangles": 7632439.719211822,
+        "meetsBudget": true
+      },
+      "after": {
+        "sample": "frame-samples-shop-interior.json",
+        "sha256": "26fb8160c69e28cb2d20a2d9e1a8123508c35058f7fef05bcc2209ff9d86da0e",
+        "frames": 202,
+        "totalMs": 3107.699999999997,
+        "fps": 64.99983910930919,
+        "p95Ms": 15.5,
+        "maxMs": 15.60000000000582,
+        "over20ms": 0,
+        "emptyDraws": 0,
+        "meanDrawCalls": 939.3168316831683,
+        "meanTriangles": 7613945.277227723,
+        "meetsBudget": true
+      }
+    },
+    "walking-third": {
+      "before": {
+        "sample": "frame-samples-walking-third.json",
+        "sha256": "806927e1f35849e41c39d4f1ec8646b03a2c35962f049efda340f1cd43073948",
+        "frames": 203,
+        "totalMs": 3123,
+        "fps": 65.00160102465578,
+        "p95Ms": 15.5,
+        "maxMs": 15.69999999999709,
+        "over20ms": 0,
+        "emptyDraws": 0,
+        "meanDrawCalls": 1580.8177339901479,
+        "meanTriangles": 8330375.886699507,
+        "meetsBudget": true
+      },
+      "after": {
+        "sample": "frame-samples-walking-third.json",
+        "sha256": "5c983b8f726a0d68d0756653e6457c8a5cb5496d7870cf10ff4421ab1a13ceeb",
+        "frames": 202,
+        "totalMs": 3123.100000000006,
+        "fps": 64.67932502961789,
+        "p95Ms": 15.5,
+        "maxMs": 30.69999999999709,
+        "over20ms": 1,
+        "emptyDraws": 0,
+        "meanDrawCalls": 1581.59900990099,
+        "meanTriangles": 8348036.900990099,
+        "meetsBudget": true
+      }
+    },
+    "walking-first": {
+      "before": {
+        "sample": "frame-samples-walking-first.json",
+        "sha256": "acdf6ad7904ffe0177edbb1a6d793b289b718c5d7f3207f6378b89eb8ca49be4",
+        "frames": 200,
+        "totalMs": 3107.5999999999913,
+        "fps": 64.3583472776421,
+        "p95Ms": 15.5,
+        "maxMs": 30.80000000000291,
+        "over20ms": 2,
+        "emptyDraws": 0,
+        "meanDrawCalls": 1438.44,
+        "meanTriangles": 8267270.98,
+        "meetsBudget": true
+      },
+      "after": {
+        "sample": "frame-samples-walking-first.json",
+        "sha256": "0e6af449513d4be5740672651e590c7051f7bddbf74ae5f05e6545537041056d",
+        "frames": 203,
+        "totalMs": 3123,
+        "fps": 65.00160102465578,
+        "p95Ms": 15.5,
+        "maxMs": 15.69999999999709,
+        "over20ms": 0,
+        "emptyDraws": 0,
+        "meanDrawCalls": 1443.5172413793102,
+        "meanTriangles": 8331011.532019705,
+        "meetsBudget": true
+      }
+    }
+  }
+}

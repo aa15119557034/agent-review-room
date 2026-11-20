@@ -1,0 +1,25 @@
+{
+  "scene": "combined",
+  "fixture": "D:\\codex\\2026-11-16\\world-implementation\\world-base\\apps\\desktop\\e2e\\fixtures\\world-base",
+  "output": "D:\\codex\\2026-11-16\\world-implementation\\world-base\\apps\\desktop\\e2e\\fixtures\\world-base\\artifacts\\gpu-town-kit-v1",
+  "runtime": "D:\\codex\\2026-11-16\\world-implementation\\world-base\\apps\\desktop\\e2e\\fixtures\\world-base\\artifacts\\gpu-town-kit-v1\\runtime-gnYZiH",
+  "source": "D:\\codex\\2026-11-16\\world-implementation\\world-base\\apps\\desktop\\e2e\\fixtures\\world-base",
+  "preview": false,
+  "videoOnly": false,
+  "ffmpeg": null,
+  "width": 1440,
+  "height": 900,
+  "sampleMs": 15000,
+  "warmupMs": 5000,
+  "timeoutMs": 180000,
+  "videoMs": 0,
+  "query": "",
+  "proxy": "",
+  "startedAt": "2026-11-17T02:39:30.372Z",
+  "entrySha256": "7a5a18b21074bbac0fca402ea417a7e2874492b0293b69e93159282505fb9ae8",
+  "sourceManifest": {
+    "file": "source-manifest.json",
+    "head": "3740d47b9080a3433071ca0f4e5d2ba7ba7a261b",
+    "sha256": "6bc567c102eb09584e73bdce50a8422bd3cdc6d6ddb9650a7296aecdc03c7190"
+  }
+}

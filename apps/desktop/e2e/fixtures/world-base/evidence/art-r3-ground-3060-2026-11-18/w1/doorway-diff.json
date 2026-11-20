@@ -1,0 +1,113 @@
+{
+  "sources": [
+    {
+      "revision": "363034ed1b6fa6c4ee7fbb05254156c937baf722",
+      "imageSHA256": "6998455998a886a729c677a9a50a8c35d4cdfe480ad5f20d59c753957d77fdee"
+    },
+    {
+      "revision": "47a5c12eba910682ccbf8bc9138510bc01737bf3",
+      "imageSHA256": "893d88f48bd2030678dc45438ac97fe7cee6368ba18b188c41e638ba509273eb"
+    }
+  ],
+  "frame": {
+    "eye": [
+      279.1,
+      9.8184,
+      912.8
+    ],
+    "quaternion": [
+      0.013653878147403252,
+      0.5849950384089397,
+      -0.009850566433920587,
+      0.8108620986267578
+    ],
+    "fov": 58,
+    "canvas": [
+      1440,
+      900
+    ],
+    "time": 14,
+    "timeOfDay": "evening",
+    "hidden": true
+  },
+  "crop": [
+    502,
+    423,
+    1065,
+    636
+  ],
+  "measure": {
+    "SNACK-stock": {
+      "roi": [
+        533,
+        569,
+        621,
+        620
+      ],
+      "pixels": 4488,
+      "changed": 220,
+      "delta_gt8": 0,
+      "delta_gt24": 0
+    },
+    "SNACK-header": {
+      "roi": [
+        520,
+        439,
+        614,
+        475
+      ],
+      "pixels": 3384,
+      "changed": 1094,
+      "delta_gt8": 568,
+      "delta_gt24": 562
+    },
+    "BAKERY-stock": {
+      "roi": [
+        770,
+        560,
+        855,
+        607
+      ],
+      "pixels": 3995,
+      "changed": 460,
+      "delta_gt8": 0,
+      "delta_gt24": 0
+    },
+    "BAKERY-header": {
+      "roi": [
+        747,
+        442,
+        826,
+        475
+      ],
+      "pixels": 2607,
+      "changed": 2560,
+      "delta_gt8": 2171,
+      "delta_gt24": 2103
+    },
+    "DRINK-stock": {
+      "roi": [
+        975,
+        549,
+        1047,
+        595
+      ],
+      "pixels": 3312,
+      "changed": 3155,
+      "delta_gt8": 2299,
+      "delta_gt24": 2155
+    },
+    "DRINK-header": {
+      "roi": [
+        941,
+        445,
+        1009,
+        475
+      ],
+      "pixels": 2040,
+      "changed": 2011,
+      "delta_gt8": 1577,
+      "delta_gt24": 1561
+    }
+  }
+}

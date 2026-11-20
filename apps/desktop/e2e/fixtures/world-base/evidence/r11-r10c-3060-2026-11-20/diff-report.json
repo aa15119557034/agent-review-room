@@ -1,0 +1,303 @@
+{
+  "views": [
+    {
+      "changed_pixels": 4709,
+      "changed_ratio": 0.003633,
+      "max_channel_diff": 164,
+      "mean_diff_changed": 27.388,
+      "bbox": [
+        307,
+        523,
+        1439,
+        661
+      ],
+      "max_at": [
+        1222,
+        601
+      ],
+      "view": "art-a-street",
+      "near_white": {
+        "base_count": 56,
+        "cand_count": 56,
+        "added_count": 0,
+        "added_ratio": 0.0
+      },
+      "regions": [
+        {
+          "label": "W1投影点(402,570)±80",
+          "box": [
+            322,
+            490,
+            482,
+            650
+          ],
+          "lum_base": 0.4616,
+          "lum_cand": 0.4619,
+          "lum_delta": 0.0003,
+          "changed_ratio": 0.044844,
+          "max_diff": 128
+        }
+      ]
+    },
+    {
+      "changed_pixels": 30042,
+      "changed_ratio": 0.023181,
+      "max_channel_diff": 154,
+      "mean_diff_changed": 19.479,
+      "bbox": [
+        324,
+        416,
+        1439,
+        767
+      ],
+      "max_at": [
+        901,
+        639
+      ],
+      "view": "art-b-konbini",
+      "near_white": {
+        "base_count": 67,
+        "cand_count": 67,
+        "added_count": 58,
+        "added_ratio": 4.5e-05,
+        "added_bbox": [
+          67,
+          439,
+          905,
+          565
+        ]
+      },
+      "regions": [
+        {
+          "label": "B平台接缝(x572-592,y660-690外扩20)",
+          "box": [
+            552,
+            640,
+            612,
+            710
+          ],
+          "lum_base": 0.5703,
+          "lum_cand": 0.6446,
+          "lum_delta": 0.0743,
+          "changed_ratio": 0.650238,
+          "max_diff": 125
+        },
+        {
+          "label": "W1投影点(182,742)±80",
+          "box": [
+            102,
+            662,
+            262,
+            822
+          ],
+          "lum_base": 0.3964,
+          "lum_cand": 0.3964,
+          "lum_delta": -0.0,
+          "changed_ratio": 0.0,
+          "max_diff": 1
+        }
+      ]
+    },
+    {
+      "changed_pixels": 3515,
+      "changed_ratio": 0.002712,
+      "max_channel_diff": 118,
+      "mean_diff_changed": 11.497,
+      "bbox": [
+        1034,
+        460,
+        1439,
+        886
+      ],
+      "max_at": [
+        1193,
+        483
+      ],
+      "view": "art-c-alley",
+      "near_white": {
+        "base_count": 0,
+        "cand_count": 0,
+        "added_count": 0,
+        "added_ratio": 0.0
+      },
+      "regions": []
+    },
+    {
+      "changed_pixels": 195193,
+      "changed_ratio": 0.150612,
+      "max_channel_diff": 136,
+      "mean_diff_changed": 47.751,
+      "bbox": [
+        126,
+        68,
+        1168,
+        807
+      ],
+      "max_at": [
+        173,
+        145
+      ],
+      "view": "art-d-laundry",
+      "near_white": {
+        "base_count": 0,
+        "cand_count": 336,
+        "added_count": 336,
+        "added_ratio": 0.000259,
+        "added_bbox": [
+          378,
+          374,
+          1088,
+          496
+        ]
+      },
+      "regions": [
+        {
+          "label": "D洗衣店画面中部(门内)",
+          "box": [
+            432,
+            270,
+            1007,
+            675
+          ],
+          "lum_base": 0.4826,
+          "lum_cand": 0.6022,
+          "lum_delta": 0.1196,
+          "changed_ratio": 0.673576,
+          "max_diff": 129
+        }
+      ]
+    },
+    {
+      "changed_pixels": 49255,
+      "changed_ratio": 0.038005,
+      "max_channel_diff": 224,
+      "mean_diff_changed": 21.586,
+      "bbox": [
+        122,
+        137,
+        1439,
+        692
+      ],
+      "max_at": [
+        1022,
+        618
+      ],
+      "view": "sample-e-harbour",
+      "near_white": {
+        "base_count": 0,
+        "cand_count": 0,
+        "added_count": 0,
+        "added_ratio": 0.0
+      },
+      "regions": [
+        {
+          "label": "W1投影点(91,480)±80",
+          "box": [
+            11,
+            400,
+            171,
+            560
+          ],
+          "lum_base": 0.6016,
+          "lum_cand": 0.6016,
+          "lum_delta": -0.0,
+          "changed_ratio": 0.007305,
+          "max_diff": 112
+        }
+      ]
+    },
+    {
+      "changed_pixels": 426492,
+      "changed_ratio": 0.329083,
+      "max_channel_diff": 229,
+      "mean_diff_changed": 23.473,
+      "bbox": [
+        0,
+        394,
+        1439,
+        899
+      ],
+      "max_at": [
+        1241,
+        568
+      ],
+      "view": "sample-f-hillside",
+      "near_white": {
+        "base_count": 0,
+        "cand_count": 0,
+        "added_count": 0,
+        "added_ratio": 0.0
+      },
+      "regions": []
+    },
+    {
+      "changed_pixels": 23372,
+      "changed_ratio": 0.018034,
+      "max_channel_diff": 224,
+      "mean_diff_changed": 14.032,
+      "bbox": [
+        0,
+        0,
+        1404,
+        781
+      ],
+      "max_at": [
+        149,
+        344
+      ],
+      "view": "sample-g-rail",
+      "near_white": {
+        "base_count": 26,
+        "cand_count": 27,
+        "added_count": 3,
+        "added_ratio": 2e-06,
+        "added_bbox": [
+          842,
+          371,
+          1243,
+          485
+        ]
+      },
+      "regions": [
+        {
+          "label": "W1投影点(85,474)±80",
+          "box": [
+            5,
+            394,
+            165,
+            554
+          ],
+          "lum_base": 0.3987,
+          "lum_cand": 0.3986,
+          "lum_delta": -0.0,
+          "changed_ratio": 0.0,
+          "max_diff": 1
+        }
+      ]
+    },
+    {
+      "changed_pixels": 219582,
+      "changed_ratio": 0.169431,
+      "max_channel_diff": 230,
+      "mean_diff_changed": 25.602,
+      "bbox": [
+        0,
+        14,
+        1439,
+        899
+      ],
+      "max_at": [
+        1294,
+        624
+      ],
+      "view": "sample-h-north",
+      "near_white": {
+        "base_count": 0,
+        "cand_count": 0,
+        "added_count": 0,
+        "added_ratio": 0.0
+      },
+      "regions": []
+    }
+  ]
+}

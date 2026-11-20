@@ -1,0 +1,19 @@
+{
+  "source": "Root and frozen runtime runner observations, not inferred from report.ok.",
+  "runs": [
+    {
+      "artifact": "gpu-town-c12",
+      "exitCode": 1,
+      "rootExecSession": 73575,
+      "processId": 47704
+    },
+    {
+      "artifact": "gpu-look-c12-v1",
+      "exitCode": 1,
+      "rootExecSession": 75645,
+      "processId": 60904,
+      "evidence": "Frozen runtime analysis actual runner record; PID matches original process.json"
+    }
+  ],
+  "note": "All original transport failures remain in full reports and measurements. No green-only selection or retry."
+}

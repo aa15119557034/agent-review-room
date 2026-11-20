@@ -1,0 +1,50 @@
+[
+  {
+    "file": "../look-c11-2026-11-17/README.md",
+    "presentInCommit": "e38dd51a294da3a498b9404c0f27b854d16a2fd5",
+    "sha256": "44f78643eebb2e434fa241925039b369166751faba11d13a86f929cde50aaabd",
+    "copied": false
+  },
+  {
+    "file": "../look-c11-2026-11-17/baseline/23-service-corner.jpg",
+    "presentInCommit": "e38dd51a294da3a498b9404c0f27b854d16a2fd5",
+    "sha256": "25434019c9e92a70ef73b5d900795570314e1007ab6685b23367d96c9734fa8b",
+    "copied": false
+  },
+  {
+    "file": "../look-c11-2026-11-17/baseline/24-laundry-details.jpg",
+    "presentInCommit": "e38dd51a294da3a498b9404c0f27b854d16a2fd5",
+    "sha256": "ab7b3f04f20c5d9bf9bbcbc84067bad359901163459c95af1cbb37b0cf5a3090",
+    "copied": false
+  },
+  {
+    "file": "../look-c11-2026-11-17/diagnostic/shop-interior-ao-on-capture-2.png",
+    "presentInCommit": "e38dd51a294da3a498b9404c0f27b854d16a2fd5",
+    "sha256": "16f4da4850f84b2008fe32cb69737ee8494514bab9690ea0b94926799bb65a05",
+    "copied": false
+  },
+  {
+    "file": "../look-c11-2026-11-17/diagnostic/20-rear-eye-ao-on-capture-2.png",
+    "presentInCommit": "e38dd51a294da3a498b9404c0f27b854d16a2fd5",
+    "sha256": "c2ec3dad5276efdd8c712c78d68a77a0aaa5bd164c291ef712f07aeca04d825a",
+    "copied": false
+  },
+  {
+    "file": "../look-c11-2026-11-17/diagnostic/look-report.json.gz",
+    "presentInCommit": "e38dd51a294da3a498b9404c0f27b854d16a2fd5",
+    "sha256": "e9fbc56aadc0af57c46022bc12c0fc65681b31c5e993e81914fd71fd5fbe953f",
+    "copied": false
+  },
+  {
+    "file": "../look-c11-2026-11-17/analysis/x51-c11-look-v1-analysis.json",
+    "presentInCommit": "e38dd51a294da3a498b9404c0f27b854d16a2fd5",
+    "sha256": "e0a5a8a68444885289f0de55da659cea5561d8066f55da47f50f0c07c7462faf",
+    "copied": false
+  },
+  {
+    "file": "../textured-props-2026-11-17/shutter-grade/grade-report.json.gz",
+    "presentInCommit": "e38dd51a294da3a498b9404c0f27b854d16a2fd5",
+    "sha256": "8936fea87afe0f52a495be8cfad3477a4d7bf4d4d4b46dfcdad13619ddbfb243",
+    "copied": false
+  }
+]

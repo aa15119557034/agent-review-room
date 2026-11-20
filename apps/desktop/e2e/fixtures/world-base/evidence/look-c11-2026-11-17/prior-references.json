@@ -1,0 +1,50 @@
+[
+  {
+    "file": "../look-c10-2026-11-17/README.md",
+    "presentInCommit": "e1f32af2cfcde2e1e958a0dffb87f8d219886d5c",
+    "sha256": "3e671e0da63ab869b62530e49a25dd30befe2ba83a8a002f8326f0c6799a4261",
+    "copied": false
+  },
+  {
+    "file": "../look-c10-2026-11-17/baseline/23-service-corner.jpg",
+    "presentInCommit": "e1f32af2cfcde2e1e958a0dffb87f8d219886d5c",
+    "sha256": "1d886f407d6d399c4ef0e971618966d3cd87680d3e6ea2bdefc713fdf7f5817f",
+    "copied": false
+  },
+  {
+    "file": "../look-c10-2026-11-17/baseline/24-laundry-details.jpg",
+    "presentInCommit": "e1f32af2cfcde2e1e958a0dffb87f8d219886d5c",
+    "sha256": "8fceff525aca8a700172b4d687a3734a752d00acd0673a39ca7a6995ebc5ac2d",
+    "copied": false
+  },
+  {
+    "file": "../look-c10-2026-11-17/diagnostic/shop-interior-ao-on-capture-2.png",
+    "presentInCommit": "e1f32af2cfcde2e1e958a0dffb87f8d219886d5c",
+    "sha256": "404233a4bfb14ddb6c1f456978081665073623a778edebb5dc234c5cc7009f0d",
+    "copied": false
+  },
+  {
+    "file": "../look-c10-2026-11-17/diagnostic/20-rear-eye-ao-on-capture-2.png",
+    "presentInCommit": "e1f32af2cfcde2e1e958a0dffb87f8d219886d5c",
+    "sha256": "69f9666b59cfce2b77361261d71ec65b17fbd1cb7bab2a4eabb3ea32ea0f8ee3",
+    "copied": false
+  },
+  {
+    "file": "../look-c10-2026-11-17/analysis/x51-c10-look-v1-analysis.json",
+    "presentInCommit": "e1f32af2cfcde2e1e958a0dffb87f8d219886d5c",
+    "sha256": "588a8a5588a002077e3bc6a720aa35fa25e3fa709db9d8c2dc3e18d2af341384",
+    "copied": false
+  },
+  {
+    "file": "../look-c10-2026-11-17/analysis/x51-c10-ao-samples-v1-analysis.json",
+    "presentInCommit": "e1f32af2cfcde2e1e958a0dffb87f8d219886d5c",
+    "sha256": "d4035598c9bc3e7f5f975cc4cd5bc0ccadf0d1dabe5cbf2343c5ae3c885bb97c",
+    "copied": false
+  },
+  {
+    "file": "../textured-props-2026-11-17/shutter-grade/grade-report.json.gz",
+    "presentInCommit": "e1f32af2cfcde2e1e958a0dffb87f8d219886d5c",
+    "sha256": "8936fea87afe0f52a495be8cfad3477a4d7bf4d4d4b46dfcdad13619ddbfb243",
+    "copied": false
+  }
+]

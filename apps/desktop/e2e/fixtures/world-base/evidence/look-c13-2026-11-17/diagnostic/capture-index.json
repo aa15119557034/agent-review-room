@@ -1,0 +1,742 @@
+{
+  "artifact": "gpu-look-c13-v1",
+  "records": [
+    {
+      "name": "service-corner-ao-on-warmup",
+      "view": "service-corner",
+      "pass": "warmup",
+      "camera": {
+        "position": [
+          308.4,
+          9.612,
+          872.9
+        ],
+        "quaternion": [
+          -0.08432325046436126,
+          0.5331397072650681,
+          0.05351200213385738,
+          0.8401119613456697
+        ],
+        "fov": 55
+      },
+      "time": 14,
+      "uploadedAO": 0.55,
+      "files": {
+        "png": {
+          "filename": "service-corner-ao-on-warmup.png",
+          "bytes": 2002388,
+          "sha256": "5c0c219f7bef51b0063fb826c924e645ba510c90bf77c8c2b76dc51ebb2dbe88",
+          "copiedToArchive": false
+        },
+        "jpg": {
+          "filename": "service-corner-ao-on-warmup.jpg",
+          "bytes": 94841,
+          "sha256": "1ec184279132d93165f6f2301124468e4edd56b0127c12c9d5b406f8736d9e1f",
+          "copiedToArchive": false
+        }
+      }
+    },
+    {
+      "name": "service-corner-ao-on-capture-1",
+      "view": "service-corner",
+      "pass": "capture-1",
+      "camera": {
+        "position": [
+          308.4,
+          9.612,
+          872.9
+        ],
+        "quaternion": [
+          -0.08432325046436126,
+          0.5331397072650681,
+          0.05351200213385738,
+          0.8401119613456697
+        ],
+        "fov": 55
+      },
+      "time": 14,
+      "uploadedAO": 0.55,
+      "files": {
+        "png": {
+          "filename": "service-corner-ao-on-capture-1.png",
+          "bytes": 2002388,
+          "sha256": "5c0c219f7bef51b0063fb826c924e645ba510c90bf77c8c2b76dc51ebb2dbe88",
+          "copiedToArchive": false
+        },
+        "jpg": {
+          "filename": "service-corner-ao-on-capture-1.jpg",
+          "bytes": 94841,
+          "sha256": "1ec184279132d93165f6f2301124468e4edd56b0127c12c9d5b406f8736d9e1f",
+          "copiedToArchive": false
+        }
+      }
+    },
+    {
+      "name": "service-corner-ao-on-capture-2",
+      "view": "service-corner",
+      "pass": "capture-2",
+      "camera": {
+        "position": [
+          308.4,
+          9.612,
+          872.9
+        ],
+        "quaternion": [
+          -0.08432325046436126,
+          0.5331397072650681,
+          0.05351200213385738,
+          0.8401119613456697
+        ],
+        "fov": 55
+      },
+      "time": 14,
+      "uploadedAO": 0.55,
+      "files": {
+        "png": {
+          "filename": "service-corner-ao-on-capture-2.png",
+          "bytes": 2002388,
+          "sha256": "5c0c219f7bef51b0063fb826c924e645ba510c90bf77c8c2b76dc51ebb2dbe88",
+          "copiedToArchive": false
+        },
+        "jpg": {
+          "filename": "service-corner-ao-on-capture-2.jpg",
+          "bytes": 94841,
+          "sha256": "1ec184279132d93165f6f2301124468e4edd56b0127c12c9d5b406f8736d9e1f",
+          "copiedToArchive": true
+        }
+      }
+    },
+    {
+      "name": "laundry-details-ao-on-warmup",
+      "view": "laundry-details",
+      "pass": "warmup",
+      "camera": {
+        "position": [
+          288,
+          14.384808464050293,
+          777.9
+        ],
+        "quaternion": [
+          -0.15522850149956677,
+          0.6173580660361093,
+          0.12595148976979553,
+          0.7608609287163607
+        ],
+        "fov": 55
+      },
+      "time": 14,
+      "uploadedAO": 0.55,
+      "files": {
+        "png": {
+          "filename": "laundry-details-ao-on-warmup.png",
+          "bytes": 1941221,
+          "sha256": "1eb2d9298f5476bf97d77d52254326c058266e755691971df2487b0e6c7baf36",
+          "copiedToArchive": false
+        },
+        "jpg": {
+          "filename": "laundry-details-ao-on-warmup.jpg",
+          "bytes": 66907,
+          "sha256": "a0188d308e40f7deb08bf650bf5ac410a1dff33395e8d378904cda66bf5c9ec3",
+          "copiedToArchive": false
+        }
+      }
+    },
+    {
+      "name": "laundry-details-ao-on-capture-1",
+      "view": "laundry-details",
+      "pass": "capture-1",
+      "camera": {
+        "position": [
+          288,
+          14.384808464050293,
+          777.9
+        ],
+        "quaternion": [
+          -0.15522850149956677,
+          0.6173580660361093,
+          0.12595148976979553,
+          0.7608609287163607
+        ],
+        "fov": 55
+      },
+      "time": 14,
+      "uploadedAO": 0.55,
+      "files": {
+        "png": {
+          "filename": "laundry-details-ao-on-capture-1.png",
+          "bytes": 1941221,
+          "sha256": "1eb2d9298f5476bf97d77d52254326c058266e755691971df2487b0e6c7baf36",
+          "copiedToArchive": false
+        },
+        "jpg": {
+          "filename": "laundry-details-ao-on-capture-1.jpg",
+          "bytes": 66907,
+          "sha256": "a0188d308e40f7deb08bf650bf5ac410a1dff33395e8d378904cda66bf5c9ec3",
+          "copiedToArchive": false
+        }
+      }
+    },
+    {
+      "name": "laundry-details-ao-on-capture-2",
+      "view": "laundry-details",
+      "pass": "capture-2",
+      "camera": {
+        "position": [
+          288,
+          14.384808464050293,
+          777.9
+        ],
+        "quaternion": [
+          -0.15522850149956677,
+          0.6173580660361093,
+          0.12595148976979553,
+          0.7608609287163607
+        ],
+        "fov": 55
+      },
+      "time": 14,
+      "uploadedAO": 0.55,
+      "files": {
+        "png": {
+          "filename": "laundry-details-ao-on-capture-2.png",
+          "bytes": 1941221,
+          "sha256": "1eb2d9298f5476bf97d77d52254326c058266e755691971df2487b0e6c7baf36",
+          "copiedToArchive": true
+        },
+        "jpg": {
+          "filename": "laundry-details-ao-on-capture-2.jpg",
+          "bytes": 66907,
+          "sha256": "a0188d308e40f7deb08bf650bf5ac410a1dff33395e8d378904cda66bf5c9ec3",
+          "copiedToArchive": true
+        }
+      }
+    },
+    {
+      "name": "shop-interior-ao-on-warmup",
+      "view": "shop-interior",
+      "pass": "warmup",
+      "camera": {
+        "position": [
+          271.7,
+          9.9134,
+          908
+        ],
+        "quaternion": [
+          -0.015701859235384273,
+          0.7069324236562871,
+          0.015701859235384273,
+          0.7069324236562871
+        ],
+        "fov": 58
+      },
+      "time": 14,
+      "uploadedAO": 0.55,
+      "files": {
+        "png": {
+          "filename": "shop-interior-ao-on-warmup.png",
+          "bytes": 1961094,
+          "sha256": "16f4da4850f84b2008fe32cb69737ee8494514bab9690ea0b94926799bb65a05",
+          "copiedToArchive": false
+        },
+        "jpg": {
+          "filename": "shop-interior-ao-on-warmup.jpg",
+          "bytes": 124927,
+          "sha256": "a237f43acc360e690bea44020b3895defd6cbe864722e3d429b8b8e17d14d84a",
+          "copiedToArchive": false
+        }
+      }
+    },
+    {
+      "name": "shop-interior-ao-on-capture-1",
+      "view": "shop-interior",
+      "pass": "capture-1",
+      "camera": {
+        "position": [
+          271.7,
+          9.9134,
+          908
+        ],
+        "quaternion": [
+          -0.015701859235384273,
+          0.7069324236562871,
+          0.015701859235384273,
+          0.7069324236562871
+        ],
+        "fov": 58
+      },
+      "time": 14,
+      "uploadedAO": 0.55,
+      "files": {
+        "png": {
+          "filename": "shop-interior-ao-on-capture-1.png",
+          "bytes": 1961094,
+          "sha256": "16f4da4850f84b2008fe32cb69737ee8494514bab9690ea0b94926799bb65a05",
+          "copiedToArchive": false
+        },
+        "jpg": {
+          "filename": "shop-interior-ao-on-capture-1.jpg",
+          "bytes": 124927,
+          "sha256": "a237f43acc360e690bea44020b3895defd6cbe864722e3d429b8b8e17d14d84a",
+          "copiedToArchive": false
+        }
+      }
+    },
+    {
+      "name": "shop-interior-ao-on-capture-2",
+      "view": "shop-interior",
+      "pass": "capture-2",
+      "camera": {
+        "position": [
+          271.7,
+          9.9134,
+          908
+        ],
+        "quaternion": [
+          -0.015701859235384273,
+          0.7069324236562871,
+          0.015701859235384273,
+          0.7069324236562871
+        ],
+        "fov": 58
+      },
+      "time": 14,
+      "uploadedAO": 0.55,
+      "files": {
+        "png": {
+          "filename": "shop-interior-ao-on-capture-2.png",
+          "bytes": 1961094,
+          "sha256": "16f4da4850f84b2008fe32cb69737ee8494514bab9690ea0b94926799bb65a05",
+          "copiedToArchive": true
+        },
+        "jpg": {
+          "filename": "shop-interior-ao-on-capture-2.jpg",
+          "bytes": 124927,
+          "sha256": "a237f43acc360e690bea44020b3895defd6cbe864722e3d429b8b8e17d14d84a",
+          "copiedToArchive": true
+        }
+      }
+    },
+    {
+      "name": "20-rear-eye-ao-on-warmup",
+      "view": "20-rear-eye",
+      "pass": "warmup",
+      "camera": {
+        "position": [
+          273,
+          14.755245542526229,
+          758
+        ],
+        "quaternion": [
+          -0.00013011891877658623,
+          0.9145142483742376,
+          -0.00029414054360230415,
+          -0.40455356390830466
+        ],
+        "fov": 58
+      },
+      "time": 14,
+      "uploadedAO": 0.55,
+      "files": {
+        "png": {
+          "filename": "20-rear-eye-ao-on-warmup.png",
+          "bytes": 2655093,
+          "sha256": "93f3027a533c74868b756836326abfd6d4466fd6e7390eca891116426f5bc737",
+          "copiedToArchive": false
+        },
+        "jpg": {
+          "filename": "20-rear-eye-ao-on-warmup.jpg",
+          "bytes": 167196,
+          "sha256": "23c9e356c19eeae9b0eee1f51ba67d80d4fe27e14b107a5b2508f9dfe4eb6c87",
+          "copiedToArchive": false
+        }
+      }
+    },
+    {
+      "name": "20-rear-eye-ao-on-capture-1",
+      "view": "20-rear-eye",
+      "pass": "capture-1",
+      "camera": {
+        "position": [
+          273,
+          14.755245542526229,
+          758
+        ],
+        "quaternion": [
+          -0.00013011891877658623,
+          0.9145142483742376,
+          -0.00029414054360230415,
+          -0.40455356390830466
+        ],
+        "fov": 58
+      },
+      "time": 14,
+      "uploadedAO": 0.55,
+      "files": {
+        "png": {
+          "filename": "20-rear-eye-ao-on-capture-1.png",
+          "bytes": 2655093,
+          "sha256": "93f3027a533c74868b756836326abfd6d4466fd6e7390eca891116426f5bc737",
+          "copiedToArchive": false
+        },
+        "jpg": {
+          "filename": "20-rear-eye-ao-on-capture-1.jpg",
+          "bytes": 167196,
+          "sha256": "23c9e356c19eeae9b0eee1f51ba67d80d4fe27e14b107a5b2508f9dfe4eb6c87",
+          "copiedToArchive": false
+        }
+      }
+    },
+    {
+      "name": "20-rear-eye-ao-on-capture-2",
+      "view": "20-rear-eye",
+      "pass": "capture-2",
+      "camera": {
+        "position": [
+          273,
+          14.755245542526229,
+          758
+        ],
+        "quaternion": [
+          -0.00013011891877658623,
+          0.9145142483742376,
+          -0.00029414054360230415,
+          -0.40455356390830466
+        ],
+        "fov": 58
+      },
+      "time": 14,
+      "uploadedAO": 0.55,
+      "files": {
+        "png": {
+          "filename": "20-rear-eye-ao-on-capture-2.png",
+          "bytes": 2655093,
+          "sha256": "93f3027a533c74868b756836326abfd6d4466fd6e7390eca891116426f5bc737",
+          "copiedToArchive": false
+        },
+        "jpg": {
+          "filename": "20-rear-eye-ao-on-capture-2.jpg",
+          "bytes": 167196,
+          "sha256": "23c9e356c19eeae9b0eee1f51ba67d80d4fe27e14b107a5b2508f9dfe4eb6c87",
+          "copiedToArchive": true
+        }
+      }
+    },
+    {
+      "name": "21-front-eye-ao-on-warmup",
+      "view": "21-front-eye",
+      "pass": "warmup",
+      "camera": {
+        "position": [
+          274,
+          12.87812709172567,
+          783
+        ],
+        "quaternion": [
+          0.07422133960767584,
+          -0.5103582416049142,
+          0.044271975994965136,
+          0.8556083508909221
+        ],
+        "fov": 58
+      },
+      "time": 14,
+      "uploadedAO": 0.55,
+      "files": {
+        "png": {
+          "filename": "21-front-eye-ao-on-warmup.png",
+          "bytes": 2072650,
+          "sha256": "bfda1d747a438433d23efee6794b6eaa1ddd319375ab8086126adfbdd422e7b6",
+          "copiedToArchive": false
+        },
+        "jpg": {
+          "filename": "21-front-eye-ao-on-warmup.jpg",
+          "bytes": 88272,
+          "sha256": "4ac503a2c877db662997bcf2aa644984d40e851e23daaa2dbedccaf962970760",
+          "copiedToArchive": false
+        }
+      }
+    },
+    {
+      "name": "21-front-eye-ao-on-capture-1",
+      "view": "21-front-eye",
+      "pass": "capture-1",
+      "camera": {
+        "position": [
+          274,
+          12.87812709172567,
+          783
+        ],
+        "quaternion": [
+          0.07422133960767584,
+          -0.5103582416049142,
+          0.044271975994965136,
+          0.8556083508909221
+        ],
+        "fov": 58
+      },
+      "time": 14,
+      "uploadedAO": 0.55,
+      "files": {
+        "png": {
+          "filename": "21-front-eye-ao-on-capture-1.png",
+          "bytes": 2072650,
+          "sha256": "bfda1d747a438433d23efee6794b6eaa1ddd319375ab8086126adfbdd422e7b6",
+          "copiedToArchive": false
+        },
+        "jpg": {
+          "filename": "21-front-eye-ao-on-capture-1.jpg",
+          "bytes": 88272,
+          "sha256": "4ac503a2c877db662997bcf2aa644984d40e851e23daaa2dbedccaf962970760",
+          "copiedToArchive": false
+        }
+      }
+    },
+    {
+      "name": "21-front-eye-ao-on-capture-2",
+      "view": "21-front-eye",
+      "pass": "capture-2",
+      "camera": {
+        "position": [
+          274,
+          12.87812709172567,
+          783
+        ],
+        "quaternion": [
+          0.07422133960767584,
+          -0.5103582416049142,
+          0.044271975994965136,
+          0.8556083508909221
+        ],
+        "fov": 58
+      },
+      "time": 14,
+      "uploadedAO": 0.55,
+      "files": {
+        "png": {
+          "filename": "21-front-eye-ao-on-capture-2.png",
+          "bytes": 2072650,
+          "sha256": "bfda1d747a438433d23efee6794b6eaa1ddd319375ab8086126adfbdd422e7b6",
+          "copiedToArchive": true
+        },
+        "jpg": {
+          "filename": "21-front-eye-ao-on-capture-2.jpg",
+          "bytes": 88272,
+          "sha256": "4ac503a2c877db662997bcf2aa644984d40e851e23daaa2dbedccaf962970760",
+          "copiedToArchive": true
+        }
+      }
+    },
+    {
+      "name": "station-street-ao-on-warmup",
+      "view": "station-street",
+      "pass": "warmup",
+      "camera": {
+        "position": [
+          278.8,
+          10.4,
+          936
+        ],
+        "quaternion": [
+          -0.003277842930440423,
+          -0.009834585659995631,
+          -0.000032237959341941705,
+          0.9999462663720154
+        ],
+        "fov": 58
+      },
+      "time": 14,
+      "uploadedAO": 0.55,
+      "files": {
+        "png": {
+          "filename": "station-street-ao-on-warmup.png",
+          "bytes": 2641270,
+          "sha256": "85c99e459a8e72a4f1eef93040bdbf59097eb0499d989fd4516522dc10b0f190",
+          "copiedToArchive": false
+        },
+        "jpg": {
+          "filename": "station-street-ao-on-warmup.jpg",
+          "bytes": 146139,
+          "sha256": "f68a4a9125180e359c909fa508e77d1a926fbc7d0a82e641f96f544485d55e02",
+          "copiedToArchive": false
+        }
+      }
+    },
+    {
+      "name": "station-street-ao-on-capture-1",
+      "view": "station-street",
+      "pass": "capture-1",
+      "camera": {
+        "position": [
+          278.8,
+          10.4,
+          936
+        ],
+        "quaternion": [
+          -0.003277842930440423,
+          -0.009834585659995631,
+          -0.000032237959341941705,
+          0.9999462663720154
+        ],
+        "fov": 58
+      },
+      "time": 14,
+      "uploadedAO": 0.55,
+      "files": {
+        "png": {
+          "filename": "station-street-ao-on-capture-1.png",
+          "bytes": 2641270,
+          "sha256": "85c99e459a8e72a4f1eef93040bdbf59097eb0499d989fd4516522dc10b0f190",
+          "copiedToArchive": false
+        },
+        "jpg": {
+          "filename": "station-street-ao-on-capture-1.jpg",
+          "bytes": 146139,
+          "sha256": "f68a4a9125180e359c909fa508e77d1a926fbc7d0a82e641f96f544485d55e02",
+          "copiedToArchive": false
+        }
+      }
+    },
+    {
+      "name": "station-street-ao-on-capture-2",
+      "view": "station-street",
+      "pass": "capture-2",
+      "camera": {
+        "position": [
+          278.8,
+          10.4,
+          936
+        ],
+        "quaternion": [
+          -0.003277842930440423,
+          -0.009834585659995631,
+          -0.000032237959341941705,
+          0.9999462663720154
+        ],
+        "fov": 58
+      },
+      "time": 14,
+      "uploadedAO": 0.55,
+      "files": {
+        "png": {
+          "filename": "station-street-ao-on-capture-2.png",
+          "bytes": 2641270,
+          "sha256": "85c99e459a8e72a4f1eef93040bdbf59097eb0499d989fd4516522dc10b0f190",
+          "copiedToArchive": false
+        },
+        "jpg": {
+          "filename": "station-street-ao-on-capture-2.jpg",
+          "bytes": 146139,
+          "sha256": "f68a4a9125180e359c909fa508e77d1a926fbc7d0a82e641f96f544485d55e02",
+          "copiedToArchive": true
+        }
+      }
+    },
+    {
+      "name": "street-detail-ao-on-warmup",
+      "view": "street-detail",
+      "pass": "warmup",
+      "camera": {
+        "position": [
+          284.4,
+          10.281286274509803,
+          924
+        ],
+        "quaternion": [
+          -0.12465537443110519,
+          -0.38126635888515065,
+          -0.05196769176958736,
+          0.914547079280253
+        ],
+        "fov": 58
+      },
+      "time": 14,
+      "uploadedAO": 0.55,
+      "files": {
+        "png": {
+          "filename": "street-detail-ao-on-warmup.png",
+          "bytes": 2253929,
+          "sha256": "b2530d410ff1bf82c7a7eb681046c4ba04d9bbeb5e4ce443e051668bd7256742",
+          "copiedToArchive": false
+        },
+        "jpg": {
+          "filename": "street-detail-ao-on-warmup.jpg",
+          "bytes": 100935,
+          "sha256": "88dcd02dd328c11e02f65e08ae91977a469217d016418bfeca20e19d32d599cf",
+          "copiedToArchive": false
+        }
+      }
+    },
+    {
+      "name": "street-detail-ao-on-capture-1",
+      "view": "street-detail",
+      "pass": "capture-1",
+      "camera": {
+        "position": [
+          284.4,
+          10.281286274509803,
+          924
+        ],
+        "quaternion": [
+          -0.12465537443110519,
+          -0.38126635888515065,
+          -0.05196769176958736,
+          0.914547079280253
+        ],
+        "fov": 58
+      },
+      "time": 14,
+      "uploadedAO": 0.55,
+      "files": {
+        "png": {
+          "filename": "street-detail-ao-on-capture-1.png",
+          "bytes": 2253929,
+          "sha256": "b2530d410ff1bf82c7a7eb681046c4ba04d9bbeb5e4ce443e051668bd7256742",
+          "copiedToArchive": false
+        },
+        "jpg": {
+          "filename": "street-detail-ao-on-capture-1.jpg",
+          "bytes": 100935,
+          "sha256": "88dcd02dd328c11e02f65e08ae91977a469217d016418bfeca20e19d32d599cf",
+          "copiedToArchive": false
+        }
+      }
+    },
+    {
+      "name": "street-detail-ao-on-capture-2",
+      "view": "street-detail",
+      "pass": "capture-2",
+      "camera": {
+        "position": [
+          284.4,
+          10.281286274509803,
+          924
+        ],
+        "quaternion": [
+          -0.12465537443110519,
+          -0.38126635888515065,
+          -0.05196769176958736,
+          0.914547079280253
+        ],
+        "fov": 58
+      },
+      "time": 14,
+      "uploadedAO": 0.55,
+      "files": {
+        "png": {
+          "filename": "street-detail-ao-on-capture-2.png",
+          "bytes": 2253929,
+          "sha256": "b2530d410ff1bf82c7a7eb681046c4ba04d9bbeb5e4ce443e051668bd7256742",
+          "copiedToArchive": false
+        },
+        "jpg": {
+          "filename": "street-detail-ao-on-capture-2.jpg",
+          "bytes": 100935,
+          "sha256": "88dcd02dd328c11e02f65e08ae91977a469217d016418bfeca20e19d32d599cf",
+          "copiedToArchive": true
+        }
+      }
+    }
+  ],
+  "allCaptureMetadata": "look-report.json.gz",
+  "scope": "All 21 frames indexed; seven views, default AO on, warmup plus two captures. No AO-off/HDR/tap/shadow-ABA rerun. Unselected pixels remain in original artifacts."
+}

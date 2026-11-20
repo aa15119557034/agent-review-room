@@ -1,0 +1,1466 @@
+{
+  "sourceCommit": "5463714131eba64f83a828ba509c023072f4d4ea",
+  "sourceVerification": {
+    "commit": "5463714131eba64f83a828ba509c023072f4d4ea",
+    "manifestSha256": "0e6dc0f0ac7c6e55284b5e98c3bf4886e7c0e5ef9d6e9590aec5a28eab3402c8",
+    "trackedFilesVerifiedAgainstCommit": 198,
+    "ignoredFilesVerifiedAgainstPinnedManifestAndDisk": 0
+  },
+  "stage": "complete",
+  "completedAt": "2026-11-17T06:17:11.323Z",
+  "ok": false,
+  "renderOk": true,
+  "transportClean": false,
+  "versions": {
+    "node": "24.22.0",
+    "acorn": "8.18.0",
+    "ada": "4.0.0",
+    "amaro": "1.1.11",
+    "ares": "1.34.8",
+    "brotli": "1.2.0",
+    "cldr": "48.0",
+    "icu": "78.2",
+    "llhttp": "9.4.3",
+    "merve": "1.2.2",
+    "modules": "149",
+    "napi": "10",
+    "nbytes": "0.1.4",
+    "ncrypto": "0.0.1",
+    "nghttp2": "1.70.0",
+    "nghttp3": "",
+    "ngtcp2": "",
+    "openssl": "0.0.0",
+    "simdjson": "4.6.11",
+    "simdutf": "7.7.0",
+    "sqlite": "3.53.4",
+    "tz": "2026d",
+    "undici": "7.29.1",
+    "unicode": "17.0",
+    "uv": "1.52.1",
+    "uvwasi": "0.0.23",
+    "v8": "15.2.124.43-electron.0",
+    "zlib": "1.3.2.1-motley",
+    "zstd": "1.6.0",
+    "electron": "44.9.0",
+    "chrome": "152.0.7977.167"
+  },
+  "sourceUnchanged": true,
+  "driverUnchanged": true,
+  "changedSourceFiles": [],
+  "restore": {
+    "ao": 0.55,
+    "blur": 0,
+    "rays": 0,
+    "time": 34.0885,
+    "view": "station-street",
+    "walking": false,
+    "frozen": false
+  },
+  "networkFailures": [
+    {
+      "stage": "loading",
+      "url": "http://127.0.0.1:56021/assets/models/menhir.glb",
+      "canceled": true,
+      "errorText": "net::ERR_ABORTED",
+      "requestId": "3708.116",
+      "timestamp": 1906373.490409,
+      "type": "Fetch"
+    },
+    {
+      "stage": "loading",
+      "url": "http://127.0.0.1:56021/assets/models/boulders.glb",
+      "canceled": true,
+      "errorText": "net::ERR_ABORTED",
+      "requestId": "3708.118",
+      "timestamp": 1906373.490573,
+      "type": "Fetch"
+    }
+  ],
+  "httpErrors": [],
+  "exceptions": [],
+  "strictExpectedProcessExitFromReport": 1,
+  "exitEvidence": "Expected from driver/report ok, not a persisted OS process exit observation. Preserve console/runner exit separately.",
+  "initial": {
+    "views": [
+      {
+        "name": "20-rear-eye",
+        "space": "station-local",
+        "position": [
+          -7,
+          6.755245542526229,
+          -142
+        ],
+        "target": [
+          4,
+          6.764808464050294,
+          -132
+        ]
+      },
+      {
+        "name": "21-front-eye",
+        "space": "station-local",
+        "position": [
+          -6,
+          4.87812709172567,
+          -117
+        ],
+        "target": [
+          4,
+          6.864808464050293,
+          -122.4
+        ]
+      },
+      {
+        "name": "station-street",
+        "space": "world",
+        "position": [
+          278.8,
+          10.4,
+          936
+        ],
+        "target": [
+          280,
+          10,
+          875
+        ]
+      }
+    ],
+    "saved": {
+      "ao": 0.55,
+      "blur": 0,
+      "rays": 0,
+      "time": 34.0885
+    },
+    "method": "Exact C7 20/21 camera formulas plus existing station-street. Freeze RAF/time14. For each view: AO=.55 then AO=0; each has one retained warmup and two fresh same-task render+PNG captures. Only AO changes within view. No shadow/exposure/quality/shader edits. Typed depth metadata describes actual Three objects; no claim of queried driver internal attachment format. No performance claims."
+  },
+  "selectedImages": [
+    "20-rear-eye-ao-on-capture-2.jpg",
+    "20-rear-eye-ao-on-capture-2.png",
+    "20-rear-eye-ao-off-capture-2.jpg",
+    "20-rear-eye-ao-off-capture-2.png",
+    "21-front-eye-ao-on-capture-2.jpg",
+    "21-front-eye-ao-on-capture-2.png",
+    "21-front-eye-ao-off-capture-2.jpg",
+    "21-front-eye-ao-off-capture-2.png",
+    "station-street-ao-on-capture-2.jpg",
+    "station-street-ao-off-capture-2.jpg"
+  ],
+  "captures": [
+    {
+      "name": "20-rear-eye-ao-on-capture-2",
+      "view": {
+        "name": "20-rear-eye",
+        "space": "station-local",
+        "position": [
+          -7,
+          6.755245542526229,
+          -142
+        ],
+        "target": [
+          4,
+          6.764808464050294,
+          -132
+        ]
+      },
+      "pass": "capture-2",
+      "camera": {
+        "position": [
+          273,
+          14.755245542526229,
+          758
+        ],
+        "quaternion": [
+          -0.00013011891877658623,
+          0.9145142483742376,
+          -0.00029414054360230415,
+          -0.40455356390830466
+        ],
+        "fov": 58,
+        "aspect": 1.6,
+        "near": 0.2,
+        "far": 16000,
+        "zoom": 1,
+        "projectionMatrix": [
+          1.1275298470446398,
+          0,
+          0,
+          0,
+          0,
+          1.8040477552714236,
+          0,
+          0,
+          0,
+          0,
+          -1.000025000312504,
+          -1,
+          0,
+          0,
+          -0.4000050000625008,
+          0
+        ]
+      },
+      "lights": [
+        {
+          "class": "DirectionalLight",
+          "name": "",
+          "type": "DirectionalLight",
+          "position": [
+            198.3349607968577,
+            97.47086455531951,
+            795.4735164292183
+          ],
+          "worldPosition": [
+            198.3349607968577,
+            97.47086455531951,
+            795.4735164292183
+          ],
+          "color": [
+            1,
+            0.775822218312646,
+            0.55201140150344
+          ],
+          "intensity": 2.1,
+          "castShadow": true,
+          "target": [
+            280,
+            8,
+            900
+          ],
+          "shadow": {
+            "mapSize": [
+              4096,
+              4096
+            ],
+            "bias": -0.0002,
+            "normalBias": 0.035,
+            "camera": {
+              "near": 1,
+              "far": 400,
+              "left": -150,
+              "right": 150,
+              "top": 150,
+              "bottom": -150
+            },
+            "depth": {
+              "class": "DepthTexture",
+              "isDepthTexture": true,
+              "type": 1014,
+              "format": 1026,
+              "internalFormat": null,
+              "minFilter": 1006,
+              "magFilter": 1006,
+              "wrapS": 1001,
+              "wrapT": 1001,
+              "width": 4096,
+              "height": 4096
+            }
+          }
+        },
+        {
+          "class": "HemisphereLight",
+          "name": "",
+          "type": "HemisphereLight",
+          "position": [
+            0,
+            1,
+            0
+          ],
+          "worldPosition": [
+            0,
+            1,
+            0
+          ],
+          "color": [
+            0.623960391667596,
+            0.7454042095350284,
+            1
+          ],
+          "intensity": 1.05,
+          "castShadow": false,
+          "shadow": null
+        }
+      ],
+      "ao": 0.55,
+      "toon": 1,
+      "time": 14,
+      "stationTime": 14,
+      "params": {
+        "exposure": 1.02,
+        "blur": 0,
+        "bloom": 0.12,
+        "distortion": 0,
+        "fringe": 0,
+        "vignette": 0.12,
+        "rays": 0,
+        "saturation": 1,
+        "contrast": 1.05,
+        "speed": 0
+      },
+      "quality": "medium",
+      "depth": {
+        "texture": {
+          "class": "DepthTexture",
+          "isDepthTexture": true,
+          "type": 1015,
+          "format": 1026,
+          "internalFormat": null,
+          "minFilter": 1003,
+          "magFilter": 1003,
+          "wrapS": 1001,
+          "wrapT": 1001,
+          "width": 1440,
+          "height": 900
+        },
+        "sceneTarget": {
+          "class": "WebGLRenderTarget",
+          "width": 1440,
+          "height": 900,
+          "samples": 4,
+          "depthBuffer": true
+        },
+        "boundToSceneDepth": true,
+        "near": 0.2,
+        "far": 16000,
+        "reversed": 0,
+        "projectionScale": 811.8214898721407
+      },
+      "gpu": {
+        "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "vendor": "Google Inc. (NVIDIA)",
+        "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+        "shadingLanguageVersion": "WebGL GLSL ES 3.00 (OpenGL ES GLSL ES 3.0 Chromium)",
+        "precision": "highp",
+        "maxTextureSize": 16384
+      },
+      "dimensions": {
+        "width": 1440,
+        "height": 900,
+        "pixelRatio": 1
+      },
+      "render": {
+        "frame": 238,
+        "calls": 1195,
+        "triangles": 9550549,
+        "points": 0,
+        "lines": 0
+      },
+      "memory": {
+        "geometries": 1071,
+        "textures": 214
+      },
+      "errors": [],
+      "clock": {
+        "timeOrigin": 1794896191818.2,
+        "now": 34518.40000009537
+      },
+      "pngSha256": "b711a515fc8cc7e619e373a4a822ac1136148ee2f36cfea80515d7c1b587b3fa"
+    },
+    {
+      "name": "20-rear-eye-ao-off-capture-2",
+      "view": {
+        "name": "20-rear-eye",
+        "space": "station-local",
+        "position": [
+          -7,
+          6.755245542526229,
+          -142
+        ],
+        "target": [
+          4,
+          6.764808464050294,
+          -132
+        ]
+      },
+      "pass": "capture-2",
+      "camera": {
+        "position": [
+          273,
+          14.755245542526229,
+          758
+        ],
+        "quaternion": [
+          -0.00013011891877658623,
+          0.9145142483742376,
+          -0.00029414054360230415,
+          -0.40455356390830466
+        ],
+        "fov": 58,
+        "aspect": 1.6,
+        "near": 0.2,
+        "far": 16000,
+        "zoom": 1,
+        "projectionMatrix": [
+          1.1275298470446398,
+          0,
+          0,
+          0,
+          0,
+          1.8040477552714236,
+          0,
+          0,
+          0,
+          0,
+          -1.000025000312504,
+          -1,
+          0,
+          0,
+          -0.4000050000625008,
+          0
+        ]
+      },
+      "lights": [
+        {
+          "class": "DirectionalLight",
+          "name": "",
+          "type": "DirectionalLight",
+          "position": [
+            198.3349607968577,
+            97.47086455531951,
+            795.4735164292183
+          ],
+          "worldPosition": [
+            198.3349607968577,
+            97.47086455531951,
+            795.4735164292183
+          ],
+          "color": [
+            1,
+            0.775822218312646,
+            0.55201140150344
+          ],
+          "intensity": 2.1,
+          "castShadow": true,
+          "target": [
+            280,
+            8,
+            900
+          ],
+          "shadow": {
+            "mapSize": [
+              4096,
+              4096
+            ],
+            "bias": -0.0002,
+            "normalBias": 0.035,
+            "camera": {
+              "near": 1,
+              "far": 400,
+              "left": -150,
+              "right": 150,
+              "top": 150,
+              "bottom": -150
+            },
+            "depth": {
+              "class": "DepthTexture",
+              "isDepthTexture": true,
+              "type": 1014,
+              "format": 1026,
+              "internalFormat": null,
+              "minFilter": 1006,
+              "magFilter": 1006,
+              "wrapS": 1001,
+              "wrapT": 1001,
+              "width": 4096,
+              "height": 4096
+            }
+          }
+        },
+        {
+          "class": "HemisphereLight",
+          "name": "",
+          "type": "HemisphereLight",
+          "position": [
+            0,
+            1,
+            0
+          ],
+          "worldPosition": [
+            0,
+            1,
+            0
+          ],
+          "color": [
+            0.623960391667596,
+            0.7454042095350284,
+            1
+          ],
+          "intensity": 1.05,
+          "castShadow": false,
+          "shadow": null
+        }
+      ],
+      "ao": 0,
+      "toon": 1,
+      "time": 14,
+      "stationTime": 14,
+      "params": {
+        "exposure": 1.02,
+        "blur": 0,
+        "bloom": 0.12,
+        "distortion": 0,
+        "fringe": 0,
+        "vignette": 0.12,
+        "rays": 0,
+        "saturation": 1,
+        "contrast": 1.05,
+        "speed": 0
+      },
+      "quality": "medium",
+      "depth": {
+        "texture": {
+          "class": "DepthTexture",
+          "isDepthTexture": true,
+          "type": 1015,
+          "format": 1026,
+          "internalFormat": null,
+          "minFilter": 1003,
+          "magFilter": 1003,
+          "wrapS": 1001,
+          "wrapT": 1001,
+          "width": 1440,
+          "height": 900
+        },
+        "sceneTarget": {
+          "class": "WebGLRenderTarget",
+          "width": 1440,
+          "height": 900,
+          "samples": 4,
+          "depthBuffer": true
+        },
+        "boundToSceneDepth": true,
+        "near": 0.2,
+        "far": 16000,
+        "reversed": 0,
+        "projectionScale": 811.8214898721407
+      },
+      "gpu": {
+        "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "vendor": "Google Inc. (NVIDIA)",
+        "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+        "shadingLanguageVersion": "WebGL GLSL ES 3.00 (OpenGL ES GLSL ES 3.0 Chromium)",
+        "precision": "highp",
+        "maxTextureSize": 16384
+      },
+      "dimensions": {
+        "width": 1440,
+        "height": 900,
+        "pixelRatio": 1
+      },
+      "render": {
+        "frame": 289,
+        "calls": 1195,
+        "triangles": 9550549,
+        "points": 0,
+        "lines": 0
+      },
+      "memory": {
+        "geometries": 1071,
+        "textures": 214
+      },
+      "errors": [],
+      "clock": {
+        "timeOrigin": 1794896191818.2,
+        "now": 34880.5
+      },
+      "pngSha256": "3f4e8ed6f6ece529dd60d42a98d8491dbf4be5ae52c6dc9b716cd805c6245473"
+    },
+    {
+      "name": "21-front-eye-ao-on-capture-2",
+      "view": {
+        "name": "21-front-eye",
+        "space": "station-local",
+        "position": [
+          -6,
+          4.87812709172567,
+          -117
+        ],
+        "target": [
+          4,
+          6.864808464050293,
+          -122.4
+        ]
+      },
+      "pass": "capture-2",
+      "camera": {
+        "position": [
+          274,
+          12.87812709172567,
+          783
+        ],
+        "quaternion": [
+          0.07422133960767584,
+          -0.5103582416049142,
+          0.044271975994965136,
+          0.8556083508909221
+        ],
+        "fov": 58,
+        "aspect": 1.6,
+        "near": 0.2,
+        "far": 16000,
+        "zoom": 1,
+        "projectionMatrix": [
+          1.1275298470446398,
+          0,
+          0,
+          0,
+          0,
+          1.8040477552714236,
+          0,
+          0,
+          0,
+          0,
+          -1.000025000312504,
+          -1,
+          0,
+          0,
+          -0.4000050000625008,
+          0
+        ]
+      },
+      "lights": [
+        {
+          "class": "DirectionalLight",
+          "name": "",
+          "type": "DirectionalLight",
+          "position": [
+            198.3349607968577,
+            97.47086455531951,
+            795.4735164292183
+          ],
+          "worldPosition": [
+            198.3349607968577,
+            97.47086455531951,
+            795.4735164292183
+          ],
+          "color": [
+            1,
+            0.775822218312646,
+            0.55201140150344
+          ],
+          "intensity": 2.1,
+          "castShadow": true,
+          "target": [
+            280,
+            8,
+            900
+          ],
+          "shadow": {
+            "mapSize": [
+              4096,
+              4096
+            ],
+            "bias": -0.0002,
+            "normalBias": 0.035,
+            "camera": {
+              "near": 1,
+              "far": 400,
+              "left": -150,
+              "right": 150,
+              "top": 150,
+              "bottom": -150
+            },
+            "depth": {
+              "class": "DepthTexture",
+              "isDepthTexture": true,
+              "type": 1014,
+              "format": 1026,
+              "internalFormat": null,
+              "minFilter": 1006,
+              "magFilter": 1006,
+              "wrapS": 1001,
+              "wrapT": 1001,
+              "width": 4096,
+              "height": 4096
+            }
+          }
+        },
+        {
+          "class": "HemisphereLight",
+          "name": "",
+          "type": "HemisphereLight",
+          "position": [
+            0,
+            1,
+            0
+          ],
+          "worldPosition": [
+            0,
+            1,
+            0
+          ],
+          "color": [
+            0.623960391667596,
+            0.7454042095350284,
+            1
+          ],
+          "intensity": 1.05,
+          "castShadow": false,
+          "shadow": null
+        }
+      ],
+      "ao": 0.55,
+      "toon": 1,
+      "time": 14,
+      "stationTime": 14,
+      "params": {
+        "exposure": 1.02,
+        "blur": 0,
+        "bloom": 0.12,
+        "distortion": 0,
+        "fringe": 0,
+        "vignette": 0.12,
+        "rays": 0,
+        "saturation": 1,
+        "contrast": 1.05,
+        "speed": 0
+      },
+      "quality": "medium",
+      "depth": {
+        "texture": {
+          "class": "DepthTexture",
+          "isDepthTexture": true,
+          "type": 1015,
+          "format": 1026,
+          "internalFormat": null,
+          "minFilter": 1003,
+          "magFilter": 1003,
+          "wrapS": 1001,
+          "wrapT": 1001,
+          "width": 1440,
+          "height": 900
+        },
+        "sceneTarget": {
+          "class": "WebGLRenderTarget",
+          "width": 1440,
+          "height": 900,
+          "samples": 4,
+          "depthBuffer": true
+        },
+        "boundToSceneDepth": true,
+        "near": 0.2,
+        "far": 16000,
+        "reversed": 0,
+        "projectionScale": 811.8214898721407
+      },
+      "gpu": {
+        "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "vendor": "Google Inc. (NVIDIA)",
+        "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+        "shadingLanguageVersion": "WebGL GLSL ES 3.00 (OpenGL ES GLSL ES 3.0 Chromium)",
+        "precision": "highp",
+        "maxTextureSize": 16384
+      },
+      "dimensions": {
+        "width": 1440,
+        "height": 900,
+        "pixelRatio": 1
+      },
+      "render": {
+        "frame": 340,
+        "calls": 776,
+        "triangles": 8677270,
+        "points": 0,
+        "lines": 0
+      },
+      "memory": {
+        "geometries": 1071,
+        "textures": 214
+      },
+      "errors": [],
+      "clock": {
+        "timeOrigin": 1794896191818.2,
+        "now": 35200.40000009537
+      },
+      "pngSha256": "ea58e8888df177ba37c9772637e728c9d5a8d81c2d4a09dd79c8e03a04ec9e68"
+    },
+    {
+      "name": "21-front-eye-ao-off-capture-2",
+      "view": {
+        "name": "21-front-eye",
+        "space": "station-local",
+        "position": [
+          -6,
+          4.87812709172567,
+          -117
+        ],
+        "target": [
+          4,
+          6.864808464050293,
+          -122.4
+        ]
+      },
+      "pass": "capture-2",
+      "camera": {
+        "position": [
+          274,
+          12.87812709172567,
+          783
+        ],
+        "quaternion": [
+          0.07422133960767584,
+          -0.5103582416049142,
+          0.044271975994965136,
+          0.8556083508909221
+        ],
+        "fov": 58,
+        "aspect": 1.6,
+        "near": 0.2,
+        "far": 16000,
+        "zoom": 1,
+        "projectionMatrix": [
+          1.1275298470446398,
+          0,
+          0,
+          0,
+          0,
+          1.8040477552714236,
+          0,
+          0,
+          0,
+          0,
+          -1.000025000312504,
+          -1,
+          0,
+          0,
+          -0.4000050000625008,
+          0
+        ]
+      },
+      "lights": [
+        {
+          "class": "DirectionalLight",
+          "name": "",
+          "type": "DirectionalLight",
+          "position": [
+            198.3349607968577,
+            97.47086455531951,
+            795.4735164292183
+          ],
+          "worldPosition": [
+            198.3349607968577,
+            97.47086455531951,
+            795.4735164292183
+          ],
+          "color": [
+            1,
+            0.775822218312646,
+            0.55201140150344
+          ],
+          "intensity": 2.1,
+          "castShadow": true,
+          "target": [
+            280,
+            8,
+            900
+          ],
+          "shadow": {
+            "mapSize": [
+              4096,
+              4096
+            ],
+            "bias": -0.0002,
+            "normalBias": 0.035,
+            "camera": {
+              "near": 1,
+              "far": 400,
+              "left": -150,
+              "right": 150,
+              "top": 150,
+              "bottom": -150
+            },
+            "depth": {
+              "class": "DepthTexture",
+              "isDepthTexture": true,
+              "type": 1014,
+              "format": 1026,
+              "internalFormat": null,
+              "minFilter": 1006,
+              "magFilter": 1006,
+              "wrapS": 1001,
+              "wrapT": 1001,
+              "width": 4096,
+              "height": 4096
+            }
+          }
+        },
+        {
+          "class": "HemisphereLight",
+          "name": "",
+          "type": "HemisphereLight",
+          "position": [
+            0,
+            1,
+            0
+          ],
+          "worldPosition": [
+            0,
+            1,
+            0
+          ],
+          "color": [
+            0.623960391667596,
+            0.7454042095350284,
+            1
+          ],
+          "intensity": 1.05,
+          "castShadow": false,
+          "shadow": null
+        }
+      ],
+      "ao": 0,
+      "toon": 1,
+      "time": 14,
+      "stationTime": 14,
+      "params": {
+        "exposure": 1.02,
+        "blur": 0,
+        "bloom": 0.12,
+        "distortion": 0,
+        "fringe": 0,
+        "vignette": 0.12,
+        "rays": 0,
+        "saturation": 1,
+        "contrast": 1.05,
+        "speed": 0
+      },
+      "quality": "medium",
+      "depth": {
+        "texture": {
+          "class": "DepthTexture",
+          "isDepthTexture": true,
+          "type": 1015,
+          "format": 1026,
+          "internalFormat": null,
+          "minFilter": 1003,
+          "magFilter": 1003,
+          "wrapS": 1001,
+          "wrapT": 1001,
+          "width": 1440,
+          "height": 900
+        },
+        "sceneTarget": {
+          "class": "WebGLRenderTarget",
+          "width": 1440,
+          "height": 900,
+          "samples": 4,
+          "depthBuffer": true
+        },
+        "boundToSceneDepth": true,
+        "near": 0.2,
+        "far": 16000,
+        "reversed": 0,
+        "projectionScale": 811.8214898721407
+      },
+      "gpu": {
+        "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "vendor": "Google Inc. (NVIDIA)",
+        "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+        "shadingLanguageVersion": "WebGL GLSL ES 3.00 (OpenGL ES GLSL ES 3.0 Chromium)",
+        "precision": "highp",
+        "maxTextureSize": 16384
+      },
+      "dimensions": {
+        "width": 1440,
+        "height": 900,
+        "pixelRatio": 1
+      },
+      "render": {
+        "frame": 391,
+        "calls": 776,
+        "triangles": 8677270,
+        "points": 0,
+        "lines": 0
+      },
+      "memory": {
+        "geometries": 1071,
+        "textures": 214
+      },
+      "errors": [],
+      "clock": {
+        "timeOrigin": 1794896191818.2,
+        "now": 35513.90000009537
+      },
+      "pngSha256": "f2eede33b61b1ce1be5bae36cae7a79f3d0c5f2c5b808056bef2324be77db5f8"
+    },
+    {
+      "name": "station-street-ao-on-capture-2",
+      "view": {
+        "name": "station-street",
+        "space": "world",
+        "position": [
+          278.8,
+          10.4,
+          936
+        ],
+        "target": [
+          280,
+          10,
+          875
+        ]
+      },
+      "pass": "capture-2",
+      "camera": {
+        "position": [
+          278.8,
+          10.4,
+          936
+        ],
+        "quaternion": [
+          -0.003277842930440423,
+          -0.009834585659995631,
+          -0.000032237959341941705,
+          0.9999462663720154
+        ],
+        "fov": 58,
+        "aspect": 1.6,
+        "near": 0.2,
+        "far": 16000,
+        "zoom": 1,
+        "projectionMatrix": [
+          1.1275298470446398,
+          0,
+          0,
+          0,
+          0,
+          1.8040477552714236,
+          0,
+          0,
+          0,
+          0,
+          -1.000025000312504,
+          -1,
+          0,
+          0,
+          -0.4000050000625008,
+          0
+        ]
+      },
+      "lights": [
+        {
+          "class": "DirectionalLight",
+          "name": "",
+          "type": "DirectionalLight",
+          "position": [
+            198.3349607968577,
+            97.47086455531951,
+            795.4735164292183
+          ],
+          "worldPosition": [
+            198.3349607968577,
+            97.47086455531951,
+            795.4735164292183
+          ],
+          "color": [
+            1,
+            0.775822218312646,
+            0.55201140150344
+          ],
+          "intensity": 2.1,
+          "castShadow": true,
+          "target": [
+            280,
+            8,
+            900
+          ],
+          "shadow": {
+            "mapSize": [
+              4096,
+              4096
+            ],
+            "bias": -0.0002,
+            "normalBias": 0.035,
+            "camera": {
+              "near": 1,
+              "far": 400,
+              "left": -150,
+              "right": 150,
+              "top": 150,
+              "bottom": -150
+            },
+            "depth": {
+              "class": "DepthTexture",
+              "isDepthTexture": true,
+              "type": 1014,
+              "format": 1026,
+              "internalFormat": null,
+              "minFilter": 1006,
+              "magFilter": 1006,
+              "wrapS": 1001,
+              "wrapT": 1001,
+              "width": 4096,
+              "height": 4096
+            }
+          }
+        },
+        {
+          "class": "HemisphereLight",
+          "name": "",
+          "type": "HemisphereLight",
+          "position": [
+            0,
+            1,
+            0
+          ],
+          "worldPosition": [
+            0,
+            1,
+            0
+          ],
+          "color": [
+            0.623960391667596,
+            0.7454042095350284,
+            1
+          ],
+          "intensity": 1.05,
+          "castShadow": false,
+          "shadow": null
+        }
+      ],
+      "ao": 0.55,
+      "toon": 1,
+      "time": 14,
+      "stationTime": 14,
+      "params": {
+        "exposure": 1.02,
+        "blur": 0,
+        "bloom": 0.12,
+        "distortion": 0,
+        "fringe": 0,
+        "vignette": 0.12,
+        "rays": 0,
+        "saturation": 1,
+        "contrast": 1.05,
+        "speed": 0
+      },
+      "quality": "medium",
+      "depth": {
+        "texture": {
+          "class": "DepthTexture",
+          "isDepthTexture": true,
+          "type": 1015,
+          "format": 1026,
+          "internalFormat": null,
+          "minFilter": 1003,
+          "magFilter": 1003,
+          "wrapS": 1001,
+          "wrapT": 1001,
+          "width": 1440,
+          "height": 900
+        },
+        "sceneTarget": {
+          "class": "WebGLRenderTarget",
+          "width": 1440,
+          "height": 900,
+          "samples": 4,
+          "depthBuffer": true
+        },
+        "boundToSceneDepth": true,
+        "near": 0.2,
+        "far": 16000,
+        "reversed": 0,
+        "projectionScale": 811.8214898721407
+      },
+      "gpu": {
+        "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "vendor": "Google Inc. (NVIDIA)",
+        "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+        "shadingLanguageVersion": "WebGL GLSL ES 3.00 (OpenGL ES GLSL ES 3.0 Chromium)",
+        "precision": "highp",
+        "maxTextureSize": 16384
+      },
+      "dimensions": {
+        "width": 1440,
+        "height": 900,
+        "pixelRatio": 1
+      },
+      "render": {
+        "frame": 442,
+        "calls": 1516,
+        "triangles": 8287602,
+        "points": 0,
+        "lines": 0
+      },
+      "memory": {
+        "geometries": 1071,
+        "textures": 214
+      },
+      "errors": [],
+      "clock": {
+        "timeOrigin": 1794896191818.2,
+        "now": 35885.90000009537
+      },
+      "pngSha256": "847239c0be0ceac5b18e911912c4680f7f513eee82cedbbc0c4a7b9725fb3861"
+    },
+    {
+      "name": "station-street-ao-off-capture-2",
+      "view": {
+        "name": "station-street",
+        "space": "world",
+        "position": [
+          278.8,
+          10.4,
+          936
+        ],
+        "target": [
+          280,
+          10,
+          875
+        ]
+      },
+      "pass": "capture-2",
+      "camera": {
+        "position": [
+          278.8,
+          10.4,
+          936
+        ],
+        "quaternion": [
+          -0.003277842930440423,
+          -0.009834585659995631,
+          -0.000032237959341941705,
+          0.9999462663720154
+        ],
+        "fov": 58,
+        "aspect": 1.6,
+        "near": 0.2,
+        "far": 16000,
+        "zoom": 1,
+        "projectionMatrix": [
+          1.1275298470446398,
+          0,
+          0,
+          0,
+          0,
+          1.8040477552714236,
+          0,
+          0,
+          0,
+          0,
+          -1.000025000312504,
+          -1,
+          0,
+          0,
+          -0.4000050000625008,
+          0
+        ]
+      },
+      "lights": [
+        {
+          "class": "DirectionalLight",
+          "name": "",
+          "type": "DirectionalLight",
+          "position": [
+            198.3349607968577,
+            97.47086455531951,
+            795.4735164292183
+          ],
+          "worldPosition": [
+            198.3349607968577,
+            97.47086455531951,
+            795.4735164292183
+          ],
+          "color": [
+            1,
+            0.775822218312646,
+            0.55201140150344
+          ],
+          "intensity": 2.1,
+          "castShadow": true,
+          "target": [
+            280,
+            8,
+            900
+          ],
+          "shadow": {
+            "mapSize": [
+              4096,
+              4096
+            ],
+            "bias": -0.0002,
+            "normalBias": 0.035,
+            "camera": {
+              "near": 1,
+              "far": 400,
+              "left": -150,
+              "right": 150,
+              "top": 150,
+              "bottom": -150
+            },
+            "depth": {
+              "class": "DepthTexture",
+              "isDepthTexture": true,
+              "type": 1014,
+              "format": 1026,
+              "internalFormat": null,
+              "minFilter": 1006,
+              "magFilter": 1006,
+              "wrapS": 1001,
+              "wrapT": 1001,
+              "width": 4096,
+              "height": 4096
+            }
+          }
+        },
+        {
+          "class": "HemisphereLight",
+          "name": "",
+          "type": "HemisphereLight",
+          "position": [
+            0,
+            1,
+            0
+          ],
+          "worldPosition": [
+            0,
+            1,
+            0
+          ],
+          "color": [
+            0.623960391667596,
+            0.7454042095350284,
+            1
+          ],
+          "intensity": 1.05,
+          "castShadow": false,
+          "shadow": null
+        }
+      ],
+      "ao": 0,
+      "toon": 1,
+      "time": 14,
+      "stationTime": 14,
+      "params": {
+        "exposure": 1.02,
+        "blur": 0,
+        "bloom": 0.12,
+        "distortion": 0,
+        "fringe": 0,
+        "vignette": 0.12,
+        "rays": 0,
+        "saturation": 1,
+        "contrast": 1.05,
+        "speed": 0
+      },
+      "quality": "medium",
+      "depth": {
+        "texture": {
+          "class": "DepthTexture",
+          "isDepthTexture": true,
+          "type": 1015,
+          "format": 1026,
+          "internalFormat": null,
+          "minFilter": 1003,
+          "magFilter": 1003,
+          "wrapS": 1001,
+          "wrapT": 1001,
+          "width": 1440,
+          "height": 900
+        },
+        "sceneTarget": {
+          "class": "WebGLRenderTarget",
+          "width": 1440,
+          "height": 900,
+          "samples": 4,
+          "depthBuffer": true
+        },
+        "boundToSceneDepth": true,
+        "near": 0.2,
+        "far": 16000,
+        "reversed": 0,
+        "projectionScale": 811.8214898721407
+      },
+      "gpu": {
+        "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "vendor": "Google Inc. (NVIDIA)",
+        "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+        "shadingLanguageVersion": "WebGL GLSL ES 3.00 (OpenGL ES GLSL ES 3.0 Chromium)",
+        "precision": "highp",
+        "maxTextureSize": 16384
+      },
+      "dimensions": {
+        "width": 1440,
+        "height": 900,
+        "pixelRatio": 1
+      },
+      "render": {
+        "frame": 493,
+        "calls": 1516,
+        "triangles": 8287602,
+        "points": 0,
+        "lines": 0
+      },
+      "memory": {
+        "geometries": 1071,
+        "textures": 214
+      },
+      "errors": [],
+      "clock": {
+        "timeOrigin": 1794896191818.2,
+        "now": 36260.40000009537
+      },
+      "pngSha256": "adf2a0b7e51124b1b82eaab2078abf3dfdfe2ebd5a41d2e02bb415e38dfc6503"
+    }
+  ],
+  "causalPairs": [
+    {
+      "view": "20-rear-eye",
+      "onAO": 0.55,
+      "offAO": 0,
+      "equalFields": {
+        "camera": true,
+        "lights": true,
+        "time": true,
+        "stationTime": true,
+        "toon": true,
+        "params": true,
+        "quality": true,
+        "depth": true,
+        "dimensions": true
+      },
+      "firstSecondPNGEqual": {
+        "on": true,
+        "off": true
+      }
+    },
+    {
+      "view": "21-front-eye",
+      "onAO": 0.55,
+      "offAO": 0,
+      "equalFields": {
+        "camera": true,
+        "lights": true,
+        "time": true,
+        "stationTime": true,
+        "toon": true,
+        "params": true,
+        "quality": true,
+        "depth": true,
+        "dimensions": true
+      },
+      "firstSecondPNGEqual": {
+        "on": true,
+        "off": true
+      }
+    },
+    {
+      "view": "station-street",
+      "onAO": 0.55,
+      "offAO": 0,
+      "equalFields": {
+        "camera": true,
+        "lights": true,
+        "time": true,
+        "stationTime": true,
+        "toon": true,
+        "params": true,
+        "quality": true,
+        "depth": true,
+        "dimensions": true
+      },
+      "firstSecondPNGEqual": {
+        "on": true,
+        "off": true
+      }
+    }
+  ]
+}

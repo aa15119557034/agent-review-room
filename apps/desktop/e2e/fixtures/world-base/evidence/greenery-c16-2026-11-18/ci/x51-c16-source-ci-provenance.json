@@ -1,0 +1,70 @@
+{
+  "head": "50e190b092fb2b30ab9ed19a28302d5638f947f4",
+  "recordedAt": "2026-11-17T16:54:31.549Z",
+  "run": 44109955261,
+  "job": 134132528102,
+  "url": "https://github.com/aa15119557034/agent-review-room/actions/runs/44109955261/job/134132528102",
+  "actualCheckout": {
+    "ref": "refs/remotes/pull/254/merge",
+    "sha": "45a651b64a491691408c85e9615df203ca45f65f",
+    "sourceHead": "50e190b092fb2b30ab9ed19a28302d5638f947f4",
+    "baseHead": "e8c37d659ae3e73934efb6e2a21fc822da9610e8",
+    "scope": "CI is associated with exact API head_sha; actual tested checkout is GitHub PR synthetic merge, not direct source-head checkout."
+  },
+  "command": "node D:/codex/2026-11-16/world-implementation/handoff/x51-c16-source-ci-summary.cjs",
+  "summaryExit": 0,
+  "results": {
+    "testGroups": 9,
+    "tests": 1615,
+    "passed": 1615,
+    "types": 9,
+    "builds": 2,
+    "allExitZero": true,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0
+  },
+  "limitations": [
+    "All REST metadata captures were already completed/success, including runs.json.",
+    "log.json is the actual job log represented as a JSON string; counts and exits derive from actual summary rows.",
+    "This is Windows GitHub Actions, not local Windows execution or GPU acceptance. C cloud 1507 claim is not used.",
+    "No repository/GitHub writes, local test rerun or GPU execution."
+  ],
+  "files": [
+    {
+      "path": "D:/codex/2026-11-16/world-implementation/handoff/x51-c16-source-ci-checks.json",
+      "bytes": 5322,
+      "sha256": "4fe7a1f7a32dd6f921b1db23fd45bb1d18d2c7b67ee315c3098c70b054dadbe4"
+    },
+    {
+      "path": "D:/codex/2026-11-16/world-implementation/handoff/x51-c16-source-ci-runs.json",
+      "bytes": 17211,
+      "sha256": "991ea5ebd6860894dbc7bd41e2b735c74c9bbc72ad4a2cc5b2b35a454781ffe5"
+    },
+    {
+      "path": "D:/codex/2026-11-16/world-implementation/handoff/x51-c16-source-ci-jobs.json",
+      "bytes": 4139,
+      "sha256": "64d00c7d7909440a914b4fc30d69c54773b31b8d67957324f76f3d388be63200"
+    },
+    {
+      "path": "D:/codex/2026-11-16/world-implementation/handoff/x51-c16-source-ci-run.json",
+      "bytes": 16165,
+      "sha256": "537f553ab64fa548bdc83a55005eddbfe11555218da78e50c4d6fecd5caa81ef"
+    },
+    {
+      "path": "D:/codex/2026-11-16/world-implementation/handoff/x51-c16-source-ci-log.json",
+      "bytes": 32117,
+      "sha256": "e69258dab309cb7186734828fd61236b1e25cd0919ed5fecb66f9fdb7f33e32c"
+    },
+    {
+      "path": "D:/codex/2026-11-16/world-implementation/handoff/x51-c16-source-ci-summary.cjs",
+      "bytes": 2521,
+      "sha256": "5d1a294e4235256f63c632647e739dbfacd3656616473e91f7bc9f669654ee65"
+    },
+    {
+      "path": "D:/codex/2026-11-16/world-implementation/handoff/x51-c16-source-ci-summary.json",
+      "bytes": 6776,
+      "sha256": "90deab3e9874182e205a8a0666f641a96b5298cf0250835a28dc8b34854c44d2"
+    }
+  ]
+}

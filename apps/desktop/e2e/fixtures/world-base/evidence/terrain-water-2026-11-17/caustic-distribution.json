@@ -1,0 +1,75 @@
+{
+  "method": "Exact native generator executed with CPU-only DataTexture holder; no Three.js import or GPU",
+  "source": "upstream/petalwake/src/world/water.js",
+  "sourceSha256": "6cfdc9c8526453a9cbebf3a117470687849ced971285bc80b472dab452af1be0",
+  "generatorSha256": "e35c8ede7016de3b9f132d602b74613a3a1d87fec801ce2e541be227a70a38fb",
+  "samplesPerLevel": 250000,
+  "randomSeed": 73,
+  "channelMeans": [
+    0.49803508683746944,
+    0.49804035261565555
+  ],
+  "independentTexelMean": 0.3974428226196564,
+  "levels": [
+    {
+      "size": 256,
+      "mip": 0,
+      "independentBilinear": 0.3977646441567544,
+      "coupledUVTime14": 0.3969736502104479
+    },
+    {
+      "size": 128,
+      "mip": 1,
+      "independentBilinear": 0.40230136887993034,
+      "coupledUVTime14": 0.4023820732326108
+    },
+    {
+      "size": 64,
+      "mip": 2,
+      "independentBilinear": 0.4130873493768048,
+      "coupledUVTime14": 0.41363192409436944
+    },
+    {
+      "size": 32,
+      "mip": 3,
+      "independentBilinear": 0.4516442379386922,
+      "coupledUVTime14": 0.4527555438482087
+    },
+    {
+      "size": 16,
+      "mip": 4,
+      "independentBilinear": 0.5939049352261493,
+      "coupledUVTime14": 0.5945977154348504
+    },
+    {
+      "size": 8,
+      "mip": 5,
+      "independentBilinear": 0.979889002815162,
+      "coupledUVTime14": 0.9818038350858584
+    },
+    {
+      "size": 4,
+      "mip": 6,
+      "independentBilinear": 1.3885310378744435,
+      "coupledUVTime14": 1.388143485637674
+    },
+    {
+      "size": 2,
+      "mip": 7,
+      "independentBilinear": 1.5350607483773222,
+      "coupledUVTime14": 1.5350144173986857
+    },
+    {
+      "size": 1,
+      "mip": 8,
+      "independentBilinear": 1.599907324456814,
+      "coupledUVTime14": 1.599907324456814
+    }
+  ],
+  "limitations": [
+    "Histogram integral assumes independent B/A samples; bilinear estimate is Monte Carlo.",
+    "Coupled sample uses shader scale 1.37, time14 offsets, and uniform UV over [0,100)^2; excludes spatially varying refraction normals.",
+    "Mip levels use floating-point 2x2 box averaging and bilinear sampling at integer LOD; not driver quantization, trilinear, or anisotropic filtering.",
+    "0.398 is an approximate unresolved spatial mean for this pinned generator, not an exact local pixel integral."
+  ]
+}

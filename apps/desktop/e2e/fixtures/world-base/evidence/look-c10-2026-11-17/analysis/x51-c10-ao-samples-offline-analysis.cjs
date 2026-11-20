@@ -1,0 +1,15 @@
+'use strict';
+// Read-only numeric summary of the already-recorded GPU RGBA32F probe.
+const fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypto');
+const dir=process.argv[2]||'D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base/artifacts/gpu-ao-c10-samples-v1';
+const read=n=>JSON.parse(fs.readFileSync(path.join(dir,n),'utf8'));
+const sha=p=>crypto.createHash('sha256').update(fs.readFileSync(p)).digest('hex');
+const report=read('look-report.json'),gpu=read('gpu-ao-samples.json');
+if(JSON.stringify(report.gpuSamples)!==JSON.stringify(gpu))throw new Error('GPU evidence copies differ');
+if(crypto.createHash('sha256').update(gpu.exactFunctions).digest('hex')!==gpu.exactFunctionsSha256)throw new Error('Exact GLSL hash mismatch');
+const camera=report.captures.find(c=>c.pass==='capture-2').camera;
+const q=camera.quaternion;
+function toView(v){const [x,y,z]=v,qx=-q[0],qy=-q[1],qz=-q[2],qw=q[3],tx=2*(qy*z-qz*y),ty=2*(qz*x-qx*z),tz=2*(qx*y-qy*x);return[x+qw*tx+qy*tz-qz*ty,y+qw*ty+qz*tx-qx*tz,z+qw*tz+qx*ty-qy*tx];}
+function angle(a,b){return Math.acos(Math.max(-1,Math.min(1,a.reduce((s,v,i)=>s+v*b[i],0)/(Math.hypot(...a)*Math.hypot(...b)))))*180/Math.PI;}
+const centres=gpu.centres.map(c=>({pixel:c.pixel,gpuAO:c.gpuAO,aoFromGPUContributions:c.aoFromGPUContributions,agreementError:c.agreementError,centerGPUViewPosition:c.viewPosition,centerGPUViewNormal:c.viewNormal,centerRay:c.centerRay,centerNormalAngleDeg:angle(c.viewNormal,toView(c.centerRay.faceNormalWorld)),ringSums:[0,1].map(r=>c.samples.filter(t=>t.ring===r).reduce((s,t)=>s+t.contribution,0)),nonzeroTaps:c.samples.filter(t=>t.contribution!==0).map(t=>({tap:t.tap,ring:t.ring,pixel:t.pixel,sourceDepthTexelTopLeft:t.sourceDepthTexelTopLeft,viewPosition:t.viewPosition,stationLocal:t.stationLocal,viewNormal:t.viewNormal,distance:t.distance,up:t.up,facingDot:t.facingDot,facing:t.facing,distanceWeight:t.distanceWeight,contribution:t.contribution,ray:t.sourceDepthTexelRayHit,rayDepthDifference:t.sourceDepthTexelRayHit?t.linearDepth+t.sourceDepthTexelRayHit.viewPosition[2]:null,rayNormalAngleDeg:t.sourceDepthTexelRayHit?angle(t.viewNormal,toView(t.sourceDepthTexelRayHit.faceNormalWorld)):null})),allTapSkipEvidence:c.samples.map(t=>({tap:t.tap,up:t.up,distance:t.distance,facing:t.facing,flags:t.flags,contribution:t.contribution}))}));
+console.log(JSON.stringify({artifactDirectory:dir,head:report.headAfter,reportSha256:sha(path.join(dir,'look-report.json')),gpuSamplesSha256:sha(path.join(dir,'gpu-ao-samples.json')),exactFunctionsSha256:gpu.exactFunctionsSha256,uniforms:gpu.uniforms,depthTexture:gpu.depthTexture,glError:gpu.glError,rendererRestored:gpu.rendererRestored,temporaryResourcesDisposed:gpu.temporaryResourcesDisposed,centres,maxOriginalVsSumError:Math.max(...centres.map(c=>c.agreementError)),maxCenterNormalAngleDeg:Math.max(...centres.map(c=>c.centerNormalAngleDeg)),method:'Summarizes actual GPU output only. CPU rotates geometric normals for comparison and sums recorded GPU contributions. No CPU replacement of depth/normal/AO shader, no renderer, no writes.'},null,2));

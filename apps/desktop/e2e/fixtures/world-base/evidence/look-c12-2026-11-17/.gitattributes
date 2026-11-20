@@ -1,0 +1,8 @@
+*.gz binary
+*.png binary
+*.jpg binary
+*.json -text
+*.cjs -text
+*.mjs -text
+*.md -text
+*.txt -text

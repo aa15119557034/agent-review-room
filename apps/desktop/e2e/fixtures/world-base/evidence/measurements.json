@@ -1,0 +1,2942 @@
+{
+  "baselines": {
+    "petalwake": {
+      "completedAt": "2026-11-16T14:06:06.337Z",
+      "ok": false,
+      "dimensions": {
+        "viewport": [
+          1440,
+          900
+        ],
+        "canvas": [
+          1440,
+          900
+        ],
+        "pixelRatio": 1
+      },
+      "quality": {
+        "autoScaleEnabled": true,
+        "pipelineScale": 1
+      },
+      "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "versions": {
+        "node": "24.22.0",
+        "acorn": "8.18.0",
+        "ada": "4.0.0",
+        "amaro": "1.1.11",
+        "ares": "1.34.8",
+        "brotli": "1.2.0",
+        "cldr": "48.0",
+        "icu": "78.2",
+        "llhttp": "9.4.3",
+        "merve": "1.2.2",
+        "modules": "149",
+        "napi": "10",
+        "nbytes": "0.1.4",
+        "ncrypto": "0.0.1",
+        "nghttp2": "1.70.0",
+        "nghttp3": "",
+        "ngtcp2": "",
+        "openssl": "0.0.0",
+        "simdjson": "4.6.11",
+        "simdutf": "7.7.0",
+        "sqlite": "3.53.4",
+        "tz": "2026d",
+        "undici": "7.29.1",
+        "unicode": "17.0",
+        "uv": "1.52.1",
+        "uvwasi": "0.0.23",
+        "v8": "15.2.124.43-electron.0",
+        "zlib": "1.3.2.1-motley",
+        "zstd": "1.6.0",
+        "electron": "44.9.0",
+        "chrome": "152.0.7977.167"
+      },
+      "timing": {
+        "firstWebGLDrawMs": 2903.5,
+        "sceneReadyMs": 4016.2000000476837,
+        "firstReadyFrameMs": 8952.5,
+        "navigationMs": 3970.0999999046326
+      },
+      "performance": {
+        "method": "RAF intervals with WebGL2 submission counters across all passes; instrumentation overhead included",
+        "unsupportedDrawPaths": [
+          "ANGLE_instanced_arrays",
+          "WEBGL_multi_draw"
+        ],
+        "frameCount": 970,
+        "sampleMs": 15015.199999999999,
+        "fps": 64.60120411316532,
+        "p95FrameMs": 15.5,
+        "drawCalls": {
+          "mean": 195.15876288659794,
+          "min": 184,
+          "max": 205
+        },
+        "triangles": {
+          "mean": 7576804.746391753,
+          "min": 6678444,
+          "max": 8372300
+        },
+        "framesWithoutDraws": 0
+      },
+      "exceptions": [],
+      "networkFailures": [
+        {
+          "url": "http://127.0.0.1:54865/original/petalwake/assets/models/menhir.glb",
+          "type": "Fetch",
+          "canceled": true,
+          "errorText": "net::ERR_ABORTED",
+          "requestId": "42172.73",
+          "timestamp": 1848117.027636
+        }
+      ]
+    },
+    "sakuragaoka": {
+      "completedAt": "2026-11-16T14:04:46.534Z",
+      "ok": true,
+      "dimensions": {
+        "viewport": [
+          1440,
+          900
+        ],
+        "canvas": [
+          1440,
+          900
+        ],
+        "pixelRatio": 1
+      },
+      "quality": {
+        "name": "high",
+        "pixelRatio": 1,
+        "msaa": 4,
+        "shadowMap": 4096,
+        "shadowSize": 75,
+        "petals": 1
+      },
+      "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "versions": {
+        "node": "24.22.0",
+        "acorn": "8.18.0",
+        "ada": "4.0.0",
+        "amaro": "1.1.11",
+        "ares": "1.34.8",
+        "brotli": "1.2.0",
+        "cldr": "48.0",
+        "icu": "78.2",
+        "llhttp": "9.4.3",
+        "merve": "1.2.2",
+        "modules": "149",
+        "napi": "10",
+        "nbytes": "0.1.4",
+        "ncrypto": "0.0.1",
+        "nghttp2": "1.70.0",
+        "nghttp3": "",
+        "ngtcp2": "",
+        "openssl": "0.0.0",
+        "simdjson": "4.6.11",
+        "simdutf": "7.7.0",
+        "sqlite": "3.53.4",
+        "tz": "2026d",
+        "undici": "7.29.1",
+        "unicode": "17.0",
+        "uv": "1.52.1",
+        "uvwasi": "0.0.23",
+        "v8": "15.2.124.43-electron.0",
+        "zlib": "1.3.2.1-motley",
+        "zstd": "1.6.0",
+        "electron": "44.9.0",
+        "chrome": "152.0.7977.167"
+      },
+      "timing": {
+        "firstWebGLDrawMs": 85282.60000014305,
+        "sceneReadyMs": 85105.10000014305,
+        "firstReadyFrameMs": 94057.10000014305,
+        "navigationMs": 60225.5
+      },
+      "performance": {
+        "method": "RAF intervals with WebGL2 submission counters across all passes; instrumentation overhead included",
+        "unsupportedDrawPaths": [
+          "ANGLE_instanced_arrays",
+          "WEBGL_multi_draw"
+        ],
+        "frameCount": 972,
+        "sampleMs": 15015.400000000009,
+        "fps": 64.73354023202842,
+        "p95FrameMs": 15.5,
+        "drawCalls": {
+          "mean": 2267.034979423868,
+          "min": 2265,
+          "max": 2271
+        },
+        "triangles": {
+          "mean": 9368209.481481481,
+          "min": 9368080,
+          "max": 9368464
+        },
+        "framesWithoutDraws": 0
+      },
+      "exceptions": [],
+      "networkFailures": []
+    }
+  },
+  "combined": {
+    "completedAt": "2026-11-16T14:33:02.633Z",
+    "ok": true,
+    "renderOk": true,
+    "transportClean": true,
+    "dimensions": {
+      "viewport": [
+        1440,
+        900
+      ],
+      "canvas": [
+        1440,
+        900
+      ],
+      "pixelRatio": 1
+    },
+    "quality": null,
+    "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "versions": {
+      "node": "24.22.0",
+      "acorn": "8.18.0",
+      "ada": "4.0.0",
+      "amaro": "1.1.11",
+      "ares": "1.34.8",
+      "brotli": "1.2.0",
+      "cldr": "48.0",
+      "icu": "78.2",
+      "llhttp": "9.4.3",
+      "merve": "1.2.2",
+      "modules": "149",
+      "napi": "10",
+      "nbytes": "0.1.4",
+      "ncrypto": "0.0.1",
+      "nghttp2": "1.70.0",
+      "nghttp3": "",
+      "ngtcp2": "",
+      "openssl": "0.0.0",
+      "simdjson": "4.6.11",
+      "simdutf": "7.7.0",
+      "sqlite": "3.53.4",
+      "tz": "2026d",
+      "undici": "7.29.1",
+      "unicode": "17.0",
+      "uv": "1.52.1",
+      "uvwasi": "0.0.23",
+      "v8": "15.2.124.43-electron.0",
+      "zlib": "1.3.2.1-motley",
+      "zstd": "1.6.0",
+      "electron": "44.9.0",
+      "chrome": "152.0.7977.167"
+    },
+    "timing": {
+      "firstWebGLDrawMs": 1931.6000001430511,
+      "sceneReadyMs": 30811.300000190735,
+      "firstReadyFrameMs": 30843.900000095367,
+      "navigationMs": 238.80000019073486
+    },
+    "performance": {
+      "method": "RAF intervals with WebGL2 submission counters across all passes; instrumentation overhead included",
+      "unsupportedDrawPaths": [
+        "ANGLE_instanced_arrays",
+        "WEBGL_multi_draw"
+      ],
+      "frameCount": 982,
+      "sampleMs": 15123.199999999997,
+      "fps": 64.93334743969531,
+      "p95FrameMs": 15.5,
+      "drawCalls": {
+        "mean": 1453.0417515274949,
+        "min": 1452,
+        "max": 1456
+      },
+      "triangles": {
+        "mean": 8257377,
+        "min": 8257305,
+        "max": 8257577
+      },
+      "framesWithoutDraws": 0,
+      "samplesFile": "frame-samples.json"
+    },
+    "exceptions": [],
+    "networkFailures": [],
+    "failedRequestTiming": [],
+    "views": [
+      {
+        "name": "station-street",
+        "method": "RAF intervals with WebGL2 submission counters across all passes; instrumentation overhead included",
+        "unsupportedDrawPaths": [
+          "ANGLE_instanced_arrays",
+          "WEBGL_multi_draw"
+        ],
+        "frameCount": 204,
+        "sampleMs": 3138.399999999994,
+        "fps": 65.00127453479492,
+        "p95FrameMs": 15.5,
+        "drawCalls": {
+          "mean": 1453.0980392156862,
+          "min": 1451,
+          "max": 1455
+        },
+        "triangles": {
+          "mean": 8257391.274509804,
+          "min": 8257257,
+          "max": 8257513
+        },
+        "framesWithoutDraws": 0,
+        "samplesFile": "frame-samples-station-street.json",
+        "capture": {
+          "file": "01-station-street.png",
+          "jpeg": "01-station-street.jpg",
+          "jpegWidth": 960,
+          "pixels": {
+            "width": 1440,
+            "height": 900,
+            "samples": 39816,
+            "meanRgb": 71.79616234679243,
+            "nonBlackFraction": 0.9795810729355033,
+            "notBlack": true
+          }
+        }
+      },
+      {
+        "name": "station-port",
+        "method": "RAF intervals with WebGL2 submission counters across all passes; instrumentation overhead included",
+        "unsupportedDrawPaths": [
+          "ANGLE_instanced_arrays",
+          "WEBGL_multi_draw"
+        ],
+        "frameCount": 202,
+        "sampleMs": 3107.800000000003,
+        "fps": 64.99774760280579,
+        "p95FrameMs": 15.5,
+        "drawCalls": {
+          "mean": 794,
+          "min": 794,
+          "max": 794
+        },
+        "triangles": {
+          "mean": 7809904,
+          "min": 7809904,
+          "max": 7809904
+        },
+        "framesWithoutDraws": 0,
+        "samplesFile": "frame-samples-station-port.json",
+        "capture": {
+          "file": "02-station-port.png",
+          "jpeg": "02-station-port.jpg",
+          "jpegWidth": 960,
+          "pixels": {
+            "width": 1440,
+            "height": 900,
+            "samples": 39816,
+            "meanRgb": 147.62895151027905,
+            "nonBlackFraction": 1,
+            "notBlack": true
+          }
+        }
+      },
+      {
+        "name": "island-aerial",
+        "method": "RAF intervals with WebGL2 submission counters across all passes; instrumentation overhead included",
+        "unsupportedDrawPaths": [
+          "ANGLE_instanced_arrays",
+          "WEBGL_multi_draw"
+        ],
+        "frameCount": 203,
+        "sampleMs": 3123.0999999999913,
+        "fps": 64.99951970798263,
+        "p95FrameMs": 15.5,
+        "drawCalls": {
+          "mean": 1685.6108374384237,
+          "min": 1685,
+          "max": 1686
+        },
+        "triangles": {
+          "mean": 7668794.093596059,
+          "min": 7668755,
+          "max": 7668819
+        },
+        "framesWithoutDraws": 0,
+        "samplesFile": "frame-samples-island-aerial.json",
+        "capture": {
+          "file": "03-island-aerial.png",
+          "jpeg": "03-island-aerial.jpg",
+          "jpegWidth": 960,
+          "pixels": {
+            "width": 1440,
+            "height": 900,
+            "samples": 39816,
+            "meanRgb": 115.65425122228895,
+            "nonBlackFraction": 1,
+            "notBlack": true
+          }
+        }
+      },
+      {
+        "name": "shop-interior",
+        "method": "RAF intervals with WebGL2 submission counters across all passes; instrumentation overhead included",
+        "unsupportedDrawPaths": [
+          "ANGLE_instanced_arrays",
+          "WEBGL_multi_draw"
+        ],
+        "frameCount": 202,
+        "sampleMs": 3107.699999999997,
+        "fps": 64.99983910930919,
+        "p95FrameMs": 15.5,
+        "drawCalls": {
+          "mean": 881.9752475247525,
+          "min": 878,
+          "max": 883
+        },
+        "triangles": {
+          "mean": 7536770.881188119,
+          "min": 7484147,
+          "max": 7547819
+        },
+        "framesWithoutDraws": 0,
+        "samplesFile": "frame-samples-shop-interior.json",
+        "capture": {
+          "file": "04-shop-interior.png",
+          "jpeg": "04-shop-interior.jpg",
+          "jpegWidth": 960,
+          "pixels": {
+            "width": 1440,
+            "height": 900,
+            "samples": 39816,
+            "meanRgb": 125.59463532248476,
+            "nonBlackFraction": 1,
+            "notBlack": true
+          }
+        }
+      }
+    ],
+    "behaviorValidation": {
+      "ok": true,
+      "checks": [
+        {
+          "name": "closed shop door blocks the walking capsule",
+          "passed": true,
+          "evidence": {
+            "displacement": 0.34999999999999964,
+            "candidate": {
+              "x": -7.23,
+              "z": 8
+            }
+          }
+        },
+        {
+          "name": "approaching opens the real shop door collider",
+          "passed": true,
+          "evidence": {
+            "displacement": 0,
+            "candidate": {
+              "x": -7.58,
+              "z": 8
+            }
+          }
+        },
+        {
+          "name": "adjacent storefront wall remains solid",
+          "passed": true,
+          "evidence": {
+            "displacement": 0.40000000000000036,
+            "candidate": {
+              "x": -7.1,
+              "z": 12
+            }
+          }
+        },
+        {
+          "name": "open entrance provides a continuous capsule-width passage",
+          "passed": true,
+          "evidence": {
+            "maxCorrection": 0
+          }
+        },
+        {
+          "name": "interior floor uses its raised walkable surface",
+          "passed": true,
+          "evidence": {
+            "expectedFloor": 0.4134,
+            "maxHeightError": 0
+          }
+        },
+        {
+          "name": "first person camera is 1.52m above world-space feet",
+          "passed": true,
+          "evidence": {
+            "feet": [
+              281.6,
+              8.812,
+              934
+            ],
+            "camera": [
+              281.6,
+              10.331999999999999,
+              934
+            ],
+            "error": 0
+          }
+        },
+        {
+          "name": "third person camera follows within its obstruction-limited boom",
+          "passed": true,
+          "evidence": {
+            "followDistance": 4.224038352098614,
+            "maximum": 4.224038352098617
+          }
+        },
+        {
+          "name": "view switching preserves the body and collision position",
+          "passed": true,
+          "evidence": {
+            "feet": [
+              281.6,
+              8.812,
+              934
+            ],
+            "initialFeet": [
+              281.6,
+              8.812,
+              934
+            ]
+          }
+        },
+        {
+          "name": "station local/world coordinates round-trip at its nonzero placement",
+          "passed": true,
+          "evidence": {
+            "local": [
+              1.6000000000000227,
+              0.8119999999999994,
+              34
+            ],
+            "world": [
+              281.6,
+              8.812,
+              934
+            ]
+          }
+        },
+        {
+          "name": "real shop wall shortens third-person boom with near-plane clearance",
+          "passed": true,
+          "evidence": {
+            "shortened": 0.7951227548559752,
+            "cameraLotZ": -2.290597833643244,
+            "streetSideWallZ": -2.6,
+            "clearance": 0.30940216635678375,
+            "raycastCalls": 0
+          }
+        },
+        {
+          "name": "camera collision never scans rendered triangles",
+          "passed": true,
+          "evidence": {
+            "raycastCalls": 0
+          }
+        }
+      ]
+    },
+    "walkingValidation": {
+      "ok": true,
+      "method": "Electron sendInputEvent holds W for each measured segment; positions come from the live walker, with no per-frame pose overrides.",
+      "segments": [
+        {
+          "mode": "third",
+          "before": {
+            "feet": [
+              281.6,
+              8.812,
+              934
+            ],
+            "mode": "third",
+            "timeMs": 75500.60000014305
+          },
+          "after": {
+            "feet": [
+              280.9462718521388,
+              8.55023505417491,
+              924.6512519348182
+            ],
+            "mode": "third",
+            "timeMs": 78610.60000014305
+          },
+          "distance": 9.375231824568871,
+          "horizontalDistance": 9.371576755143508,
+          "method": "RAF intervals with WebGL2 submission counters across all passes; instrumentation overhead included",
+          "unsupportedDrawPaths": [
+            "ANGLE_instanced_arrays",
+            "WEBGL_multi_draw"
+          ],
+          "frameCount": 202,
+          "sampleMs": 3107.699999999997,
+          "fps": 64.99983910930919,
+          "p95FrameMs": 15.5,
+          "drawCalls": {
+            "mean": 1435.7673267326732,
+            "min": 1419,
+            "max": 1444
+          },
+          "triangles": {
+            "mean": 8205442.396039604,
+            "min": 8181628,
+            "max": 8270570
+          },
+          "framesWithoutDraws": 0,
+          "samplesFile": "frame-samples-walking-third.json",
+          "capture": {
+            "file": "walking-third.png",
+            "jpeg": "walking-third.jpg",
+            "jpegWidth": 960,
+            "pixels": {
+              "width": 1440,
+              "height": 900,
+              "samples": 39816,
+              "meanRgb": 88.96641216261781,
+              "nonBlackFraction": 0.9946252762708458,
+              "notBlack": true
+            }
+          },
+          "ok": true
+        },
+        {
+          "mode": "first",
+          "before": {
+            "feet": [
+              280.92798183487173,
+              8.542911390057464,
+              924.3896925020523
+            ],
+            "mode": "first",
+            "timeMs": 79330.10000014305
+          },
+          "after": {
+            "feet": [
+              280.27427206885625,
+              8.281153804666317,
+              915.0412073095114
+            ],
+            "mode": "first",
+            "timeMs": 82437.90000009537
+          },
+          "distance": 9.374968207244793,
+          "horizontalDistance": 9.371313240594452,
+          "method": "RAF intervals with WebGL2 submission counters across all passes; instrumentation overhead included",
+          "unsupportedDrawPaths": [
+            "ANGLE_instanced_arrays",
+            "WEBGL_multi_draw"
+          ],
+          "frameCount": 202,
+          "sampleMs": 3107.600000000006,
+          "fps": 65.00193075041821,
+          "p95FrameMs": 15.5,
+          "drawCalls": {
+            "mean": 1296.3861386138615,
+            "min": 1222,
+            "max": 1415
+          },
+          "triangles": {
+            "mean": 8125848.257425742,
+            "min": 7963714,
+            "max": 8236696
+          },
+          "framesWithoutDraws": 0,
+          "samplesFile": "frame-samples-walking-first.json",
+          "capture": {
+            "file": "walking-first.png",
+            "jpeg": "walking-first.jpg",
+            "jpegWidth": 960,
+            "pixels": {
+              "width": 1440,
+              "height": 900,
+              "samples": 39816,
+              "meanRgb": 91.0407708793882,
+              "nonBlackFraction": 0.9995479204339964,
+              "notBlack": true
+            }
+          },
+          "ok": true
+        }
+      ],
+      "viewSwitch": {
+        "before": [
+          280.92798183487173,
+          8.542911390057464,
+          924.3896925020523
+        ],
+        "after": [
+          280.92798183487173,
+          8.542911390057464,
+          924.3896925020523
+        ],
+        "distance": 0,
+        "mode": "first"
+      },
+      "inputEvents": [
+        {
+          "type": "keydown",
+          "code": "KeyW",
+          "key": "w",
+          "trusted": true,
+          "timeMs": 75501.70000004768
+        },
+        {
+          "type": "keyup",
+          "code": "KeyW",
+          "key": "w",
+          "trusted": true,
+          "timeMs": 78610.60000014305
+        },
+        {
+          "type": "keydown",
+          "code": "KeyW",
+          "key": "w",
+          "trusted": true,
+          "timeMs": 79330.40000009537
+        },
+        {
+          "type": "keyup",
+          "code": "KeyW",
+          "key": "w",
+          "trusted": true,
+          "timeMs": 82437.90000009537
+        }
+      ]
+    },
+    "lookValidation": {
+      "ok": true,
+      "method": "Actual pipeline uniforms/parameters and UI state; central-pixel nonblack smoke checks. Images retain animation.",
+      "toon": {
+        "on": {
+          "state": {
+            "toon": 1,
+            "blur": 0,
+            "rays": 0,
+            "toonCheckbox": true,
+            "effectsCheckbox": false,
+            "currentView": "station-street"
+          },
+          "capture": {
+            "file": "05-street-toon-on.png",
+            "jpeg": "05-street-toon-on.jpg",
+            "jpegWidth": 960,
+            "pixels": {
+              "width": 1440,
+              "height": 900,
+              "samples": 39816,
+              "meanRgb": 71.68387080570403,
+              "nonBlackFraction": 0.979882459312839,
+              "notBlack": true
+            }
+          }
+        },
+        "off": {
+          "state": {
+            "toon": 0,
+            "blur": 0,
+            "rays": 0,
+            "toonCheckbox": false,
+            "effectsCheckbox": false,
+            "currentView": "station-street"
+          },
+          "capture": {
+            "file": "06-street-toon-off.png",
+            "jpeg": "06-street-toon-off.jpg",
+            "jpegWidth": 960,
+            "pixels": {
+              "width": 1440,
+              "height": 900,
+              "samples": 39816,
+              "meanRgb": 73.859620922914,
+              "nonBlackFraction": 0.9702129797066505,
+              "notBlack": true
+            }
+          }
+        },
+        "difference": {
+          "meanAbsoluteRgbDifference": 4.454261316872428,
+          "isolatedFromAnimation": false
+        }
+      },
+      "flightEffects": {
+        "on": {
+          "state": {
+            "toon": 1,
+            "blur": 1,
+            "rays": 0.55,
+            "toonCheckbox": true,
+            "effectsCheckbox": true,
+            "currentView": "station-street"
+          },
+          "capture": {
+            "file": "07-flight-effects-on.png",
+            "jpeg": "07-flight-effects-on.jpg",
+            "jpegWidth": 960,
+            "pixels": {
+              "width": 1440,
+              "height": 900,
+              "samples": 39816,
+              "meanRgb": 71.80222356171338,
+              "nonBlackFraction": 0.9798071127185051,
+              "notBlack": true
+            }
+          }
+        },
+        "off": {
+          "state": {
+            "toon": 1,
+            "blur": 0,
+            "rays": 0,
+            "toonCheckbox": true,
+            "effectsCheckbox": false,
+            "currentView": "station-street"
+          },
+          "capture": {
+            "file": "08-flight-effects-off.png",
+            "jpeg": "08-flight-effects-off.jpg",
+            "jpegWidth": 960,
+            "pixels": {
+              "width": 1440,
+              "height": 900,
+              "samples": 39816,
+              "meanRgb": 71.64062186055595,
+              "nonBlackFraction": 0.9793048020896122,
+              "notBlack": true
+            }
+          }
+        },
+        "difference": {
+          "meanAbsoluteRgbDifference": 2.140849794238683,
+          "isolatedFromAnimation": false
+        }
+      }
+    },
+    "video": {
+      "mime": "video/webm;codecs=vp8",
+      "bytes": 4849002,
+      "file": "world.webm",
+      "durationRequestedMs": 12000,
+      "durationActualMs": 12028.364896774292,
+      "views": [
+        {
+          "name": "station-street",
+          "startMs": 0
+        },
+        {
+          "name": "station-port",
+          "startMs": 3036.5490913391113
+        },
+        {
+          "name": "island-aerial",
+          "startMs": 6039.149045944214
+        },
+        {
+          "name": "shop-interior",
+          "startMs": 9051.34892463684
+        }
+      ],
+      "frameCount": 392,
+      "captureMethod": "Fixture-only CDP JPEG screencast; original timestamps -> ffconcat with per-file framerate=1000 -> FFmpeg libvpx VFR. No frame duplication or speedup.",
+      "recordingOverhead": "Screencast JPEG capture and subsequent CPU encoding occur outside the existing scene FPS measurements.",
+      "sourceFramesFile": "video-source-timeline.json",
+      "ffmpeg": {
+        "executable": "E:\\AI\\ComfyUI-aki-v3.2-core037\\python\\Lib\\site-packages\\imageio_ffmpeg\\binaries\\ffmpeg-win-x86_64-v7.1.exe",
+        "version": "ffmpeg version 7.1-essentials_build-www.gyan.dev Copyright (c) 2000-2024 the FFmpeg developers",
+        "args": [
+          "-hide_banner",
+          "-loglevel",
+          "warning",
+          "-nostats",
+          "-n",
+          "-f",
+          "concat",
+          "-safe",
+          "0",
+          "-i",
+          "video.ffconcat",
+          "-an",
+          "-c:v",
+          "libvpx",
+          "-deadline",
+          "good",
+          "-cpu-used",
+          "4",
+          "-b:v",
+          "5M",
+          "-pix_fmt",
+          "yuv420p",
+          "-fps_mode",
+          "vfr",
+          "-enc_time_base",
+          "1:1000",
+          "world.webm"
+        ]
+      },
+      "captureCompletedAt": "2026-11-16T15:11:45.118Z",
+      "captureRenderOk": true,
+      "captureTransportClean": true
+    },
+    "videoVerification": {
+      "ok": true,
+      "method": "Offscreen Electron at 60Hz presents the existing Blob WebM sequentially at 1x without seeking. requestVideoFrameCallback records the presentation timeline; sampled RGBA pixels are hashed and exported as JPEG for visual QA.",
+      "file": {
+        "bytes": 4849002,
+        "sha256": "aba0cbbf6e2ec6d99abb8b565846789a6fe634897665d6596daed8e8d4158961",
+        "sha256After": "aba0cbbf6e2ec6d99abb8b565846789a6fe634897665d6596daed8e8d4158961",
+        "unchanged": true
+      },
+      "container": {
+        "frames": 392,
+        "maximumGapSeconds": 0.03500000000000014,
+        "gapsOver120ms": [],
+        "ok": true,
+        "file": "video-container-timeline.json"
+      },
+      "sourceAlignment": {
+        "sourceFrames": 392,
+        "encodedFrames": 392,
+        "maxTimestampErrorMs": 0.6631107330322266,
+        "ok": true,
+        "method": "One encoded frame per captured JPEG; PTS compared with original CDP timestamps, allowing at most 2ms container/time-base quantization."
+      },
+      "decode": {
+        "metadata": {
+          "width": 1440,
+          "height": 900,
+          "initialDuration": 12.029
+        },
+        "duration": 12.029,
+        "durationSource": "metadata",
+        "playback": "sequential 1x; no seek",
+        "frames": [
+          {
+            "requestedTime": 1.503625,
+            "decodedTime": 1.506,
+            "timestampDelta": 0.002375000000000016,
+            "videoCurrentTime": 1.582074,
+            "presentedFrame": {
+              "mediaTime": 1.506,
+              "presentedFrames": 46,
+              "width": 1440,
+              "height": 900
+            },
+            "width": 1440,
+            "height": 900,
+            "meanRgb": 67.7001038108607,
+            "nonBlackFraction": 0.8828862768736186,
+            "notBlack": true,
+            "sha256": "709dee590120a8ec1b3a77602ca3b6913db7b6c671763fd629482001acee84a6",
+            "jpeg": "video-frame-01.jpg"
+          },
+          {
+            "requestedTime": 4.510875,
+            "decodedTime": 4.523,
+            "timestampDelta": 0.012124999999999275,
+            "videoCurrentTime": 4.53547,
+            "presentedFrame": {
+              "mediaTime": 4.523,
+              "presentedFrames": 137,
+              "width": 1440,
+              "height": 900
+            },
+            "width": 1440,
+            "height": 900,
+            "meanRgb": 159.1732134485289,
+            "nonBlackFraction": 0.9991209563994374,
+            "notBlack": true,
+            "sha256": "955ecf9c10a99648c47d0bd5554e60421fefa4861e05e4e2bf165611dc9698e2",
+            "jpeg": "video-frame-02.jpg"
+          },
+          {
+            "requestedTime": 7.5181249999999995,
+            "decodedTime": 7.538,
+            "timestampDelta": 0.019875000000000753,
+            "videoCurrentTime": 7.551969,
+            "presentedFrame": {
+              "mediaTime": 7.538,
+              "presentedFrames": 235,
+              "width": 1440,
+              "height": 900
+            },
+            "width": 1440,
+            "height": 900,
+            "meanRgb": 116.61286082646514,
+            "nonBlackFraction": 0.9999748844685553,
+            "notBlack": true,
+            "sha256": "4875303448572dbc43218ce34e166e0de6adef9a547cf22bb3a5a5a1fbfb012c",
+            "jpeg": "video-frame-03.jpg"
+          },
+          {
+            "requestedTime": 10.525375,
+            "decodedTime": 10.582,
+            "timestampDelta": 0.05662500000000037,
+            "videoCurrentTime": 10.569773,
+            "presentedFrame": {
+              "mediaTime": 10.582,
+              "presentedFrames": 334,
+              "width": 1440,
+              "height": 900
+            },
+            "width": 1440,
+            "height": 900,
+            "meanRgb": 130.7119750853928,
+            "nonBlackFraction": 0.9817661241711875,
+            "notBlack": true,
+            "sha256": "947b3efb7510176d54aceb7bd0369061fc9670fb442c8497de8c94703d4c52f5",
+            "jpeg": "video-frame-04.jpg"
+          },
+          {
+            "requestedTime": 11.66813,
+            "decodedTime": 11.69,
+            "timestampDelta": 0.021869999999999834,
+            "videoCurrentTime": 11.684609,
+            "presentedFrame": {
+              "mediaTime": 11.69,
+              "presentedFrames": 370,
+              "width": 1440,
+              "height": 900
+            },
+            "width": 1440,
+            "height": 900,
+            "meanRgb": 130.67173163217464,
+            "nonBlackFraction": 0.9816656620454088,
+            "notBlack": true,
+            "sha256": "96c0052f5726fb0187ca91e9b0d57672c5d895d661ddd4a0fc46173d1b02cab2",
+            "jpeg": "video-frame-05.jpg"
+          }
+        ],
+        "distinctFrames": 5,
+        "timeline": [
+          {
+            "mediaTime": 0,
+            "presentedFrames": 1,
+            "expectedDisplayTime": 547.3
+          },
+          {
+            "mediaTime": 0.029,
+            "presentedFrames": 2,
+            "expectedDisplayTime": 586.9
+          },
+          {
+            "mediaTime": 0.06,
+            "presentedFrames": 3,
+            "expectedDisplayTime": 620.2
+          },
+          {
+            "mediaTime": 0.092,
+            "presentedFrames": 4,
+            "expectedDisplayTime": 653.6
+          },
+          {
+            "mediaTime": 0.122,
+            "presentedFrames": 5,
+            "expectedDisplayTime": 686.9
+          },
+          {
+            "mediaTime": 0.152,
+            "presentedFrames": 6,
+            "expectedDisplayTime": 703.6
+          },
+          {
+            "mediaTime": 0.184,
+            "presentedFrames": 7,
+            "expectedDisplayTime": 736.9
+          },
+          {
+            "mediaTime": 0.214,
+            "presentedFrames": 8,
+            "expectedDisplayTime": 770.2
+          },
+          {
+            "mediaTime": 0.244,
+            "presentedFrames": 9,
+            "expectedDisplayTime": 803.5
+          },
+          {
+            "mediaTime": 0.276,
+            "presentedFrames": 10,
+            "expectedDisplayTime": 836.9
+          },
+          {
+            "mediaTime": 0.337,
+            "presentedFrames": 12,
+            "expectedDisplayTime": 886.9
+          },
+          {
+            "mediaTime": 0.367,
+            "presentedFrames": 13,
+            "expectedDisplayTime": 920.2
+          },
+          {
+            "mediaTime": 0.4,
+            "presentedFrames": 14,
+            "expectedDisplayTime": 953.6
+          },
+          {
+            "mediaTime": 0.429,
+            "presentedFrames": 15,
+            "expectedDisplayTime": 986.9
+          },
+          {
+            "mediaTime": 0.46,
+            "presentedFrames": 16,
+            "expectedDisplayTime": 1020.2
+          },
+          {
+            "mediaTime": 0.521,
+            "presentedFrames": 18,
+            "expectedDisplayTime": 1070.3
+          },
+          {
+            "mediaTime": 0.614,
+            "presentedFrames": 19,
+            "expectedDisplayTime": 1253.6
+          },
+          {
+            "mediaTime": 0.706,
+            "presentedFrames": 20,
+            "expectedDisplayTime": 1247.3
+          },
+          {
+            "mediaTime": 0.738,
+            "presentedFrames": 21,
+            "expectedDisplayTime": 1320.2
+          },
+          {
+            "mediaTime": 0.768,
+            "presentedFrames": 22,
+            "expectedDisplayTime": 1353.5
+          },
+          {
+            "mediaTime": 0.798,
+            "presentedFrames": 23,
+            "expectedDisplayTime": 1370.2
+          },
+          {
+            "mediaTime": 0.829,
+            "presentedFrames": 24,
+            "expectedDisplayTime": 1403.5
+          },
+          {
+            "mediaTime": 0.86,
+            "presentedFrames": 25,
+            "expectedDisplayTime": 1436.9
+          },
+          {
+            "mediaTime": 0.891,
+            "presentedFrames": 26,
+            "expectedDisplayTime": 1470.2
+          },
+          {
+            "mediaTime": 0.922,
+            "presentedFrames": 27,
+            "expectedDisplayTime": 1503.6
+          },
+          {
+            "mediaTime": 0.983,
+            "presentedFrames": 29,
+            "expectedDisplayTime": 1553.5
+          },
+          {
+            "mediaTime": 1.014,
+            "presentedFrames": 30,
+            "expectedDisplayTime": 1586.8
+          },
+          {
+            "mediaTime": 1.045,
+            "presentedFrames": 31,
+            "expectedDisplayTime": 1620.2
+          },
+          {
+            "mediaTime": 1.076,
+            "presentedFrames": 32,
+            "expectedDisplayTime": 1653.5
+          },
+          {
+            "mediaTime": 1.106,
+            "presentedFrames": 33,
+            "expectedDisplayTime": 1686.8
+          },
+          {
+            "mediaTime": 1.137,
+            "presentedFrames": 34,
+            "expectedDisplayTime": 1720.2
+          },
+          {
+            "mediaTime": 1.168,
+            "presentedFrames": 35,
+            "expectedDisplayTime": 1753.6
+          },
+          {
+            "mediaTime": 1.199,
+            "presentedFrames": 36,
+            "expectedDisplayTime": 1770.1
+          },
+          {
+            "mediaTime": 1.23,
+            "presentedFrames": 37,
+            "expectedDisplayTime": 1803.5
+          },
+          {
+            "mediaTime": 1.26,
+            "presentedFrames": 38,
+            "expectedDisplayTime": 1836.8
+          },
+          {
+            "mediaTime": 1.291,
+            "presentedFrames": 39,
+            "expectedDisplayTime": 1870.1
+          },
+          {
+            "mediaTime": 1.321,
+            "presentedFrames": 40,
+            "expectedDisplayTime": 1903.5
+          },
+          {
+            "mediaTime": 1.383,
+            "presentedFrames": 42,
+            "expectedDisplayTime": 1953.5
+          },
+          {
+            "mediaTime": 1.414,
+            "presentedFrames": 43,
+            "expectedDisplayTime": 1986.9
+          },
+          {
+            "mediaTime": 1.444,
+            "presentedFrames": 44,
+            "expectedDisplayTime": 2020.2
+          },
+          {
+            "mediaTime": 1.475,
+            "presentedFrames": 45,
+            "expectedDisplayTime": 2053.5
+          },
+          {
+            "mediaTime": 1.506,
+            "presentedFrames": 46,
+            "expectedDisplayTime": 2086.8
+          },
+          {
+            "mediaTime": 1.599,
+            "presentedFrames": 49,
+            "expectedDisplayTime": 2170.2
+          },
+          {
+            "mediaTime": 1.629,
+            "presentedFrames": 50,
+            "expectedDisplayTime": 2203.5
+          },
+          {
+            "mediaTime": 1.66,
+            "presentedFrames": 51,
+            "expectedDisplayTime": 2236.8
+          },
+          {
+            "mediaTime": 1.692,
+            "presentedFrames": 52,
+            "expectedDisplayTime": 2270.2
+          },
+          {
+            "mediaTime": 1.722,
+            "presentedFrames": 53,
+            "expectedDisplayTime": 2303.5
+          },
+          {
+            "mediaTime": 1.754,
+            "presentedFrames": 54,
+            "expectedDisplayTime": 2336.8
+          },
+          {
+            "mediaTime": 1.783,
+            "presentedFrames": 55,
+            "expectedDisplayTime": 2353.6
+          },
+          {
+            "mediaTime": 1.814,
+            "presentedFrames": 56,
+            "expectedDisplayTime": 2386.8
+          },
+          {
+            "mediaTime": 1.844,
+            "presentedFrames": 57,
+            "expectedDisplayTime": 2420.1
+          },
+          {
+            "mediaTime": 1.876,
+            "presentedFrames": 58,
+            "expectedDisplayTime": 2453.5
+          },
+          {
+            "mediaTime": 1.907,
+            "presentedFrames": 59,
+            "expectedDisplayTime": 2486.9
+          },
+          {
+            "mediaTime": 1.937,
+            "presentedFrames": 60,
+            "expectedDisplayTime": 2520.1
+          },
+          {
+            "mediaTime": 1.968,
+            "presentedFrames": 61,
+            "expectedDisplayTime": 2553.5
+          },
+          {
+            "mediaTime": 1.998,
+            "presentedFrames": 62,
+            "expectedDisplayTime": 2570.1
+          },
+          {
+            "mediaTime": 2.029,
+            "presentedFrames": 63,
+            "expectedDisplayTime": 2603.5
+          },
+          {
+            "mediaTime": 2.06,
+            "presentedFrames": 64,
+            "expectedDisplayTime": 2636.9
+          },
+          {
+            "mediaTime": 2.091,
+            "presentedFrames": 65,
+            "expectedDisplayTime": 2670.2
+          },
+          {
+            "mediaTime": 2.122,
+            "presentedFrames": 66,
+            "expectedDisplayTime": 2703.5
+          },
+          {
+            "mediaTime": 2.152,
+            "presentedFrames": 67,
+            "expectedDisplayTime": 2736.8
+          },
+          {
+            "mediaTime": 2.184,
+            "presentedFrames": 68,
+            "expectedDisplayTime": 2770.1
+          },
+          {
+            "mediaTime": 2.214,
+            "presentedFrames": 69,
+            "expectedDisplayTime": 2786.8
+          },
+          {
+            "mediaTime": 2.244,
+            "presentedFrames": 70,
+            "expectedDisplayTime": 2820.2
+          },
+          {
+            "mediaTime": 2.276,
+            "presentedFrames": 71,
+            "expectedDisplayTime": 2853.5
+          },
+          {
+            "mediaTime": 2.307,
+            "presentedFrames": 72,
+            "expectedDisplayTime": 2886.8
+          },
+          {
+            "mediaTime": 2.367,
+            "presentedFrames": 74,
+            "expectedDisplayTime": 2936.8
+          },
+          {
+            "mediaTime": 2.398,
+            "presentedFrames": 75,
+            "expectedDisplayTime": 2970.1
+          },
+          {
+            "mediaTime": 2.429,
+            "presentedFrames": 76,
+            "expectedDisplayTime": 3003.5
+          },
+          {
+            "mediaTime": 2.459,
+            "presentedFrames": 77,
+            "expectedDisplayTime": 3036.8
+          },
+          {
+            "mediaTime": 2.491,
+            "presentedFrames": 78,
+            "expectedDisplayTime": 3070.2
+          },
+          {
+            "mediaTime": 2.521,
+            "presentedFrames": 79,
+            "expectedDisplayTime": 3103.4
+          },
+          {
+            "mediaTime": 2.552,
+            "presentedFrames": 80,
+            "expectedDisplayTime": 3136.8
+          },
+          {
+            "mediaTime": 2.583,
+            "presentedFrames": 81,
+            "expectedDisplayTime": 3153.5
+          },
+          {
+            "mediaTime": 2.614,
+            "presentedFrames": 82,
+            "expectedDisplayTime": 3186.8
+          },
+          {
+            "mediaTime": 2.644,
+            "presentedFrames": 83,
+            "expectedDisplayTime": 3220.1
+          },
+          {
+            "mediaTime": 2.675,
+            "presentedFrames": 84,
+            "expectedDisplayTime": 3253.5
+          },
+          {
+            "mediaTime": 2.705,
+            "presentedFrames": 85,
+            "expectedDisplayTime": 3286.8
+          },
+          {
+            "mediaTime": 2.737,
+            "presentedFrames": 86,
+            "expectedDisplayTime": 3320.2
+          },
+          {
+            "mediaTime": 2.768,
+            "presentedFrames": 87,
+            "expectedDisplayTime": 3353.5
+          },
+          {
+            "mediaTime": 2.799,
+            "presentedFrames": 88,
+            "expectedDisplayTime": 3370.1
+          },
+          {
+            "mediaTime": 2.829,
+            "presentedFrames": 89,
+            "expectedDisplayTime": 3403.5
+          },
+          {
+            "mediaTime": 2.86,
+            "presentedFrames": 90,
+            "expectedDisplayTime": 3436.8
+          },
+          {
+            "mediaTime": 2.891,
+            "presentedFrames": 91,
+            "expectedDisplayTime": 3470.1
+          },
+          {
+            "mediaTime": 2.923,
+            "presentedFrames": 92,
+            "expectedDisplayTime": 3503.5
+          },
+          {
+            "mediaTime": 2.983,
+            "presentedFrames": 94,
+            "expectedDisplayTime": 3553.5
+          },
+          {
+            "mediaTime": 3.014,
+            "presentedFrames": 95,
+            "expectedDisplayTime": 3586.8
+          },
+          {
+            "mediaTime": 3.044,
+            "presentedFrames": 96,
+            "expectedDisplayTime": 3620.2
+          },
+          {
+            "mediaTime": 3.077,
+            "presentedFrames": 97,
+            "expectedDisplayTime": 3653.5
+          },
+          {
+            "mediaTime": 3.108,
+            "presentedFrames": 98,
+            "expectedDisplayTime": 3686.8
+          },
+          {
+            "mediaTime": 3.139,
+            "presentedFrames": 99,
+            "expectedDisplayTime": 3720.1
+          },
+          {
+            "mediaTime": 3.171,
+            "presentedFrames": 100,
+            "expectedDisplayTime": 3753.4
+          },
+          {
+            "mediaTime": 3.232,
+            "presentedFrames": 102,
+            "expectedDisplayTime": 3803.4
+          },
+          {
+            "mediaTime": 3.263,
+            "presentedFrames": 103,
+            "expectedDisplayTime": 3836.7
+          },
+          {
+            "mediaTime": 3.293,
+            "presentedFrames": 104,
+            "expectedDisplayTime": 3870.1
+          },
+          {
+            "mediaTime": 3.323,
+            "presentedFrames": 105,
+            "expectedDisplayTime": 3903.5
+          },
+          {
+            "mediaTime": 3.354,
+            "presentedFrames": 106,
+            "expectedDisplayTime": 3936.7
+          },
+          {
+            "mediaTime": 3.416,
+            "presentedFrames": 108,
+            "expectedDisplayTime": 3986.8
+          },
+          {
+            "mediaTime": 3.447,
+            "presentedFrames": 109,
+            "expectedDisplayTime": 4020.1
+          },
+          {
+            "mediaTime": 3.478,
+            "presentedFrames": 110,
+            "expectedDisplayTime": 4053.4
+          },
+          {
+            "mediaTime": 3.51,
+            "presentedFrames": 111,
+            "expectedDisplayTime": 4086.8
+          },
+          {
+            "mediaTime": 3.539,
+            "presentedFrames": 112,
+            "expectedDisplayTime": 4120.1
+          },
+          {
+            "mediaTime": 3.569,
+            "presentedFrames": 113,
+            "expectedDisplayTime": 4153.5
+          },
+          {
+            "mediaTime": 3.6,
+            "presentedFrames": 114,
+            "expectedDisplayTime": 4170.1
+          },
+          {
+            "mediaTime": 3.693,
+            "presentedFrames": 115,
+            "expectedDisplayTime": 4286.7
+          },
+          {
+            "mediaTime": 3.724,
+            "presentedFrames": 116,
+            "expectedDisplayTime": 4303.4
+          },
+          {
+            "mediaTime": 3.755,
+            "presentedFrames": 117,
+            "expectedDisplayTime": 4336.7
+          },
+          {
+            "mediaTime": 3.786,
+            "presentedFrames": 118,
+            "expectedDisplayTime": 4370.1
+          },
+          {
+            "mediaTime": 3.816,
+            "presentedFrames": 119,
+            "expectedDisplayTime": 4386.7
+          },
+          {
+            "mediaTime": 3.846,
+            "presentedFrames": 120,
+            "expectedDisplayTime": 4420.1
+          },
+          {
+            "mediaTime": 3.877,
+            "presentedFrames": 121,
+            "expectedDisplayTime": 4453.4
+          },
+          {
+            "mediaTime": 3.908,
+            "presentedFrames": 122,
+            "expectedDisplayTime": 4486.8
+          },
+          {
+            "mediaTime": 3.939,
+            "presentedFrames": 123,
+            "expectedDisplayTime": 4520.1
+          },
+          {
+            "mediaTime": 4,
+            "presentedFrames": 125,
+            "expectedDisplayTime": 4570.1
+          },
+          {
+            "mediaTime": 4.031,
+            "presentedFrames": 126,
+            "expectedDisplayTime": 4603.4
+          },
+          {
+            "mediaTime": 4.062,
+            "presentedFrames": 127,
+            "expectedDisplayTime": 4636.7
+          },
+          {
+            "mediaTime": 4.092,
+            "presentedFrames": 128,
+            "expectedDisplayTime": 4670.1
+          },
+          {
+            "mediaTime": 4.123,
+            "presentedFrames": 129,
+            "expectedDisplayTime": 4703.4
+          },
+          {
+            "mediaTime": 4.154,
+            "presentedFrames": 130,
+            "expectedDisplayTime": 4736.7
+          },
+          {
+            "mediaTime": 4.309,
+            "presentedFrames": 131,
+            "expectedDisplayTime": 4920.1
+          },
+          {
+            "mediaTime": 4.37,
+            "presentedFrames": 132,
+            "expectedDisplayTime": 4920.6
+          },
+          {
+            "mediaTime": 4.4,
+            "presentedFrames": 133,
+            "expectedDisplayTime": 5003.4
+          },
+          {
+            "mediaTime": 4.431,
+            "presentedFrames": 134,
+            "expectedDisplayTime": 5020.1
+          },
+          {
+            "mediaTime": 4.461,
+            "presentedFrames": 135,
+            "expectedDisplayTime": 5053.4
+          },
+          {
+            "mediaTime": 4.492,
+            "presentedFrames": 136,
+            "expectedDisplayTime": 5086.7
+          },
+          {
+            "mediaTime": 4.523,
+            "presentedFrames": 137,
+            "expectedDisplayTime": 5120
+          },
+          {
+            "mediaTime": 4.554,
+            "presentedFrames": 138,
+            "expectedDisplayTime": 5153.3
+          },
+          {
+            "mediaTime": 4.616,
+            "presentedFrames": 140,
+            "expectedDisplayTime": 5203.4
+          },
+          {
+            "mediaTime": 4.646,
+            "presentedFrames": 141,
+            "expectedDisplayTime": 5236.8
+          },
+          {
+            "mediaTime": 4.677,
+            "presentedFrames": 142,
+            "expectedDisplayTime": 5270.1
+          },
+          {
+            "mediaTime": 4.708,
+            "presentedFrames": 143,
+            "expectedDisplayTime": 5303.4
+          },
+          {
+            "mediaTime": 4.739,
+            "presentedFrames": 144,
+            "expectedDisplayTime": 5336.7
+          },
+          {
+            "mediaTime": 4.77,
+            "presentedFrames": 145,
+            "expectedDisplayTime": 5370.1
+          },
+          {
+            "mediaTime": 4.831,
+            "presentedFrames": 147,
+            "expectedDisplayTime": 5420
+          },
+          {
+            "mediaTime": 4.862,
+            "presentedFrames": 148,
+            "expectedDisplayTime": 5453.4
+          },
+          {
+            "mediaTime": 4.892,
+            "presentedFrames": 149,
+            "expectedDisplayTime": 5486.8
+          },
+          {
+            "mediaTime": 4.924,
+            "presentedFrames": 150,
+            "expectedDisplayTime": 5520.1
+          },
+          {
+            "mediaTime": 4.954,
+            "presentedFrames": 151,
+            "expectedDisplayTime": 5553.4
+          },
+          {
+            "mediaTime": 5.016,
+            "presentedFrames": 153,
+            "expectedDisplayTime": 5603.3
+          },
+          {
+            "mediaTime": 5.046,
+            "presentedFrames": 154,
+            "expectedDisplayTime": 5636.7
+          },
+          {
+            "mediaTime": 5.077,
+            "presentedFrames": 155,
+            "expectedDisplayTime": 5670
+          },
+          {
+            "mediaTime": 5.109,
+            "presentedFrames": 156,
+            "expectedDisplayTime": 5703.4
+          },
+          {
+            "mediaTime": 5.139,
+            "presentedFrames": 157,
+            "expectedDisplayTime": 5736.7
+          },
+          {
+            "mediaTime": 5.17,
+            "presentedFrames": 158,
+            "expectedDisplayTime": 5770.1
+          },
+          {
+            "mediaTime": 5.202,
+            "presentedFrames": 159,
+            "expectedDisplayTime": 5803.3
+          },
+          {
+            "mediaTime": 5.231,
+            "presentedFrames": 160,
+            "expectedDisplayTime": 5820
+          },
+          {
+            "mediaTime": 5.262,
+            "presentedFrames": 161,
+            "expectedDisplayTime": 5853.3
+          },
+          {
+            "mediaTime": 5.293,
+            "presentedFrames": 162,
+            "expectedDisplayTime": 5886.7
+          },
+          {
+            "mediaTime": 5.323,
+            "presentedFrames": 163,
+            "expectedDisplayTime": 5920
+          },
+          {
+            "mediaTime": 5.354,
+            "presentedFrames": 164,
+            "expectedDisplayTime": 5953.4
+          },
+          {
+            "mediaTime": 5.415,
+            "presentedFrames": 166,
+            "expectedDisplayTime": 6003.3
+          },
+          {
+            "mediaTime": 5.446,
+            "presentedFrames": 167,
+            "expectedDisplayTime": 6036.7
+          },
+          {
+            "mediaTime": 5.477,
+            "presentedFrames": 168,
+            "expectedDisplayTime": 6070
+          },
+          {
+            "mediaTime": 5.508,
+            "presentedFrames": 169,
+            "expectedDisplayTime": 6103.3
+          },
+          {
+            "mediaTime": 5.539,
+            "presentedFrames": 170,
+            "expectedDisplayTime": 6136.7
+          },
+          {
+            "mediaTime": 5.569,
+            "presentedFrames": 171,
+            "expectedDisplayTime": 6170
+          },
+          {
+            "mediaTime": 5.6,
+            "presentedFrames": 172,
+            "expectedDisplayTime": 6203.3
+          },
+          {
+            "mediaTime": 5.631,
+            "presentedFrames": 173,
+            "expectedDisplayTime": 6220
+          },
+          {
+            "mediaTime": 5.662,
+            "presentedFrames": 174,
+            "expectedDisplayTime": 6253.4
+          },
+          {
+            "mediaTime": 5.693,
+            "presentedFrames": 175,
+            "expectedDisplayTime": 6286.7
+          },
+          {
+            "mediaTime": 5.723,
+            "presentedFrames": 176,
+            "expectedDisplayTime": 6320
+          },
+          {
+            "mediaTime": 5.754,
+            "presentedFrames": 177,
+            "expectedDisplayTime": 6353.3
+          },
+          {
+            "mediaTime": 5.786,
+            "presentedFrames": 178,
+            "expectedDisplayTime": 6386.7
+          },
+          {
+            "mediaTime": 5.818,
+            "presentedFrames": 179,
+            "expectedDisplayTime": 6420
+          },
+          {
+            "mediaTime": 5.846,
+            "presentedFrames": 180,
+            "expectedDisplayTime": 6436.6
+          },
+          {
+            "mediaTime": 5.877,
+            "presentedFrames": 181,
+            "expectedDisplayTime": 6470
+          },
+          {
+            "mediaTime": 5.908,
+            "presentedFrames": 182,
+            "expectedDisplayTime": 6503.3
+          },
+          {
+            "mediaTime": 5.939,
+            "presentedFrames": 183,
+            "expectedDisplayTime": 6536.7
+          },
+          {
+            "mediaTime": 5.97,
+            "presentedFrames": 184,
+            "expectedDisplayTime": 6570
+          },
+          {
+            "mediaTime": 6.032,
+            "presentedFrames": 186,
+            "expectedDisplayTime": 6620
+          },
+          {
+            "mediaTime": 6.062,
+            "presentedFrames": 187,
+            "expectedDisplayTime": 6653.4
+          },
+          {
+            "mediaTime": 6.091,
+            "presentedFrames": 188,
+            "expectedDisplayTime": 6686.7
+          },
+          {
+            "mediaTime": 6.124,
+            "presentedFrames": 189,
+            "expectedDisplayTime": 6720
+          },
+          {
+            "mediaTime": 6.153,
+            "presentedFrames": 190,
+            "expectedDisplayTime": 6753.4
+          },
+          {
+            "mediaTime": 6.181,
+            "presentedFrames": 191,
+            "expectedDisplayTime": 6770
+          },
+          {
+            "mediaTime": 6.216,
+            "presentedFrames": 192,
+            "expectedDisplayTime": 6803.3
+          },
+          {
+            "mediaTime": 6.245,
+            "presentedFrames": 193,
+            "expectedDisplayTime": 6836.6
+          },
+          {
+            "mediaTime": 6.276,
+            "presentedFrames": 194,
+            "expectedDisplayTime": 6870
+          },
+          {
+            "mediaTime": 6.304,
+            "presentedFrames": 195,
+            "expectedDisplayTime": 6903.3
+          },
+          {
+            "mediaTime": 6.337,
+            "presentedFrames": 196,
+            "expectedDisplayTime": 6936.7
+          },
+          {
+            "mediaTime": 6.37,
+            "presentedFrames": 197,
+            "expectedDisplayTime": 6969.9
+          },
+          {
+            "mediaTime": 6.431,
+            "presentedFrames": 199,
+            "expectedDisplayTime": 7020
+          },
+          {
+            "mediaTime": 6.46,
+            "presentedFrames": 200,
+            "expectedDisplayTime": 7053.3
+          },
+          {
+            "mediaTime": 6.491,
+            "presentedFrames": 201,
+            "expectedDisplayTime": 7086.7
+          },
+          {
+            "mediaTime": 6.522,
+            "presentedFrames": 202,
+            "expectedDisplayTime": 7119.9
+          },
+          {
+            "mediaTime": 6.554,
+            "presentedFrames": 203,
+            "expectedDisplayTime": 7153.3
+          },
+          {
+            "mediaTime": 6.614,
+            "presentedFrames": 205,
+            "expectedDisplayTime": 7203.3
+          },
+          {
+            "mediaTime": 6.646,
+            "presentedFrames": 206,
+            "expectedDisplayTime": 7236.6
+          },
+          {
+            "mediaTime": 6.677,
+            "presentedFrames": 207,
+            "expectedDisplayTime": 7270
+          },
+          {
+            "mediaTime": 6.708,
+            "presentedFrames": 208,
+            "expectedDisplayTime": 7303.3
+          },
+          {
+            "mediaTime": 6.738,
+            "presentedFrames": 209,
+            "expectedDisplayTime": 7336.6
+          },
+          {
+            "mediaTime": 6.799,
+            "presentedFrames": 211,
+            "expectedDisplayTime": 7386.7
+          },
+          {
+            "mediaTime": 6.83,
+            "presentedFrames": 212,
+            "expectedDisplayTime": 7420
+          },
+          {
+            "mediaTime": 6.862,
+            "presentedFrames": 213,
+            "expectedDisplayTime": 7453.3
+          },
+          {
+            "mediaTime": 6.893,
+            "presentedFrames": 214,
+            "expectedDisplayTime": 7486.7
+          },
+          {
+            "mediaTime": 6.924,
+            "presentedFrames": 215,
+            "expectedDisplayTime": 7519.9
+          },
+          {
+            "mediaTime": 6.953,
+            "presentedFrames": 216,
+            "expectedDisplayTime": 7553.3
+          },
+          {
+            "mediaTime": 6.985,
+            "presentedFrames": 217,
+            "expectedDisplayTime": 7586.7
+          },
+          {
+            "mediaTime": 7.047,
+            "presentedFrames": 219,
+            "expectedDisplayTime": 7636.6
+          },
+          {
+            "mediaTime": 7.077,
+            "presentedFrames": 220,
+            "expectedDisplayTime": 7670
+          },
+          {
+            "mediaTime": 7.108,
+            "presentedFrames": 221,
+            "expectedDisplayTime": 7703.3
+          },
+          {
+            "mediaTime": 7.139,
+            "presentedFrames": 222,
+            "expectedDisplayTime": 7736.6
+          },
+          {
+            "mediaTime": 7.168,
+            "presentedFrames": 223,
+            "expectedDisplayTime": 7769.9
+          },
+          {
+            "mediaTime": 7.201,
+            "presentedFrames": 224,
+            "expectedDisplayTime": 7803.3
+          },
+          {
+            "mediaTime": 7.231,
+            "presentedFrames": 225,
+            "expectedDisplayTime": 7819.9
+          },
+          {
+            "mediaTime": 7.262,
+            "presentedFrames": 226,
+            "expectedDisplayTime": 7853.3
+          },
+          {
+            "mediaTime": 7.292,
+            "presentedFrames": 227,
+            "expectedDisplayTime": 7886.6
+          },
+          {
+            "mediaTime": 7.322,
+            "presentedFrames": 228,
+            "expectedDisplayTime": 7920
+          },
+          {
+            "mediaTime": 7.354,
+            "presentedFrames": 229,
+            "expectedDisplayTime": 7953.3
+          },
+          {
+            "mediaTime": 7.384,
+            "presentedFrames": 230,
+            "expectedDisplayTime": 7986.6
+          },
+          {
+            "mediaTime": 7.416,
+            "presentedFrames": 231,
+            "expectedDisplayTime": 8020
+          },
+          {
+            "mediaTime": 7.445,
+            "presentedFrames": 232,
+            "expectedDisplayTime": 8036.6
+          },
+          {
+            "mediaTime": 7.477,
+            "presentedFrames": 233,
+            "expectedDisplayTime": 8070
+          },
+          {
+            "mediaTime": 7.508,
+            "presentedFrames": 234,
+            "expectedDisplayTime": 8103.3
+          },
+          {
+            "mediaTime": 7.538,
+            "presentedFrames": 235,
+            "expectedDisplayTime": 8136.6
+          },
+          {
+            "mediaTime": 7.57,
+            "presentedFrames": 236,
+            "expectedDisplayTime": 8170
+          },
+          {
+            "mediaTime": 7.601,
+            "presentedFrames": 237,
+            "expectedDisplayTime": 8203.3
+          },
+          {
+            "mediaTime": 7.629,
+            "presentedFrames": 238,
+            "expectedDisplayTime": 8219.9
+          },
+          {
+            "mediaTime": 7.661,
+            "presentedFrames": 239,
+            "expectedDisplayTime": 8253.2
+          },
+          {
+            "mediaTime": 7.693,
+            "presentedFrames": 240,
+            "expectedDisplayTime": 8286.6
+          },
+          {
+            "mediaTime": 7.723,
+            "presentedFrames": 241,
+            "expectedDisplayTime": 8320
+          },
+          {
+            "mediaTime": 7.753,
+            "presentedFrames": 242,
+            "expectedDisplayTime": 8353.2
+          },
+          {
+            "mediaTime": 7.784,
+            "presentedFrames": 243,
+            "expectedDisplayTime": 8386.6
+          },
+          {
+            "mediaTime": 7.815,
+            "presentedFrames": 244,
+            "expectedDisplayTime": 8403.2
+          },
+          {
+            "mediaTime": 7.845,
+            "presentedFrames": 245,
+            "expectedDisplayTime": 8436.6
+          },
+          {
+            "mediaTime": 7.877,
+            "presentedFrames": 246,
+            "expectedDisplayTime": 8469.9
+          },
+          {
+            "mediaTime": 7.908,
+            "presentedFrames": 247,
+            "expectedDisplayTime": 8503.3
+          },
+          {
+            "mediaTime": 7.937,
+            "presentedFrames": 248,
+            "expectedDisplayTime": 8536.6
+          },
+          {
+            "mediaTime": 7.97,
+            "presentedFrames": 249,
+            "expectedDisplayTime": 8569.9
+          },
+          {
+            "mediaTime": 8.031,
+            "presentedFrames": 251,
+            "expectedDisplayTime": 8619.9
+          },
+          {
+            "mediaTime": 8.061,
+            "presentedFrames": 252,
+            "expectedDisplayTime": 8653.2
+          },
+          {
+            "mediaTime": 8.09,
+            "presentedFrames": 253,
+            "expectedDisplayTime": 8686.5
+          },
+          {
+            "mediaTime": 8.124,
+            "presentedFrames": 254,
+            "expectedDisplayTime": 8720
+          },
+          {
+            "mediaTime": 8.155,
+            "presentedFrames": 255,
+            "expectedDisplayTime": 8753.2
+          },
+          {
+            "mediaTime": 8.185,
+            "presentedFrames": 256,
+            "expectedDisplayTime": 8786.6
+          },
+          {
+            "mediaTime": 8.216,
+            "presentedFrames": 257,
+            "expectedDisplayTime": 8819.9
+          },
+          {
+            "mediaTime": 8.244,
+            "presentedFrames": 258,
+            "expectedDisplayTime": 8836.6
+          },
+          {
+            "mediaTime": 8.278,
+            "presentedFrames": 259,
+            "expectedDisplayTime": 8869.9
+          },
+          {
+            "mediaTime": 8.308,
+            "presentedFrames": 260,
+            "expectedDisplayTime": 8903.2
+          },
+          {
+            "mediaTime": 8.339,
+            "presentedFrames": 261,
+            "expectedDisplayTime": 8936.6
+          },
+          {
+            "mediaTime": 8.368,
+            "presentedFrames": 262,
+            "expectedDisplayTime": 8969.9
+          },
+          {
+            "mediaTime": 8.399,
+            "presentedFrames": 263,
+            "expectedDisplayTime": 8986.6
+          },
+          {
+            "mediaTime": 8.429,
+            "presentedFrames": 264,
+            "expectedDisplayTime": 9019.9
+          },
+          {
+            "mediaTime": 8.461,
+            "presentedFrames": 265,
+            "expectedDisplayTime": 9053.2
+          },
+          {
+            "mediaTime": 8.491,
+            "presentedFrames": 266,
+            "expectedDisplayTime": 9086.5
+          },
+          {
+            "mediaTime": 8.522,
+            "presentedFrames": 267,
+            "expectedDisplayTime": 9119.9
+          },
+          {
+            "mediaTime": 8.552,
+            "presentedFrames": 268,
+            "expectedDisplayTime": 9153.2
+          },
+          {
+            "mediaTime": 8.614,
+            "presentedFrames": 270,
+            "expectedDisplayTime": 9203.2
+          },
+          {
+            "mediaTime": 8.646,
+            "presentedFrames": 271,
+            "expectedDisplayTime": 9236.6
+          },
+          {
+            "mediaTime": 8.677,
+            "presentedFrames": 272,
+            "expectedDisplayTime": 9269.9
+          },
+          {
+            "mediaTime": 8.707,
+            "presentedFrames": 273,
+            "expectedDisplayTime": 9303.2
+          },
+          {
+            "mediaTime": 8.738,
+            "presentedFrames": 274,
+            "expectedDisplayTime": 9336.6
+          },
+          {
+            "mediaTime": 8.768,
+            "presentedFrames": 275,
+            "expectedDisplayTime": 9369.9
+          },
+          {
+            "mediaTime": 8.801,
+            "presentedFrames": 276,
+            "expectedDisplayTime": 9403.2
+          },
+          {
+            "mediaTime": 8.83,
+            "presentedFrames": 277,
+            "expectedDisplayTime": 9419.9
+          },
+          {
+            "mediaTime": 8.86,
+            "presentedFrames": 278,
+            "expectedDisplayTime": 9453.3
+          },
+          {
+            "mediaTime": 8.891,
+            "presentedFrames": 279,
+            "expectedDisplayTime": 9486.5
+          },
+          {
+            "mediaTime": 8.922,
+            "presentedFrames": 280,
+            "expectedDisplayTime": 9519.8
+          },
+          {
+            "mediaTime": 8.952,
+            "presentedFrames": 281,
+            "expectedDisplayTime": 9553.2
+          },
+          {
+            "mediaTime": 8.985,
+            "presentedFrames": 282,
+            "expectedDisplayTime": 9586.6
+          },
+          {
+            "mediaTime": 9.016,
+            "presentedFrames": 283,
+            "expectedDisplayTime": 9619.9
+          },
+          {
+            "mediaTime": 9.047,
+            "presentedFrames": 284,
+            "expectedDisplayTime": 9636.5
+          },
+          {
+            "mediaTime": 9.077,
+            "presentedFrames": 285,
+            "expectedDisplayTime": 9669.9
+          },
+          {
+            "mediaTime": 9.105,
+            "presentedFrames": 286,
+            "expectedDisplayTime": 9703.2
+          },
+          {
+            "mediaTime": 9.136,
+            "presentedFrames": 287,
+            "expectedDisplayTime": 9736.6
+          },
+          {
+            "mediaTime": 9.167,
+            "presentedFrames": 288,
+            "expectedDisplayTime": 9769.9
+          },
+          {
+            "mediaTime": 9.198,
+            "presentedFrames": 289,
+            "expectedDisplayTime": 9786.5
+          },
+          {
+            "mediaTime": 9.229,
+            "presentedFrames": 290,
+            "expectedDisplayTime": 9819.8
+          },
+          {
+            "mediaTime": 9.259,
+            "presentedFrames": 291,
+            "expectedDisplayTime": 9853.2
+          },
+          {
+            "mediaTime": 9.291,
+            "presentedFrames": 292,
+            "expectedDisplayTime": 9886.6
+          },
+          {
+            "mediaTime": 9.321,
+            "presentedFrames": 293,
+            "expectedDisplayTime": 9919.9
+          },
+          {
+            "mediaTime": 9.352,
+            "presentedFrames": 294,
+            "expectedDisplayTime": 9953.2
+          },
+          {
+            "mediaTime": 9.413,
+            "presentedFrames": 296,
+            "expectedDisplayTime": 10003.2
+          },
+          {
+            "mediaTime": 9.444,
+            "presentedFrames": 297,
+            "expectedDisplayTime": 10036.5
+          },
+          {
+            "mediaTime": 9.474,
+            "presentedFrames": 298,
+            "expectedDisplayTime": 10069.9
+          },
+          {
+            "mediaTime": 9.505,
+            "presentedFrames": 299,
+            "expectedDisplayTime": 10103.2
+          },
+          {
+            "mediaTime": 9.537,
+            "presentedFrames": 300,
+            "expectedDisplayTime": 10136.5
+          },
+          {
+            "mediaTime": 9.568,
+            "presentedFrames": 301,
+            "expectedDisplayTime": 10169.8
+          },
+          {
+            "mediaTime": 9.598,
+            "presentedFrames": 302,
+            "expectedDisplayTime": 10186.5
+          },
+          {
+            "mediaTime": 9.629,
+            "presentedFrames": 303,
+            "expectedDisplayTime": 10219.8
+          },
+          {
+            "mediaTime": 9.66,
+            "presentedFrames": 304,
+            "expectedDisplayTime": 10253.2
+          },
+          {
+            "mediaTime": 9.69,
+            "presentedFrames": 305,
+            "expectedDisplayTime": 10286.5
+          },
+          {
+            "mediaTime": 9.721,
+            "presentedFrames": 306,
+            "expectedDisplayTime": 10319.9
+          },
+          {
+            "mediaTime": 9.752,
+            "presentedFrames": 307,
+            "expectedDisplayTime": 10353.2
+          },
+          {
+            "mediaTime": 9.783,
+            "presentedFrames": 308,
+            "expectedDisplayTime": 10386.5
+          },
+          {
+            "mediaTime": 9.813,
+            "presentedFrames": 309,
+            "expectedDisplayTime": 10403.2
+          },
+          {
+            "mediaTime": 9.844,
+            "presentedFrames": 310,
+            "expectedDisplayTime": 10436.5
+          },
+          {
+            "mediaTime": 9.875,
+            "presentedFrames": 311,
+            "expectedDisplayTime": 10469.8
+          },
+          {
+            "mediaTime": 9.905,
+            "presentedFrames": 312,
+            "expectedDisplayTime": 10503.2
+          },
+          {
+            "mediaTime": 9.936,
+            "presentedFrames": 313,
+            "expectedDisplayTime": 10536.5
+          },
+          {
+            "mediaTime": 9.967,
+            "presentedFrames": 314,
+            "expectedDisplayTime": 10569.9
+          },
+          {
+            "mediaTime": 10.029,
+            "presentedFrames": 316,
+            "expectedDisplayTime": 10619.8
+          },
+          {
+            "mediaTime": 10.059,
+            "presentedFrames": 317,
+            "expectedDisplayTime": 10653.2
+          },
+          {
+            "mediaTime": 10.09,
+            "presentedFrames": 318,
+            "expectedDisplayTime": 10686.5
+          },
+          {
+            "mediaTime": 10.121,
+            "presentedFrames": 319,
+            "expectedDisplayTime": 10719.8
+          },
+          {
+            "mediaTime": 10.151,
+            "presentedFrames": 320,
+            "expectedDisplayTime": 10753.2
+          },
+          {
+            "mediaTime": 10.182,
+            "presentedFrames": 321,
+            "expectedDisplayTime": 10769.8
+          },
+          {
+            "mediaTime": 10.213,
+            "presentedFrames": 322,
+            "expectedDisplayTime": 10803.1
+          },
+          {
+            "mediaTime": 10.244,
+            "presentedFrames": 323,
+            "expectedDisplayTime": 10836.5
+          },
+          {
+            "mediaTime": 10.275,
+            "presentedFrames": 324,
+            "expectedDisplayTime": 10869.8
+          },
+          {
+            "mediaTime": 10.306,
+            "presentedFrames": 325,
+            "expectedDisplayTime": 10903.1
+          },
+          {
+            "mediaTime": 10.338,
+            "presentedFrames": 326,
+            "expectedDisplayTime": 10936.5
+          },
+          {
+            "mediaTime": 10.367,
+            "presentedFrames": 327,
+            "expectedDisplayTime": 10969.8
+          },
+          {
+            "mediaTime": 10.398,
+            "presentedFrames": 328,
+            "expectedDisplayTime": 10986.5
+          },
+          {
+            "mediaTime": 10.429,
+            "presentedFrames": 329,
+            "expectedDisplayTime": 11019.8
+          },
+          {
+            "mediaTime": 10.46,
+            "presentedFrames": 330,
+            "expectedDisplayTime": 11053.1
+          },
+          {
+            "mediaTime": 10.49,
+            "presentedFrames": 331,
+            "expectedDisplayTime": 11086.5
+          },
+          {
+            "mediaTime": 10.522,
+            "presentedFrames": 332,
+            "expectedDisplayTime": 11119.8
+          },
+          {
+            "mediaTime": 10.582,
+            "presentedFrames": 334,
+            "expectedDisplayTime": 11169.8
+          },
+          {
+            "mediaTime": 10.613,
+            "presentedFrames": 335,
+            "expectedDisplayTime": 11203.1
+          },
+          {
+            "mediaTime": 10.643,
+            "presentedFrames": 336,
+            "expectedDisplayTime": 11236.5
+          },
+          {
+            "mediaTime": 10.675,
+            "presentedFrames": 337,
+            "expectedDisplayTime": 11269.8
+          },
+          {
+            "mediaTime": 10.705,
+            "presentedFrames": 338,
+            "expectedDisplayTime": 11303.1
+          },
+          {
+            "mediaTime": 10.736,
+            "presentedFrames": 339,
+            "expectedDisplayTime": 11336.5
+          },
+          {
+            "mediaTime": 10.798,
+            "presentedFrames": 341,
+            "expectedDisplayTime": 11386.4
+          },
+          {
+            "mediaTime": 10.828,
+            "presentedFrames": 342,
+            "expectedDisplayTime": 11419.8
+          },
+          {
+            "mediaTime": 10.86,
+            "presentedFrames": 343,
+            "expectedDisplayTime": 11453.2
+          },
+          {
+            "mediaTime": 10.89,
+            "presentedFrames": 344,
+            "expectedDisplayTime": 11486.4
+          },
+          {
+            "mediaTime": 10.921,
+            "presentedFrames": 345,
+            "expectedDisplayTime": 11519.8
+          },
+          {
+            "mediaTime": 10.952,
+            "presentedFrames": 346,
+            "expectedDisplayTime": 11553.1
+          },
+          {
+            "mediaTime": 10.983,
+            "presentedFrames": 347,
+            "expectedDisplayTime": 11586.5
+          },
+          {
+            "mediaTime": 11.013,
+            "presentedFrames": 348,
+            "expectedDisplayTime": 11603.1
+          },
+          {
+            "mediaTime": 11.044,
+            "presentedFrames": 349,
+            "expectedDisplayTime": 11636.5
+          },
+          {
+            "mediaTime": 11.074,
+            "presentedFrames": 350,
+            "expectedDisplayTime": 11669.8
+          },
+          {
+            "mediaTime": 11.106,
+            "presentedFrames": 351,
+            "expectedDisplayTime": 11703.1
+          },
+          {
+            "mediaTime": 11.138,
+            "presentedFrames": 352,
+            "expectedDisplayTime": 11736.5
+          },
+          {
+            "mediaTime": 11.198,
+            "presentedFrames": 354,
+            "expectedDisplayTime": 11786.5
+          },
+          {
+            "mediaTime": 11.229,
+            "presentedFrames": 355,
+            "expectedDisplayTime": 11819.8
+          },
+          {
+            "mediaTime": 11.26,
+            "presentedFrames": 356,
+            "expectedDisplayTime": 11853.2
+          },
+          {
+            "mediaTime": 11.291,
+            "presentedFrames": 357,
+            "expectedDisplayTime": 11886.5
+          },
+          {
+            "mediaTime": 11.322,
+            "presentedFrames": 358,
+            "expectedDisplayTime": 11919.8
+          },
+          {
+            "mediaTime": 11.353,
+            "presentedFrames": 359,
+            "expectedDisplayTime": 11953.1
+          },
+          {
+            "mediaTime": 11.383,
+            "presentedFrames": 360,
+            "expectedDisplayTime": 11986.4
+          },
+          {
+            "mediaTime": 11.414,
+            "presentedFrames": 361,
+            "expectedDisplayTime": 12003.1
+          },
+          {
+            "mediaTime": 11.444,
+            "presentedFrames": 362,
+            "expectedDisplayTime": 12036.4
+          },
+          {
+            "mediaTime": 11.476,
+            "presentedFrames": 363,
+            "expectedDisplayTime": 12069.7
+          },
+          {
+            "mediaTime": 11.506,
+            "presentedFrames": 364,
+            "expectedDisplayTime": 12103.1
+          },
+          {
+            "mediaTime": 11.536,
+            "presentedFrames": 365,
+            "expectedDisplayTime": 12136.5
+          },
+          {
+            "mediaTime": 11.568,
+            "presentedFrames": 366,
+            "expectedDisplayTime": 12169.7
+          },
+          {
+            "mediaTime": 11.598,
+            "presentedFrames": 367,
+            "expectedDisplayTime": 12186.5
+          },
+          {
+            "mediaTime": 11.628,
+            "presentedFrames": 368,
+            "expectedDisplayTime": 12219.8
+          },
+          {
+            "mediaTime": 11.66,
+            "presentedFrames": 369,
+            "expectedDisplayTime": 12253.1
+          },
+          {
+            "mediaTime": 11.69,
+            "presentedFrames": 370,
+            "expectedDisplayTime": 12286.4
+          },
+          {
+            "mediaTime": 11.721,
+            "presentedFrames": 371,
+            "expectedDisplayTime": 12319.8
+          },
+          {
+            "mediaTime": 11.752,
+            "presentedFrames": 372,
+            "expectedDisplayTime": 12353.1
+          },
+          {
+            "mediaTime": 11.783,
+            "presentedFrames": 373,
+            "expectedDisplayTime": 12386.4
+          },
+          {
+            "mediaTime": 11.813,
+            "presentedFrames": 374,
+            "expectedDisplayTime": 12403.1
+          },
+          {
+            "mediaTime": 11.844,
+            "presentedFrames": 375,
+            "expectedDisplayTime": 12436.5
+          },
+          {
+            "mediaTime": 11.874,
+            "presentedFrames": 376,
+            "expectedDisplayTime": 12469.8
+          },
+          {
+            "mediaTime": 11.905,
+            "presentedFrames": 377,
+            "expectedDisplayTime": 12503.1
+          },
+          {
+            "mediaTime": 11.936,
+            "presentedFrames": 378,
+            "expectedDisplayTime": 12536.4
+          },
+          {
+            "mediaTime": 11.997,
+            "presentedFrames": 380,
+            "expectedDisplayTime": 12586.4
+          },
+          {
+            "mediaTime": 12.028,
+            "presentedFrames": 381,
+            "expectedDisplayTime": 12619.8
+          }
+        ],
+        "presentation": {
+          "callbacks": 353,
+          "maximumMediaTimeGap": 0.15500000000000025,
+          "missedPresentationCallbacks": 28
+        },
+        "playbackQuality": {
+          "totalVideoFrames": 392,
+          "droppedVideoFrames": 14,
+          "corruptedVideoFrames": 0
+        },
+        "ok": true,
+        "limitation": "Callback timeline describes actual presented frames, not a demuxed enumeration of every encoded packet. JPEG samples cover the four view midpoints and the tail."
+      }
+    }
+  },
+  "artifacts": [
+    {
+      "file": "00-default.jpg",
+      "bytes": 120193,
+      "sha256": "96e7db3857c5705cb5f18c3d9aac434a13900eacaf9acceabc2d0c258af88b8d"
+    },
+    {
+      "file": "01-station-street.jpg",
+      "bytes": 120467,
+      "sha256": "0b9149c502734279c92c5e425041a68025c3f1c8ace7cd962ce0bde23a9dbdaa"
+    },
+    {
+      "file": "02-station-port.jpg",
+      "bytes": 124276,
+      "sha256": "8728bf564e8db3ceafe08e1d9ca759e2b58ce06a1f31234bce0ea08a5e6e5b46"
+    },
+    {
+      "file": "03-island-aerial.jpg",
+      "bytes": 54266,
+      "sha256": "572e4515c83e7a2990c5e3c8ee4bd99b0c8c8940f00b6cf79b254dfd8f18108d"
+    },
+    {
+      "file": "04-shop-interior.jpg",
+      "bytes": 101391,
+      "sha256": "b17d98d7c951b13b20b48a6169c92ec62a4dbe2cc9e6ce491fa7aaeb00575740"
+    },
+    {
+      "file": "05-street-toon-on.jpg",
+      "bytes": 120206,
+      "sha256": "7993e88a8eee64ece9e76dc526253ba622fc27807fa4c834dfb03621be7c6fe0"
+    },
+    {
+      "file": "06-street-toon-off.jpg",
+      "bytes": 117118,
+      "sha256": "4079866a9c57f891159922320a612b6e6c8d77565cf8e9b8578f54d2cede5184"
+    },
+    {
+      "file": "07-flight-effects-on.jpg",
+      "bytes": 119943,
+      "sha256": "ee434fd9b97f72abf8c1c8397c91c15514b6a87c92657ce32425ae3f280141f5"
+    },
+    {
+      "file": "08-flight-effects-off.jpg",
+      "bytes": 119985,
+      "sha256": "d3cd1a4f7c69ec67260dbad4fc6acb85ace8049efdd888f82ea64268fc97c147"
+    },
+    {
+      "file": "walking-third.jpg",
+      "bytes": 114587,
+      "sha256": "e9187f0fc8bc02a7e07da1fc54e87ee131c14028f77e56301d023aad7cbd9d38"
+    },
+    {
+      "file": "walking-first.jpg",
+      "bytes": 115262,
+      "sha256": "71623451cb64b1ef825ab9854741ca95d0b9cc9009982aae2e38097893b489d8"
+    },
+    {
+      "file": "world.webm",
+      "bytes": 4849002,
+      "sha256": "aba0cbbf6e2ec6d99abb8b565846789a6fe634897665d6596daed8e8d4158961"
+    },
+    {
+      "file": "video-source-manifest.json",
+      "bytes": 23317,
+      "sha256": "56c4c0b5828e2611e31c5a20f728b9413ad3166deb39020dc003bd42219dce80"
+    },
+    {
+      "file": "video-container-timeline.json",
+      "bytes": 45842,
+      "sha256": "2e5f345779fec03a87ce481369d4b5066f793136e6c9e6dbb81c9f7003757ae3"
+    },
+    {
+      "file": "video-source-timeline.json",
+      "bytes": 61297,
+      "sha256": "e57b57753aaf141d1962273b0433b3e8a69b6b29235317d16aa27c36f29203b7"
+    },
+    {
+      "file": "video-frame-01.jpg",
+      "bytes": 316334,
+      "sha256": "5699f9c3a170b0be4eb44ed027e6939b29246c228a4b8d5779932f50a32b0a4a"
+    },
+    {
+      "file": "video-frame-02.jpg",
+      "bytes": 318484,
+      "sha256": "add163143cf7f1dec174fa816cf4ab8a25e0eeec7d1306549afc71b9caa12970"
+    },
+    {
+      "file": "video-frame-03.jpg",
+      "bytes": 108218,
+      "sha256": "85c027de5619c91033269b33b2ac4ede9961d6e560aec7ceead5b6286b189928"
+    },
+    {
+      "file": "video-frame-04.jpg",
+      "bytes": 231236,
+      "sha256": "035ec2ea50a8ed382a03ce6b8af42a2922693df9e164210404b5d95b4216a945"
+    },
+    {
+      "file": "video-frame-05.jpg",
+      "bytes": 231525,
+      "sha256": "09c4c6c8e5b64aa4f5c46c5f0be827646f5f869a5c28518b2a8dfc245a7c50f5"
+    },
+    {
+      "file": "original-petalwake.png",
+      "bytes": 1965701,
+      "sha256": "3d567f62c71d204dd146619d90872cf8ed45abf30ae70de12415751b154cedbc"
+    },
+    {
+      "file": "original-sakuragaoka.png",
+      "bytes": 1874861,
+      "sha256": "d83a0333bb23aab2ea3736734759704fe3d858510d912cfaf19fc1f78903f5d9"
+    },
+    {
+      "file": "frame-samples-island-aerial.json",
+      "bytes": 11487,
+      "sha256": "9eff4df54c092fcb5d85d7b7f88e98e88eabca1800b8bcf3a3ea536c9c426adf"
+    },
+    {
+      "file": "frame-samples-shop-interior.json",
+      "bytes": 11178,
+      "sha256": "c97093cdd5e477569d9a45014d5e7cef4226f9bead62effab3cd753815882b97"
+    },
+    {
+      "file": "frame-samples-station-port.json",
+      "bytes": 11122,
+      "sha256": "17927a37a20550910a266685af1b82e65a1bb87237ce21bf3b055745ae3500ca"
+    },
+    {
+      "file": "frame-samples-station-street.json",
+      "bytes": 11512,
+      "sha256": "35ca07e05cc1623aa5559a2a5a58eea913dbf699f90f78a45c38fcdedf30529e"
+    },
+    {
+      "file": "frame-samples-walking-first.json",
+      "bytes": 11217,
+      "sha256": "125ee9f6e13766c20519e9067fd49fc9afb54de5ca90364df8d41f26f6cddffb"
+    },
+    {
+      "file": "frame-samples-walking-third.json",
+      "bytes": 11261,
+      "sha256": "d41fde6343728e805743a1b0081c8401da93d4aec3ed282e686ce0f7742da481"
+    },
+    {
+      "file": "frame-samples.json",
+      "bytes": 55304,
+      "sha256": "0f87e8f557dc1874d929ad1897f818b85e83e094883b186f24765e9861bda913"
+    }
+  ]
+}

@@ -1,0 +1,6 @@
+{
+  "source": "D:/codex/2026-11-16/world-implementation/handoff/x51-c15-facade-city-result.json",
+  "sha256": "043062488cc0731e37dd9eced62e728a856fa69ddd9ef598e80ff491eda403f4",
+  "copied": false,
+  "scope": "C16 city diff adds only foliage hook; no sites, geometry, planting, stairs or vegetationClearAreas changes. Bounds are recomputed from saved C15 actual clearAreas, not a new C16 runtime readback."
+}

@@ -1,0 +1,63 @@
+{
+  "createdAt": "2026-11-17T11:53:28.754Z",
+  "initialHead": "0d97731bd7cb4f4634f4c9fdc0e1033ae7585f2a",
+  "finalHead": "6b0e9c4c7453bdd612e77c03cde9f81112ae9cc3",
+  "sourceChecks": [
+    {
+      "artifact": "gpu-town-density-v1",
+      "head": "0d97731bd7cb4f4634f4c9fdc0e1033ae7585f2a",
+      "sha256": "cb2d1faeb9023f22a6a96895afcc6543afcd29908cfc15777f5a8043d2e0ab73",
+      "trackedFilesVerified": 203,
+      "pinnedIgnoredFilesVerified": 9,
+      "receipt": "embedded"
+    },
+    {
+      "artifact": "gpu-density-v1",
+      "head": "0d97731bd7cb4f4634f4c9fdc0e1033ae7585f2a",
+      "sha256": "d5b40f9b847d955dc65710c6d630c1e850dae826a26ba47950faecff1b4098cc",
+      "trackedFilesVerified": 204,
+      "pinnedIgnoredFilesVerified": 9,
+      "receipt": "separate"
+    },
+    {
+      "artifact": "gpu-town-density-v2",
+      "head": "6b0e9c4c7453bdd612e77c03cde9f81112ae9cc3",
+      "sha256": "967c72f3d19152cc8f996711fa803c71081e55d9472fc44483a034638d03dc47",
+      "trackedFilesVerified": 203,
+      "pinnedIgnoredFilesVerified": 9,
+      "receipt": "embedded"
+    }
+  ],
+  "outcomes": [
+    {
+      "artifact": "gpu-town-density-v1",
+      "head": "0d97731bd7cb4f4634f4c9fdc0e1033ae7585f2a",
+      "stage": "waiting-for-ready-frame",
+      "renderOk": false,
+      "actualExit": 1,
+      "session": 16446,
+      "pid": 38628
+    },
+    {
+      "artifact": "gpu-density-v1",
+      "head": "0d97731bd7cb4f4634f4c9fdc0e1033ae7585f2a",
+      "stage": "complete",
+      "renderOk": true,
+      "transportClean": false,
+      "actualExit": 1,
+      "session": 55536,
+      "pid": 52044
+    },
+    {
+      "artifact": "gpu-town-density-v2",
+      "head": "6b0e9c4c7453bdd612e77c03cde9f81112ae9cc3",
+      "stage": "complete",
+      "renderOk": true,
+      "transportClean": false,
+      "actualExit": 1,
+      "session": 93115,
+      "pid": 28616
+    }
+  ],
+  "scope": "Separate exact source commits and actual process exits. Original failure and all transport errors retained. All original 21 records retained, selected images unchanged, logs losslessly compressed. No scene/GPU/remote write performed by curator."
+}

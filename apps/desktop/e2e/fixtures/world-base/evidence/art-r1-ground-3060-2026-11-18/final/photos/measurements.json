@@ -1,0 +1,379 @@
+{
+  "nativeSize": [
+    1440,
+    900
+  ],
+  "rows": {
+    "A": {
+      "inputs": [
+        "eac71effc664979b826ee6df50bd3e5732f37bba3597e7b6339b1ac139f349a6",
+        "785c39bf89f070afa798470b7d731f9fd7fe6eaab87d3abcf906fc2896162b07",
+        "227e6cb1bbd1160dff9f62d1d25d16d74bcdd2d6ff15ab3e94b761162d1c1cdd"
+      ],
+      "baselineVsFinal": {
+        "pixels": 1296000,
+        "changed": 321108,
+        "gt1": 211449,
+        "gt8": 162274,
+        "gt32": 98415,
+        "max": 255
+      },
+      "originalR1VsFinal": {
+        "pixels": 1296000,
+        "changed": 3392,
+        "gt1": 2194,
+        "gt8": 621,
+        "gt32": 13,
+        "max": 82
+      }
+    },
+    "B": {
+      "inputs": [
+        "dc95944b80cad0dac5e48465b981185811408aa1515da9ab6bcf6c09edbce1aa",
+        "6998455998a886a729c677a9a50a8c35d4cdfe480ad5f20d59c753957d77fdee",
+        "6998455998a886a729c677a9a50a8c35d4cdfe480ad5f20d59c753957d77fdee"
+      ],
+      "baselineVsFinal": {
+        "pixels": 1296000,
+        "changed": 404968,
+        "gt1": 197649,
+        "gt8": 162573,
+        "gt32": 120406,
+        "max": 255
+      },
+      "originalR1VsFinal": {
+        "pixels": 1296000,
+        "changed": 0,
+        "gt1": 0,
+        "gt8": 0,
+        "gt32": 0,
+        "max": 0
+      }
+    },
+    "C": {
+      "inputs": [
+        "65ce179f3039ddf3ec1e06031679e172e19907f25ccedfe10fe45cdcdacb83eb",
+        "102f3b2c58138b34b60525b91d496f79c2e70acc2e66749a10e9d4cd2c7d2c41",
+        "2d36227aebf799555734ab89ea9162227fad7a280bdf847db499a3455e62bef7"
+      ],
+      "baselineVsFinal": {
+        "pixels": 1296000,
+        "changed": 778459,
+        "gt1": 652020,
+        "gt8": 471585,
+        "gt32": 98406,
+        "max": 234
+      },
+      "originalR1VsFinal": {
+        "pixels": 1296000,
+        "changed": 10714,
+        "gt1": 2299,
+        "gt8": 1950,
+        "gt32": 1811,
+        "max": 152
+      }
+    },
+    "D": {
+      "inputs": [
+        "43df9d76f3e2ab4ce48da48fbece35bdf87db2e6d47f1ec6c3925b35cfd93fec",
+        "8f29a3e7e38ad7004592a121677b445303646fddad310092c61030dfb3372589",
+        "591317b581f134149a8fae4396624c473301da8028e5260be99576a184020190"
+      ],
+      "baselineVsFinal": {
+        "pixels": 1296000,
+        "changed": 730235,
+        "gt1": 625683,
+        "gt8": 416916,
+        "gt32": 155074,
+        "max": 255
+      },
+      "originalR1VsFinal": {
+        "pixels": 1296000,
+        "changed": 61556,
+        "gt1": 26914,
+        "gt8": 21775,
+        "gt32": 19804,
+        "max": 213
+      }
+    }
+  },
+  "DRegistrationMasks": {
+    "oldStar": {
+      "baselineVsFinal": {
+        "pixels": 6863,
+        "changed": 1342,
+        "gt1": 0,
+        "gt8": 0,
+        "gt32": 0,
+        "max": 1
+      },
+      "originalR1VsFinal": {
+        "pixels": 6863,
+        "changed": 6863,
+        "gt1": 6863,
+        "gt8": 6839,
+        "gt32": 5960,
+        "max": 212
+      },
+      "displayRGBByVersion": [
+        [
+          86.32,
+          41.12,
+          147.85
+        ],
+        [
+          51.6,
+          50.67,
+          51.4
+        ],
+        [
+          86.4,
+          41.19,
+          147.9
+        ]
+      ],
+      "pixels": 6863
+    },
+    "originalR1Star": {
+      "baselineVsFinal": {
+        "pixels": 6224,
+        "changed": 6224,
+        "gt1": 6224,
+        "gt8": 4730,
+        "gt32": 0,
+        "max": 12
+      },
+      "originalR1VsFinal": {
+        "pixels": 6224,
+        "changed": 6224,
+        "gt1": 6224,
+        "gt8": 6206,
+        "gt32": 5394,
+        "max": 146
+      },
+      "displayRGBByVersion": [
+        [
+          52.6,
+          49.95,
+          57.0
+        ],
+        [
+          128.83,
+          67.95,
+          42.95
+        ],
+        [
+          43.14,
+          45.75,
+          56.35
+        ]
+      ],
+      "pixels": 6224
+    },
+    "yellowA40": {
+      "baselineVsFinal": {
+        "pixels": 1105,
+        "changed": 986,
+        "gt1": 833,
+        "gt8": 831,
+        "gt32": 0,
+        "max": 17
+      },
+      "originalR1VsFinal": {
+        "pixels": 1105,
+        "changed": 1105,
+        "gt1": 1105,
+        "gt8": 1105,
+        "gt32": 1105,
+        "max": 209
+      },
+      "displayRGBByVersion": [
+        [
+          113.45,
+          61.06,
+          48.62
+        ],
+        [
+          252.29,
+          182.19,
+          0.56
+        ],
+        [
+          103.14,
+          56.55,
+          47.66
+        ]
+      ],
+      "pixels": 1105
+    },
+    "yellowA41": {
+      "baselineVsFinal": {
+        "pixels": 1127,
+        "changed": 1127,
+        "gt1": 1127,
+        "gt8": 1127,
+        "gt32": 1127,
+        "max": 197
+      },
+      "originalR1VsFinal": {
+        "pixels": 1127,
+        "changed": 1127,
+        "gt1": 1127,
+        "gt8": 1127,
+        "gt32": 1127,
+        "max": 208
+      },
+      "displayRGBByVersion": [
+        [
+          68.64,
+          57.89,
+          58.75
+        ],
+        [
+          54.52,
+          51.75,
+          57.44
+        ],
+        [
+          253.46,
+          182.82,
+          0.05
+        ]
+      ],
+      "pixels": 1127
+    },
+    "caution0": {
+      "baselineVsFinal": {
+        "pixels": 1833,
+        "changed": 1593,
+        "gt1": 1459,
+        "gt8": 688,
+        "gt32": 0,
+        "max": 11
+      },
+      "originalR1VsFinal": {
+        "pixels": 1833,
+        "changed": 1833,
+        "gt1": 1833,
+        "gt8": 1827,
+        "gt32": 1598,
+        "max": 212
+      },
+      "displayRGBByVersion": [
+        [
+          57.9,
+          50.73,
+          78.33
+        ],
+        [
+          186.86,
+          142.62,
+          12.0
+        ],
+        [
+          51.26,
+          47.84,
+          77.98
+        ]
+      ],
+      "pixels": 1833
+    },
+    "caution1": {
+      "baselineVsFinal": {
+        "pixels": 1895,
+        "changed": 1895,
+        "gt1": 1895,
+        "gt8": 1864,
+        "gt32": 1554,
+        "max": 196
+      },
+      "originalR1VsFinal": {
+        "pixels": 1895,
+        "changed": 1895,
+        "gt1": 1895,
+        "gt8": 1618,
+        "gt32": 1568,
+        "max": 201
+      },
+      "displayRGBByVersion": [
+        [
+          44.0,
+          43.0,
+          51.04
+        ],
+        [
+          37.32,
+          40.13,
+          50.66
+        ],
+        [
+          184.96,
+          141.4,
+          11.8
+        ]
+      ],
+      "pixels": 1895
+    }
+  },
+  "summaryImage": "ABCD-overview.jpg",
+  "source": [
+    "de9f59b",
+    "7bf4e7e",
+    "df6e730"
+  ],
+  "AOldCarQuadrilateral": {
+    "measure": "rasterized projected bounds from the original runtime decal with no dilation",
+    "changed": {
+      "pixels": 19,
+      "changed": 19,
+      "gt1": 19,
+      "gt8": 6,
+      "gt32": 6,
+      "max": 82
+    },
+    "onePixelBand": {
+      "pixels": 47,
+      "changed": 47,
+      "gt1": 46,
+      "gt8": 21,
+      "gt32": 6,
+      "max": 82
+    },
+    "fiveXROI": [
+      830,
+      514,
+      877,
+      547
+    ]
+  },
+  "CRearMask": {
+    "nativeScreenPixelsInUnion": 3949,
+    "inside": {
+      "pixels": 3949,
+      "changed": 3245,
+      "gt1": 2101,
+      "gt8": 1950,
+      "gt32": 1811,
+      "max": 152
+    },
+    "outside": {
+      "pixels": 1292051,
+      "changed": 7469,
+      "gt1": 198,
+      "gt8": 0,
+      "gt32": 0,
+      "max": 4
+    },
+    "tolerancePx": 2
+  },
+  "noticeDisplacementsPx": {
+    "yellowA4": [
+      44.2725,
+      -1.5126
+    ],
+    "caution": [
+      73.4965,
+      -2.5851
+    ]
+  }
+}

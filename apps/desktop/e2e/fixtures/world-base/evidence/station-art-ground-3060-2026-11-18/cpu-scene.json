@@ -1,0 +1,1432 @@
+{
+  "base": "47a5c12eba910682ccbf8bc9138510bc01737bf3",
+  "source": "2a7c6f12bb66f44a04a9dbbc2a4e2e7a22e93758",
+  "release": "3ef6196ee62ad3b1bf9cfda4ea0feac017ccb64aac208ef4b8b82df0f7ea9d13",
+  "sampling": "Project-native Three / Electron, WebGL contexts rejected, station/city/skyline normal geometry and original baked layout. v1 diagnostics used original package routes. Final loaded normal prepared package URLs and completed scene-ready. One process per build.",
+  "builds": {
+    "control": {
+      "fingerprint": "1057:2751069:297148.3:946248.3",
+      "liveDecals": null,
+      "registeredArt": null,
+      "casters": {
+        "trees": 93,
+        "bark": 152873,
+        "blob": 377356,
+        "cards": 106824,
+        "lod": {
+          "L0": {
+            "n": 17,
+            "bark": 71551,
+            "blob": 173024,
+            "cards": 48802
+          },
+          "L1": {
+            "n": 58,
+            "bark": 70748,
+            "blob": 180596,
+            "cards": 54354
+          },
+          "L2": {
+            "n": 18,
+            "bark": 10574,
+            "blob": 23736,
+            "cards": 3668
+          }
+        },
+        "plaza": {
+          "bark": 11382,
+          "blob": 55440,
+          "cards": 11952
+        },
+        "w3": {
+          "bark": 7637,
+          "blob": 31312,
+          "cards": 6382
+        },
+        "bases": 24088
+      },
+      "collisionCount": 3147,
+      "collisionHash": "a0487644f831456ba4802d144d452d9d9709c5b80a26384f0931545fa4d2a541",
+      "originalTownWeather": "e887be277b66f02377d940561ef83f56b17a4cf922fb71cfc60976e474422a3f",
+      "originalSkylineWeather": "bfaae26b5923987b31af71da7c0da7cc3f2111be4e45a47ba04abda03763f9c5",
+      "measuredSeedGroups": [
+        11,
+        9
+      ],
+      "originalClearance": "b6cad90e651dbb87746e9f9e83f22c3157da3f32223159a918ccf8b87cfcee0f",
+      "originalStairs": "5266e38faf20f06d1bd5bbd1aeed50986fc4af4687ea39cc4886023f8c0c4fbf",
+      "allStairs": 6,
+      "totalClearanceAreas": 35,
+      "changedVegetationTexels": 260,
+      "placement": [],
+      "extraHiddenShells": [
+        false,
+        false
+      ],
+      "originalWestHouseVisible": true,
+      "decals": [
+        {
+          "index": 0,
+          "area": "01-left-wall",
+          "cell": 0,
+          "positionMatches": true,
+          "planarPassed": 9,
+          "curved": null,
+          "extra": 0
+        },
+        {
+          "index": 1,
+          "area": "01-left-wall",
+          "cell": 9,
+          "positionMatches": true,
+          "planarPassed": 9,
+          "curved": null,
+          "extra": 0
+        },
+        {
+          "index": 2,
+          "area": "01-left-wall",
+          "cell": 3,
+          "positionMatches": true,
+          "planarPassed": 9,
+          "curved": null,
+          "extra": 0
+        },
+        {
+          "index": 3,
+          "area": "01-left-pole",
+          "cell": 10,
+          "positionMatches": true,
+          "planarPassed": 3,
+          "curved": true,
+          "extra": 0
+        },
+        {
+          "index": 4,
+          "area": "01-right-shop",
+          "cell": 5,
+          "positionMatches": true,
+          "planarPassed": 1,
+          "curved": true,
+          "extra": 0
+        },
+        {
+          "index": 5,
+          "area": "01-right-shop",
+          "cell": 11,
+          "positionMatches": true,
+          "planarPassed": 5,
+          "curved": true,
+          "extra": 0
+        },
+        {
+          "index": 6,
+          "area": "01-right-shop",
+          "cell": 8,
+          "positionMatches": true,
+          "planarPassed": 9,
+          "curved": null,
+          "extra": 0
+        },
+        {
+          "index": 7,
+          "area": "01-right-pole",
+          "cell": 8,
+          "positionMatches": true,
+          "planarPassed": 2,
+          "curved": true,
+          "extra": 0
+        },
+        {
+          "index": 8,
+          "area": "21-mailboxes",
+          "cell": 7,
+          "positionMatches": true,
+          "planarPassed": 9,
+          "curved": null,
+          "extra": 0
+        },
+        {
+          "index": 9,
+          "area": "21-mailboxes",
+          "cell": 9,
+          "positionMatches": true,
+          "planarPassed": 9,
+          "curved": null,
+          "extra": 0
+        },
+        {
+          "index": 10,
+          "area": "main",
+          "cell": 10,
+          "positionMatches": true,
+          "planarPassed": 9,
+          "curved": null,
+          "extra": 0
+        },
+        {
+          "index": 11,
+          "area": "main",
+          "cell": 9,
+          "positionMatches": true,
+          "planarPassed": 9,
+          "curved": null,
+          "extra": 0
+        },
+        {
+          "index": 12,
+          "area": "main",
+          "cell": 9,
+          "positionMatches": true,
+          "planarPassed": 9,
+          "curved": null,
+          "extra": 0
+        },
+        {
+          "index": 13,
+          "area": "main",
+          "cell": 9,
+          "positionMatches": true,
+          "planarPassed": 9,
+          "curved": null,
+          "extra": 0
+        },
+        {
+          "index": 14,
+          "area": "laundry",
+          "cell": 2,
+          "positionMatches": true,
+          "planarPassed": 9,
+          "curved": null,
+          "extra": 0
+        },
+        {
+          "index": 15,
+          "area": "laundry",
+          "cell": 5,
+          "positionMatches": true,
+          "planarPassed": 9,
+          "curved": null,
+          "extra": 0
+        },
+        {
+          "index": 16,
+          "area": "laundry",
+          "cell": 9,
+          "positionMatches": true,
+          "planarPassed": 9,
+          "curved": null,
+          "extra": 0
+        },
+        {
+          "index": 17,
+          "area": "rear",
+          "cell": 0,
+          "positionMatches": true,
+          "planarPassed": 9,
+          "curved": null,
+          "extra": 0
+        },
+        {
+          "index": 18,
+          "area": "rear",
+          "cell": 3,
+          "positionMatches": true,
+          "planarPassed": 9,
+          "curved": null,
+          "extra": 0
+        },
+        {
+          "index": 19,
+          "area": "rear",
+          "cell": 3,
+          "positionMatches": true,
+          "planarPassed": 9,
+          "curved": null,
+          "extra": 0
+        },
+        {
+          "index": 20,
+          "area": "rear",
+          "cell": 1,
+          "positionMatches": true,
+          "planarPassed": 9,
+          "curved": null,
+          "extra": 0
+        },
+        {
+          "index": 21,
+          "area": "rear",
+          "cell": 11,
+          "positionMatches": true,
+          "planarPassed": 9,
+          "curved": null,
+          "extra": 0
+        },
+        {
+          "index": 22,
+          "area": "rear",
+          "cell": 10,
+          "positionMatches": true,
+          "planarPassed": 9,
+          "curved": null,
+          "extra": 0
+        },
+        {
+          "index": 23,
+          "area": "rear",
+          "cell": 9,
+          "positionMatches": true,
+          "planarPassed": 9,
+          "curved": null,
+          "extra": 0
+        },
+        {
+          "index": 24,
+          "area": "rear",
+          "cell": 13,
+          "positionMatches": true,
+          "planarPassed": 9,
+          "curved": null,
+          "extra": 0
+        },
+        {
+          "index": 25,
+          "area": "rear",
+          "cell": 14,
+          "positionMatches": true,
+          "planarPassed": 9,
+          "curved": null,
+          "extra": 0
+        }
+      ],
+      "proofOfEight": [
+        {
+          "u": -0.5,
+          "v": -0.5,
+          "depth": 0,
+          "material": "apartment-pbr-plaster",
+          "angleDot": 1,
+          "wall": true,
+          "hit": "station-city-background/town-edge-kit"
+        },
+        {
+          "u": -0.5,
+          "v": 0,
+          "depth": 0,
+          "material": "apartment-pbr-plaster",
+          "angleDot": 1,
+          "wall": true,
+          "hit": "station-city-background/town-edge-kit"
+        },
+        {
+          "u": -0.5,
+          "v": 0.5,
+          "depth": 0,
+          "material": "apartment-pbr-plaster",
+          "angleDot": 1,
+          "wall": true,
+          "hit": "station-city-background/town-edge-kit"
+        },
+        {
+          "u": 0,
+          "v": -0.5,
+          "depth": 0,
+          "material": "apartment-pbr-plaster",
+          "angleDot": 1,
+          "wall": true,
+          "hit": "station-city-background/town-edge-kit"
+        },
+        {
+          "u": 0,
+          "v": 0,
+          "depth": 0,
+          "material": "apartment-pbr-plaster",
+          "angleDot": 1,
+          "wall": true,
+          "hit": "station-city-background/town-edge-kit"
+        },
+        {
+          "u": 0,
+          "v": 0.5,
+          "depth": 0,
+          "material": "apartment-pbr-plaster",
+          "angleDot": 1,
+          "wall": true,
+          "hit": "station-city-background/town-edge-kit"
+        },
+        {
+          "u": 0.5,
+          "v": -0.5,
+          "depth": 0,
+          "material": "apartment-pbr-plaster",
+          "angleDot": 1,
+          "wall": true,
+          "hit": "station-city-background/town-edge-kit"
+        },
+        {
+          "u": 0.5,
+          "v": 0,
+          "depth": 0,
+          "material": "apartment-pbr-plaster",
+          "angleDot": 1,
+          "wall": true,
+          "hit": "station-city-background/town-edge-kit"
+        },
+        {
+          "u": 0.5,
+          "v": 0.5,
+          "depth": 0,
+          "material": "apartment-pbr-plaster",
+          "angleDot": 1,
+          "wall": true,
+          "hit": "station-city-background/town-edge-kit"
+        }
+      ],
+      "errors": []
+    },
+    "v1": {
+      "fingerprint": "1065:2657303:299375.3:953080.7",
+      "liveDecals": null,
+      "registeredArt": {
+        "buildings": [
+          "station-exchange",
+          "alley-workshop"
+        ],
+        "laundry": "Portal_wings"
+      },
+      "casters": {
+        "trees": 93,
+        "bark": 137713,
+        "blob": 313356,
+        "cards": 89524,
+        "lod": {
+          "L0": {
+            "n": 17,
+            "bark": 56391,
+            "blob": 109024,
+            "cards": 31502
+          },
+          "L1": {
+            "n": 58,
+            "bark": 70748,
+            "blob": 180596,
+            "cards": 54354
+          },
+          "L2": {
+            "n": 18,
+            "bark": 10574,
+            "blob": 23736,
+            "cards": 3668
+          }
+        },
+        "plaza": {
+          "bark": 2309,
+          "blob": 13680,
+          "cards": 674
+        },
+        "w3": {
+          "bark": 1550,
+          "blob": 9072,
+          "cards": 360
+        },
+        "bases": 24088
+      },
+      "collisionCount": 3147,
+      "collisionHash": "a0487644f831456ba4802d144d452d9d9709c5b80a26384f0931545fa4d2a541",
+      "originalTownWeather": "e887be277b66f02377d940561ef83f56b17a4cf922fb71cfc60976e474422a3f",
+      "originalSkylineWeather": "bfaae26b5923987b31af71da7c0da7cc3f2111be4e45a47ba04abda03763f9c5",
+      "measuredSeedGroups": [
+        11,
+        9
+      ],
+      "originalClearance": "b6cad90e651dbb87746e9f9e83f22c3157da3f32223159a918ccf8b87cfcee0f",
+      "originalStairs": "5266e38faf20f06d1bd5bbd1aeed50986fc4af4687ea39cc4886023f8c0c4fbf",
+      "allStairs": 7,
+      "totalClearanceAreas": 38,
+      "changedVegetationTexels": 290,
+      "placement": [
+        {
+          "placement": {
+            "name": "station-exchange",
+            "type": "station-art",
+            "center": [
+              35,
+              -124.2
+            ],
+            "baseY": 4.430233103434214,
+            "yaw": 0,
+            "halfWidth": 3.15,
+            "halfDepth": 3.55,
+            "footprint": {
+              "minX": 31.85,
+              "maxX": 38.15,
+              "minZ": -127.75,
+              "maxZ": -120.65
+            },
+            "foundation": {
+              "top": 12.430233103434215,
+              "bottom": 11.52418612798056,
+              "height": 0.9060469754536546
+            },
+            "ground": {
+              "min": 11.60418612798056,
+              "max": 12.390233103434214,
+              "relief": 0.7860469754536545,
+              "samples": 961
+            },
+            "worldOrigin": [
+              315,
+              12.430233103434215,
+              775.8
+            ]
+          },
+          "registeredForClearing": {
+            "name": "station-exchange",
+            "minX": 31.85,
+            "maxX": 38.15,
+            "minZ": -127.75,
+            "maxZ": -120.65
+          },
+          "worldMeshBox": [
+            [
+              311.84999990463257,
+              12.430233103434215,
+              772.2800000190734
+            ],
+            [
+              318.0350000858307,
+              32.97023401896156,
+              779.7100000858306
+            ]
+          ],
+          "hasEntry": {
+            "name": "station-exchange-entry",
+            "x": 34.45,
+            "width": 1.64,
+            "highZ": -120.65,
+            "lowZ": -118.51,
+            "steps": 8,
+            "rise": 0.15835294672647732,
+            "tread": 0.26750000000000007,
+            "top": 4.750233103434215,
+            "bottom": 3.483409529622396,
+            "minClearance": 0.19502497863770074
+          }
+        },
+        {
+          "placement": {
+            "name": "alley-workshop",
+            "type": "station-art",
+            "center": [
+              -30,
+              -142.6
+            ],
+            "baseY": 5.143555140363213,
+            "yaw": 2.03,
+            "halfWidth": 2.72,
+            "halfDepth": 3.07,
+            "footprint": {
+              "minX": -33.95756323594602,
+              "maxX": -26.04243676405398,
+              "minZ": -146.39895327202598,
+              "maxZ": -138.801046727974
+            },
+            "foundation": {
+              "top": 13.143555140363212,
+              "bottom": 12.511274916676518,
+              "height": 0.6322802236866947
+            },
+            "ground": {
+              "min": 12.591274916676518,
+              "max": 13.103555140363213,
+              "relief": 0.5122802236866946,
+              "samples": 961
+            },
+            "worldOrigin": [
+              250,
+              13.143555140363212,
+              757.4
+            ]
+          },
+          "registeredForClearing": {
+            "name": "alley-workshop",
+            "minX": -33.95756323594602,
+            "maxX": -26.04243676405398,
+            "minZ": -146.39895327202598,
+            "maxZ": -138.801046727974
+          },
+          "worldMeshBox": [
+            [
+              245.98875188704156,
+              13.143555140363212,
+              753.3304749411756
+            ],
+            [
+              254.47737929497944,
+              17.883554911481376,
+              761.2390430654569
+            ]
+          ]
+        }
+      ],
+      "extraHiddenShells": [
+        false,
+        false
+      ],
+      "originalWestHouseVisible": true,
+      "portal": {
+        "placed": [
+          282,
+          12.764808464050294,
+          776.75
+        ],
+        "material": "Infill | baked ceramic and metal",
+        "inReceivers": true
+      },
+      "decals": [
+        {
+          "index": 0,
+          "area": "01-left-wall",
+          "cell": 0,
+          "positionMatches": true,
+          "planarPassed": 9,
+          "curved": null,
+          "extra": 0
+        },
+        {
+          "index": 1,
+          "area": "01-left-wall",
+          "cell": 9,
+          "positionMatches": true,
+          "planarPassed": 9,
+          "curved": null,
+          "extra": 0
+        },
+        {
+          "index": 2,
+          "area": "01-left-wall",
+          "cell": 3,
+          "positionMatches": true,
+          "planarPassed": 9,
+          "curved": null,
+          "extra": 0
+        },
+        {
+          "index": 3,
+          "area": "01-left-pole",
+          "cell": 10,
+          "positionMatches": true,
+          "planarPassed": 3,
+          "curved": true,
+          "extra": 0
+        },
+        {
+          "index": 4,
+          "area": "01-right-shop",
+          "cell": 5,
+          "positionMatches": true,
+          "planarPassed": 1,
+          "curved": true,
+          "extra": 0
+        },
+        {
+          "index": 5,
+          "area": "01-right-shop",
+          "cell": 11,
+          "positionMatches": true,
+          "planarPassed": 5,
+          "curved": true,
+          "extra": 0
+        },
+        {
+          "index": 6,
+          "area": "01-right-shop",
+          "cell": 8,
+          "positionMatches": true,
+          "planarPassed": 9,
+          "curved": null,
+          "extra": 0
+        },
+        {
+          "index": 7,
+          "area": "01-right-pole",
+          "cell": 8,
+          "positionMatches": true,
+          "planarPassed": 2,
+          "curved": true,
+          "extra": 0
+        },
+        {
+          "index": 8,
+          "area": "21-mailboxes",
+          "cell": 7,
+          "positionMatches": true,
+          "planarPassed": 6,
+          "curved": null,
+          "extra": 0
+        },
+        {
+          "index": 9,
+          "area": "21-mailboxes",
+          "cell": 9,
+          "positionMatches": true,
+          "planarPassed": 9,
+          "curved": null,
+          "extra": 0
+        },
+        {
+          "index": 10,
+          "area": "main",
+          "cell": 10,
+          "positionMatches": true,
+          "planarPassed": 9,
+          "curved": null,
+          "extra": 0
+        },
+        {
+          "index": 11,
+          "area": "main",
+          "cell": 9,
+          "positionMatches": true,
+          "planarPassed": 9,
+          "curved": null,
+          "extra": 0
+        },
+        {
+          "index": 12,
+          "area": "main",
+          "cell": 9,
+          "positionMatches": true,
+          "planarPassed": 9,
+          "curved": null,
+          "extra": 0
+        },
+        {
+          "index": 13,
+          "area": "main",
+          "cell": 9,
+          "positionMatches": true,
+          "planarPassed": 9,
+          "curved": null,
+          "extra": 0
+        },
+        {
+          "index": 14,
+          "area": "laundry",
+          "cell": 2,
+          "positionMatches": true,
+          "planarPassed": 9,
+          "curved": null,
+          "extra": 0
+        },
+        {
+          "index": 15,
+          "area": "laundry",
+          "cell": 5,
+          "positionMatches": true,
+          "planarPassed": 9,
+          "curved": null,
+          "extra": 0
+        },
+        {
+          "index": 16,
+          "area": "laundry",
+          "cell": 9,
+          "positionMatches": true,
+          "planarPassed": 9,
+          "curved": null,
+          "extra": 0
+        },
+        {
+          "index": 17,
+          "area": "rear",
+          "cell": 0,
+          "positionMatches": true,
+          "planarPassed": 9,
+          "curved": null,
+          "extra": 0
+        },
+        {
+          "index": 18,
+          "area": "rear",
+          "cell": 3,
+          "positionMatches": true,
+          "planarPassed": 9,
+          "curved": null,
+          "extra": 0
+        },
+        {
+          "index": 19,
+          "area": "rear",
+          "cell": 3,
+          "positionMatches": true,
+          "planarPassed": 9,
+          "curved": null,
+          "extra": 0
+        },
+        {
+          "index": 20,
+          "area": "rear",
+          "cell": 1,
+          "positionMatches": true,
+          "planarPassed": 9,
+          "curved": null,
+          "extra": 0
+        },
+        {
+          "index": 21,
+          "area": "rear",
+          "cell": 11,
+          "positionMatches": true,
+          "planarPassed": 9,
+          "curved": null,
+          "extra": 0
+        },
+        {
+          "index": 22,
+          "area": "rear",
+          "cell": 10,
+          "positionMatches": true,
+          "planarPassed": 9,
+          "curved": null,
+          "extra": 0
+        },
+        {
+          "index": 23,
+          "area": "rear",
+          "cell": 9,
+          "positionMatches": true,
+          "planarPassed": 9,
+          "curved": null,
+          "extra": 0
+        },
+        {
+          "index": 24,
+          "area": "rear",
+          "cell": 13,
+          "positionMatches": true,
+          "planarPassed": 9,
+          "curved": null,
+          "extra": 0
+        },
+        {
+          "index": 25,
+          "area": "rear",
+          "cell": 14,
+          "positionMatches": true,
+          "planarPassed": 9,
+          "curved": null,
+          "extra": 0
+        }
+      ],
+      "proofOfEight": [
+        {
+          "u": -0.5,
+          "v": -0.5,
+          "depth": 0,
+          "material": "Infill | baked ceramic and metal",
+          "angleDot": 1,
+          "wall": true,
+          "hit": "station-city-background/Portal_wings"
+        },
+        {
+          "u": -0.5,
+          "v": 0,
+          "depth": 0,
+          "material": "Infill | baked ceramic and metal",
+          "angleDot": 1,
+          "wall": true,
+          "hit": "station-city-background/Portal_wings"
+        },
+        {
+          "u": -0.5,
+          "v": 0.5,
+          "depth": 0,
+          "material": "Infill | baked ceramic and metal",
+          "angleDot": 1,
+          "wall": true,
+          "hit": "station-city-background/Portal_wings"
+        },
+        {
+          "u": 0,
+          "v": -0.5,
+          "depth": 0.018,
+          "material": "Infill | baked ceramic and metal",
+          "angleDot": 1,
+          "wall": true,
+          "hit": "station-city-background/Portal_wings"
+        },
+        {
+          "u": 0,
+          "v": 0,
+          "depth": 0.018,
+          "material": "Infill | baked ceramic and metal",
+          "angleDot": 1,
+          "wall": true,
+          "hit": "station-city-background/Portal_wings"
+        },
+        {
+          "u": 0,
+          "v": 0.5,
+          "depth": 0.018,
+          "material": "Infill | baked ceramic and metal",
+          "angleDot": 1,
+          "wall": true,
+          "hit": "station-city-background/Portal_wings"
+        },
+        {
+          "u": 0.5,
+          "v": -0.5,
+          "depth": 0,
+          "material": "Infill | baked ceramic and metal",
+          "angleDot": 1,
+          "wall": true,
+          "hit": "station-city-background/Portal_wings"
+        },
+        {
+          "u": 0.5,
+          "v": 0,
+          "depth": 0,
+          "material": "Infill | baked ceramic and metal",
+          "angleDot": 1,
+          "wall": true,
+          "hit": "station-city-background/Portal_wings"
+        },
+        {
+          "u": 0.5,
+          "v": 0.5,
+          "depth": 0,
+          "material": "Infill | baked ceramic and metal",
+          "angleDot": 1,
+          "wall": true,
+          "hit": "station-city-background/Portal_wings"
+        }
+      ],
+      "errors": []
+    },
+    "v2-final": {
+      "fingerprint": "1065:2670334:299375.3:953080.7",
+      "liveDecals": {
+        "source": "baked",
+        "rays": 0
+      },
+      "registeredArt": {
+        "buildings": [
+          "station-exchange",
+          "alley-workshop"
+        ],
+        "laundry": "Portal_wings"
+      },
+      "casters": {
+        "trees": 93,
+        "bark": 137713,
+        "blob": 326311,
+        "cards": 89588,
+        "lod": {
+          "L0": {
+            "n": 17,
+            "bark": 56391,
+            "blob": 121979,
+            "cards": 31566
+          },
+          "L1": {
+            "n": 58,
+            "bark": 70748,
+            "blob": 180596,
+            "cards": 54354
+          },
+          "L2": {
+            "n": 18,
+            "bark": 10574,
+            "blob": 23736,
+            "cards": 3668
+          }
+        },
+        "plaza": {
+          "bark": 2309,
+          "blob": 13680,
+          "cards": 674
+        },
+        "w3": {
+          "bark": 1550,
+          "blob": 22027,
+          "cards": 424
+        },
+        "bases": 24088
+      },
+      "collisionCount": 3147,
+      "collisionHash": "a0487644f831456ba4802d144d452d9d9709c5b80a26384f0931545fa4d2a541",
+      "originalTownWeather": "e887be277b66f02377d940561ef83f56b17a4cf922fb71cfc60976e474422a3f",
+      "originalSkylineWeather": "bfaae26b5923987b31af71da7c0da7cc3f2111be4e45a47ba04abda03763f9c5",
+      "measuredSeedGroups": [
+        11,
+        9
+      ],
+      "originalClearance": "b6cad90e651dbb87746e9f9e83f22c3157da3f32223159a918ccf8b87cfcee0f",
+      "originalStairs": "5266e38faf20f06d1bd5bbd1aeed50986fc4af4687ea39cc4886023f8c0c4fbf",
+      "allStairs": 7,
+      "totalClearanceAreas": 38,
+      "changedVegetationTexels": 290,
+      "placement": [
+        {
+          "placement": {
+            "name": "station-exchange",
+            "type": "station-art",
+            "center": [
+              35,
+              -124.2
+            ],
+            "baseY": 4.430233103434214,
+            "yaw": 0,
+            "halfWidth": 3.15,
+            "halfDepth": 3.55,
+            "footprint": {
+              "minX": 31.85,
+              "maxX": 38.15,
+              "minZ": -127.75,
+              "maxZ": -120.65
+            },
+            "foundation": {
+              "top": 12.430233103434215,
+              "bottom": 11.52418612798056,
+              "height": 0.9060469754536546
+            },
+            "ground": {
+              "min": 11.60418612798056,
+              "max": 12.390233103434214,
+              "relief": 0.7860469754536545,
+              "samples": 961
+            },
+            "worldOrigin": [
+              315,
+              12.430233103434215,
+              775.8
+            ]
+          },
+          "registeredForClearing": {
+            "name": "station-exchange",
+            "minX": 31.85,
+            "maxX": 38.15,
+            "minZ": -127.75,
+            "maxZ": -120.65
+          },
+          "worldMeshBox": [
+            [
+              311.84999990463257,
+              12.430233103434215,
+              772.2800000190734
+            ],
+            [
+              318.0350000858307,
+              32.97023401896156,
+              779.7100000858306
+            ]
+          ],
+          "hasEntry": {
+            "name": "station-exchange-entry",
+            "x": 34.45,
+            "width": 1.64,
+            "highZ": -120.65,
+            "lowZ": -118.51,
+            "steps": 8,
+            "rise": 0.15835294672647732,
+            "tread": 0.26750000000000007,
+            "top": 4.750233103434215,
+            "bottom": 3.483409529622396,
+            "minClearance": 0.19502497863770074
+          }
+        },
+        {
+          "placement": {
+            "name": "alley-workshop",
+            "type": "station-art",
+            "center": [
+              -30,
+              -142.6
+            ],
+            "baseY": 5.143555140363213,
+            "yaw": 2.03,
+            "halfWidth": 2.72,
+            "halfDepth": 3.07,
+            "footprint": {
+              "minX": -33.95756323594602,
+              "maxX": -26.04243676405398,
+              "minZ": -146.39895327202598,
+              "maxZ": -138.801046727974
+            },
+            "foundation": {
+              "top": 13.143555140363212,
+              "bottom": 12.511274916676518,
+              "height": 0.6322802236866947
+            },
+            "ground": {
+              "min": 12.591274916676518,
+              "max": 13.103555140363213,
+              "relief": 0.5122802236866946,
+              "samples": 961
+            },
+            "worldOrigin": [
+              250,
+              13.143555140363212,
+              757.4
+            ]
+          },
+          "registeredForClearing": {
+            "name": "alley-workshop",
+            "minX": -33.95756323594602,
+            "maxX": -26.04243676405398,
+            "minZ": -146.39895327202598,
+            "maxZ": -138.801046727974
+          },
+          "worldMeshBox": [
+            [
+              245.98875188704156,
+              13.143555140363212,
+              753.3304749411756
+            ],
+            [
+              254.47737929497944,
+              17.883554911481376,
+              761.2390430654569
+            ]
+          ]
+        }
+      ],
+      "extraHiddenShells": [
+        false,
+        false
+      ],
+      "originalWestHouseVisible": true,
+      "portal": {
+        "placed": [
+          282,
+          12.764808464050294,
+          776.75
+        ],
+        "material": "Infill | baked ceramic and metal",
+        "inReceivers": true
+      },
+      "decals": [
+        {
+          "index": 0,
+          "area": "01-left-wall",
+          "cell": 0,
+          "positionMatches": true,
+          "planarPassed": 9,
+          "curved": null,
+          "extra": 0
+        },
+        {
+          "index": 1,
+          "area": "01-left-wall",
+          "cell": 9,
+          "positionMatches": true,
+          "planarPassed": 9,
+          "curved": null,
+          "extra": 0
+        },
+        {
+          "index": 2,
+          "area": "01-left-wall",
+          "cell": 3,
+          "positionMatches": true,
+          "planarPassed": 9,
+          "curved": null,
+          "extra": 0
+        },
+        {
+          "index": 3,
+          "area": "01-left-pole",
+          "cell": 10,
+          "positionMatches": true,
+          "planarPassed": 3,
+          "curved": true,
+          "extra": 0
+        },
+        {
+          "index": 4,
+          "area": "01-right-shop",
+          "cell": 5,
+          "positionMatches": true,
+          "planarPassed": 1,
+          "curved": true,
+          "extra": 0
+        },
+        {
+          "index": 5,
+          "area": "01-right-shop",
+          "cell": 11,
+          "positionMatches": true,
+          "planarPassed": 5,
+          "curved": true,
+          "extra": 0
+        },
+        {
+          "index": 6,
+          "area": "01-right-shop",
+          "cell": 8,
+          "positionMatches": true,
+          "planarPassed": 9,
+          "curved": null,
+          "extra": 0
+        },
+        {
+          "index": 7,
+          "area": "01-right-pole",
+          "cell": 8,
+          "positionMatches": true,
+          "planarPassed": 2,
+          "curved": true,
+          "extra": 0
+        },
+        {
+          "index": 8,
+          "area": "21-mailboxes",
+          "cell": 7,
+          "positionMatches": true,
+          "planarPassed": 9,
+          "curved": null,
+          "extra": 0
+        },
+        {
+          "index": 9,
+          "area": "21-mailboxes",
+          "cell": 9,
+          "positionMatches": true,
+          "planarPassed": 9,
+          "curved": null,
+          "extra": 0
+        },
+        {
+          "index": 10,
+          "area": "main",
+          "cell": 10,
+          "positionMatches": true,
+          "planarPassed": 9,
+          "curved": null,
+          "extra": 0
+        },
+        {
+          "index": 11,
+          "area": "main",
+          "cell": 9,
+          "positionMatches": true,
+          "planarPassed": 9,
+          "curved": null,
+          "extra": 0
+        },
+        {
+          "index": 12,
+          "area": "main",
+          "cell": 9,
+          "positionMatches": true,
+          "planarPassed": 9,
+          "curved": null,
+          "extra": 0
+        },
+        {
+          "index": 13,
+          "area": "main",
+          "cell": 9,
+          "positionMatches": true,
+          "planarPassed": 9,
+          "curved": null,
+          "extra": 0
+        },
+        {
+          "index": 14,
+          "area": "laundry",
+          "cell": 2,
+          "positionMatches": true,
+          "planarPassed": 9,
+          "curved": null,
+          "extra": 0
+        },
+        {
+          "index": 15,
+          "area": "laundry",
+          "cell": 5,
+          "positionMatches": true,
+          "planarPassed": 9,
+          "curved": null,
+          "extra": 0
+        },
+        {
+          "index": 16,
+          "area": "laundry",
+          "cell": 9,
+          "positionMatches": true,
+          "planarPassed": 9,
+          "curved": null,
+          "extra": 0
+        },
+        {
+          "index": 17,
+          "area": "rear",
+          "cell": 0,
+          "positionMatches": true,
+          "planarPassed": 9,
+          "curved": null,
+          "extra": 0
+        },
+        {
+          "index": 18,
+          "area": "rear",
+          "cell": 3,
+          "positionMatches": true,
+          "planarPassed": 9,
+          "curved": null,
+          "extra": 0
+        },
+        {
+          "index": 19,
+          "area": "rear",
+          "cell": 3,
+          "positionMatches": true,
+          "planarPassed": 9,
+          "curved": null,
+          "extra": 0
+        },
+        {
+          "index": 20,
+          "area": "rear",
+          "cell": 1,
+          "positionMatches": true,
+          "planarPassed": 9,
+          "curved": null,
+          "extra": 0
+        },
+        {
+          "index": 21,
+          "area": "rear",
+          "cell": 11,
+          "positionMatches": true,
+          "planarPassed": 9,
+          "curved": null,
+          "extra": 0
+        },
+        {
+          "index": 22,
+          "area": "rear",
+          "cell": 10,
+          "positionMatches": true,
+          "planarPassed": 9,
+          "curved": null,
+          "extra": 0
+        },
+        {
+          "index": 23,
+          "area": "rear",
+          "cell": 9,
+          "positionMatches": true,
+          "planarPassed": 9,
+          "curved": null,
+          "extra": 0
+        },
+        {
+          "index": 24,
+          "area": "rear",
+          "cell": 13,
+          "positionMatches": true,
+          "planarPassed": 9,
+          "curved": null,
+          "extra": 0
+        },
+        {
+          "index": 25,
+          "area": "rear",
+          "cell": 14,
+          "positionMatches": true,
+          "planarPassed": 9,
+          "curved": null,
+          "extra": 0
+        }
+      ],
+      "proofOfEight": [
+        {
+          "u": -0.5,
+          "v": -0.5,
+          "depth": 0,
+          "material": "Infill | baked ceramic and metal",
+          "angleDot": 1,
+          "wall": true,
+          "hit": "station-city-background/Portal_wings"
+        },
+        {
+          "u": -0.5,
+          "v": 0,
+          "depth": 0,
+          "material": "Infill | baked ceramic and metal",
+          "angleDot": 1,
+          "wall": true,
+          "hit": "station-city-background/Portal_wings"
+        },
+        {
+          "u": -0.5,
+          "v": 0.5,
+          "depth": 0,
+          "material": "Infill | baked ceramic and metal",
+          "angleDot": 1,
+          "wall": true,
+          "hit": "station-city-background/Portal_wings"
+        },
+        {
+          "u": 0,
+          "v": -0.5,
+          "depth": 0.002,
+          "material": "Infill | baked ceramic and metal",
+          "angleDot": 1,
+          "wall": true,
+          "hit": "station-city-background/Portal_wings"
+        },
+        {
+          "u": 0,
+          "v": 0,
+          "depth": 0.002,
+          "material": "Infill | baked ceramic and metal",
+          "angleDot": 1,
+          "wall": true,
+          "hit": "station-city-background/Portal_wings"
+        },
+        {
+          "u": 0,
+          "v": 0.5,
+          "depth": 0.002,
+          "material": "Infill | baked ceramic and metal",
+          "angleDot": 1,
+          "wall": true,
+          "hit": "station-city-background/Portal_wings"
+        },
+        {
+          "u": 0.5,
+          "v": -0.5,
+          "depth": 0,
+          "material": "Infill | baked ceramic and metal",
+          "angleDot": 1,
+          "wall": true,
+          "hit": "station-city-background/Portal_wings"
+        },
+        {
+          "u": 0.5,
+          "v": 0,
+          "depth": 0,
+          "material": "Infill | baked ceramic and metal",
+          "angleDot": 1,
+          "wall": true,
+          "hit": "station-city-background/Portal_wings"
+        },
+        {
+          "u": 0.5,
+          "v": 0.5,
+          "depth": 0,
+          "material": "Infill | baked ceramic and metal",
+          "angleDot": 1,
+          "wall": true,
+          "hit": "station-city-background/Portal_wings"
+        }
+      ],
+      "errors": []
+    }
+  }
+}

@@ -1,0 +1,214 @@
+{
+  "head": "1677ea3167905a180d8b26c48a4b0c0ffece4325",
+  "command": "node D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs",
+  "actualExit": 0,
+  "sourceHashes": {
+    "src/city.js": "3a122eb3951cc8aa2962f69adc476f0993f5270e2c40b625aed114caa4a82538",
+    "src/city-apartments.js": "57e0db5f29f4b41fabc69f014628715b8aabf535ae2da8813a1e8792b5c035a2",
+    "src/streetscape.js": "c145191868bb32538dde34daee7229b8b04117b3713e7c2865506596d3d35998",
+    "src/look.js": "3bb978f9ef4222dea0ec102b2dc9d8667faa06f8a5c099dbcbc73e75342fcc6a",
+    "upstream/sakuragaoka/src/world/houses/gb.js": "1eff740f7c981529cfbdf4dd070309905d147cf4d9897a5bffcda5040ea2c1c5",
+    "upstream/sakuragaoka/src/world/houses/props.js": "9dec02c33081cfefa6d302dd5d91a3f1b05ff618c0dcf2c3000d198df127f4f2"
+  },
+  "files": {
+    "x51-c13-city-cpu.mjs": {
+      "bytes": 15257,
+      "sha256": "e9e711635b07760e6f6e48395639faca3397f9d524fe6ea82fc3c48197bb202a"
+    },
+    "x51-c13-city-result.json": {
+      "bytes": 147905,
+      "sha256": "0701a52381597d5e5acdbd0368bc89f29947cac03a59e40326268a84cb349ba2"
+    },
+    "x51-c13-city-stderr.txt": {
+      "bytes": 302,
+      "sha256": "88e5e87bb1ee2effd49823df359dcb4015570ecbd885218a03921fcf3d020871"
+    }
+  },
+  "blockerFound": false,
+  "buckets": {
+    "oldRngCalls": 0,
+    "oldTriangles": 72,
+    "newTriangles": 72,
+    "perBin": [
+      {
+        "role": "plain",
+        "type": "MeshToonMaterial",
+        "positionsEqual": true,
+        "normalsEqual": true,
+        "uvEqual": true,
+        "indicesEqual": true,
+        "colorsEqual": false,
+        "flagsEqual": true
+      },
+      {
+        "role": "atlas",
+        "type": "MeshToonMaterial",
+        "positionsEqual": true,
+        "normalsEqual": true,
+        "uvEqual": true,
+        "indicesEqual": true,
+        "colorsEqual": true,
+        "flagsEqual": true
+      }
+    ],
+    "stationExactlyOnlyImportAndBuilderCall": true,
+    "note": "Positions/dimensions/indices/normals/UV/flags identical at emitted GB arrays; body/lid vertex colors differ, label colors identical. Original H.P.bins consumes zero rng values for n2. Existing station metadata/colliders are untouched; no new station CPU rebuild performed."
+  },
+  "budget": {
+    "cityTotal": 29553,
+    "strictHeadroom": 446,
+    "density": 444,
+    "streetAddedUnchanged": 132,
+    "newTexturePixels": 0,
+    "cacheEntriesAdded": 0
+  },
+  "foundations": [
+    {
+      "name": "town-apartment-3f",
+      "localMin": [
+        -24.735,
+        5.248040148417157,
+        -134.985
+      ],
+      "localMax": [
+        -11.215000000000002,
+        5.338040148417157,
+        -123.315
+      ],
+      "insets": [
+        0.005000000000002558,
+        0.0049999999999954525,
+        0.005000000000000782,
+        0.005000000000009663
+      ],
+      "yUnchanged": true,
+      "f32ExteriorGap": [
+        0.005000114440917969,
+        0.0050048828125
+      ]
+    },
+    {
+      "name": "town-apartment-4f",
+      "localMin": [
+        -6.235000000000001,
+        4.694808464050293,
+        -133.485
+      ],
+      "localMax": [
+        8.285,
+        4.784808464050293,
+        -121.815
+      ],
+      "insets": [
+        0.004999999999999893,
+        0.0049999999999954525,
+        0.004999999999999005,
+        0.005000000000009663
+      ],
+      "yUnchanged": true,
+      "f32ExteriorGap": [
+        0.005000114440917969,
+        0.0050048828125
+      ]
+    },
+    {
+      "name": "town-apartment-5f",
+      "localMin": [
+        13.764999999999997,
+        4.573957901000977,
+        -133.485
+      ],
+      "localMax": [
+        28.285,
+        4.663957901000977,
+        -120.815
+      ],
+      "insets": [
+        0.004999999999999005,
+        0.0049999999999954525,
+        0.004999999999999005,
+        0.005000000000009663
+      ],
+      "yUnchanged": true,
+      "f32ExteriorGap": [
+        0.005001068115234375,
+        0.0050048828125
+      ]
+    },
+    {
+      "name": "town-house-0",
+      "localMin": [
+        -42.08523296657734,
+        4.195555652798646,
+        -131.5346700184522
+      ],
+      "localMax": [
+        -31.91476703342266,
+        4.285555652798646,
+        -121.46532998154778
+      ],
+      "insets": [
+        0.005000000000002558,
+        0.005000000000023874,
+        0.004999999999999005,
+        0.0049999999999954525
+      ],
+      "yUnchanged": true,
+      "f32ExteriorGap": [
+        0.0049991607666015625,
+        0.0050048828125
+      ]
+    },
+    {
+      "name": "town-house-1",
+      "localMin": [
+        -54.20161962163775,
+        4.247841223382807,
+        -131.86692623024547
+      ],
+      "localMax": [
+        -45.79838037836225,
+        4.3378412233828065,
+        -122.13307376975453
+      ],
+      "insets": [
+        0.0049999999999954525,
+        0.0049999999999954525,
+        0.0049999999999954525,
+        0.005000000000009663
+      ],
+      "yUnchanged": true,
+      "f32ExteriorGap": [
+        0.005001068115234375,
+        0.00499725341796875
+      ]
+    }
+  ],
+  "foundationConclusion": "Prior9cm coplanar exterior vertical band removed: all5concrete caps inset5mm per edge, positive Float32 gap; full edge faces now enclosed in opaque20cm rim. Cap top/bottom unchanged, rim unchanged; this is not a claim all overlapping internal/bottom geometry was eliminated.",
+  "stairsExactlyEqualPreviousDensity": true,
+  "wall": {
+    "material": "existing M.concrete",
+    "worldUV": 3,
+    "trianglesCasting": 600,
+    "sourceMap": "houses/tex.js tex.concrete",
+    "plasterArcsRemoved": true,
+    "textureRecipe": "256x256 #f2f1ee,30blotches alpha.3,500speckles alpha.22; also1.5px horizontal/vertical midlines alpha.35. Not only soft spots.",
+    "scope": "GB.box maps face metric dimensions /3; shared map not altered. CPU image pixels mocked; 5F blotches/dirtiness/tiling must be assessed in actual GPU images."
+  },
+  "ownership": {
+    "ownedMaterials": 29,
+    "textureDisposals": 0,
+    "geometryDisposals": 26,
+    "materialDisposals": 24,
+    "sharedPrototypeDisposals": {
+      "geometries": 0,
+      "materials": 0
+    },
+    "scope": "Two dispose calls,26root geometry/24root material events once, borrowed textures/probed station kit geometry/material0. Owned-material set29 includes non-root/custom depth paths not independently event-counted; no claim all29were separately observed."
+  },
+  "limits": [
+    "Actual current source city/upstream factories/GB/GLTF geometry, with canvas and image pixels mocked. No shader/GPU execution or visual acceptance.",
+    "Source head asserted1677ea3 and hashed inputs retained; no all-transitive-dependency hash claim.",
+    "Compared existing CPU geometry/steps; did not rerun all-station collision/complete navigation or previous city props-river audit because source layout/physics unchanged."
+  ]
+}

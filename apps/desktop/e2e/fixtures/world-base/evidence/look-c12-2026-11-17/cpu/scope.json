@@ -1,0 +1,20 @@
+{
+  "head": "e38dd51a294da3a498b9404c0f27b854d16a2fd5",
+  "command": "node D:/codex/2026-11-16/world-implementation/handoff/x51-c12-city-driver.mjs",
+  "exitCode": 0,
+  "scope": {
+    "actual": "Current city, upstream GB/material factory/prop APIs and crate GLTF geometry; CPU terrain/transition methods; real foundation and stair guards.",
+    "mock": "Texture image pixels/canvas painting are placeholders. No GPU, no transparency/shader or screenshot acceptance.",
+    "stderr": "THREE.Material: parameter 'transparent' has value of undefined.\nTHREE.Material: parameter 'alphaTest' has value of undefined.\nTHREE.Texture: Unable to serialize Texture.\nTHREE.Texture: Unable to serialize Texture.\nTHREE.Texture: Unable to serialize Texture.\nTHREE.Texture: Unable to serialize Texture.\n",
+    "notRepeated": "No whole-scene props/river collision audit; C12 changes no building footprints/root placement or physics. No claim of CPU/GPU byte identity."
+  },
+  "triangles": {
+    "before": 28857,
+    "after": 29109,
+    "delta": 252,
+    "borderDelta": 240,
+    "floorDelta": 12,
+    "strictRemaining": 890
+  },
+  "note": "CPU geometry/material/disposal evidence only; image pixels mocked. No C11 shadow ABA or C10/C11 sampling experiment is reused as C12 proof. Source-level coplanar risk is not an observed GPU defect; root visual findings are stated separately."
+}

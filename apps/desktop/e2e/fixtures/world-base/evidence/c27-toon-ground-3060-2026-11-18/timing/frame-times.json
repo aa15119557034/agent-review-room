@@ -1,0 +1,1573 @@
+{
+  "source": "e00875bd88109c6b3eb685bbb5aec8d01ef4bf5c",
+  "order": [
+    "station-street",
+    "shop-interior",
+    "20",
+    "21",
+    "23",
+    "24",
+    "window",
+    "door",
+    "walking-third",
+    "walking-first"
+  ],
+  "threshold": {
+    "fps": 60,
+    "p95Ms": 16.7
+  },
+  "notes": {
+    "duration": "3s native fixed views; 10s each at the six town/detail cameras; 3s each in the two walking modes.",
+    "fps": "1000 * count / sum(ms), RAF frame submission intervals on the RTX 3060 Laptop, 1440x900, DPR 1",
+    "p95": "nearest rank; nativeReportP95 records the pre-existing source convention for each segment",
+    "originalData": "Recreate original segment bytes with the included verify.cjs. The six town files use 2-space JSON plus LF; all four street/walk files use compact JSON.",
+    "runs": "Native preset evening, C27 toon default / ?toon=off / default. C26 shadow tint stays enabled throughout. The 6 town camera poses are checked before and after measurement. Both other fixed-camera positions were checked against their C26 native reports."
+  },
+  "cameras": {
+    "service-corner": {
+      "position": [
+        308.4,
+        9.612,
+        872.9
+      ],
+      "quaternion": [
+        -0.08432325046436126,
+        0.5331397072650681,
+        0.05351200213385738,
+        0.8401119613456697
+      ],
+      "fov": 55
+    },
+    "laundry-details": {
+      "position": [
+        288,
+        14.384808464050293,
+        777.9
+      ],
+      "quaternion": [
+        -0.15522850149956677,
+        0.6173580660361093,
+        0.12595148976979553,
+        0.7608609287163607
+      ],
+      "fov": 55
+    },
+    "shop-interior": {
+      "position": [
+        271.7,
+        9.9134,
+        908
+      ],
+      "quaternion": [
+        -0.015701859235384273,
+        0.7069324236562871,
+        0.015701859235384273,
+        0.7069324236562871
+      ],
+      "fov": 58
+    },
+    "20-rear-eye": {
+      "position": [
+        273,
+        14.755245542526229,
+        758
+      ],
+      "quaternion": [
+        -0.00013011891877658623,
+        0.9145142483742376,
+        -0.00029414054360230415,
+        -0.40455356390830466
+      ],
+      "fov": 58
+    },
+    "21-front-eye": {
+      "position": [
+        274,
+        12.87812709172567,
+        783
+      ],
+      "quaternion": [
+        0.07422133960767584,
+        -0.5103582416049142,
+        0.044271975994965136,
+        0.8556083508909221
+      ],
+      "fov": 58
+    },
+    "station-street": {
+      "position": [
+        278.8,
+        10.4,
+        936
+      ],
+      "quaternion": [
+        -0.003277842930440423,
+        -0.009834585659995631,
+        -0.000032237959341941705,
+        0.9999462663720154
+      ],
+      "fov": 58
+    },
+    "street-detail": {
+      "position": [
+        284.4,
+        10.281286274509803,
+        924
+      ],
+      "quaternion": [
+        -0.12465537443110519,
+        -0.38126635888515065,
+        -0.05196769176958736,
+        0.914547079280253
+      ],
+      "fov": 58
+    },
+    "van-side": {
+      "position": [
+        276.3147277851227,
+        11.210013480772632,
+        971.1462175645175
+      ],
+      "quaternion": [
+        -0.029182465008512196,
+        -0.7830517056478151,
+        -0.03684648464040197,
+        0.6201779958912754
+      ],
+      "fov": 47
+    },
+    "shop-door-eye": {
+      "position": [
+        271.7,
+        9.9134,
+        908
+      ],
+      "quaternion": [
+        0.015701859235384273,
+        0.7069324236562871,
+        0.015701859235384273,
+        -0.7069324236562871
+      ],
+      "fov": 58
+    }
+  },
+  "runs": {
+    "ground-on": {
+      "started": "2026-11-18T07:24:55.945Z",
+      "ended": "2026-11-18T07:28:24.760Z",
+      "mode": "on",
+      "scene": "e00875bd88109c6b3eb685bbb5aec8d01ef4bf5c",
+      "checkout": "e00875bd88109c6b3eb685bbb5aec8d01ef4bf5c",
+      "filesChecked": 251,
+      "normal": {
+        "exit": 1,
+        "stage": "complete",
+        "renderOk": true,
+        "jsExceptions": 0,
+        "requests": [
+          {
+            "file": "/assets/models/boulders.glb",
+            "stage": "waiting-for-ready-frame",
+            "error": "net::ERR_ABORTED",
+            "canceled": true
+          },
+          {
+            "file": "/assets/models/menhir.glb",
+            "stage": "waiting-for-ready-frame",
+            "error": "net::ERR_ABORTED",
+            "canceled": true
+          },
+          {
+            "file": "/prop-assets/plastic_crate_02/plastic_crate_02.bin",
+            "stage": "waiting-for-ready-frame",
+            "error": "net::ERR_ABORTED",
+            "canceled": true
+          }
+        ],
+        "transportClean": false,
+        "shaderOrConsoleErrors": 0
+      },
+      "town": {
+        "exit": 1,
+        "stage": "complete",
+        "renderOk": true,
+        "jsExceptions": 0,
+        "requests": [
+          {
+            "file": "/assets/models/boulders.glb",
+            "stage": "loading",
+            "error": "net::ERR_ABORTED",
+            "canceled": true
+          },
+          {
+            "file": "/prop-assets/plastic_crate_02/plastic_crate_02.bin",
+            "stage": "loading",
+            "error": "net::ERR_ABORTED",
+            "canceled": true
+          }
+        ],
+        "transportClean": false,
+        "shaderOrConsoleErrors": null
+      },
+      "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "indoorBoxCount": 8,
+      "shaderChunks": {
+        "normal": {
+          "litBands": true,
+          "coverage": true,
+          "shadowTint": true
+        },
+        "town": {
+          "litBands": true,
+          "coverage": true,
+          "shadowTint": true
+        }
+      },
+      "roomGeneratorLotIds": [
+        "E1",
+        "E2",
+        "E3",
+        "E5",
+        "W1",
+        "W2",
+        "W4",
+        "W6"
+      ],
+      "tintedVolumeLotIds": [
+        "E1",
+        "E2",
+        "E3",
+        "E5",
+        "W1",
+        "W2",
+        "W4",
+        "W6"
+      ],
+      "normalHostSha256": "1ca2e167316fca29ec48089e9fbfa20e781ef6b1f171f54313ee8455a2e79eb3",
+      "townHostSha256": "4bd17490bf61265e0e260f4ea1f8aa015dc9e779bf1186400c8febd2a9e17bd7",
+      "segments": {
+        "20": {
+          "frames": 657,
+          "ms": 10107.700000000004,
+          "fps": 64.99995053276213,
+          "p95": 15.5,
+          "p99": 15.5,
+          "maximum": 15.60000000000582,
+          "over20": 0,
+          "drawsPerFrame": 1274.2435312024354,
+          "trianglesPerFrame": 9648687.93455099,
+          "passed": true,
+          "nativeReportP95": 15.5,
+          "effects": {
+            "toon27": true,
+            "outline": 1,
+            "outlineGpu": 1,
+            "legacyToon": 1,
+            "bands": [
+              0,
+              0.55,
+              1
+            ],
+            "shadowTint": true,
+            "decals": true,
+            "weathering": 1,
+            "timeOfDay": "evening",
+            "clouds": 1,
+            "water": true,
+            "wetRoad": true
+          },
+          "originalSha256": "e0d89db4e1d8a52162418d78788ef5d135b97da0a368c9c628f7e8b39799190c"
+        },
+        "21": {
+          "frames": 657,
+          "ms": 10107.599999999991,
+          "fps": 65.00059361272712,
+          "p95": 15.5,
+          "p99": 15.60000000000582,
+          "maximum": 15.60000000000582,
+          "over20": 0,
+          "drawsPerFrame": 851.0365296803653,
+          "trianglesPerFrame": 8784556.788432268,
+          "passed": true,
+          "nativeReportP95": 15.5,
+          "effects": {
+            "toon27": true,
+            "outline": 1,
+            "outlineGpu": 1,
+            "legacyToon": 1,
+            "bands": [
+              0,
+              0.55,
+              1
+            ],
+            "shadowTint": true,
+            "decals": true,
+            "weathering": 1,
+            "timeOfDay": "evening",
+            "clouds": 1,
+            "water": true,
+            "wetRoad": true
+          },
+          "originalSha256": "7fff16d9229db70e40b722e72f06414db7c4c6afd0aafa32854d6bc9c0b85f15"
+        },
+        "23": {
+          "frames": 654,
+          "ms": 10107.800000000003,
+          "fps": 64.70250697481151,
+          "p95": 15.5,
+          "p99": 15.599999999991269,
+          "maximum": 30.80000000000291,
+          "over20": 3,
+          "drawsPerFrame": 1150.9816513761468,
+          "trianglesPerFrame": 7562852.214067278,
+          "passed": true,
+          "nativeReportP95": 15.5,
+          "effects": {
+            "toon27": true,
+            "outline": 1,
+            "outlineGpu": 1,
+            "legacyToon": 1,
+            "bands": [
+              0,
+              0.55,
+              1
+            ],
+            "shadowTint": true,
+            "decals": true,
+            "weathering": 1,
+            "timeOfDay": "evening",
+            "clouds": 1,
+            "water": true,
+            "wetRoad": true
+          },
+          "originalSha256": "dba774be19ee76c2d72a27a7f77c183bead5db132483a06ce05e4a7be92e4f70"
+        },
+        "24": {
+          "frames": 656,
+          "ms": 10107.699999999997,
+          "fps": 64.90101605706542,
+          "p95": 15.5,
+          "p99": 15.60000000000582,
+          "maximum": 31,
+          "over20": 1,
+          "drawsPerFrame": 908.2256097560976,
+          "trianglesPerFrame": 8870309.25609756,
+          "passed": true,
+          "nativeReportP95": 15.5,
+          "effects": {
+            "toon27": true,
+            "outline": 1,
+            "outlineGpu": 1,
+            "legacyToon": 1,
+            "bands": [
+              0,
+              0.55,
+              1
+            ],
+            "shadowTint": true,
+            "decals": true,
+            "weathering": 1,
+            "timeOfDay": "evening",
+            "clouds": 1,
+            "water": true,
+            "wetRoad": true
+          },
+          "originalSha256": "0303230ef0d0f9c14e6e8a4a20533f40a98009a6feaf8a3153f523d53eae8de0"
+        },
+        "station-street": {
+          "frames": 201,
+          "ms": 3123.199999999997,
+          "fps": 64.3570696721312,
+          "p95": 15.5,
+          "p99": 15.60000000000582,
+          "maximum": 30.89999999999418,
+          "over20": 2,
+          "drawsPerFrame": 1591,
+          "trianglesPerFrame": 8323660,
+          "passed": true,
+          "nativeReportP95": 15.5,
+          "effects": {
+            "toon27": true,
+            "outline": 1,
+            "outlineGpu": 1,
+            "legacyToon": 1,
+            "bands": [
+              0,
+              0.55,
+              1
+            ],
+            "shadowTint": true,
+            "decals": true,
+            "weathering": 1,
+            "timeOfDay": "evening",
+            "clouds": 1,
+            "water": true,
+            "wetRoad": true
+          },
+          "originalSha256": "5f038c35707bdb114cc0b797a0a6bddc20765aca2d7b1795d9185de6db24b360"
+        },
+        "shop-interior": {
+          "frames": 198,
+          "ms": 3107.699999999997,
+          "fps": 63.71271358239218,
+          "p95": 15.5,
+          "p99": 30.80000000000291,
+          "maximum": 30.80000000000291,
+          "over20": 4,
+          "drawsPerFrame": 942.0858585858585,
+          "trianglesPerFrame": 7629417.585858586,
+          "passed": true,
+          "nativeReportP95": 15.5,
+          "effects": {
+            "toon27": true,
+            "outline": 1,
+            "outlineGpu": 1,
+            "legacyToon": 1,
+            "bands": [
+              0,
+              0.55,
+              1
+            ],
+            "shadowTint": true,
+            "decals": true,
+            "weathering": 1,
+            "timeOfDay": "evening",
+            "clouds": 1,
+            "water": true,
+            "wetRoad": true
+          },
+          "originalSha256": "e1ce71402a66ef93871f7bbee3dda354e67be2741c88845ddef3d74ae76e658a"
+        },
+        "window": {
+          "frames": 651,
+          "ms": 10107.600000000006,
+          "fps": 64.40698088567015,
+          "p95": 15.5,
+          "p99": 16,
+          "maximum": 30.90000000000873,
+          "over20": 6,
+          "drawsPerFrame": 1188.9984639016898,
+          "trianglesPerFrame": 7875984.448540706,
+          "passed": true,
+          "nativeReportP95": 15.5,
+          "effects": {
+            "toon27": true,
+            "outline": 1,
+            "outlineGpu": 1,
+            "legacyToon": 1,
+            "bands": [
+              0,
+              0.55,
+              1
+            ],
+            "shadowTint": true,
+            "decals": true,
+            "weathering": 1,
+            "timeOfDay": "evening",
+            "clouds": 1,
+            "water": true,
+            "wetRoad": true
+          },
+          "originalSha256": "4c1702d3f4e4af424823377a556b7189cb7ebb5c3fba7a56c0bc563ba9884b2b"
+        },
+        "door": {
+          "frames": 657,
+          "ms": 10107.699999999997,
+          "fps": 64.99995053276217,
+          "p95": 15.5,
+          "p99": 15.5,
+          "maximum": 15.60000000000582,
+          "over20": 0,
+          "drawsPerFrame": 1097.3150684931506,
+          "trianglesPerFrame": 7505153.782343987,
+          "passed": true,
+          "nativeReportP95": 15.5,
+          "effects": {
+            "toon27": true,
+            "outline": 1,
+            "outlineGpu": 1,
+            "legacyToon": 1,
+            "bands": [
+              0,
+              0.55,
+              1
+            ],
+            "shadowTint": true,
+            "decals": true,
+            "weathering": 1,
+            "timeOfDay": "evening",
+            "clouds": 1,
+            "water": true,
+            "wetRoad": true
+          },
+          "originalSha256": "03664486a556d1ed452a9e57f6734b7056804507ccf9731856ed5ee88bfed70f"
+        },
+        "walking-third": {
+          "frames": 162,
+          "ms": 3138.5,
+          "fps": 51.61701449737136,
+          "p95": 30.80000000000291,
+          "p99": 30.89999999999418,
+          "maximum": 30.89999999999418,
+          "over20": 42,
+          "drawsPerFrame": 1590.3086419753085,
+          "trianglesPerFrame": 8361737.987654321,
+          "passed": false,
+          "nativeReportP95": 30.80000000000291,
+          "walk": {
+            "from": [
+              281.6,
+              8.812,
+              934
+            ],
+            "to": [
+              280.9294054113457,
+              8.543481416634737,
+              924.4100505940978
+            ],
+            "distanceXZ": 9.613367084954998
+          },
+          "effects": {
+            "toon27": true,
+            "outline": 1,
+            "outlineGpu": 1,
+            "legacyToon": 1,
+            "bands": [
+              0,
+              0.55,
+              1
+            ],
+            "shadowTint": true,
+            "decals": true,
+            "weathering": 1,
+            "timeOfDay": "evening",
+            "clouds": 1,
+            "water": true,
+            "wetRoad": true
+          },
+          "originalSha256": "ad21dd973896c861e9d9b7b1114c300303613ada714f07b60fa2a85aa7347e9c"
+        },
+        "walking-first": {
+          "frames": 203,
+          "ms": 3138.399999999994,
+          "fps": 64.68264083609495,
+          "p95": 15.5,
+          "p99": 15.60000000000582,
+          "maximum": 30.80000000000291,
+          "over20": 1,
+          "drawsPerFrame": 1442.192118226601,
+          "trianglesPerFrame": 8289460.517241379,
+          "passed": true,
+          "nativeReportP95": 15.5,
+          "walk": {
+            "from": [
+              280.9155490023715,
+              8.537933051987553,
+              924.2118947138412
+            ],
+            "to": [
+              280.2450684292188,
+              8.269460122556113,
+              914.6235758055755
+            ],
+            "distanceXZ": 9.611732605809465
+          },
+          "effects": {
+            "toon27": true,
+            "outline": 1,
+            "outlineGpu": 1,
+            "legacyToon": 1,
+            "bands": [
+              0,
+              0.55,
+              1
+            ],
+            "shadowTint": true,
+            "decals": true,
+            "weathering": 1,
+            "timeOfDay": "evening",
+            "clouds": 1,
+            "water": true,
+            "wetRoad": true
+          },
+          "originalSha256": "57f665c6f9226d2672a6d9cbbff922274922c90ad8a506b479a1c161fe383cd4"
+        }
+      },
+      "summary": {
+        "n": 10,
+        "passes": 9,
+        "total": 4696,
+        "over20": 59,
+        "maximum": 31
+      },
+      "startup": {
+        "weathering": {
+          "totalMs": 636.7,
+          "source": "baked",
+          "planMs": 1.9,
+          "rays": 0,
+          "triangles": 52,
+          "vehicleVolumes": 4
+        },
+        "firstReadyFrameMs": 43337.299999952316,
+        "buildStartMs": 22495.89999985695,
+        "worldReadyStageMs": 23356.099999904633,
+        "stationBuildingsToReadyMs": 860.2000000476837
+      },
+      "nativeFixedCameras": [
+        {
+          "name": "station-street",
+          "position": [
+            278.8,
+            10.4,
+            936
+          ]
+        },
+        {
+          "name": "shop-interior",
+          "position": [
+            271.7,
+            9.9134,
+            908
+          ]
+        }
+      ],
+      "nativeSignals": {
+        "streetAndWalk": null,
+        "town": null
+      },
+      "verifiedAfterTown": 251
+    },
+    "ground-off": {
+      "started": "2026-11-18T07:28:25.075Z",
+      "ended": "2026-11-18T07:31:51.952Z",
+      "mode": "off",
+      "scene": "e00875bd88109c6b3eb685bbb5aec8d01ef4bf5c",
+      "checkout": "e00875bd88109c6b3eb685bbb5aec8d01ef4bf5c",
+      "filesChecked": 251,
+      "normal": {
+        "exit": 1,
+        "stage": "complete",
+        "renderOk": true,
+        "jsExceptions": 0,
+        "requests": [
+          {
+            "file": "/assets/models/boulders.glb",
+            "stage": "waiting-for-ready-frame",
+            "error": "net::ERR_ABORTED",
+            "canceled": true
+          },
+          {
+            "file": "/prop-assets/plastic_crate_02/plastic_crate_02.bin",
+            "stage": "waiting-for-ready-frame",
+            "error": "net::ERR_ABORTED",
+            "canceled": true
+          }
+        ],
+        "transportClean": false,
+        "shaderOrConsoleErrors": 0
+      },
+      "town": {
+        "exit": 0,
+        "stage": "complete",
+        "renderOk": true,
+        "jsExceptions": 0,
+        "requests": [],
+        "transportClean": true,
+        "shaderOrConsoleErrors": null
+      },
+      "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "indoorBoxCount": 8,
+      "shaderChunks": {
+        "normal": {
+          "litBands": false,
+          "coverage": false,
+          "shadowTint": true
+        },
+        "town": {
+          "litBands": false,
+          "coverage": false,
+          "shadowTint": true
+        }
+      },
+      "roomGeneratorLotIds": [
+        "E1",
+        "E2",
+        "E3",
+        "E5",
+        "W1",
+        "W2",
+        "W4",
+        "W6"
+      ],
+      "tintedVolumeLotIds": [
+        "E1",
+        "E2",
+        "E3",
+        "E5",
+        "W1",
+        "W2",
+        "W4",
+        "W6"
+      ],
+      "normalHostSha256": "1ca2e167316fca29ec48089e9fbfa20e781ef6b1f171f54313ee8455a2e79eb3",
+      "townHostSha256": "86e0c09543b506c08abc52fc227827b4c7e3fdff489110d2eec52f9048d82f76",
+      "segments": {
+        "20": {
+          "frames": 657,
+          "ms": 10107.699999999997,
+          "fps": 64.99995053276217,
+          "p95": 15.5,
+          "p99": 15.599999999998545,
+          "maximum": 15.60000000000582,
+          "over20": 0,
+          "drawsPerFrame": 1276.490106544901,
+          "trianglesPerFrame": 9658457.888888888,
+          "passed": true,
+          "nativeReportP95": 15.5,
+          "effects": {
+            "toon27": false,
+            "outline": 0,
+            "outlineGpu": 0,
+            "legacyToon": 1,
+            "bands": null,
+            "shadowTint": true,
+            "decals": true,
+            "weathering": 1,
+            "timeOfDay": "evening",
+            "clouds": 1,
+            "water": true,
+            "wetRoad": true
+          },
+          "originalSha256": "8346831671376febc5748b1bcc34355d57c4e368fd570afe9ef7f336ea0c6241"
+        },
+        "21": {
+          "frames": 657,
+          "ms": 10107.699999999997,
+          "fps": 64.99995053276217,
+          "p95": 15.5,
+          "p99": 15.5,
+          "maximum": 15.60000000000582,
+          "over20": 0,
+          "drawsPerFrame": 851.779299847793,
+          "trianglesPerFrame": 8794028.709284628,
+          "passed": true,
+          "nativeReportP95": 15.5,
+          "effects": {
+            "toon27": false,
+            "outline": 0,
+            "outlineGpu": 0,
+            "legacyToon": 1,
+            "bands": null,
+            "shadowTint": true,
+            "decals": true,
+            "weathering": 1,
+            "timeOfDay": "evening",
+            "clouds": 1,
+            "water": true,
+            "wetRoad": true
+          },
+          "originalSha256": "e4b44fd53f75ff691bf61045b0098ae6121b99e63a07f2b8b1cfdb4b895c9533"
+        },
+        "23": {
+          "frames": 657,
+          "ms": 10107.700000000012,
+          "fps": 64.99995053276207,
+          "p95": 15.5,
+          "p99": 15.599999999991269,
+          "maximum": 15.60000000000582,
+          "over20": 0,
+          "drawsPerFrame": 1153.0806697108067,
+          "trianglesPerFrame": 7573005.701674277,
+          "passed": true,
+          "nativeReportP95": 15.5,
+          "effects": {
+            "toon27": false,
+            "outline": 0,
+            "outlineGpu": 0,
+            "legacyToon": 1,
+            "bands": null,
+            "shadowTint": true,
+            "decals": true,
+            "weathering": 1,
+            "timeOfDay": "evening",
+            "clouds": 1,
+            "water": true,
+            "wetRoad": true
+          },
+          "originalSha256": "495f2c64f476642e1f06e51c5409a7fcc729a31f09067363a5a176199f409749"
+        },
+        "24": {
+          "frames": 657,
+          "ms": 10107.699999999997,
+          "fps": 64.99995053276217,
+          "p95": 15.5,
+          "p99": 15.60000000000582,
+          "maximum": 15.60000000000582,
+          "over20": 0,
+          "drawsPerFrame": 907.7092846270929,
+          "trianglesPerFrame": 8861212.394216133,
+          "passed": true,
+          "nativeReportP95": 15.5,
+          "effects": {
+            "toon27": false,
+            "outline": 0,
+            "outlineGpu": 0,
+            "legacyToon": 1,
+            "bands": null,
+            "shadowTint": true,
+            "decals": true,
+            "weathering": 1,
+            "timeOfDay": "evening",
+            "clouds": 1,
+            "water": true,
+            "wetRoad": true
+          },
+          "originalSha256": "2a755eaad3bf51c3afccb22cc37463aa318eb09ac14cbf2d35f4da34f0f713a2"
+        },
+        "station-street": {
+          "frames": 173,
+          "ms": 3123,
+          "fps": 55.395453089977586,
+          "p95": 30.80000000000291,
+          "p99": 30.90000000000873,
+          "maximum": 30.90000000000873,
+          "over20": 30,
+          "drawsPerFrame": 1591,
+          "trianglesPerFrame": 8323660,
+          "passed": false,
+          "nativeReportP95": 30.80000000000291,
+          "effects": {
+            "toon27": false,
+            "outline": 0,
+            "outlineGpu": 0,
+            "legacyToon": 1,
+            "bands": null,
+            "shadowTint": true,
+            "decals": true,
+            "weathering": 1,
+            "timeOfDay": "evening",
+            "clouds": 1,
+            "water": true,
+            "wetRoad": true
+          },
+          "originalSha256": "1947d37d3c508191b6c23776e1de4f03e77f56fe5a695c4b7154f3c291ae1e23"
+        },
+        "shop-interior": {
+          "frames": 202,
+          "ms": 3107.600000000006,
+          "fps": 65.00193075041821,
+          "p95": 15.5,
+          "p99": 15.5,
+          "maximum": 15.60000000000582,
+          "over20": 0,
+          "drawsPerFrame": 943.3168316831683,
+          "trianglesPerFrame": 7645718.089108911,
+          "passed": true,
+          "nativeReportP95": 15.5,
+          "effects": {
+            "toon27": false,
+            "outline": 0,
+            "outlineGpu": 0,
+            "legacyToon": 1,
+            "bands": null,
+            "shadowTint": true,
+            "decals": true,
+            "weathering": 1,
+            "timeOfDay": "evening",
+            "clouds": 1,
+            "water": true,
+            "wetRoad": true
+          },
+          "originalSha256": "a0e90e443b86817da2a188a797e86814e9587b3c5c6b5f3d1cdc14f7635a8acc"
+        },
+        "window": {
+          "frames": 657,
+          "ms": 10107.699999999997,
+          "fps": 64.99995053276217,
+          "p95": 15.5,
+          "p99": 15.60000000000582,
+          "maximum": 15.60000000000582,
+          "over20": 0,
+          "drawsPerFrame": 1188.4018264840183,
+          "trianglesPerFrame": 7872603.068493151,
+          "passed": true,
+          "nativeReportP95": 15.5,
+          "effects": {
+            "toon27": false,
+            "outline": 0,
+            "outlineGpu": 0,
+            "legacyToon": 1,
+            "bands": null,
+            "shadowTint": true,
+            "decals": true,
+            "weathering": 1,
+            "timeOfDay": "evening",
+            "clouds": 1,
+            "water": true,
+            "wetRoad": true
+          },
+          "originalSha256": "796f155221ca3e8ae438760cbfd4db4ce73941ce566d5024ba51e7e2ba6aea7c"
+        },
+        "door": {
+          "frames": 658,
+          "ms": 10123.100000000006,
+          "fps": 64.99985182404596,
+          "p95": 15.5,
+          "p99": 15.5,
+          "maximum": 15.60000000000582,
+          "over20": 0,
+          "drawsPerFrame": 1099.8267477203647,
+          "trianglesPerFrame": 7518532.440729483,
+          "passed": true,
+          "nativeReportP95": 15.5,
+          "effects": {
+            "toon27": false,
+            "outline": 0,
+            "outlineGpu": 0,
+            "legacyToon": 1,
+            "bands": null,
+            "shadowTint": true,
+            "decals": true,
+            "weathering": 1,
+            "timeOfDay": "evening",
+            "clouds": 1,
+            "water": true,
+            "wetRoad": true
+          },
+          "originalSha256": "c2d4affaeb95bd04a9d2131fd78d141d33e82d840eadc967e54d902feb71bab2"
+        },
+        "walking-third": {
+          "frames": 185,
+          "ms": 3123.0999999999913,
+          "fps": 59.2360154974226,
+          "p95": 30.80000000000291,
+          "p99": 30.80000000000291,
+          "maximum": 30.80000000000291,
+          "over20": 18,
+          "drawsPerFrame": 1590.1459459459459,
+          "trianglesPerFrame": 8362223.691891892,
+          "passed": false,
+          "nativeReportP95": 30.80000000000291,
+          "walk": {
+            "from": [
+              281.6,
+              8.812,
+              934
+            ],
+            "to": [
+              280.92860265632476,
+              8.54315997854881,
+              924.3985706624575
+            ],
+            "distanceXZ": 9.624875049418383
+          },
+          "effects": {
+            "toon27": false,
+            "outline": 0,
+            "outlineGpu": 0,
+            "legacyToon": 1,
+            "bands": null,
+            "shadowTint": true,
+            "decals": true,
+            "weathering": 1,
+            "timeOfDay": "evening",
+            "clouds": 1,
+            "water": true,
+            "wetRoad": true
+          },
+          "originalSha256": "305657ee203dde9965265e86e595951342aef49c1bafb6ed7b21ab17eaaf396f"
+        },
+        "walking-first": {
+          "frames": 201,
+          "ms": 3138.5,
+          "fps": 64.04333280229409,
+          "p95": 15.5,
+          "p99": 30.60000000000582,
+          "maximum": 31,
+          "over20": 3,
+          "drawsPerFrame": 1441.2686567164178,
+          "trianglesPerFrame": 8287919.328358209,
+          "passed": true,
+          "nativeReportP95": 15.5,
+          "walk": {
+            "from": [
+              280.9132661420847,
+              8.537018952141521,
+              924.1792482907687
+            ],
+            "to": [
+              280.2492070992463,
+              8.27111732324279,
+              914.6827615443854
+            ],
+            "distanceXZ": 9.519676199147183
+          },
+          "effects": {
+            "toon27": false,
+            "outline": 0,
+            "outlineGpu": 0,
+            "legacyToon": 1,
+            "bands": null,
+            "shadowTint": true,
+            "decals": true,
+            "weathering": 1,
+            "timeOfDay": "evening",
+            "clouds": 1,
+            "water": true,
+            "wetRoad": true
+          },
+          "originalSha256": "3bbe7611fea08ee88f39b7ca3f86d88be81baed89ba4010ec6c6f2fba80dfa21"
+        }
+      },
+      "summary": {
+        "n": 10,
+        "passes": 8,
+        "total": 4704,
+        "over20": 51,
+        "maximum": 31
+      },
+      "startup": {
+        "weathering": {
+          "totalMs": 749.6,
+          "source": "baked",
+          "planMs": 2.2,
+          "rays": 0,
+          "triangles": 52,
+          "vehicleVolumes": 4
+        },
+        "firstReadyFrameMs": 42521.800000190735,
+        "buildStartMs": 23556.5,
+        "worldReadyStageMs": 24634.5,
+        "stationBuildingsToReadyMs": 1078
+      },
+      "nativeFixedCameras": [
+        {
+          "name": "station-street",
+          "position": [
+            278.8,
+            10.4,
+            936
+          ]
+        },
+        {
+          "name": "shop-interior",
+          "position": [
+            271.7,
+            9.9134,
+            908
+          ]
+        }
+      ],
+      "nativeSignals": {
+        "streetAndWalk": null,
+        "town": null
+      },
+      "verifiedAfterTown": 251
+    },
+    "ground-on-repeat": {
+      "started": "2026-11-18T07:31:52.265Z",
+      "ended": "2026-11-18T07:35:20.212Z",
+      "mode": "on",
+      "scene": "e00875bd88109c6b3eb685bbb5aec8d01ef4bf5c",
+      "checkout": "e00875bd88109c6b3eb685bbb5aec8d01ef4bf5c",
+      "filesChecked": 251,
+      "normal": {
+        "exit": 1,
+        "stage": "complete",
+        "renderOk": true,
+        "jsExceptions": 0,
+        "requests": [
+          {
+            "file": "/prop-assets/plastic_crate_02/plastic_crate_02.bin",
+            "stage": "waiting-for-ready-frame",
+            "error": "net::ERR_ABORTED",
+            "canceled": true
+          }
+        ],
+        "transportClean": false,
+        "shaderOrConsoleErrors": 0
+      },
+      "town": {
+        "exit": 1,
+        "stage": "complete",
+        "renderOk": true,
+        "jsExceptions": 0,
+        "requests": [
+          {
+            "file": "/assets/models/boulders.glb",
+            "stage": "loading",
+            "error": "net::ERR_ABORTED",
+            "canceled": true
+          },
+          {
+            "file": "/prop-assets/plastic_crate_02/plastic_crate_02.bin",
+            "stage": "loading",
+            "error": "net::ERR_ABORTED",
+            "canceled": true
+          }
+        ],
+        "transportClean": false,
+        "shaderOrConsoleErrors": null
+      },
+      "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "indoorBoxCount": 8,
+      "shaderChunks": {
+        "normal": {
+          "litBands": true,
+          "coverage": true,
+          "shadowTint": true
+        },
+        "town": {
+          "litBands": true,
+          "coverage": true,
+          "shadowTint": true
+        }
+      },
+      "roomGeneratorLotIds": [
+        "E1",
+        "E2",
+        "E3",
+        "E5",
+        "W1",
+        "W2",
+        "W4",
+        "W6"
+      ],
+      "tintedVolumeLotIds": [
+        "E1",
+        "E2",
+        "E3",
+        "E5",
+        "W1",
+        "W2",
+        "W4",
+        "W6"
+      ],
+      "normalHostSha256": "1ca2e167316fca29ec48089e9fbfa20e781ef6b1f171f54313ee8455a2e79eb3",
+      "townHostSha256": "4bd17490bf61265e0e260f4ea1f8aa015dc9e779bf1186400c8febd2a9e17bd7",
+      "segments": {
+        "20": {
+          "frames": 658,
+          "ms": 10123.100000000006,
+          "fps": 64.99985182404596,
+          "p95": 15.5,
+          "p99": 15.599999999998545,
+          "maximum": 15.60000000000582,
+          "over20": 0,
+          "drawsPerFrame": 1275.709726443769,
+          "trianglesPerFrame": 9654938.72644377,
+          "passed": true,
+          "nativeReportP95": 15.5,
+          "effects": {
+            "toon27": true,
+            "outline": 1,
+            "outlineGpu": 1,
+            "legacyToon": 1,
+            "bands": [
+              0,
+              0.55,
+              1
+            ],
+            "shadowTint": true,
+            "decals": true,
+            "weathering": 1,
+            "timeOfDay": "evening",
+            "clouds": 1,
+            "water": true,
+            "wetRoad": true
+          },
+          "originalSha256": "378793ca673231aeab48d179ca4de8720158a946afd960afefcf69494fa8b4cb"
+        },
+        "21": {
+          "frames": 657,
+          "ms": 10107.599999999991,
+          "fps": 65.00059361272712,
+          "p95": 15.5,
+          "p99": 15.599999999991269,
+          "maximum": 15.60000000000582,
+          "over20": 0,
+          "drawsPerFrame": 851.5053272450533,
+          "trianglesPerFrame": 8790539.832572298,
+          "passed": true,
+          "nativeReportP95": 15.5,
+          "effects": {
+            "toon27": true,
+            "outline": 1,
+            "outlineGpu": 1,
+            "legacyToon": 1,
+            "bands": [
+              0,
+              0.55,
+              1
+            ],
+            "shadowTint": true,
+            "decals": true,
+            "weathering": 1,
+            "timeOfDay": "evening",
+            "clouds": 1,
+            "water": true,
+            "wetRoad": true
+          },
+          "originalSha256": "c6ad2e381e17fcfd9dc6f6da33953170a18f39ce8397bb99098729d503e435d3"
+        },
+        "23": {
+          "frames": 657,
+          "ms": 10107.699999999997,
+          "fps": 64.99995053276217,
+          "p95": 15.5,
+          "p99": 15.599999999991269,
+          "maximum": 15.69999999999709,
+          "over20": 0,
+          "drawsPerFrame": 1152.331811263318,
+          "trianglesPerFrame": 7569320.514459665,
+          "passed": true,
+          "nativeReportP95": 15.5,
+          "effects": {
+            "toon27": true,
+            "outline": 1,
+            "outlineGpu": 1,
+            "legacyToon": 1,
+            "bands": [
+              0,
+              0.55,
+              1
+            ],
+            "shadowTint": true,
+            "decals": true,
+            "weathering": 1,
+            "timeOfDay": "evening",
+            "clouds": 1,
+            "water": true,
+            "wetRoad": true
+          },
+          "originalSha256": "d74a8e3358fed8087d1d63a6e776296dd5a7448398c2ee366ba300fa95c4b594"
+        },
+        "24": {
+          "frames": 658,
+          "ms": 10123.100000000006,
+          "fps": 64.99985182404596,
+          "p95": 15.5,
+          "p99": 15.599999999991269,
+          "maximum": 15.60000000000582,
+          "over20": 0,
+          "drawsPerFrame": 907.8677811550152,
+          "trianglesPerFrame": 8864443.443768997,
+          "passed": true,
+          "nativeReportP95": 15.5,
+          "effects": {
+            "toon27": true,
+            "outline": 1,
+            "outlineGpu": 1,
+            "legacyToon": 1,
+            "bands": [
+              0,
+              0.55,
+              1
+            ],
+            "shadowTint": true,
+            "decals": true,
+            "weathering": 1,
+            "timeOfDay": "evening",
+            "clouds": 1,
+            "water": true,
+            "wetRoad": true
+          },
+          "originalSha256": "f5fa1afd887919695d1a6caf33e9c606b5c376296c820ae26203ad4fcbcbbf68"
+        },
+        "station-street": {
+          "frames": 203,
+          "ms": 3123,
+          "fps": 65.00160102465578,
+          "p95": 15.5,
+          "p99": 15.5,
+          "maximum": 15.60000000000582,
+          "over20": 0,
+          "drawsPerFrame": 1591,
+          "trianglesPerFrame": 8323660,
+          "passed": true,
+          "nativeReportP95": 15.5,
+          "effects": {
+            "toon27": true,
+            "outline": 1,
+            "outlineGpu": 1,
+            "legacyToon": 1,
+            "bands": [
+              0,
+              0.55,
+              1
+            ],
+            "shadowTint": true,
+            "decals": true,
+            "weathering": 1,
+            "timeOfDay": "evening",
+            "clouds": 1,
+            "water": true,
+            "wetRoad": true
+          },
+          "originalSha256": "e48689ec1444fb72409dd405826b4ebbe4e107a943f92797f104a47041f59450"
+        },
+        "shop-interior": {
+          "frames": 202,
+          "ms": 3107.5999999999913,
+          "fps": 65.00193075041851,
+          "p95": 15.5,
+          "p99": 15.5,
+          "maximum": 15.60000000000582,
+          "over20": 0,
+          "drawsPerFrame": 942,
+          "trianglesPerFrame": 7627629,
+          "passed": true,
+          "nativeReportP95": 15.5,
+          "effects": {
+            "toon27": true,
+            "outline": 1,
+            "outlineGpu": 1,
+            "legacyToon": 1,
+            "bands": [
+              0,
+              0.55,
+              1
+            ],
+            "shadowTint": true,
+            "decals": true,
+            "weathering": 1,
+            "timeOfDay": "evening",
+            "clouds": 1,
+            "water": true,
+            "wetRoad": true
+          },
+          "originalSha256": "a9c82ccb153be9cb874d5c62bc6041920321e30710c1d12ab45070031c352ba0"
+        },
+        "window": {
+          "frames": 655,
+          "ms": 10107.899999999994,
+          "fps": 64.80079937474652,
+          "p95": 15.5,
+          "p99": 15.60000000000582,
+          "maximum": 30.90000000000873,
+          "over20": 2,
+          "drawsPerFrame": 1188.6106870229007,
+          "trianglesPerFrame": 7873849.490076336,
+          "passed": true,
+          "nativeReportP95": 15.5,
+          "effects": {
+            "toon27": true,
+            "outline": 1,
+            "outlineGpu": 1,
+            "legacyToon": 1,
+            "bands": [
+              0,
+              0.55,
+              1
+            ],
+            "shadowTint": true,
+            "decals": true,
+            "weathering": 1,
+            "timeOfDay": "evening",
+            "clouds": 1,
+            "water": true,
+            "wetRoad": true
+          },
+          "originalSha256": "acb06c69f0abd7ba16c9ae32d30d1bcdef80b27080836af09425ec2bcd8aff89"
+        },
+        "door": {
+          "frames": 657,
+          "ms": 10107.800000000003,
+          "fps": 64.99930746552165,
+          "p95": 15.5,
+          "p99": 15.60000000000582,
+          "maximum": 15.60000000000582,
+          "over20": 0,
+          "drawsPerFrame": 1098.9056316590563,
+          "trianglesPerFrame": 7513737.386605784,
+          "passed": true,
+          "nativeReportP95": 15.5,
+          "effects": {
+            "toon27": true,
+            "outline": 1,
+            "outlineGpu": 1,
+            "legacyToon": 1,
+            "bands": [
+              0,
+              0.55,
+              1
+            ],
+            "shadowTint": true,
+            "decals": true,
+            "weathering": 1,
+            "timeOfDay": "evening",
+            "clouds": 1,
+            "water": true,
+            "wetRoad": true
+          },
+          "originalSha256": "c78c78f08c7e943ce4b0ae4b3db2af02dd3846f71ccba2c6be18fec4bd9d5973"
+        },
+        "walking-third": {
+          "frames": 194,
+          "ms": 3138.5,
+          "fps": 61.812967978333596,
+          "p95": 30.69999999999709,
+          "p99": 30.80000000000291,
+          "maximum": 30.80000000000291,
+          "over20": 10,
+          "drawsPerFrame": 1590.3453608247423,
+          "trianglesPerFrame": 8361918.93814433,
+          "passed": false,
+          "nativeReportP95": 30.69999999999709,
+          "walk": {
+            "from": [
+              281.6,
+              8.812,
+              934
+            ],
+            "to": [
+              280.92967624508145,
+              8.543589863514981,
+              924.4139236969636
+            ],
+            "distanceXZ": 9.60948452436676
+          },
+          "effects": {
+            "toon27": true,
+            "outline": 1,
+            "outlineGpu": 1,
+            "legacyToon": 1,
+            "bands": [
+              0,
+              0.55,
+              1
+            ],
+            "shadowTint": true,
+            "decals": true,
+            "weathering": 1,
+            "timeOfDay": "evening",
+            "clouds": 1,
+            "water": true,
+            "wetRoad": true
+          },
+          "originalSha256": "e6b2332fce53c4ecfd7e19298d9dbb537044faf0138031d2cca1548d9d8c4706"
+        },
+        "walking-first": {
+          "frames": 203,
+          "ms": 3123.100000000006,
+          "fps": 64.99951970798233,
+          "p95": 15.5,
+          "p99": 15.5,
+          "maximum": 15.60000000000582,
+          "over20": 0,
+          "drawsPerFrame": 1442.6699507389162,
+          "trianglesPerFrame": 8290393.645320197,
+          "passed": true,
+          "nativeReportP95": 15.5,
+          "walk": {
+            "from": [
+              280.9144489362116,
+              8.53749256497518,
+              924.1961630348279
+            ],
+            "to": [
+              280.2512427274117,
+              8.27193242673524,
+              914.7118723834014
+            ],
+            "distanceXZ": 9.507450322569476
+          },
+          "effects": {
+            "toon27": true,
+            "outline": 1,
+            "outlineGpu": 1,
+            "legacyToon": 1,
+            "bands": [
+              0,
+              0.55,
+              1
+            ],
+            "shadowTint": true,
+            "decals": true,
+            "weathering": 1,
+            "timeOfDay": "evening",
+            "clouds": 1,
+            "water": true,
+            "wetRoad": true
+          },
+          "originalSha256": "1454f24d0af21edbe9a5696d8311e484e2f85108beb91877daa1649063bcf6ec"
+        }
+      },
+      "summary": {
+        "n": 10,
+        "passes": 9,
+        "total": 4744,
+        "over20": 12,
+        "maximum": 30.90000000000873
+      },
+      "startup": {
+        "weathering": {
+          "totalMs": 615.9,
+          "source": "baked",
+          "planMs": 2.1,
+          "rays": 0,
+          "triangles": 52,
+          "vehicleVolumes": 4
+        },
+        "firstReadyFrameMs": 43708.700000047684,
+        "buildStartMs": 21964.900000095367,
+        "worldReadyStageMs": 22791.10000014305,
+        "stationBuildingsToReadyMs": 826.2000000476837
+      },
+      "nativeFixedCameras": [
+        {
+          "name": "station-street",
+          "position": [
+            278.8,
+            10.4,
+            936
+          ]
+        },
+        {
+          "name": "shop-interior",
+          "position": [
+            271.7,
+            9.9134,
+            908
+          ]
+        }
+      ],
+      "nativeSignals": {
+        "streetAndWalk": null,
+        "town": null
+      },
+      "verifiedAfterTown": 251
+    }
+  },
+  "attempts": [
+    {
+      "key": "ground-on",
+      "mode": "on",
+      "attempt": 1,
+      "startedAt": "2026-11-18T07:24:55.710Z",
+      "finishedAt": "2026-11-18T07:28:24.863Z",
+      "valid": true,
+      "wrapperExit": 0
+    },
+    {
+      "key": "ground-off",
+      "mode": "off",
+      "attempt": 1,
+      "startedAt": "2026-11-18T07:28:24.863Z",
+      "finishedAt": "2026-11-18T07:31:52.052Z",
+      "valid": true,
+      "wrapperExit": 0
+    },
+    {
+      "key": "ground-on-repeat",
+      "mode": "on",
+      "attempt": 1,
+      "startedAt": "2026-11-18T07:31:52.053Z",
+      "finishedAt": "2026-11-18T07:35:20.322Z",
+      "valid": true,
+      "wrapperExit": 0
+    }
+  ],
+  "framesSha256": "662f4457698d8319b8c59620b5d7236355e8162d57e0b8019525016ffa5852dc"
+}

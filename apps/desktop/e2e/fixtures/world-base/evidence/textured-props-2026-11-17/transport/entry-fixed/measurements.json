@@ -1,0 +1,906 @@
+{
+  "stage": "complete",
+  "ok": false,
+  "bytesIntegrity": true,
+  "transportClean": false,
+  "inputsUnchanged": true,
+  "exceptions": [],
+  "httpErrors": [],
+  "missingTerminal": [],
+  "expected": 72,
+  "count": 72,
+  "bytesPass": 72,
+  "transportPass": 49,
+  "methods": {
+    "native": {
+      "count": 36,
+      "bytesPass": 36,
+      "transportPass": 36
+    },
+    "fileloader": {
+      "count": 36,
+      "bytesPass": 36,
+      "transportPass": 13
+    }
+  },
+  "networkFailures": [
+    {
+      "method": "Network.loadingFailed",
+      "stage": "menhir-fileloader-2",
+      "receivedWallTime": 1794897670.874,
+      "canceled": true,
+      "errorText": "net::ERR_ABORTED",
+      "requestId": "64852.7",
+      "timestamp": 1907849.928087,
+      "type": "Fetch",
+      "documentRelativeMs": 120.323974609375
+    },
+    {
+      "method": "Network.loadingFailed",
+      "stage": "menhir-fileloader-3",
+      "receivedWallTime": 1794897670.893,
+      "canceled": true,
+      "errorText": "net::ERR_ABORTED",
+      "requestId": "64852.8",
+      "timestamp": 1907849.947098,
+      "type": "Fetch",
+      "documentRelativeMs": 139.3349609375
+    },
+    {
+      "method": "Network.loadingFailed",
+      "stage": "boulders-fileloader-1",
+      "receivedWallTime": 1794897670.979,
+      "canceled": true,
+      "errorText": "net::ERR_ABORTED",
+      "requestId": "64852.12",
+      "timestamp": 1907850.032429,
+      "type": "Fetch",
+      "documentRelativeMs": 224.665771484375
+    },
+    {
+      "method": "Network.loadingFailed",
+      "stage": "boulders-fileloader-2",
+      "receivedWallTime": 1794897671.003,
+      "canceled": true,
+      "errorText": "net::ERR_ABORTED",
+      "requestId": "64852.13",
+      "timestamp": 1907850.057235,
+      "type": "Fetch",
+      "documentRelativeMs": 249.471923828125
+    },
+    {
+      "method": "Network.loadingFailed",
+      "stage": "boulders-fileloader-3",
+      "receivedWallTime": 1794897671.025,
+      "canceled": true,
+      "errorText": "net::ERR_ABORTED",
+      "requestId": "64852.14",
+      "timestamp": 1907850.079335,
+      "type": "Fetch",
+      "documentRelativeMs": 271.57177734375
+    },
+    {
+      "method": "Network.loadingFailed",
+      "stage": "lighthouse-fileloader-1",
+      "receivedWallTime": 1794897671.172,
+      "canceled": true,
+      "errorText": "net::ERR_ABORTED",
+      "requestId": "64852.18",
+      "timestamp": 1907850.223651,
+      "type": "Fetch",
+      "documentRelativeMs": 415.887939453125
+    },
+    {
+      "method": "Network.loadingFailed",
+      "stage": "lighthouse-fileloader-2",
+      "receivedWallTime": 1794897671.205,
+      "canceled": true,
+      "errorText": "net::ERR_ABORTED",
+      "requestId": "64852.19",
+      "timestamp": 1907850.257098,
+      "type": "Fetch",
+      "documentRelativeMs": 449.3349609375
+    },
+    {
+      "method": "Network.loadingFailed",
+      "stage": "lighthouse-fileloader-3",
+      "receivedWallTime": 1794897671.235,
+      "canceled": true,
+      "errorText": "net::ERR_ABORTED",
+      "requestId": "64852.20",
+      "timestamp": 1907850.287659,
+      "type": "Fetch",
+      "documentRelativeMs": 479.895751953125
+    },
+    {
+      "method": "Network.loadingFailed",
+      "stage": "prop-plastic_crate_02-textures-plastic_crate_02_nor_gl_1k.jpg-fileloader-2",
+      "receivedWallTime": 1794897671.506,
+      "canceled": true,
+      "errorText": "net::ERR_ABORTED",
+      "requestId": "64852.31",
+      "timestamp": 1907850.559733,
+      "type": "Fetch",
+      "documentRelativeMs": 751.9697265625
+    },
+    {
+      "method": "Network.loadingFailed",
+      "stage": "prop-plastic_crate_02-textures-plastic_crate_02_nor_gl_1k.jpg-fileloader-3",
+      "receivedWallTime": 1794897671.524,
+      "canceled": true,
+      "errorText": "net::ERR_ABORTED",
+      "requestId": "64852.32",
+      "timestamp": 1907850.578064,
+      "type": "Fetch",
+      "documentRelativeMs": 770.30078125
+    },
+    {
+      "method": "Network.loadingFailed",
+      "stage": "prop-plastic_crate_02-textures-plastic_crate_02_diff_1k.jpg-fileloader-1",
+      "receivedWallTime": 1794897671.631,
+      "canceled": true,
+      "errorText": "net::ERR_ABORTED",
+      "requestId": "64852.36",
+      "timestamp": 1907850.684572,
+      "type": "Fetch",
+      "documentRelativeMs": 876.808837890625
+    },
+    {
+      "method": "Network.loadingFailed",
+      "stage": "prop-plastic_crate_02-textures-plastic_crate_02_diff_1k.jpg-fileloader-3",
+      "receivedWallTime": 1794897671.677,
+      "canceled": true,
+      "errorText": "net::ERR_ABORTED",
+      "requestId": "64852.38",
+      "timestamp": 1907850.731094,
+      "type": "Fetch",
+      "documentRelativeMs": 923.330810546875
+    },
+    {
+      "method": "Network.loadingFailed",
+      "stage": "prop-plastic_crate_02-textures-plastic_crate_02_arm_1k.jpg-fileloader-1",
+      "receivedWallTime": 1794897671.782,
+      "canceled": true,
+      "errorText": "net::ERR_ABORTED",
+      "requestId": "64852.42",
+      "timestamp": 1907850.836031,
+      "type": "Fetch",
+      "documentRelativeMs": 1028.267822265625
+    },
+    {
+      "method": "Network.loadingFailed",
+      "stage": "prop-plastic_crate_02-textures-plastic_crate_02_arm_1k.jpg-fileloader-2",
+      "receivedWallTime": 1794897671.809,
+      "canceled": true,
+      "errorText": "net::ERR_ABORTED",
+      "requestId": "64852.43",
+      "timestamp": 1907850.863325,
+      "type": "Fetch",
+      "documentRelativeMs": 1055.56201171875
+    },
+    {
+      "method": "Network.loadingFailed",
+      "stage": "prop-worn_shutter-textures-worn_shutter_nor_gl_1k.jpg-fileloader-1",
+      "receivedWallTime": 1794897672.096,
+      "canceled": true,
+      "errorText": "net::ERR_ABORTED",
+      "requestId": "64852.54",
+      "timestamp": 1907851.14964,
+      "type": "Fetch",
+      "documentRelativeMs": 1341.876953125
+    },
+    {
+      "method": "Network.loadingFailed",
+      "stage": "prop-worn_shutter-textures-worn_shutter_nor_gl_1k.jpg-fileloader-2",
+      "receivedWallTime": 1794897672.119,
+      "canceled": true,
+      "errorText": "net::ERR_ABORTED",
+      "requestId": "64852.55",
+      "timestamp": 1907851.172753,
+      "type": "Fetch",
+      "documentRelativeMs": 1364.989990234375
+    },
+    {
+      "method": "Network.loadingFailed",
+      "stage": "prop-worn_shutter-textures-worn_shutter_nor_gl_1k.jpg-fileloader-3",
+      "receivedWallTime": 1794897672.144,
+      "canceled": true,
+      "errorText": "net::ERR_ABORTED",
+      "requestId": "64852.56",
+      "timestamp": 1907851.197565,
+      "type": "Fetch",
+      "documentRelativeMs": 1389.802001953125
+    },
+    {
+      "method": "Network.loadingFailed",
+      "stage": "prop-worn_shutter-textures-worn_shutter_diff_1k.jpg-fileloader-1",
+      "receivedWallTime": 1794897672.247,
+      "canceled": true,
+      "errorText": "net::ERR_ABORTED",
+      "requestId": "64852.60",
+      "timestamp": 1907851.301133,
+      "type": "Fetch",
+      "documentRelativeMs": 1493.369873046875
+    },
+    {
+      "method": "Network.loadingFailed",
+      "stage": "prop-worn_shutter-textures-worn_shutter_diff_1k.jpg-fileloader-2",
+      "receivedWallTime": 1794897672.271,
+      "canceled": true,
+      "errorText": "net::ERR_ABORTED",
+      "requestId": "64852.61",
+      "timestamp": 1907851.32501,
+      "type": "Fetch",
+      "documentRelativeMs": 1517.2470703125
+    },
+    {
+      "method": "Network.loadingFailed",
+      "stage": "prop-worn_shutter-textures-worn_shutter_diff_1k.jpg-fileloader-3",
+      "receivedWallTime": 1794897672.296,
+      "canceled": true,
+      "errorText": "net::ERR_ABORTED",
+      "requestId": "64852.62",
+      "timestamp": 1907851.349771,
+      "type": "Fetch",
+      "documentRelativeMs": 1542.0078125
+    },
+    {
+      "method": "Network.loadingFailed",
+      "stage": "prop-worn_shutter-textures-worn_shutter_arm_1k.jpg-fileloader-1",
+      "receivedWallTime": 1794897672.398,
+      "canceled": true,
+      "errorText": "net::ERR_ABORTED",
+      "requestId": "64852.66",
+      "timestamp": 1907851.45181,
+      "type": "Fetch",
+      "documentRelativeMs": 1644.046875
+    },
+    {
+      "method": "Network.loadingFailed",
+      "stage": "prop-worn_shutter-textures-worn_shutter_arm_1k.jpg-fileloader-2",
+      "receivedWallTime": 1794897672.421,
+      "canceled": true,
+      "errorText": "net::ERR_ABORTED",
+      "requestId": "64852.67",
+      "timestamp": 1907851.475341,
+      "type": "Fetch",
+      "documentRelativeMs": 1667.577880859375
+    },
+    {
+      "method": "Network.loadingFailed",
+      "stage": "prop-worn_shutter-textures-worn_shutter_arm_1k.jpg-fileloader-3",
+      "receivedWallTime": 1794897672.446,
+      "canceled": true,
+      "errorText": "net::ERR_ABORTED",
+      "requestId": "64852.68",
+      "timestamp": 1907851.500016,
+      "type": "Fetch",
+      "documentRelativeMs": 1692.2529296875
+    }
+  ],
+  "failingCases": [
+    {
+      "id": "menhir-fileloader-2",
+      "method": "fileloader",
+      "url": "/assets/models/menhir.glb?transportCase=menhir-fileloader-2",
+      "hostStartedWallTime": 1794897670.861,
+      "expectedBytes": 620588,
+      "expectedSha256": "82d68e3300134f1eb851707528d09cca01d6fb5db91e597b14de15b9e7bacb6c",
+      "started": {
+        "timeOriginMs": 1794897670754.1,
+        "nowMs": 115
+      },
+      "fulfilled": {
+        "timeOriginMs": 1794897670754.1,
+        "nowMs": 120.60000014305115
+      },
+      "actualBytes": 620588,
+      "actualSha256": "82d68e3300134f1eb851707528d09cca01d6fb5db91e597b14de15b9e7bacb6c",
+      "hashed": {
+        "timeOriginMs": 1794897670754.1,
+        "nowMs": 121.10000014305115
+      },
+      "bytesIntegrity": true,
+      "requestIds": [
+        "64852.7"
+      ],
+      "transportClean": false
+    },
+    {
+      "id": "menhir-fileloader-3",
+      "method": "fileloader",
+      "url": "/assets/models/menhir.glb?transportCase=menhir-fileloader-3",
+      "hostStartedWallTime": 1794897670.877,
+      "expectedBytes": 620588,
+      "expectedSha256": "82d68e3300134f1eb851707528d09cca01d6fb5db91e597b14de15b9e7bacb6c",
+      "started": {
+        "timeOriginMs": 1794897670754.1,
+        "nowMs": 132.79999995231628
+      },
+      "fulfilled": {
+        "timeOriginMs": 1794897670754.1,
+        "nowMs": 139.5
+      },
+      "actualBytes": 620588,
+      "actualSha256": "82d68e3300134f1eb851707528d09cca01d6fb5db91e597b14de15b9e7bacb6c",
+      "hashed": {
+        "timeOriginMs": 1794897670754.1,
+        "nowMs": 140
+      },
+      "bytesIntegrity": true,
+      "requestIds": [
+        "64852.8"
+      ],
+      "transportClean": false
+    },
+    {
+      "id": "boulders-fileloader-1",
+      "method": "fileloader",
+      "url": "/assets/models/boulders.glb?transportCase=boulders-fileloader-1",
+      "hostStartedWallTime": 1794897670.965,
+      "expectedBytes": 669820,
+      "expectedSha256": "05123f357a9b8029fff53fe962c8304df64824d73053bf4de574b65cde41bd1a",
+      "started": {
+        "timeOriginMs": 1794897670754.1,
+        "nowMs": 219.60000014305115
+      },
+      "fulfilled": {
+        "timeOriginMs": 1794897670754.1,
+        "nowMs": 224.90000009536743
+      },
+      "actualBytes": 669820,
+      "actualSha256": "05123f357a9b8029fff53fe962c8304df64824d73053bf4de574b65cde41bd1a",
+      "hashed": {
+        "timeOriginMs": 1794897670754.1,
+        "nowMs": 225.29999995231628
+      },
+      "bytesIntegrity": true,
+      "requestIds": [
+        "64852.12"
+      ],
+      "transportClean": false
+    },
+    {
+      "id": "boulders-fileloader-2",
+      "method": "fileloader",
+      "url": "/assets/models/boulders.glb?transportCase=boulders-fileloader-2",
+      "hostStartedWallTime": 1794897670.988,
+      "expectedBytes": 669820,
+      "expectedSha256": "05123f357a9b8029fff53fe962c8304df64824d73053bf4de574b65cde41bd1a",
+      "started": {
+        "timeOriginMs": 1794897670754.1,
+        "nowMs": 242.90000009536743
+      },
+      "fulfilled": {
+        "timeOriginMs": 1794897670754.1,
+        "nowMs": 249.70000004768372
+      },
+      "actualBytes": 669820,
+      "actualSha256": "05123f357a9b8029fff53fe962c8304df64824d73053bf4de574b65cde41bd1a",
+      "hashed": {
+        "timeOriginMs": 1794897670754.1,
+        "nowMs": 250.20000004768372
+      },
+      "bytesIntegrity": true,
+      "requestIds": [
+        "64852.13"
+      ],
+      "transportClean": false
+    },
+    {
+      "id": "boulders-fileloader-3",
+      "method": "fileloader",
+      "url": "/assets/models/boulders.glb?transportCase=boulders-fileloader-3",
+      "hostStartedWallTime": 1794897671.012,
+      "expectedBytes": 669820,
+      "expectedSha256": "05123f357a9b8029fff53fe962c8304df64824d73053bf4de574b65cde41bd1a",
+      "started": {
+        "timeOriginMs": 1794897670754.1,
+        "nowMs": 266.2000000476837
+      },
+      "fulfilled": {
+        "timeOriginMs": 1794897670754.1,
+        "nowMs": 271.90000009536743
+      },
+      "actualBytes": 669820,
+      "actualSha256": "05123f357a9b8029fff53fe962c8304df64824d73053bf4de574b65cde41bd1a",
+      "hashed": {
+        "timeOriginMs": 1794897670754.1,
+        "nowMs": 272.2999999523163
+      },
+      "bytesIntegrity": true,
+      "requestIds": [
+        "64852.14"
+      ],
+      "transportClean": false
+    },
+    {
+      "id": "lighthouse-fileloader-1",
+      "method": "fileloader",
+      "url": "/assets/models/lighthouse.glb?transportCase=lighthouse-fileloader-1",
+      "hostStartedWallTime": 1794897671.146,
+      "expectedBytes": 4857788,
+      "expectedSha256": "53f9ba81d89a1c4485590581a481679081eba129dd74047251b7d1e3a58d47fa",
+      "started": {
+        "timeOriginMs": 1794897670754.1,
+        "nowMs": 399.90000009536743
+      },
+      "fulfilled": {
+        "timeOriginMs": 1794897670754.1,
+        "nowMs": 418
+      },
+      "actualBytes": 4857788,
+      "actualSha256": "53f9ba81d89a1c4485590581a481679081eba129dd74047251b7d1e3a58d47fa",
+      "hashed": {
+        "timeOriginMs": 1794897670754.1,
+        "nowMs": 423.40000009536743
+      },
+      "bytesIntegrity": true,
+      "requestIds": [
+        "64852.18"
+      ],
+      "transportClean": false
+    },
+    {
+      "id": "lighthouse-fileloader-2",
+      "method": "fileloader",
+      "url": "/assets/models/lighthouse.glb?transportCase=lighthouse-fileloader-2",
+      "hostStartedWallTime": 1794897671.179,
+      "expectedBytes": 4857788,
+      "expectedSha256": "53f9ba81d89a1c4485590581a481679081eba129dd74047251b7d1e3a58d47fa",
+      "started": {
+        "timeOriginMs": 1794897670754.1,
+        "nowMs": 433.10000014305115
+      },
+      "fulfilled": {
+        "timeOriginMs": 1794897670754.1,
+        "nowMs": 451
+      },
+      "actualBytes": 4857788,
+      "actualSha256": "53f9ba81d89a1c4485590581a481679081eba129dd74047251b7d1e3a58d47fa",
+      "hashed": {
+        "timeOriginMs": 1794897670754.1,
+        "nowMs": 455.7000000476837
+      },
+      "bytesIntegrity": true,
+      "requestIds": [
+        "64852.19"
+      ],
+      "transportClean": false
+    },
+    {
+      "id": "lighthouse-fileloader-3",
+      "method": "fileloader",
+      "url": "/assets/models/lighthouse.glb?transportCase=lighthouse-fileloader-3",
+      "hostStartedWallTime": 1794897671.212,
+      "expectedBytes": 4857788,
+      "expectedSha256": "53f9ba81d89a1c4485590581a481679081eba129dd74047251b7d1e3a58d47fa",
+      "started": {
+        "timeOriginMs": 1794897670754.1,
+        "nowMs": 466.10000014305115
+      },
+      "fulfilled": {
+        "timeOriginMs": 1794897670754.1,
+        "nowMs": 481.5
+      },
+      "actualBytes": 4857788,
+      "actualSha256": "53f9ba81d89a1c4485590581a481679081eba129dd74047251b7d1e3a58d47fa",
+      "hashed": {
+        "timeOriginMs": 1794897670754.1,
+        "nowMs": 486.10000014305115
+      },
+      "bytesIntegrity": true,
+      "requestIds": [
+        "64852.20"
+      ],
+      "transportClean": false
+    },
+    {
+      "id": "prop-plastic_crate_02-textures-plastic_crate_02_nor_gl_1k.jpg-fileloader-2",
+      "method": "fileloader",
+      "url": "/prop-assets/plastic_crate_02/textures/plastic_crate_02_nor_gl_1k.jpg?transportCase=prop-plastic_crate_02-textures-plastic_crate_02_nor_gl_1k.jpg-fileloader-2",
+      "hostStartedWallTime": 1794897671.49,
+      "expectedBytes": 558561,
+      "expectedSha256": "492b4cb03b043fb30a21b5de1cdf91dfbcd9bb7d080957af69a333d622050f30",
+      "started": {
+        "timeOriginMs": 1794897670754.1,
+        "nowMs": 746.2999999523163
+      },
+      "fulfilled": {
+        "timeOriginMs": 1794897670754.1,
+        "nowMs": 752.2999999523163
+      },
+      "actualBytes": 558561,
+      "actualSha256": "492b4cb03b043fb30a21b5de1cdf91dfbcd9bb7d080957af69a333d622050f30",
+      "hashed": {
+        "timeOriginMs": 1794897670754.1,
+        "nowMs": 752.9000000953674
+      },
+      "bytesIntegrity": true,
+      "requestIds": [
+        "64852.31"
+      ],
+      "transportClean": false
+    },
+    {
+      "id": "prop-plastic_crate_02-textures-plastic_crate_02_nor_gl_1k.jpg-fileloader-3",
+      "method": "fileloader",
+      "url": "/prop-assets/plastic_crate_02/textures/plastic_crate_02_nor_gl_1k.jpg?transportCase=prop-plastic_crate_02-textures-plastic_crate_02_nor_gl_1k.jpg-fileloader-3",
+      "hostStartedWallTime": 1794897671.51,
+      "expectedBytes": 558561,
+      "expectedSha256": "492b4cb03b043fb30a21b5de1cdf91dfbcd9bb7d080957af69a333d622050f30",
+      "started": {
+        "timeOriginMs": 1794897670754.1,
+        "nowMs": 764.5
+      },
+      "fulfilled": {
+        "timeOriginMs": 1794897670754.1,
+        "nowMs": 770.6000001430511
+      },
+      "actualBytes": 558561,
+      "actualSha256": "492b4cb03b043fb30a21b5de1cdf91dfbcd9bb7d080957af69a333d622050f30",
+      "hashed": {
+        "timeOriginMs": 1794897670754.1,
+        "nowMs": 771.1000001430511
+      },
+      "bytesIntegrity": true,
+      "requestIds": [
+        "64852.32"
+      ],
+      "transportClean": false
+    },
+    {
+      "id": "prop-plastic_crate_02-textures-plastic_crate_02_diff_1k.jpg-fileloader-1",
+      "method": "fileloader",
+      "url": "/prop-assets/plastic_crate_02/textures/plastic_crate_02_diff_1k.jpg?transportCase=prop-plastic_crate_02-textures-plastic_crate_02_diff_1k.jpg-fileloader-1",
+      "hostStartedWallTime": 1794897671.618,
+      "expectedBytes": 492862,
+      "expectedSha256": "f153478d5f44f39ab27a967850caac27b35ee8f04185d0d4eaf7ad501742fb15",
+      "started": {
+        "timeOriginMs": 1794897670754.1,
+        "nowMs": 871.9000000953674
+      },
+      "fulfilled": {
+        "timeOriginMs": 1794897670754.1,
+        "nowMs": 877
+      },
+      "actualBytes": 492862,
+      "actualSha256": "f153478d5f44f39ab27a967850caac27b35ee8f04185d0d4eaf7ad501742fb15",
+      "hashed": {
+        "timeOriginMs": 1794897670754.1,
+        "nowMs": 877.4000000953674
+      },
+      "bytesIntegrity": true,
+      "requestIds": [
+        "64852.36"
+      ],
+      "transportClean": false
+    },
+    {
+      "id": "prop-plastic_crate_02-textures-plastic_crate_02_diff_1k.jpg-fileloader-3",
+      "method": "fileloader",
+      "url": "/prop-assets/plastic_crate_02/textures/plastic_crate_02_diff_1k.jpg?transportCase=prop-plastic_crate_02-textures-plastic_crate_02_diff_1k.jpg-fileloader-3",
+      "hostStartedWallTime": 1794897671.664,
+      "expectedBytes": 492862,
+      "expectedSha256": "f153478d5f44f39ab27a967850caac27b35ee8f04185d0d4eaf7ad501742fb15",
+      "started": {
+        "timeOriginMs": 1794897670754.1,
+        "nowMs": 918.2999999523163
+      },
+      "fulfilled": {
+        "timeOriginMs": 1794897670754.1,
+        "nowMs": 923.5
+      },
+      "actualBytes": 492862,
+      "actualSha256": "f153478d5f44f39ab27a967850caac27b35ee8f04185d0d4eaf7ad501742fb15",
+      "hashed": {
+        "timeOriginMs": 1794897670754.1,
+        "nowMs": 923.9000000953674
+      },
+      "bytesIntegrity": true,
+      "requestIds": [
+        "64852.38"
+      ],
+      "transportClean": false
+    },
+    {
+      "id": "prop-plastic_crate_02-textures-plastic_crate_02_arm_1k.jpg-fileloader-1",
+      "method": "fileloader",
+      "url": "/prop-assets/plastic_crate_02/textures/plastic_crate_02_arm_1k.jpg?transportCase=prop-plastic_crate_02-textures-plastic_crate_02_arm_1k.jpg-fileloader-1",
+      "hostStartedWallTime": 1794897671.768,
+      "expectedBytes": 597561,
+      "expectedSha256": "f0c667358c7afd46be37b40c30435b63ae3dba8432b45c507f3298fc6f163418",
+      "started": {
+        "timeOriginMs": 1794897670754.1,
+        "nowMs": 1023.2999999523163
+      },
+      "fulfilled": {
+        "timeOriginMs": 1794897670754.1,
+        "nowMs": 1028.6000001430511
+      },
+      "actualBytes": 597561,
+      "actualSha256": "f0c667358c7afd46be37b40c30435b63ae3dba8432b45c507f3298fc6f163418",
+      "hashed": {
+        "timeOriginMs": 1794897670754.1,
+        "nowMs": 1028.9000000953674
+      },
+      "bytesIntegrity": true,
+      "requestIds": [
+        "64852.42"
+      ],
+      "transportClean": false
+    },
+    {
+      "id": "prop-plastic_crate_02-textures-plastic_crate_02_arm_1k.jpg-fileloader-2",
+      "method": "fileloader",
+      "url": "/prop-assets/plastic_crate_02/textures/plastic_crate_02_arm_1k.jpg?transportCase=prop-plastic_crate_02-textures-plastic_crate_02_arm_1k.jpg-fileloader-2",
+      "hostStartedWallTime": 1794897671.794,
+      "expectedBytes": 597561,
+      "expectedSha256": "f0c667358c7afd46be37b40c30435b63ae3dba8432b45c507f3298fc6f163418",
+      "started": {
+        "timeOriginMs": 1794897670754.1,
+        "nowMs": 1049.6000001430511
+      },
+      "fulfilled": {
+        "timeOriginMs": 1794897670754.1,
+        "nowMs": 1055.7000000476837
+      },
+      "actualBytes": 597561,
+      "actualSha256": "f0c667358c7afd46be37b40c30435b63ae3dba8432b45c507f3298fc6f163418",
+      "hashed": {
+        "timeOriginMs": 1794897670754.1,
+        "nowMs": 1056.2000000476837
+      },
+      "bytesIntegrity": true,
+      "requestIds": [
+        "64852.43"
+      ],
+      "transportClean": false
+    },
+    {
+      "id": "prop-worn_shutter-textures-worn_shutter_nor_gl_1k.jpg-fileloader-1",
+      "method": "fileloader",
+      "url": "/prop-assets/worn_shutter/textures/worn_shutter_nor_gl_1k.jpg?transportCase=prop-worn_shutter-textures-worn_shutter_nor_gl_1k.jpg-fileloader-1",
+      "hostStartedWallTime": 1794897672.082,
+      "expectedBytes": 717669,
+      "expectedSha256": "924e3948a4f654322ddb595b9abca4b0b491d70fd69453f479c108d5ac815c93",
+      "started": {
+        "timeOriginMs": 1794897670754.1,
+        "nowMs": 1336.9000000953674
+      },
+      "fulfilled": {
+        "timeOriginMs": 1794897670754.1,
+        "nowMs": 1342.2000000476837
+      },
+      "actualBytes": 717669,
+      "actualSha256": "924e3948a4f654322ddb595b9abca4b0b491d70fd69453f479c108d5ac815c93",
+      "hashed": {
+        "timeOriginMs": 1794897670754.1,
+        "nowMs": 1342.7000000476837
+      },
+      "bytesIntegrity": true,
+      "requestIds": [
+        "64852.54"
+      ],
+      "transportClean": false
+    },
+    {
+      "id": "prop-worn_shutter-textures-worn_shutter_nor_gl_1k.jpg-fileloader-2",
+      "method": "fileloader",
+      "url": "/prop-assets/worn_shutter/textures/worn_shutter_nor_gl_1k.jpg?transportCase=prop-worn_shutter-textures-worn_shutter_nor_gl_1k.jpg-fileloader-2",
+      "hostStartedWallTime": 1794897672.106,
+      "expectedBytes": 717669,
+      "expectedSha256": "924e3948a4f654322ddb595b9abca4b0b491d70fd69453f479c108d5ac815c93",
+      "started": {
+        "timeOriginMs": 1794897670754.1,
+        "nowMs": 1360.1000001430511
+      },
+      "fulfilled": {
+        "timeOriginMs": 1794897670754.1,
+        "nowMs": 1365.2000000476837
+      },
+      "actualBytes": 717669,
+      "actualSha256": "924e3948a4f654322ddb595b9abca4b0b491d70fd69453f479c108d5ac815c93",
+      "hashed": {
+        "timeOriginMs": 1794897670754.1,
+        "nowMs": 1365.7000000476837
+      },
+      "bytesIntegrity": true,
+      "requestIds": [
+        "64852.55"
+      ],
+      "transportClean": false
+    },
+    {
+      "id": "prop-worn_shutter-textures-worn_shutter_nor_gl_1k.jpg-fileloader-3",
+      "method": "fileloader",
+      "url": "/prop-assets/worn_shutter/textures/worn_shutter_nor_gl_1k.jpg?transportCase=prop-worn_shutter-textures-worn_shutter_nor_gl_1k.jpg-fileloader-3",
+      "hostStartedWallTime": 1794897672.131,
+      "expectedBytes": 717669,
+      "expectedSha256": "924e3948a4f654322ddb595b9abca4b0b491d70fd69453f479c108d5ac815c93",
+      "started": {
+        "timeOriginMs": 1794897670754.1,
+        "nowMs": 1385
+      },
+      "fulfilled": {
+        "timeOriginMs": 1794897670754.1,
+        "nowMs": 1390.1000001430511
+      },
+      "actualBytes": 717669,
+      "actualSha256": "924e3948a4f654322ddb595b9abca4b0b491d70fd69453f479c108d5ac815c93",
+      "hashed": {
+        "timeOriginMs": 1794897670754.1,
+        "nowMs": 1390.6000001430511
+      },
+      "bytesIntegrity": true,
+      "requestIds": [
+        "64852.56"
+      ],
+      "transportClean": false
+    },
+    {
+      "id": "prop-worn_shutter-textures-worn_shutter_diff_1k.jpg-fileloader-1",
+      "method": "fileloader",
+      "url": "/prop-assets/worn_shutter/textures/worn_shutter_diff_1k.jpg?transportCase=prop-worn_shutter-textures-worn_shutter_diff_1k.jpg-fileloader-1",
+      "hostStartedWallTime": 1794897672.235,
+      "expectedBytes": 560285,
+      "expectedSha256": "1e1a84c4f2ce5d005c9c3e8860d23370e2ad6dcc4040cd972803ad700e516a08",
+      "started": {
+        "timeOriginMs": 1794897670754.1,
+        "nowMs": 1488.4000000953674
+      },
+      "fulfilled": {
+        "timeOriginMs": 1794897670754.1,
+        "nowMs": 1493.6000001430511
+      },
+      "actualBytes": 560285,
+      "actualSha256": "1e1a84c4f2ce5d005c9c3e8860d23370e2ad6dcc4040cd972803ad700e516a08",
+      "hashed": {
+        "timeOriginMs": 1794897670754.1,
+        "nowMs": 1494
+      },
+      "bytesIntegrity": true,
+      "requestIds": [
+        "64852.60"
+      ],
+      "transportClean": false
+    },
+    {
+      "id": "prop-worn_shutter-textures-worn_shutter_diff_1k.jpg-fileloader-2",
+      "method": "fileloader",
+      "url": "/prop-assets/worn_shutter/textures/worn_shutter_diff_1k.jpg?transportCase=prop-worn_shutter-textures-worn_shutter_diff_1k.jpg-fileloader-2",
+      "hostStartedWallTime": 1794897672.258,
+      "expectedBytes": 560285,
+      "expectedSha256": "1e1a84c4f2ce5d005c9c3e8860d23370e2ad6dcc4040cd972803ad700e516a08",
+      "started": {
+        "timeOriginMs": 1794897670754.1,
+        "nowMs": 1512.2999999523163
+      },
+      "fulfilled": {
+        "timeOriginMs": 1794897670754.1,
+        "nowMs": 1517.4000000953674
+      },
+      "actualBytes": 560285,
+      "actualSha256": "1e1a84c4f2ce5d005c9c3e8860d23370e2ad6dcc4040cd972803ad700e516a08",
+      "hashed": {
+        "timeOriginMs": 1794897670754.1,
+        "nowMs": 1517.9000000953674
+      },
+      "bytesIntegrity": true,
+      "requestIds": [
+        "64852.61"
+      ],
+      "transportClean": false
+    },
+    {
+      "id": "prop-worn_shutter-textures-worn_shutter_diff_1k.jpg-fileloader-3",
+      "method": "fileloader",
+      "url": "/prop-assets/worn_shutter/textures/worn_shutter_diff_1k.jpg?transportCase=prop-worn_shutter-textures-worn_shutter_diff_1k.jpg-fileloader-3",
+      "hostStartedWallTime": 1794897672.283,
+      "expectedBytes": 560285,
+      "expectedSha256": "1e1a84c4f2ce5d005c9c3e8860d23370e2ad6dcc4040cd972803ad700e516a08",
+      "started": {
+        "timeOriginMs": 1794897670754.1,
+        "nowMs": 1536.7999999523163
+      },
+      "fulfilled": {
+        "timeOriginMs": 1794897670754.1,
+        "nowMs": 1542.2000000476837
+      },
+      "actualBytes": 560285,
+      "actualSha256": "1e1a84c4f2ce5d005c9c3e8860d23370e2ad6dcc4040cd972803ad700e516a08",
+      "hashed": {
+        "timeOriginMs": 1794897670754.1,
+        "nowMs": 1542.6000001430511
+      },
+      "bytesIntegrity": true,
+      "requestIds": [
+        "64852.62"
+      ],
+      "transportClean": false
+    },
+    {
+      "id": "prop-worn_shutter-textures-worn_shutter_arm_1k.jpg-fileloader-1",
+      "method": "fileloader",
+      "url": "/prop-assets/worn_shutter/textures/worn_shutter_arm_1k.jpg?transportCase=prop-worn_shutter-textures-worn_shutter_arm_1k.jpg-fileloader-1",
+      "hostStartedWallTime": 1794897672.386,
+      "expectedBytes": 445738,
+      "expectedSha256": "daeb8be23cd97a39d3b2bf11e6b57ccab7b5e1fbd65672472a8b93c8fe3e3fdd",
+      "started": {
+        "timeOriginMs": 1794897670754.1,
+        "nowMs": 1639.2999999523163
+      },
+      "fulfilled": {
+        "timeOriginMs": 1794897670754.1,
+        "nowMs": 1644.2999999523163
+      },
+      "actualBytes": 445738,
+      "actualSha256": "daeb8be23cd97a39d3b2bf11e6b57ccab7b5e1fbd65672472a8b93c8fe3e3fdd",
+      "hashed": {
+        "timeOriginMs": 1794897670754.1,
+        "nowMs": 1644.7000000476837
+      },
+      "bytesIntegrity": true,
+      "requestIds": [
+        "64852.66"
+      ],
+      "transportClean": false
+    },
+    {
+      "id": "prop-worn_shutter-textures-worn_shutter_arm_1k.jpg-fileloader-2",
+      "method": "fileloader",
+      "url": "/prop-assets/worn_shutter/textures/worn_shutter_arm_1k.jpg?transportCase=prop-worn_shutter-textures-worn_shutter_arm_1k.jpg-fileloader-2",
+      "hostStartedWallTime": 1794897672.409,
+      "expectedBytes": 445738,
+      "expectedSha256": "daeb8be23cd97a39d3b2bf11e6b57ccab7b5e1fbd65672472a8b93c8fe3e3fdd",
+      "started": {
+        "timeOriginMs": 1794897670754.1,
+        "nowMs": 1663.2000000476837
+      },
+      "fulfilled": {
+        "timeOriginMs": 1794897670754.1,
+        "nowMs": 1667.7999999523163
+      },
+      "actualBytes": 445738,
+      "actualSha256": "daeb8be23cd97a39d3b2bf11e6b57ccab7b5e1fbd65672472a8b93c8fe3e3fdd",
+      "hashed": {
+        "timeOriginMs": 1794897670754.1,
+        "nowMs": 1668.1000001430511
+      },
+      "bytesIntegrity": true,
+      "requestIds": [
+        "64852.67"
+      ],
+      "transportClean": false
+    },
+    {
+      "id": "prop-worn_shutter-textures-worn_shutter_arm_1k.jpg-fileloader-3",
+      "method": "fileloader",
+      "url": "/prop-assets/worn_shutter/textures/worn_shutter_arm_1k.jpg?transportCase=prop-worn_shutter-textures-worn_shutter_arm_1k.jpg-fileloader-3",
+      "hostStartedWallTime": 1794897672.433,
+      "expectedBytes": 445738,
+      "expectedSha256": "daeb8be23cd97a39d3b2bf11e6b57ccab7b5e1fbd65672472a8b93c8fe3e3fdd",
+      "started": {
+        "timeOriginMs": 1794897670754.1,
+        "nowMs": 1687
+      },
+      "fulfilled": {
+        "timeOriginMs": 1794897670754.1,
+        "nowMs": 1692.4000000953674
+      },
+      "actualBytes": 445738,
+      "actualSha256": "daeb8be23cd97a39d3b2bf11e6b57ccab7b5e1fbd65672472a8b93c8fe3e3fdd",
+      "hashed": {
+        "timeOriginMs": 1794897670754.1,
+        "nowMs": 1692.7999999523163
+      },
+      "bytesIntegrity": true,
+      "requestIds": [
+        "64852.68"
+      ],
+      "transportClean": false
+    }
+  ],
+  "strictExpectedExit": 1,
+  "note": "No retries or relaxed failure rules; all byte success can coexist with failed transport terminal events."
+}

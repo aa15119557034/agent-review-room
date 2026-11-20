@@ -1,0 +1,6 @@
+{
+  "reportPath": "D:\\codex\\2026-11-16\\world-implementation\\world-base\\apps\\desktop\\e2e\\fixtures\\world-base\\artifacts\\gpu-look-c12-v1\\look-report.json",
+  "sha256": "c3dbcec8764e4dc21f7887328fecf0e2865fc9d9fd06a9514f2e3fe11878a0bc",
+  "sourceManifestSha256": "cbf45b08ab84348f8b29cf2386a53812111c4841d31a9856ea042dc8889d9294",
+  "coverage": "Six shared cameras; C12 did not capture street-detail. Historic references only, no image identity assumed."
+}

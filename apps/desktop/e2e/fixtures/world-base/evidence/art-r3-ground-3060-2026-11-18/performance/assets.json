@@ -1,0 +1,30 @@
+{
+  "fileCount": 782,
+  "algorithm": "For each directory sort slash-relative path strings, append path + NUL + SHA256(file contents) + LF for each, then SHA256 the resulting UTF-8 byte stream.",
+  "shared": {
+    "apartment-surfaces": {
+      "files": 9,
+      "bytes": 4932249,
+      "sha256": "9e1cfb8998dde4c83cf6accfd2fa42e1094c34bb7f19482d65195ca9b8daba76",
+      "matchedReference": true
+    },
+    "textured-props": {
+      "files": 9,
+      "bytes": 3579256,
+      "sha256": "1dc2af4a48d29e8644684117449de3abf7c01e507ab46170f9b882303bff8f2b",
+      "matchedReference": true
+    },
+    "petalwake-25443cef0eba802052d9ef24c94ba3c4157b6f2e": {
+      "files": 603,
+      "bytes": 210615280,
+      "sha256": "0ee869d9c9d13958c08820e29138b98dd86f8b8c623f78dab902d9a4b24c6a3c",
+      "matchedReference": true
+    },
+    "sakuragaoka-4112f57208b7e29998344ca71fef74202c2b2bdd": {
+      "files": 161,
+      "bytes": 5754668,
+      "sha256": "2da1f09043b23cd9b042dba22738aec39981a7d7246f7c4e93a56cd600d432e0",
+      "matchedReference": true
+    }
+  }
+}

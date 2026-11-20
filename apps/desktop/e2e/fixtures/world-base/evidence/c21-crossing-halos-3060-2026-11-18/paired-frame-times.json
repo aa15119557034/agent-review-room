@@ -1,0 +1,550 @@
+{
+  "order": [
+    "C21-initial",
+    "C20-control",
+    "C21-repeat"
+  ],
+  "method": "Separate stock Electron processes and identical cameras/assets, actual Git checkouts on the same RTX 3060 Laptop. Kept every sample. Each ten-segment run consists of the normal suite (420s outer watchdog, 3s per view/walk) followed by town suite (10s per view). The initial C21 timing from frame-times.json precedes the diagnostic photos, then C20 and C21 timing run back-to-back. This order characterizes variability; a long frame alone does not isolate its cause.",
+  "sourceBefore": "e78c52ce50205f85a4af02bfa78fb8f230b3644b",
+  "sourceAfter": "b949ffeb135f5b0798155aa5579740a841d94d0d",
+  "metrics": {
+    "C21-initial": {
+      "frames": 3741,
+      "over20ms": 107,
+      "maxMs": 30.900000000001455,
+      "passes": 7,
+      "missed": [
+        {
+          "key": "20",
+          "fps": 61.14150598058903,
+          "p95Ms": 30.700000000004366
+        },
+        {
+          "key": "island-aerial",
+          "fps": 58.27729747038104,
+          "p95Ms": 30.80000000000291
+        },
+        {
+          "key": "walking-first",
+          "fps": 55.12011724972933,
+          "p95Ms": 30.80000000000291
+        }
+      ],
+      "minFps": 55.12011724972933
+    },
+    "C20-control": {
+      "frames": 3792,
+      "over20ms": 56,
+      "maxMs": 30.90000000000873,
+      "passes": 7,
+      "missed": [
+        {
+          "key": "station-street",
+          "fps": 61.17572088577346,
+          "p95Ms": 30.69999999999709
+        },
+        {
+          "key": "island-aerial",
+          "fps": 56.077744145292336,
+          "p95Ms": 30.80000000000291
+        },
+        {
+          "key": "walking-third",
+          "fps": 61.49434443205353,
+          "p95Ms": 30.79999999998836
+        }
+      ],
+      "minFps": 56.077744145292336
+    },
+    "C21-repeat": {
+      "frames": 3812,
+      "over20ms": 32,
+      "maxMs": 31,
+      "passes": 9,
+      "missed": [
+        {
+          "key": "island-aerial",
+          "fps": 61.477378245973725,
+          "p95Ms": 30.69999999999709
+        }
+      ],
+      "minFps": 61.477378245973725
+    }
+  },
+  "pairedRuns": {
+    "control-c20": {
+      "source": "e78c52ce50205f85a4af02bfa78fb8f230b3644b",
+      "segments": {
+        "20": {
+          "sample": "frames-20.json",
+          "sha256": "26b38c78a314876173618702fe593c89665bd059a5be3c8107298bc98a731e9b",
+          "frames": 652,
+          "totalMs": 10107.800000000003,
+          "fps": 64.50463998100474,
+          "p95Ms": 15.5,
+          "maxMs": 30.80000000000291,
+          "over20ms": 5,
+          "emptyDraws": 0,
+          "meanDrawCalls": 1279.4156441717791,
+          "meanTriangles": 9676308.484662578,
+          "meetsBudget": true
+        },
+        "21": {
+          "sample": "frames-21.json",
+          "sha256": "7091cf62f921d361a899da0e71b04ec1d716987fe02d781d190d6209952e7787",
+          "frames": 657,
+          "totalMs": 10107.5,
+          "fps": 65.00123670541677,
+          "p95Ms": 15.5,
+          "maxMs": 15.599999999998545,
+          "over20ms": 0,
+          "emptyDraws": 0,
+          "meanDrawCalls": 851.1217656012177,
+          "meanTriangles": 8796393.792998478,
+          "meetsBudget": true
+        },
+        "23": {
+          "sample": "frames-23.json",
+          "sha256": "bbce3c9dcb9230209b2da625fb3a5b33a2e422add4073eda001d346a2825724b",
+          "frames": 657,
+          "totalMs": 10107.699999999997,
+          "fps": 64.99995053276217,
+          "p95Ms": 15.5,
+          "maxMs": 15.60000000000582,
+          "over20ms": 0,
+          "emptyDraws": 0,
+          "meanDrawCalls": 1156.7777777777778,
+          "meanTriangles": 7610172.5449010655,
+          "meetsBudget": true
+        },
+        "24": {
+          "sample": "frames-24.json",
+          "sha256": "2330c0df31c3aac220860995c1ae272e62b9ba586a7d74a47c68b81d24cdd552",
+          "frames": 657,
+          "totalMs": 10107.699999999997,
+          "fps": 64.99995053276217,
+          "p95Ms": 15.5,
+          "maxMs": 15.60000000000582,
+          "over20ms": 0,
+          "emptyDraws": 0,
+          "meanDrawCalls": 908.9878234398782,
+          "meanTriangles": 8870096.266362254,
+          "meetsBudget": true
+        },
+        "station-street": {
+          "sample": "frame-samples-station-street.json",
+          "sha256": "058f800e5212cf2f3c4231fdf0599f4854b7d8cde8cf4164d812a1673ff181ee",
+          "frames": 192,
+          "totalMs": 3138.5,
+          "fps": 61.17572088577346,
+          "p95Ms": 30.69999999999709,
+          "maxMs": 30.900000000001455,
+          "over20ms": 12,
+          "emptyDraws": 0,
+          "meanDrawCalls": 1604.9739583333333,
+          "meanTriangles": 8410919.9375,
+          "meetsBudget": false
+        },
+        "station-port": {
+          "sample": "frame-samples-station-port.json",
+          "sha256": "c93ab2f496825a17d1f48412f2f9fd2f4b6e83ba54cf1eb1fc20bf064d32fba7",
+          "frames": 202,
+          "totalMs": 3107.800000000003,
+          "fps": 64.99774760280579,
+          "p95Ms": 15.5,
+          "maxMs": 15.69999999999709,
+          "over20ms": 0,
+          "emptyDraws": 0,
+          "meanDrawCalls": 870.6633663366337,
+          "meanTriangles": 8006443.841584158,
+          "meetsBudget": true
+        },
+        "island-aerial": {
+          "sample": "frame-samples-island-aerial.json",
+          "sha256": "9be74a4a82521cbc7b9c0231bf97288a3fdb33dbf1064e5c597faf4ad51274c2",
+          "frames": 176,
+          "totalMs": 3138.5,
+          "fps": 56.077744145292336,
+          "p95Ms": 30.80000000000291,
+          "maxMs": 30.90000000000873,
+          "over20ms": 28,
+          "emptyDraws": 0,
+          "meanDrawCalls": 1773.4204545454545,
+          "meanTriangles": 7380635.386363637,
+          "meetsBudget": false
+        },
+        "shop-interior": {
+          "sample": "frame-samples-shop-interior.json",
+          "sha256": "680304d158c9111ac09f629b8ce54c8ed4d6ed31b1001139e1936f28e7acff46",
+          "frames": 203,
+          "totalMs": 3123.100000000006,
+          "fps": 64.99951970798233,
+          "p95Ms": 15.5,
+          "maxMs": 15.60000000000582,
+          "over20ms": 0,
+          "emptyDraws": 0,
+          "meanDrawCalls": 941.8768472906404,
+          "meanTriangles": 7627633.118226601,
+          "meetsBudget": true
+        },
+        "walking-third": {
+          "sample": "frame-samples-walking-third.json",
+          "sha256": "8afe90369036bb9839ab1cea38354efd93cc53b99c531d773d43cc5eed20faa5",
+          "frames": 193,
+          "totalMs": 3138.5,
+          "fps": 61.49434443205353,
+          "p95Ms": 30.79999999998836,
+          "maxMs": 30.89999999999418,
+          "over20ms": 11,
+          "emptyDraws": 0,
+          "meanDrawCalls": 1592.1191709844559,
+          "meanTriangles": 8425600.772020726,
+          "meetsBudget": false
+        },
+        "walking-first": {
+          "sample": "frame-samples-walking-first.json",
+          "sha256": "51ac77bd2f61847e7ab4b8e25786c28385c2fed2ec55d59b998641a9bebf1f0b",
+          "frames": 203,
+          "totalMs": 3123.100000000006,
+          "fps": 64.99951970798233,
+          "p95Ms": 15.5,
+          "maxMs": 15.5,
+          "over20ms": 0,
+          "emptyDraws": 0,
+          "meanDrawCalls": 1445.3546798029556,
+          "meanTriangles": 8354135.591133005,
+          "meetsBudget": true
+        }
+      },
+      "windows": {
+        "normal": {
+          "requestedMs": 3000,
+          "outerTimeoutMs": 420000,
+          "navigationToReadyMs": 38214
+        },
+        "town": {
+          "requestedMs": 10000
+        }
+      },
+      "inputs": {
+        "sceneManifestSha256": "83b25301e30a6fb4dd61edade63aac307a51a73045d1af091ce4da6eed1b50b8",
+        "verifiedRuntimeFiles": 243,
+        "baselineConfig": "combined",
+        "driverTown": "3d519cffcff439e98e3487a54c51926bc9956afe66d303166043f27144294747"
+      },
+      "runs": [
+        {
+          "key": "normal",
+          "args": [
+            "scripts/baseline.cjs",
+            "--scene=combined",
+            "--electron=D:/codex/2026-11-16/world-implementation/runtime-path-probe/electron.exe",
+            "--output=artifacts/gpu-paired-control-c20-e78c52c-normal",
+            "--stills",
+            "--timeout-ms=420000"
+          ],
+          "cwd": "D:\\codex\\2026-11-16\\world-implementation\\world-base\\apps\\desktop\\e2e\\fixtures\\world-base",
+          "started": "2026-11-17T23:45:33.633Z",
+          "finished": "2026-11-17T23:47:21.551Z",
+          "exit": 1,
+          "signal": null,
+          "gpuBefore": "NVIDIA GeForce RTX 3060 Laptop GPU, 617.14, P0, 55, 1687 MiB, 23.42 W, 1425 MHz",
+          "gpuAfter": "NVIDIA GeForce RTX 3060 Laptop GPU, 617.14, P0, 69, 1705 MiB, 64.41 W, 1972 MHz",
+          "renderOk": true,
+          "transportClean": false,
+          "networkFailures": [
+            {
+              "url": "http://127.0.0.1:58395/assets/models/boulders.glb",
+              "type": "Fetch",
+              "canceled": true,
+              "errorText": "net::ERR_ABORTED",
+              "requestId": "63096.130",
+              "timestamp": 1969316.261351,
+              "stage": "waiting-for-ready-frame",
+              "receivedWallTime": 1794959137.207
+            }
+          ],
+          "exceptions": [],
+          "httpErrors": [],
+          "failure": null
+        },
+        {
+          "key": "town",
+          "args": [
+            "D:\\codex\\2026-11-16\\world-implementation\\world-base\\apps\\desktop\\e2e\\fixtures\\world-base\\evidence\\street-upgrade-2026-11-18\\town\\town-frame-times.cjs",
+            "D:\\codex\\2026-11-16\\world-implementation\\world-base\\apps\\desktop\\e2e\\fixtures\\world-base",
+            "D:/codex/2026-11-16/world-implementation/runtime-path-probe/electron.exe",
+            "D:\\codex\\2026-11-16\\world-implementation\\world-base\\apps\\desktop\\e2e\\fixtures\\world-base\\artifacts\\gpu-modern-after-c21-b949ffe\\c17-reference.json",
+            "D:\\codex\\2026-11-16\\world-implementation\\world-base\\apps\\desktop\\e2e\\fixtures\\world-base\\artifacts\\gpu-paired-control-c20-e78c52c-normal\\source-manifest.json",
+            "D:\\codex\\2026-11-16\\world-implementation\\world-base\\apps\\desktop\\e2e\\fixtures\\world-base\\artifacts\\gpu-paired-control-c20-e78c52c-town"
+          ],
+          "cwd": "D:\\codex\\2026-11-16\\world-implementation\\handoff",
+          "started": "2026-11-17T23:47:21.706Z",
+          "finished": "2026-11-17T23:48:52.268Z",
+          "exit": 0,
+          "signal": null,
+          "gpuBefore": "NVIDIA GeForce RTX 3060 Laptop GPU, 617.14, P0, 69, 1705 MiB, 64.41 W, 1972 MHz",
+          "gpuAfter": "NVIDIA GeForce RTX 3060 Laptop GPU, 617.14, P0, 68, 1765 MiB, 69.00 W, 1972 MHz",
+          "renderOk": true,
+          "transportClean": true,
+          "networkFailures": [],
+          "exceptions": [],
+          "httpErrors": [],
+          "failure": null
+        }
+      ]
+    },
+    "repeat-c21": {
+      "source": "b949ffeb135f5b0798155aa5579740a841d94d0d",
+      "segments": {
+        "20": {
+          "sample": "frames-20.json",
+          "sha256": "d6fa7b19e668b00cd4090bcc83b015a2c8df91883fd24d5b499c5dffdd3056e1",
+          "frames": 640,
+          "totalMs": 10107.699999999997,
+          "fps": 63.318064445917486,
+          "p95Ms": 15.5,
+          "maxMs": 31,
+          "over20ms": 17,
+          "emptyDraws": 0,
+          "meanDrawCalls": 1279.309375,
+          "meanTriangles": 9676300.65,
+          "meetsBudget": true
+        },
+        "21": {
+          "sample": "frames-21.json",
+          "sha256": "16a92198aee15cfc95454711b475f2e66d99cc86c21f0e90517a3480b073c0e8",
+          "frames": 657,
+          "totalMs": 10107.699999999997,
+          "fps": 64.99995053276217,
+          "p95Ms": 15.5,
+          "maxMs": 15.60000000000582,
+          "over20ms": 0,
+          "emptyDraws": 0,
+          "meanDrawCalls": 851.1765601217656,
+          "meanTriangles": 8796397.299847793,
+          "meetsBudget": true
+        },
+        "23": {
+          "sample": "frames-23.json",
+          "sha256": "b56995d516f565969a62a3bc809259a5a2bb3f4899c0e4d9eabd5c0044115484",
+          "frames": 657,
+          "totalMs": 10123,
+          "fps": 64.90170897955151,
+          "p95Ms": 15.5,
+          "maxMs": 30.79999999998836,
+          "over20ms": 1,
+          "emptyDraws": 0,
+          "meanDrawCalls": 1156.9939117199392,
+          "meanTriangles": 7613562.730593608,
+          "meetsBudget": true
+        },
+        "24": {
+          "sample": "frames-24.json",
+          "sha256": "1339398a489899800810823608c1b7d81c4c927d752f5d26f842954830cbf8e1",
+          "frames": 657,
+          "totalMs": 10107.699999999997,
+          "fps": 64.99995053276217,
+          "p95Ms": 15.5,
+          "maxMs": 15.60000000000582,
+          "over20ms": 0,
+          "emptyDraws": 0,
+          "meanDrawCalls": 909.7960426179604,
+          "meanTriangles": 8873684.217656013,
+          "meetsBudget": true
+        },
+        "station-street": {
+          "sample": "frame-samples-station-street.json",
+          "sha256": "3240d84d9e50a94053fe24c35cb945b5c098e01331150eeb5871c72d3b730821",
+          "frames": 201,
+          "totalMs": 3107.800000000003,
+          "fps": 64.67597657506911,
+          "p95Ms": 15.5,
+          "maxMs": 30.80000000000291,
+          "over20ms": 1,
+          "emptyDraws": 0,
+          "meanDrawCalls": 1605.7562189054727,
+          "meanTriangles": 8413412.298507463,
+          "meetsBudget": true
+        },
+        "station-port": {
+          "sample": "frame-samples-station-port.json",
+          "sha256": "20f2b0a2ae949e826e13bd5bf1e350e6e1192f4824f81bf17216b6778e93af76",
+          "frames": 202,
+          "totalMs": 3107.5999999999985,
+          "fps": 65.00193075041835,
+          "p95Ms": 15.5,
+          "maxMs": 15.69999999999709,
+          "over20ms": 0,
+          "emptyDraws": 0,
+          "meanDrawCalls": 870.0742574257425,
+          "meanTriangles": 8006415.564356436,
+          "meetsBudget": true
+        },
+        "island-aerial": {
+          "sample": "frame-samples-island-aerial.json",
+          "sha256": "f0680f7d297fd71bd151497ef4ed4f7a37e0c8814ba3e51b4e5f4d38c44de9b3",
+          "frames": 192,
+          "totalMs": 3123.0999999999913,
+          "fps": 61.477378245973725,
+          "p95Ms": 30.69999999999709,
+          "maxMs": 30.90000000000873,
+          "over20ms": 11,
+          "emptyDraws": 0,
+          "meanDrawCalls": 1776.3697916666667,
+          "meanTriangles": 7418128.958333333,
+          "meetsBudget": false
+        },
+        "shop-interior": {
+          "sample": "frame-samples-shop-interior.json",
+          "sha256": "958fa8bc233607e5b9a75a8cb1901fb9d9f45181b77af9440feaabd7d95f5f82",
+          "frames": 202,
+          "totalMs": 3107.699999999997,
+          "fps": 64.99983910930919,
+          "p95Ms": 15.5,
+          "maxMs": 15.5,
+          "over20ms": 0,
+          "emptyDraws": 0,
+          "meanDrawCalls": 941.2574257425742,
+          "meanTriangles": 7627593.475247525,
+          "meetsBudget": true
+        },
+        "walking-third": {
+          "sample": "frame-samples-walking-third.json",
+          "sha256": "a83a1b1f43f945a186cd77ebdfc793ebf340f6c912707d703caf7766cb3330f8",
+          "frames": 201,
+          "totalMs": 3123.100000000006,
+          "fps": 64.35913035125344,
+          "p95Ms": 15.5,
+          "maxMs": 30.90000000000873,
+          "over20ms": 2,
+          "emptyDraws": 0,
+          "meanDrawCalls": 1585.1194029850747,
+          "meanTriangles": 8368434.154228856,
+          "meetsBudget": true
+        },
+        "walking-first": {
+          "sample": "frame-samples-walking-first.json",
+          "sha256": "2370c58b379aab007376e0f9e70b97de13f1ec11eb244eadcf732107b3869e14",
+          "frames": 203,
+          "totalMs": 3123.100000000006,
+          "fps": 64.99951970798233,
+          "p95Ms": 15.5,
+          "maxMs": 15.60000000000582,
+          "over20ms": 0,
+          "emptyDraws": 0,
+          "meanDrawCalls": 1446.8226600985222,
+          "meanTriangles": 8356865.679802956,
+          "meetsBudget": true
+        }
+      },
+      "windows": {
+        "normal": {
+          "requestedMs": 3000,
+          "outerTimeoutMs": 420000,
+          "navigationToReadyMs": 36412
+        },
+        "town": {
+          "requestedMs": 10000
+        }
+      },
+      "inputs": {
+        "sceneManifestSha256": "05ad1e71274b05c21b35446e738f83a2ae01f809634f74ded0423741a9530fdc",
+        "verifiedRuntimeFiles": 243,
+        "baselineConfig": "combined",
+        "driverTown": "3d519cffcff439e98e3487a54c51926bc9956afe66d303166043f27144294747"
+      },
+      "runs": [
+        {
+          "key": "normal",
+          "args": [
+            "scripts/baseline.cjs",
+            "--scene=combined",
+            "--electron=D:/codex/2026-11-16/world-implementation/runtime-path-probe/electron.exe",
+            "--output=artifacts/gpu-paired-repeat-c21-b949ffe-normal",
+            "--stills",
+            "--timeout-ms=420000"
+          ],
+          "cwd": "D:\\codex\\2026-11-16\\world-implementation\\world-base\\apps\\desktop\\e2e\\fixtures\\world-base",
+          "started": "2026-11-17T23:48:52.708Z",
+          "finished": "2026-11-17T23:50:37.415Z",
+          "exit": 1,
+          "signal": null,
+          "gpuBefore": "NVIDIA GeForce RTX 3060 Laptop GPU, 617.14, P0, 67, 1765 MiB, 51.27 W, 1972 MHz",
+          "gpuAfter": "NVIDIA GeForce RTX 3060 Laptop GPU, 617.14, P0, 68, 1760 MiB, 61.82 W, 1972 MHz",
+          "renderOk": true,
+          "transportClean": false,
+          "networkFailures": [
+            {
+              "url": "http://127.0.0.1:58755/assets/models/menhir.glb",
+              "type": "Fetch",
+              "canceled": true,
+              "errorText": "net::ERR_ABORTED",
+              "requestId": "49520.128",
+              "timestamp": 1969515.421433,
+              "stage": "waiting-for-ready-frame",
+              "receivedWallTime": 1794959336.367
+            },
+            {
+              "url": "http://127.0.0.1:58755/assets/models/boulders.glb",
+              "type": "Fetch",
+              "canceled": true,
+              "errorText": "net::ERR_ABORTED",
+              "requestId": "49520.130",
+              "timestamp": 1969515.421549,
+              "stage": "waiting-for-ready-frame",
+              "receivedWallTime": 1794959336.368
+            },
+            {
+              "url": "http://127.0.0.1:58755/prop-assets/plastic_crate_02/plastic_crate_02_1k.gltf",
+              "type": "Fetch",
+              "canceled": true,
+              "errorText": "net::ERR_ABORTED",
+              "requestId": "49520.244",
+              "timestamp": 1969526.834818,
+              "stage": "waiting-for-ready-frame",
+              "receivedWallTime": 1794959347.781
+            },
+            {
+              "url": "http://127.0.0.1:58755/prop-assets/plastic_crate_02/plastic_crate_02.bin",
+              "type": "Fetch",
+              "canceled": true,
+              "errorText": "net::ERR_ABORTED",
+              "requestId": "49520.249",
+              "timestamp": 1969526.847103,
+              "stage": "waiting-for-ready-frame",
+              "receivedWallTime": 1794959347.793
+            }
+          ],
+          "exceptions": [],
+          "httpErrors": [],
+          "failure": null
+        },
+        {
+          "key": "town",
+          "args": [
+            "D:\\codex\\2026-11-16\\world-implementation\\world-base\\apps\\desktop\\e2e\\fixtures\\world-base\\evidence\\street-upgrade-2026-11-18\\town\\town-frame-times.cjs",
+            "D:\\codex\\2026-11-16\\world-implementation\\world-base\\apps\\desktop\\e2e\\fixtures\\world-base",
+            "D:/codex/2026-11-16/world-implementation/runtime-path-probe/electron.exe",
+            "D:\\codex\\2026-11-16\\world-implementation\\world-base\\apps\\desktop\\e2e\\fixtures\\world-base\\artifacts\\gpu-modern-after-c21-b949ffe\\c17-reference.json",
+            "D:\\codex\\2026-11-16\\world-implementation\\world-base\\apps\\desktop\\e2e\\fixtures\\world-base\\artifacts\\gpu-paired-repeat-c21-b949ffe-normal\\source-manifest.json",
+            "D:\\codex\\2026-11-16\\world-implementation\\world-base\\apps\\desktop\\e2e\\fixtures\\world-base\\artifacts\\gpu-paired-repeat-c21-b949ffe-town"
+          ],
+          "cwd": "D:\\codex\\2026-11-16\\world-implementation\\handoff",
+          "started": "2026-11-17T23:50:37.555Z",
+          "finished": "2026-11-17T23:52:07.452Z",
+          "exit": 0,
+          "signal": null,
+          "gpuBefore": "NVIDIA GeForce RTX 3060 Laptop GPU, 617.14, P0, 68, 1760 MiB, 61.82 W, 1972 MHz",
+          "gpuAfter": "NVIDIA GeForce RTX 3060 Laptop GPU, 617.14, P0, 68, 1705 MiB, 56.71 W, 1942 MHz",
+          "renderOk": true,
+          "transportClean": true,
+          "networkFailures": [],
+          "exceptions": [],
+          "httpErrors": [],
+          "failure": null
+        }
+      ]
+    }
+  }
+}

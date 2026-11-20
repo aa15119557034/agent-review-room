@@ -1,0 +1,638 @@
+{
+  "seamAcrossRounds": [
+    {
+      "view": "north-seam-central",
+      "a": "north-seam-central-town-A1-capture-2",
+      "b": "north-seam-central-town-A1-capture-2",
+      "cameraEqual": true,
+      "timeEqual": true,
+      "paramsEqual": true,
+      "pngEqual": false,
+      "pixels": {
+        "changedPixels": 291834,
+        "meanAbsRGB": 2.627016975308642,
+        "maxAbsRGB": 100,
+        "bounds": [
+          0,
+          0,
+          1439,
+          898
+        ]
+      }
+    },
+    {
+      "view": "north-seam-central",
+      "a": "north-seam-central-town-B-capture-2",
+      "b": "north-seam-central-town-B-capture-2",
+      "cameraEqual": true,
+      "timeEqual": true,
+      "paramsEqual": true,
+      "pngEqual": true,
+      "pixels": {
+        "changedPixels": 0,
+        "meanAbsRGB": 0,
+        "maxAbsRGB": 0,
+        "bounds": null
+      }
+    },
+    {
+      "view": "north-seam-central",
+      "a": "north-seam-central-town-A2-capture-2",
+      "b": "north-seam-central-town-A2-capture-2",
+      "cameraEqual": true,
+      "timeEqual": true,
+      "paramsEqual": true,
+      "pngEqual": false,
+      "pixels": {
+        "changedPixels": 291834,
+        "meanAbsRGB": 2.627016975308642,
+        "maxAbsRGB": 100,
+        "bounds": [
+          0,
+          0,
+          1439,
+          898
+        ]
+      }
+    },
+    {
+      "view": "north-seam-oblique",
+      "a": "north-seam-oblique-town-A1-capture-2",
+      "b": "north-seam-oblique-town-A1-capture-2",
+      "cameraEqual": true,
+      "timeEqual": true,
+      "paramsEqual": true,
+      "pngEqual": false,
+      "pixels": {
+        "changedPixels": 211326,
+        "meanAbsRGB": 1.7811453189300412,
+        "maxAbsRGB": 76,
+        "bounds": [
+          0,
+          0,
+          1439,
+          899
+        ]
+      }
+    },
+    {
+      "view": "north-seam-oblique",
+      "a": "north-seam-oblique-town-B-capture-2",
+      "b": "north-seam-oblique-town-B-capture-2",
+      "cameraEqual": true,
+      "timeEqual": true,
+      "paramsEqual": true,
+      "pngEqual": true,
+      "pixels": {
+        "changedPixels": 0,
+        "meanAbsRGB": 0,
+        "maxAbsRGB": 0,
+        "bounds": null
+      }
+    },
+    {
+      "view": "north-seam-oblique",
+      "a": "north-seam-oblique-town-A2-capture-2",
+      "b": "north-seam-oblique-town-A2-capture-2",
+      "cameraEqual": true,
+      "timeEqual": true,
+      "paramsEqual": true,
+      "pngEqual": false,
+      "pixels": {
+        "changedPixels": 211326,
+        "meanAbsRGB": 1.781145061728395,
+        "maxAbsRGB": 76,
+        "bounds": [
+          0,
+          0,
+          1439,
+          899
+        ]
+      }
+    }
+  ],
+  "comparisons": [
+    {
+      "view": "service-corner",
+      "cameraEqual": true,
+      "pngEqual": true,
+      "pixels": {
+        "changedPixels": 0,
+        "meanAbsRGB": 0,
+        "maxAbsRGB": 0,
+        "bounds": null
+      }
+    },
+    {
+      "view": "laundry-details",
+      "cameraEqual": true,
+      "pngEqual": false,
+      "pixels": {
+        "changedPixels": 1411,
+        "meanAbsRGB": 0.006674125514403292,
+        "maxAbsRGB": 32,
+        "bounds": [
+          0,
+          3,
+          510,
+          509
+        ]
+      }
+    },
+    {
+      "view": "shop-interior",
+      "cameraEqual": true,
+      "pngEqual": true,
+      "pixels": {
+        "changedPixels": 0,
+        "meanAbsRGB": 0,
+        "maxAbsRGB": 0,
+        "bounds": null
+      }
+    },
+    {
+      "view": "20-rear-eye",
+      "cameraEqual": true,
+      "pngEqual": false,
+      "pixels": {
+        "changedPixels": 243,
+        "meanAbsRGB": 0.0007914094650205762,
+        "maxAbsRGB": 28,
+        "bounds": [
+          1141,
+          287,
+          1433,
+          722
+        ]
+      }
+    },
+    {
+      "view": "21-front-eye",
+      "cameraEqual": true,
+      "pngEqual": false,
+      "pixels": {
+        "changedPixels": 234,
+        "meanAbsRGB": 0.00022633744855967078,
+        "maxAbsRGB": 7,
+        "bounds": [
+          1357,
+          616,
+          1439,
+          669
+        ]
+      }
+    },
+    {
+      "view": "station-street",
+      "cameraEqual": true,
+      "pngEqual": false,
+      "pixels": {
+        "changedPixels": 255,
+        "meanAbsRGB": 0.0003631687242798354,
+        "maxAbsRGB": 9,
+        "bounds": [
+          384,
+          20,
+          1371,
+          577
+        ]
+      }
+    },
+    {
+      "view": "street-detail",
+      "cameraEqual": true,
+      "pngEqual": true,
+      "pixels": {
+        "changedPixels": 0,
+        "meanAbsRGB": 0,
+        "maxAbsRGB": 0,
+        "bounds": null
+      }
+    }
+  ],
+  "repeats": [
+    {
+      "a": "service-corner-ao-on-capture-1",
+      "pngEqual": true,
+      "pixels": {
+        "changedPixels": 0,
+        "meanAbsRGB": 0,
+        "maxAbsRGB": 0,
+        "bounds": null
+      }
+    },
+    {
+      "a": "laundry-details-ao-on-capture-1",
+      "pngEqual": true,
+      "pixels": {
+        "changedPixels": 0,
+        "meanAbsRGB": 0,
+        "maxAbsRGB": 0,
+        "bounds": null
+      }
+    },
+    {
+      "a": "shop-interior-ao-on-capture-1",
+      "pngEqual": true,
+      "pixels": {
+        "changedPixels": 0,
+        "meanAbsRGB": 0,
+        "maxAbsRGB": 0,
+        "bounds": null
+      }
+    },
+    {
+      "a": "20-rear-eye-ao-on-capture-1",
+      "pngEqual": true,
+      "pixels": {
+        "changedPixels": 0,
+        "meanAbsRGB": 0,
+        "maxAbsRGB": 0,
+        "bounds": null
+      }
+    },
+    {
+      "a": "21-front-eye-ao-on-capture-1",
+      "pngEqual": true,
+      "pixels": {
+        "changedPixels": 0,
+        "meanAbsRGB": 0,
+        "maxAbsRGB": 0,
+        "bounds": null
+      }
+    },
+    {
+      "a": "station-street-ao-on-capture-1",
+      "pngEqual": false,
+      "pixels": {
+        "changedPixels": 24,
+        "meanAbsRGB": 0.000006172839506172839,
+        "maxAbsRGB": 1,
+        "bounds": [
+          573,
+          20,
+          1371,
+          643
+        ]
+      }
+    },
+    {
+      "a": "street-detail-ao-on-capture-1",
+      "pngEqual": true,
+      "pixels": {
+        "changedPixels": 0,
+        "meanAbsRGB": 0,
+        "maxAbsRGB": 0,
+        "bounds": null
+      }
+    },
+    {
+      "a": "20-rear-eye-town-B-capture-1",
+      "pngEqual": false,
+      "pixels": {
+        "changedPixels": 1,
+        "meanAbsRGB": 2.57201646090535e-7,
+        "maxAbsRGB": 1,
+        "bounds": [
+          914,
+          447,
+          914,
+          447
+        ]
+      }
+    },
+    {
+      "a": "20-rear-eye-town-A2-capture-1",
+      "pngEqual": true,
+      "pixels": {
+        "changedPixels": 0,
+        "meanAbsRGB": 0,
+        "maxAbsRGB": 0,
+        "bounds": null
+      }
+    },
+    {
+      "a": "21-front-eye-town-B-capture-1",
+      "pngEqual": true,
+      "pixels": {
+        "changedPixels": 0,
+        "meanAbsRGB": 0,
+        "maxAbsRGB": 0,
+        "bounds": null
+      }
+    },
+    {
+      "a": "21-front-eye-town-A2-capture-1",
+      "pngEqual": true,
+      "pixels": {
+        "changedPixels": 0,
+        "meanAbsRGB": 0,
+        "maxAbsRGB": 0,
+        "bounds": null
+      }
+    },
+    {
+      "a": "north-seam-central-town-A1-capture-1",
+      "pngEqual": true,
+      "pixels": {
+        "changedPixels": 0,
+        "meanAbsRGB": 0,
+        "maxAbsRGB": 0,
+        "bounds": null
+      }
+    },
+    {
+      "a": "north-seam-central-town-B-capture-1",
+      "pngEqual": true,
+      "pixels": {
+        "changedPixels": 0,
+        "meanAbsRGB": 0,
+        "maxAbsRGB": 0,
+        "bounds": null
+      }
+    },
+    {
+      "a": "north-seam-central-town-A2-capture-1",
+      "pngEqual": true,
+      "pixels": {
+        "changedPixels": 0,
+        "meanAbsRGB": 0,
+        "maxAbsRGB": 0,
+        "bounds": null
+      }
+    },
+    {
+      "a": "north-seam-oblique-town-A1-capture-1",
+      "pngEqual": true,
+      "pixels": {
+        "changedPixels": 0,
+        "meanAbsRGB": 0,
+        "maxAbsRGB": 0,
+        "bounds": null
+      }
+    },
+    {
+      "a": "north-seam-oblique-town-B-capture-1",
+      "pngEqual": true,
+      "pixels": {
+        "changedPixels": 0,
+        "meanAbsRGB": 0,
+        "maxAbsRGB": 0,
+        "bounds": null
+      }
+    },
+    {
+      "a": "north-seam-oblique-town-A2-capture-1",
+      "pngEqual": true,
+      "pixels": {
+        "changedPixels": 0,
+        "meanAbsRGB": 0,
+        "maxAbsRGB": 0,
+        "bounds": null
+      }
+    }
+  ],
+  "aba": [
+    {
+      "view": "20-rear-eye",
+      "onOff": {
+        "changedPixels": 466151,
+        "meanAbsRGB": 9.27922890946502,
+        "maxAbsRGB": 246,
+        "bounds": [
+          0,
+          26,
+          1439,
+          899
+        ]
+      },
+      "restoration": {
+        "a": "20-rear-eye-ao-on-capture-2",
+        "b": "20-rear-eye-town-A2-capture-2",
+        "cameraEqual": true,
+        "timeEqual": true,
+        "paramsEqual": true,
+        "pngEqual": true,
+        "pixels": {
+          "changedPixels": 0,
+          "meanAbsRGB": 0,
+          "maxAbsRGB": 0,
+          "bounds": null
+        }
+      }
+    },
+    {
+      "view": "21-front-eye",
+      "onOff": {
+        "changedPixels": 203785,
+        "meanAbsRGB": 2.324551697530864,
+        "maxAbsRGB": 249,
+        "bounds": [
+          0,
+          181,
+          1439,
+          899
+        ]
+      },
+      "restoration": {
+        "a": "21-front-eye-ao-on-capture-2",
+        "b": "21-front-eye-town-A2-capture-2",
+        "cameraEqual": true,
+        "timeEqual": true,
+        "paramsEqual": true,
+        "pngEqual": true,
+        "pixels": {
+          "changedPixels": 0,
+          "meanAbsRGB": 0,
+          "maxAbsRGB": 0,
+          "bounds": null
+        }
+      }
+    },
+    {
+      "view": "north-seam-central",
+      "onOff": {
+        "changedPixels": 889864,
+        "meanAbsRGB": 9.698732767489712,
+        "maxAbsRGB": 121,
+        "bounds": [
+          0,
+          0,
+          1439,
+          899
+        ]
+      },
+      "restoration": {
+        "a": "north-seam-central-town-A1-capture-2",
+        "b": "north-seam-central-town-A2-capture-2",
+        "cameraEqual": true,
+        "timeEqual": true,
+        "paramsEqual": true,
+        "pngEqual": true,
+        "pixels": {
+          "changedPixels": 0,
+          "meanAbsRGB": 0,
+          "maxAbsRGB": 0,
+          "bounds": null
+        }
+      }
+    },
+    {
+      "view": "north-seam-oblique",
+      "onOff": {
+        "changedPixels": 822489,
+        "meanAbsRGB": 8.63336445473251,
+        "maxAbsRGB": 122,
+        "bounds": [
+          0,
+          0,
+          1439,
+          899
+        ]
+      },
+      "restoration": {
+        "a": "north-seam-oblique-town-A1-capture-2",
+        "b": "north-seam-oblique-town-A2-capture-2",
+        "cameraEqual": true,
+        "timeEqual": true,
+        "paramsEqual": true,
+        "pngEqual": true,
+        "pixels": {
+          "changedPixels": 0,
+          "meanAbsRGB": 0,
+          "maxAbsRGB": 0,
+          "bounds": null
+        }
+      }
+    }
+  ],
+  "segments": [
+    {
+      "name": "initial",
+      "fps": 64.47133505256893,
+      "p95": 15.5,
+      "frames": 975,
+      "long": 8,
+      "max": 30.80000000000291
+    },
+    {
+      "name": "station-street",
+      "fps": 65.0033457604435,
+      "p95": 15.5,
+      "frames": 204,
+      "long": 0,
+      "max": 15.700000000004366
+    },
+    {
+      "name": "station-port",
+      "fps": 65.00160102465578,
+      "p95": 15.5,
+      "frames": 203,
+      "long": 0,
+      "max": 15.60000000000582
+    },
+    {
+      "name": "island-aerial",
+      "fps": 65.00160102465578,
+      "p95": 15.5,
+      "frames": 203,
+      "long": 0,
+      "max": 15.60000000000582
+    },
+    {
+      "name": "shop-interior",
+      "fps": 64.99983910930919,
+      "p95": 15.5,
+      "frames": 202,
+      "long": 0,
+      "max": 15.69999999999709
+    },
+    {
+      "name": "walking-third",
+      "fps": 65.00193075041821,
+      "p95": 15.5,
+      "frames": 202,
+      "long": 0,
+      "max": 15.60000000000582
+    },
+    {
+      "name": "walking-first",
+      "fps": 64.99983910930919,
+      "p95": 15.5,
+      "frames": 202,
+      "long": 0,
+      "max": 15.60000000000582
+    }
+  ],
+  "normalNetwork": [
+    {
+      "url": "http://127.0.0.1:55786/assets/models/boulders.glb",
+      "type": "Fetch",
+      "canceled": true,
+      "errorText": "net::ERR_ABORTED",
+      "requestId": "60460.121",
+      "timestamp": 1947639.407067,
+      "stage": "waiting-for-ready-frame",
+      "receivedWallTime": 1794937460.353
+    },
+    {
+      "url": "http://127.0.0.1:55786/assets/models/menhir.glb",
+      "type": "Fetch",
+      "canceled": true,
+      "errorText": "net::ERR_ABORTED",
+      "requestId": "60460.119",
+      "timestamp": 1947639.408064,
+      "stage": "waiting-for-ready-frame",
+      "receivedWallTime": 1794937460.354
+    },
+    {
+      "url": "http://127.0.0.1:55786/prop-assets/plastic_crate_02/plastic_crate_02_1k.gltf",
+      "type": "Fetch",
+      "canceled": true,
+      "errorText": "net::ERR_ABORTED",
+      "requestId": "60460.235",
+      "timestamp": 1947650.805576,
+      "stage": "waiting-for-ready-frame",
+      "receivedWallTime": 1794937471.751
+    },
+    {
+      "url": "http://127.0.0.1:55786/prop-assets/plastic_crate_02/plastic_crate_02.bin",
+      "type": "Fetch",
+      "canceled": true,
+      "errorText": "net::ERR_ABORTED",
+      "requestId": "60460.240",
+      "timestamp": 1947650.820722,
+      "stage": "waiting-for-ready-frame",
+      "receivedWallTime": 1794937471.766
+    }
+  ],
+  "diagnosticNetwork": [
+    {
+      "stage": "loading",
+      "url": "http://127.0.0.1:56366/assets/models/menhir.glb",
+      "canceled": true,
+      "errorText": "net::ERR_ABORTED",
+      "requestId": "53460.119",
+      "timestamp": 1947760.5551,
+      "type": "Fetch"
+    },
+    {
+      "stage": "loading",
+      "url": "http://127.0.0.1:56366/assets/models/boulders.glb",
+      "canceled": true,
+      "errorText": "net::ERR_ABORTED",
+      "requestId": "53460.121",
+      "timestamp": 1947760.556868,
+      "type": "Fetch"
+    },
+    {
+      "stage": "loading",
+      "url": "http://127.0.0.1:56366/prop-assets/plastic_crate_02/plastic_crate_02_1k.gltf",
+      "canceled": true,
+      "errorText": "net::ERR_ABORTED",
+      "requestId": "53460.235",
+      "timestamp": 1947771.74199,
+      "type": "Fetch"
+    }
+  ]
+}

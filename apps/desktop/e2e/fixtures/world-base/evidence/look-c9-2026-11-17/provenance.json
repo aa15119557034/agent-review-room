@@ -1,0 +1,471 @@
+{
+  "head": "1b63536ef0dae7c9f28d92efda01b0740e9a005a",
+  "createdAt": "2026-11-17T08:35:36.804Z",
+  "files": [
+    {
+      "file": "source-map/pinned-assets.json",
+      "bytes": 2378,
+      "sha256": "8af15d38c152601615e84221135acad49cbabcc0e373bed9bc6e73ec4dc34ef9",
+      "generatedSummary": true
+    },
+    {
+      "file": "source-map/prop-assets.json",
+      "bytes": 6576,
+      "sha256": "6a4b86e144b50835b1152f4aa32ac4c5e50e352956979cd4ca5fc5f21561810a",
+      "exactCommit": "1b63536ef0dae7c9f28d92efda01b0740e9a005a"
+    },
+    {
+      "file": "baseline/source-manifest.json",
+      "bytes": 30609,
+      "sha256": "b134d9bfcdeb3f81e92671563eaf99bc3558269a57236d189b79d95fcb65947c",
+      "source": "artifacts/gpu-town-c9/source-manifest.json"
+    },
+    {
+      "file": "baseline/run-config.json",
+      "bytes": 1075,
+      "sha256": "05e5f900ef7d41106de6d489b946c58066c1c566d6ede74d4eeca273326b4c12",
+      "source": "artifacts/gpu-town-c9/run-config.json"
+    },
+    {
+      "file": "baseline/process.json",
+      "bytes": 135,
+      "sha256": "0862406670e77c478f486a72e1322c56ea5fe1ecf9f53ed13abcf9b1a9d2b442",
+      "source": "artifacts/gpu-town-c9/process.json"
+    },
+    {
+      "file": "baseline/electron.log.gz",
+      "bytes": 819,
+      "sha256": "ebd6a7ee18a9ddc4a25f08e8ce1f573c1b7df575cc0b3b87c1e496fe89de29e7",
+      "source": "artifacts/gpu-town-c9/electron.log",
+      "originalBytes": 1830,
+      "originalSha256": "5a82bfdea74f1f2f934624caadf04709a41141d7cc9258f56da4e3cf6618043e",
+      "losslessGzip": true
+    },
+    {
+      "file": "baseline/render-report.json.gz",
+      "bytes": 71436,
+      "sha256": "5c07b87f2811093efa24a16212fb1330206fc538c9dc1d80cf0421adf260b8e7",
+      "source": "artifacts/gpu-town-c9/render-report.json",
+      "originalBytes": 482223,
+      "originalSha256": "2712de09d7aa785fb16ac032d6d31923628ba263f70981e8fa1167fc7e1467e0",
+      "losslessGzip": true
+    },
+    {
+      "file": "baseline/01-station-street.jpg",
+      "bytes": 113384,
+      "sha256": "9a5aa8c6fd1be3c254c7b63681a9ecdfd5bd045f3f6e7563dbbf8bfde5d67be4",
+      "source": "artifacts/gpu-town-c9/01-station-street.jpg"
+    },
+    {
+      "file": "baseline/02-station-port.jpg",
+      "bytes": 116503,
+      "sha256": "58b3fe365b7d52b9572f93c90e85b7adf5f90920f8d259b3194e1c9c1d993695",
+      "source": "artifacts/gpu-town-c9/02-station-port.jpg"
+    },
+    {
+      "file": "baseline/03-island-aerial.jpg",
+      "bytes": 54447,
+      "sha256": "44e2ed0901adee9af5a3a4f68671bf1331e420b0bdc9eef1938750e0dab8f677",
+      "source": "artifacts/gpu-town-c9/03-island-aerial.jpg"
+    },
+    {
+      "file": "baseline/04-shop-interior.jpg",
+      "bytes": 105441,
+      "sha256": "27d1a13d21c5dd534baafcae44009c61278b0f1f806f80b8e998d4f5fc2daac2",
+      "source": "artifacts/gpu-town-c9/04-shop-interior.jpg"
+    },
+    {
+      "file": "baseline/18-town-shop-balconies.jpg",
+      "bytes": 89047,
+      "sha256": "12553c83007d432749af54e3132ae19eab9d504e76c5e4906fb2935a3c41f183",
+      "source": "artifacts/gpu-town-c9/18-town-shop-balconies.jpg"
+    },
+    {
+      "file": "baseline/19-town-rear-stairs.jpg",
+      "bytes": 120681,
+      "sha256": "123261f268c36acc5fb511e5cfff37b0ac8011217c7e86dd22d77878647ce77f",
+      "source": "artifacts/gpu-town-c9/19-town-rear-stairs.jpg"
+    },
+    {
+      "file": "baseline/23-service-corner.jpg",
+      "bytes": 77110,
+      "sha256": "5dabcae33ca3f8fa94968c95b892b04fee36aebc7fa7847fa1617b5b9e9dd3c0",
+      "source": "artifacts/gpu-town-c9/23-service-corner.jpg"
+    },
+    {
+      "file": "baseline/24-laundry-details.jpg",
+      "bytes": 50990,
+      "sha256": "d07e789c48f5fb3c6fdd50f95468cb172a733fbea459a72845287e667a46317c",
+      "source": "artifacts/gpu-town-c9/24-laundry-details.jpg"
+    },
+    {
+      "file": "baseline/23-service-corner.png",
+      "bytes": 1196079,
+      "sha256": "7cab65660b18cdc06a91e6de5d55e8dc9c3236dceb5d8ee941d9dc22c4b4717f",
+      "source": "artifacts/gpu-town-c9/23-service-corner.png"
+    },
+    {
+      "file": "baseline/24-laundry-details.png",
+      "bytes": 1156720,
+      "sha256": "8df52bf448ee9c06cb58cb8f80f886583531bc8a9814d8b2de40e9897df5c421",
+      "source": "artifacts/gpu-town-c9/24-laundry-details.png"
+    },
+    {
+      "file": "baseline/walking-first.jpg",
+      "bytes": 107800,
+      "sha256": "0c5d3279c31c6b6b090e75db02093de22a7d99602f2f480395a5891d14d4e8ea",
+      "source": "artifacts/gpu-town-c9/walking-first.jpg"
+    },
+    {
+      "file": "baseline/walking-third.jpg",
+      "bytes": 111686,
+      "sha256": "a87d555efea34f6eebf7c7604e882e6d3973842b2940b77850635363ec9eac6b",
+      "source": "artifacts/gpu-town-c9/walking-third.jpg"
+    },
+    {
+      "file": "baseline/frame-samples-island-aerial.json",
+      "bytes": 11328,
+      "sha256": "828174d438bdb77e6571bc58d2c840c8205b8dc1a97680dcfd55a81246e53ca8",
+      "source": "artifacts/gpu-town-c9/frame-samples-island-aerial.json"
+    },
+    {
+      "file": "baseline/frame-samples-shop-interior.json",
+      "bytes": 11192,
+      "sha256": "b807bdbab569f3d0ef58b0308a1e4ea9c54c59cb5a26f40321ce49ae4723e4b0",
+      "source": "artifacts/gpu-town-c9/frame-samples-shop-interior.json"
+    },
+    {
+      "file": "baseline/frame-samples-station-port.json",
+      "bytes": 11241,
+      "sha256": "2f81ab8762639311721190c301083ba04abf2264d97e981aed19d62e3643cbc1",
+      "source": "artifacts/gpu-town-c9/frame-samples-station-port.json"
+    },
+    {
+      "file": "baseline/frame-samples-station-street.json",
+      "bytes": 11483,
+      "sha256": "81d33a801694772187b6e691dfd1c8231151b19bcdd4b3f1bda377faab364e31",
+      "source": "artifacts/gpu-town-c9/frame-samples-station-street.json"
+    },
+    {
+      "file": "baseline/frame-samples-walking-first.json",
+      "bytes": 11437,
+      "sha256": "4cff4b7b1fb897875fbe9fceeab8c7a6c4ebc0221fd09915a1c5b3164c0a83ea",
+      "source": "artifacts/gpu-town-c9/frame-samples-walking-first.json"
+    },
+    {
+      "file": "baseline/frame-samples-walking-third.json",
+      "bytes": 11329,
+      "sha256": "cb3469844a120534601f1d2e85dc252ac01a829d2470ca921aa45d0ab11d5c58",
+      "source": "artifacts/gpu-town-c9/frame-samples-walking-third.json"
+    },
+    {
+      "file": "baseline/frame-samples.json",
+      "bytes": 54808,
+      "sha256": "b20e095fd4cb9f2b08392f35110b6f3aa8ef576f07329494fe77340bb3baf187",
+      "source": "artifacts/gpu-town-c9/frame-samples.json"
+    },
+    {
+      "file": "baseline/measurements.json",
+      "bytes": 51989,
+      "sha256": "8325ad69907ebdd5f234058a380a3772127b88fe710487235d3ecc7c42980024",
+      "generatedSummary": true
+    },
+    {
+      "file": "diagnostic/prop-assets-manifest.json",
+      "bytes": 3941,
+      "sha256": "dd8734fb67c85176d5061a76463eb61801dff175053a82b1c5bb0c22e2723ccc",
+      "source": "artifacts/gpu-look-c9-v1/prop-assets-manifest.json"
+    },
+    {
+      "file": "diagnostic/x51-c9-look-diagnostic-gpu.cjs",
+      "bytes": 18341,
+      "sha256": "381585f315f33704f1032dc8f09186f927e50b17f674936e001d67336993e3b2",
+      "source": "../../../../../../handoff/x51-c9-look-diagnostic-gpu.cjs"
+    },
+    {
+      "file": "diagnostic/legacy-c8-reference.json",
+      "bytes": 172354,
+      "sha256": "526a7765b3294d99a8820da298b7c8539c4966b01ded0e08a1fa059e9b976614",
+      "source": "artifacts/gpu-look-c9-v1/legacy-c8-reference.json"
+    },
+    {
+      "file": "diagnostic/source-manifest.json",
+      "bytes": 25541,
+      "sha256": "c8a8801f2c77f3a31a817ae7158d42908ae32b6784c7ef5d6be78804ec048ffd",
+      "source": "artifacts/gpu-look-c9-v1/source-manifest.json"
+    },
+    {
+      "file": "diagnostic/run-config.json",
+      "bytes": 1164,
+      "sha256": "8c82a714ea965aa14002c077d18afa4319f916f6d2895cd6873a96e6ff23d5dc",
+      "source": "artifacts/gpu-look-c9-v1/run-config.json"
+    },
+    {
+      "file": "diagnostic/process.json",
+      "bytes": 13,
+      "sha256": "9033d0b11a4fc58dbdbd4f28dbea96fb487b27ac9321e697060e00076fdef625",
+      "source": "artifacts/gpu-look-c9-v1/process.json"
+    },
+    {
+      "file": "diagnostic/electron.log.gz",
+      "bytes": 136,
+      "sha256": "65300fe542da1bbd846a662386b1805d3ccbb9d82a13e630230ec9840dacc153",
+      "source": "artifacts/gpu-look-c9-v1/electron.log",
+      "originalBytes": 148,
+      "originalSha256": "182a78621c32b8fb63fe80c9de526ccecde3a3c49052cfc9c8979aa8c1bc3511",
+      "losslessGzip": true
+    },
+    {
+      "file": "diagnostic/look-report.json.gz",
+      "bytes": 145538,
+      "sha256": "38aa33183d6a2b31ddaba19a2986ce74ede7b2350f30dc92e17737be3551b5b8",
+      "source": "artifacts/gpu-look-c9-v1/look-report.json",
+      "originalBytes": 1636862,
+      "originalSha256": "f628704a3d962fab215699da928ae2c35dcddac009579fdfae14ad72e6791034",
+      "losslessGzip": true
+    },
+    {
+      "file": "diagnostic/service-corner-ao-on-capture-2.jpg",
+      "bytes": 96766,
+      "sha256": "ff5a155bbdd8116f9465fcb1b295ab40b8fcd2bf8e4b60c8fa6125e33984ad39",
+      "source": "artifacts/gpu-look-c9-v1/service-corner-ao-on-capture-2.jpg"
+    },
+    {
+      "file": "diagnostic/service-corner-ao-off-capture-2.jpg",
+      "bytes": 95959,
+      "sha256": "9ff41222ff6a3159ff8c4891492e4b3b3c02abdbae64c9ebf299ab8989fa421e",
+      "source": "artifacts/gpu-look-c9-v1/service-corner-ao-off-capture-2.jpg"
+    },
+    {
+      "file": "diagnostic/laundry-details-ao-on-capture-2.jpg",
+      "bytes": 65221,
+      "sha256": "105458056cf134cc92f6cbb3f5c65a6be80982cae2136040a56b1b0c2b6a0d8d",
+      "source": "artifacts/gpu-look-c9-v1/laundry-details-ao-on-capture-2.jpg"
+    },
+    {
+      "file": "diagnostic/laundry-details-ao-off-capture-2.jpg",
+      "bytes": 63801,
+      "sha256": "988b317a62b486598feda56ccf1038e746a86061625830a5c7a395c596b027a4",
+      "source": "artifacts/gpu-look-c9-v1/laundry-details-ao-off-capture-2.jpg"
+    },
+    {
+      "file": "diagnostic/shop-interior-ao-on-capture-2.jpg",
+      "bytes": 123607,
+      "sha256": "47e755bba10dd4a05560235b78d52abe8ce149f2d95efe02f5df61f4003fd426",
+      "source": "artifacts/gpu-look-c9-v1/shop-interior-ao-on-capture-2.jpg"
+    },
+    {
+      "file": "diagnostic/shop-interior-ao-on-capture-2.png",
+      "bytes": 1940105,
+      "sha256": "5ab810ad3859888f6b15165b672b61d2ac5693738f8dc7cd3d897fff21d45657",
+      "source": "artifacts/gpu-look-c9-v1/shop-interior-ao-on-capture-2.png"
+    },
+    {
+      "file": "diagnostic/shop-interior-ao-off-capture-2.jpg",
+      "bytes": 120231,
+      "sha256": "e250fb45dbc0291dc8f712501e21844def5bb612c4705dd5eeab3ec4cf9c0f42",
+      "source": "artifacts/gpu-look-c9-v1/shop-interior-ao-off-capture-2.jpg"
+    },
+    {
+      "file": "diagnostic/shop-interior-ao-off-capture-2.png",
+      "bytes": 1848632,
+      "sha256": "f6b33def9b6a77229ac6704c75c621d6d8b24e7c44765ed521e4f5bc3342a676",
+      "source": "artifacts/gpu-look-c9-v1/shop-interior-ao-off-capture-2.png"
+    },
+    {
+      "file": "diagnostic/20-rear-eye-ao-on-capture-2.jpg",
+      "bytes": 163423,
+      "sha256": "8ea0e06ea4bed8aa96e14d17eeef718372accc78dea858d6c5870f8bbceea212",
+      "source": "artifacts/gpu-look-c9-v1/20-rear-eye-ao-on-capture-2.jpg"
+    },
+    {
+      "file": "diagnostic/20-rear-eye-ao-on-capture-2.png",
+      "bytes": 2635615,
+      "sha256": "2bf03848591ba01998ff9d490fb13a5149e67f358f619126186fc1e31051c966",
+      "source": "artifacts/gpu-look-c9-v1/20-rear-eye-ao-on-capture-2.png"
+    },
+    {
+      "file": "diagnostic/20-rear-eye-ao-off-capture-2.jpg",
+      "bytes": 162205,
+      "sha256": "9bb9186a5a3c72c8af31b35af1d3d272e8d6b67954b9a3cfc1a9e5bce476df37",
+      "source": "artifacts/gpu-look-c9-v1/20-rear-eye-ao-off-capture-2.jpg"
+    },
+    {
+      "file": "diagnostic/20-rear-eye-ao-off-capture-2.png",
+      "bytes": 2600883,
+      "sha256": "31846b7eae6e3bd968bcdec5250cc4cc1503178d85eb9eabf5accae860e58a60",
+      "source": "artifacts/gpu-look-c9-v1/20-rear-eye-ao-off-capture-2.png"
+    },
+    {
+      "file": "diagnostic/21-front-eye-ao-on-capture-2.jpg",
+      "bytes": 86025,
+      "sha256": "fae0b8e25952a02c35abbee0038b5eba6246442cfdb77eaf7cb2ed1440c976dd",
+      "source": "artifacts/gpu-look-c9-v1/21-front-eye-ao-on-capture-2.jpg"
+    },
+    {
+      "file": "diagnostic/21-front-eye-ao-on-capture-2.png",
+      "bytes": 2062591,
+      "sha256": "50520c75bf8497e3f6b70808155c7bc88cbeb8ca08178678e88ef82353445479",
+      "source": "artifacts/gpu-look-c9-v1/21-front-eye-ao-on-capture-2.png"
+    },
+    {
+      "file": "diagnostic/21-front-eye-ao-off-capture-2.jpg",
+      "bytes": 84704,
+      "sha256": "a94b8d7aac93c0747f21bcd44281b9c7f43459b9d7f216295a6549a80a3514f7",
+      "source": "artifacts/gpu-look-c9-v1/21-front-eye-ao-off-capture-2.jpg"
+    },
+    {
+      "file": "diagnostic/21-front-eye-ao-off-capture-2.png",
+      "bytes": 2016283,
+      "sha256": "c6c065e44f891bc6c0ddf615a57a758fedb3cba7741f8099b746da9ef25b4865",
+      "source": "artifacts/gpu-look-c9-v1/21-front-eye-ao-off-capture-2.png"
+    },
+    {
+      "file": "diagnostic/station-street-ao-on-capture-2.jpg",
+      "bytes": 145514,
+      "sha256": "48ef4b6e99b0506117602fffa3db88fa64ab1d50f874c32a73cfbe99ce60c1c8",
+      "source": "artifacts/gpu-look-c9-v1/station-street-ao-on-capture-2.jpg"
+    },
+    {
+      "file": "diagnostic/station-street-ao-off-capture-2.jpg",
+      "bytes": 145025,
+      "sha256": "9773119799eab00d8a2601b94fe2734ec123b9f8f1af520374adf6b7761ea9b9",
+      "source": "artifacts/gpu-look-c9-v1/station-street-ao-off-capture-2.jpg"
+    },
+    {
+      "file": "diagnostic/service-corner-legacy-c8-ao-on-capture-2.jpg",
+      "bytes": 66439,
+      "sha256": "7d8083abd10148c7e62c5473ecad50a45a514b9a6fb1a8cbbd9d0b414884f54b",
+      "source": "artifacts/gpu-look-c9-v1/service-corner-legacy-c8-ao-on-capture-2.jpg"
+    },
+    {
+      "file": "diagnostic/service-corner-legacy-c8-ao-on-capture-2.png",
+      "bytes": 1764177,
+      "sha256": "8493fe84136b8c68d440db054c308bdd21824478519befe4d42c7711bcfadf49",
+      "source": "artifacts/gpu-look-c9-v1/service-corner-legacy-c8-ao-on-capture-2.png"
+    },
+    {
+      "file": "diagnostic/service-corner-legacy-c8-ao-off-capture-2.jpg",
+      "bytes": 64917,
+      "sha256": "aeb5e7e7c22b574b0b757fcba35558f9a860aa9de7da3f0aab4062cc96e725ff",
+      "source": "artifacts/gpu-look-c9-v1/service-corner-legacy-c8-ao-off-capture-2.jpg"
+    },
+    {
+      "file": "diagnostic/service-corner-legacy-c8-ao-off-capture-2.png",
+      "bytes": 1709174,
+      "sha256": "def140d6666e64026c50ee466b890999096472484c339b1358f546bd15d83d27",
+      "source": "artifacts/gpu-look-c9-v1/service-corner-legacy-c8-ao-off-capture-2.png"
+    },
+    {
+      "file": "diagnostic/measurements.json",
+      "bytes": 444413,
+      "sha256": "b7f50b50c17ee4b7fdfbdae2584a0aaefd6b896be5223ae097c538ad8573a876",
+      "generatedSummary": true
+    },
+    {
+      "file": "ci/x51-c9-ci-summary.json",
+      "bytes": 6384,
+      "sha256": "0ae8b3976b6cc97d561f1daf99d0424824bd8a11f7865c3bc5cc8d4b9228eeea",
+      "source": "../../../../../../handoff/x51-c9-ci-summary.json"
+    },
+    {
+      "file": "ci/x51-c9-ci-checks.json",
+      "bytes": 5322,
+      "sha256": "fe94d4093f539814af459d79da2147429987fee34e313fdeb3ab489a598ebb45",
+      "source": "../../../../../../handoff/x51-c9-ci-checks.json"
+    },
+    {
+      "file": "ci/x51-c9-ci-jobs.json",
+      "bytes": 4139,
+      "sha256": "21ef4f3fee759dcf5a014cc342c914de063a122fad5c83187fad8ab29271d6aa",
+      "source": "../../../../../../handoff/x51-c9-ci-jobs.json"
+    },
+    {
+      "file": "ci/x51-c9-ci-summary.cjs",
+      "bytes": 1912,
+      "sha256": "b1990bbe1f91cfc706b0d849c82e6766bc6df374cfba968c8bfd79ff4f1d69a6",
+      "source": "../../../../../../handoff/x51-c9-ci-summary.cjs"
+    },
+    {
+      "file": "ci/job-log.json.gz",
+      "bytes": 5965,
+      "sha256": "bbd3efba064b41d4e0617bbf7f992506bb63689903f99b7e5490b9bcf3eac23a",
+      "source": "../../../../../../handoff/x51-c9-ci-log.json",
+      "originalBytes": 29195,
+      "originalSha256": "0ae49e966441b3ef55f2a0b947903a62e170f48df0199e6fc1f4067ce29411c8",
+      "losslessGzip": true
+    },
+    {
+      "file": "analysis/x51-c9-look-v1-analysis.json",
+      "bytes": 32325,
+      "sha256": "c09658a46f8763030c9b805f0a0c68007e638aba5e5d4157adea3e571e252017",
+      "source": "../../../../../../handoff/x51-c9-look-v1-analysis.json"
+    },
+    {
+      "file": "analysis/x51-c9-look-offline-analysis.cjs",
+      "bytes": 4203,
+      "sha256": "9c0940847a5616495aaf2df39a73373456cc6a30f2f9497db521402dff08b6d0",
+      "source": "../../../../../../handoff/x51-c9-look-offline-analysis.cjs"
+    },
+    {
+      "file": "analysis/x51-c9-look-v1-analysis.md",
+      "bytes": 3984,
+      "sha256": "d867768d61484a68ea526e61d37c3b1be97deffc0589385d09cf1e919eae3c99",
+      "source": "../../../../../../handoff/x51-c9-look-v1-analysis.md"
+    },
+    {
+      "file": "cpu/x51-c9-look-cpu-driver.cjs",
+      "bytes": 5256,
+      "sha256": "f038313917e803e67a5cb32ccbf9306c5c3a32b663a6326ce3bb71c043ca7bd8",
+      "source": "../../../../../../handoff/x51-c9-look-cpu-driver.cjs"
+    },
+    {
+      "file": "cpu/x51-c9-look-cpu-result.json",
+      "bytes": 5114,
+      "sha256": "e90f1fcc4ecd8ee38f1022c3f5eb40f463f5b24589865acfd478d41dfcbbabd9",
+      "source": "../../../../../../handoff/x51-c9-look-cpu-result.json"
+    },
+    {
+      "file": "cpu/scope.json",
+      "bytes": 1522,
+      "sha256": "c4d3ff2b345548bc8d8f0dad5649a61da5f425feb506e2c0317e0fb079c5b8c1",
+      "generatedSummary": true
+    },
+    {
+      "file": "c8-references.json",
+      "bytes": 1236,
+      "sha256": "673121dcc3717ae611b34d88d6b95c5a3944d2e4fb0d10bb9226774bab9935d4",
+      "generatedSummary": true
+    },
+    {
+      "file": "curate-c9.cjs",
+      "bytes": 17363,
+      "sha256": "8229332c19a79e4207c0bcc0ac3a29d301a7bb8e87a3546bfb0bb1464b84658f",
+      "source": "../../../../../../handoff/x51-curate-c9.cjs"
+    },
+    {
+      "file": "observed-exits.json",
+      "bytes": 435,
+      "sha256": "63cfb561a375082bc9cd46368c6f6483bc2c45c93beae8ae832131029ef4a3c3",
+      "generatedSummary": true
+    },
+    {
+      "file": ".gitattributes",
+      "bytes": 74,
+      "sha256": "d670ddbea73e2822380a85cb5c7b7c700cac8dc86cef54a1b09f8da7eec20b19"
+    },
+    {
+      "file": "README.md",
+      "bytes": 5528,
+      "sha256": "8414a7c9e8ac5c24bc7165ef36096f75f2c8cccc685b34ca1c9e4e79a77d8682",
+      "source": "../../../../../../handoff/x51-c9-evidence-readme.md"
+    },
+    {
+      "file": "summary.json",
+      "bytes": 2320,
+      "sha256": "f43cfcbc9206f7f9625b9b0cfcfc77d8747abc7ec9540948c21a47b33c98ed12",
+      "generatedSummary": true
+    }
+  ],
+  "countExcludesThisInventory": true
+}

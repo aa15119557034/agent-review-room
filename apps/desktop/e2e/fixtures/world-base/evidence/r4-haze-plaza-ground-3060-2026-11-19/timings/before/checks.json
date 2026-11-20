@@ -1,0 +1,963 @@
+{
+  "verification": {
+    "ok": true,
+    "checks": [
+      {
+        "name": "closed shop door blocks the walking capsule",
+        "passed": true,
+        "evidence": {
+          "displacement": 0.34999999999999964,
+          "candidate": {
+            "x": -7.23,
+            "z": 8
+          }
+        }
+      },
+      {
+        "name": "approaching opens the real shop door collider",
+        "passed": true,
+        "evidence": {
+          "displacement": 0,
+          "candidate": {
+            "x": -7.58,
+            "z": 8
+          }
+        }
+      },
+      {
+        "name": "adjacent storefront wall remains solid",
+        "passed": true,
+        "evidence": {
+          "displacement": 0.40000000000000036,
+          "candidate": {
+            "x": -7.1,
+            "z": 12
+          }
+        }
+      },
+      {
+        "name": "open entrance provides a continuous capsule-width passage",
+        "passed": true,
+        "evidence": {
+          "maxCorrection": 0
+        }
+      },
+      {
+        "name": "interior floor uses its raised walkable surface",
+        "passed": true,
+        "evidence": {
+          "expectedFloor": 0.4134,
+          "maxHeightError": 0
+        }
+      },
+      {
+        "name": "W3 sidewalk walking clears existing furniture and new planters",
+        "passed": true,
+        "evidence": {
+          "endLotX": 3.9674163653903243,
+          "minLotZ": 1.061816375746971,
+          "maxLotZ": 1.1500000000000001,
+          "radius": 0.3,
+          "step": 0.1,
+          "inputDistance": 8
+        }
+      },
+      {
+        "name": "W3 planters leave the existing garden gate approach clear",
+        "passed": true,
+        "evidence": {
+          "maxCorrection": 0
+        }
+      },
+      {
+        "name": "low planter tops support approaching feet and release them on exit",
+        "passed": true,
+        "evidence": [
+          {
+            "id": "w3-planter-south",
+            "expectedTop": 1.1152975042415103,
+            "onTop": 1.1152975042415103,
+            "initialFeet": 0.8553631994889643,
+            "finalFeet": 0.8553631994889643,
+            "supported": true,
+            "returnedToSidewalk": true
+          },
+          {
+            "id": "w3-planter-north",
+            "expectedTop": 1.00881568627451,
+            "onTop": 1.00881568627451,
+            "initialFeet": 0.7488156862745098,
+            "finalFeet": 0.7488156862745098,
+            "supported": true,
+            "returnedToSidewalk": true
+          }
+        ]
+      },
+      {
+        "name": "first person camera is 1.52m above world-space feet",
+        "passed": true,
+        "evidence": {
+          "feet": [
+            281.6,
+            8.812,
+            934
+          ],
+          "camera": [
+            281.6,
+            10.331999999999999,
+            934
+          ],
+          "error": 0
+        }
+      },
+      {
+        "name": "third person camera follows within its obstruction-limited boom",
+        "passed": true,
+        "evidence": {
+          "followDistance": 4.224038352098614,
+          "maximum": 4.224038352098617
+        }
+      },
+      {
+        "name": "view switching preserves the body and collision position",
+        "passed": true,
+        "evidence": {
+          "feet": [
+            281.6,
+            8.812,
+            934
+          ],
+          "initialFeet": [
+            281.6,
+            8.812,
+            934
+          ]
+        }
+      },
+      {
+        "name": "station local/world coordinates round-trip at its nonzero placement",
+        "passed": true,
+        "evidence": {
+          "local": [
+            1.6000000000000227,
+            0.8119999999999994,
+            34
+          ],
+          "world": [
+            281.6,
+            8.812,
+            934
+          ]
+        }
+      },
+      {
+        "name": "real shop wall shortens third-person boom with near-plane clearance",
+        "passed": true,
+        "evidence": {
+          "shortened": 0.7951227548559752,
+          "cameraLotZ": -2.290597833643244,
+          "streetSideWallZ": -2.6,
+          "clearance": 0.30940216635678375,
+          "raycastCalls": 0
+        }
+      },
+      {
+        "name": "camera collision never scans rendered triangles",
+        "passed": true,
+        "evidence": {
+          "raycastCalls": 0
+        }
+      }
+    ]
+  },
+  "look": true,
+  "walking": true,
+  "inputs": [
+    {
+      "type": "keydown",
+      "code": "KeyW",
+      "key": "w",
+      "trusted": true,
+      "timeMs": 106353.19999980927
+    },
+    {
+      "type": "keyup",
+      "code": "KeyW",
+      "key": "w",
+      "trusted": true,
+      "timeMs": 109571.29999995232
+    },
+    {
+      "type": "keydown",
+      "code": "KeyW",
+      "key": "w",
+      "trusted": true,
+      "timeMs": 110465.39999985695
+    },
+    {
+      "type": "keyup",
+      "code": "KeyW",
+      "key": "w",
+      "trusted": true,
+      "timeMs": 113669.89999985695
+    }
+  ],
+  "coverage": {
+    "localHTTP": 273,
+    "serverReceipts": 273,
+    "paired": 273,
+    "get200SourceAndWire": 273,
+    "browserBlobs": 16
+  },
+  "verifiedCanceled": 3,
+  "strictTransportClean": false,
+  "art": {
+    "stages": [
+      {
+        "message": "正在读取岛屿地形、港镇和云层…",
+        "ms": 413.39999985694885
+      },
+      {
+        "message": "正在安放车站、店铺与碰撞体…",
+        "ms": 3164.7999999523163
+      },
+      {
+        "message": "environment",
+        "ms": 3165.5
+      },
+      {
+        "message": "street",
+        "ms": 4477.699999809265
+      },
+      {
+        "message": "poles",
+        "ms": 5182.399999856949
+      },
+      {
+        "message": "railway",
+        "ms": 5554.099999904633
+      },
+      {
+        "message": "station",
+        "ms": 6865.099999904633
+      },
+      {
+        "message": "plaza",
+        "ms": 8039.299999952316
+      },
+      {
+        "message": "shopsA",
+        "ms": 8737
+      },
+      {
+        "message": "shopsB",
+        "ms": 9915.299999952316
+      },
+      {
+        "message": "houses",
+        "ms": 10555.599999904633
+      },
+      {
+        "message": "sakura",
+        "ms": 11166.599999904633
+      },
+      {
+        "message": "trains",
+        "ms": 12052
+      },
+      {
+        "message": "crossing",
+        "ms": 12368.399999856949
+      },
+      {
+        "message": "props",
+        "ms": 12549.399999856949
+      },
+      {
+        "message": "vehicles",
+        "ms": 13538.899999856949
+      },
+      {
+        "message": "textured-props",
+        "ms": 14142
+      },
+      {
+        "message": "正在安放站后建筑…",
+        "ms": 22479.299999952316
+      },
+      {
+        "message": "场景已就绪",
+        "ms": 23463.599999904633
+      }
+    ],
+    "weatheringMs": 689.7,
+    "decals": {
+      "posters": 10,
+      "stickers": 14,
+      "doodles": 2,
+      "rejected": 0,
+      "byArea": {
+        "01-left-wall": [
+          {
+            "kind": "poster",
+            "at": [
+              -4.84,
+              1.55,
+              30.2
+            ]
+          },
+          {
+            "kind": "sticker",
+            "at": [
+              -4.84,
+              1.3,
+              29.3
+            ]
+          },
+          {
+            "kind": "poster",
+            "at": [
+              -4.84,
+              1.45,
+              27.2
+            ]
+          }
+        ],
+        "01-left-pole": [
+          {
+            "kind": "sticker",
+            "at": [
+              -3.35,
+              1.75,
+              28.84
+            ]
+          }
+        ],
+        "01-right-shop": [
+          {
+            "kind": "poster",
+            "at": [
+              6.42,
+              1.5,
+              24.46
+            ]
+          },
+          {
+            "kind": "sticker",
+            "at": [
+              5.55,
+              3.05,
+              28.28
+            ]
+          },
+          {
+            "kind": "sticker",
+            "at": [
+              6.27,
+              1.5,
+              21.75
+            ]
+          }
+        ],
+        "01-right-pole": [
+          {
+            "kind": "sticker",
+            "at": [
+              3.32,
+              1.9,
+              23.13
+            ]
+          }
+        ],
+        "21-mailboxes": [
+          {
+            "kind": "poster",
+            "at": [
+              -3,
+              6.75,
+              -123.25
+            ]
+          },
+          {
+            "kind": "sticker",
+            "at": [
+              -1.85,
+              6.25,
+              -123.25
+            ]
+          }
+        ],
+        "main": [
+          {
+            "kind": "sticker",
+            "at": [
+              8.6,
+              1.03,
+              13.67
+            ]
+          },
+          {
+            "kind": "sticker",
+            "at": [
+              6,
+              1.2,
+              20.33
+            ]
+          },
+          {
+            "kind": "sticker",
+            "at": [
+              8.6,
+              1.1,
+              6.07
+            ]
+          },
+          {
+            "kind": "sticker",
+            "at": [
+              5.05,
+              1.12,
+              14.69
+            ]
+          }
+        ],
+        "laundry": [
+          {
+            "kind": "poster",
+            "at": [
+              7.37,
+              5.83,
+              -123.25
+            ]
+          },
+          {
+            "kind": "poster",
+            "at": [
+              6.14,
+              6.54,
+              -123.25
+            ]
+          },
+          {
+            "kind": "sticker",
+            "at": [
+              -2.54,
+              5.72,
+              -123.25
+            ]
+          }
+        ],
+        "rear": [
+          {
+            "kind": "poster",
+            "at": [
+              -15.41,
+              6.69,
+              -132.5
+            ]
+          },
+          {
+            "kind": "poster",
+            "at": [
+              -12.39,
+              6.76,
+              -132.5
+            ]
+          },
+          {
+            "kind": "poster",
+            "at": [
+              17.04,
+              5.78,
+              -131
+            ]
+          },
+          {
+            "kind": "poster",
+            "at": [
+              18.97,
+              6.11,
+              -131
+            ]
+          },
+          {
+            "kind": "sticker",
+            "at": [
+              -17.97,
+              7.1,
+              -132.5
+            ]
+          },
+          {
+            "kind": "sticker",
+            "at": [
+              -0.21,
+              6.41,
+              -131
+            ]
+          },
+          {
+            "kind": "sticker",
+            "at": [
+              -3.23,
+              5.95,
+              -131
+            ]
+          },
+          {
+            "kind": "doodle",
+            "at": [
+              24.17,
+              5.61,
+              -131
+            ]
+          },
+          {
+            "kind": "doodle",
+            "at": [
+              -21.7,
+              6.43,
+              -132.5
+            ]
+          }
+        ]
+      },
+      "source": "baked",
+      "planMs": 1.9,
+      "rays": 0,
+      "explicit": {
+        "placed": 10,
+        "adjusted": [],
+        "missed": []
+      },
+      "drawCalls": 1,
+      "triangles": 52
+    },
+    "stationTimings": {
+      "trimMs": 230,
+      "batchMs": 7650
+    },
+    "moduleStats": {
+      "environment": 1311,
+      "street": 704,
+      "poles": 371,
+      "railway": 1310,
+      "station": 1173,
+      "plaza": 697,
+      "shopsA": 1155,
+      "shopsB": 601,
+      "houses": 610,
+      "sakura": 883,
+      "trains": 316,
+      "crossing": 181,
+      "props": 988,
+      "vehicles": 468
+    },
+    "stationArt": {
+      "triangles": 12848,
+      "instancedMeshes": 6,
+      "props": [
+        {
+          "name": "van-MeshToonMaterial",
+          "triangles": 4540
+        },
+        {
+          "name": "van-MeshToonMaterial",
+          "triangles": 84
+        },
+        {
+          "name": "van-ShaderMaterial",
+          "triangles": 8
+        },
+        {
+          "name": "freezer",
+          "triangles": 96
+        },
+        {
+          "name": "crate-tower",
+          "triangles": 36
+        },
+        {
+          "name": "crate-tower",
+          "triangles": 24
+        },
+        {
+          "name": "rack",
+          "triangles": 164
+        },
+        {
+          "name": "a-board",
+          "triangles": 26
+        },
+        {
+          "name": "w1-stock",
+          "triangles": 2664
+        },
+        {
+          "name": "w1-sign-overlay",
+          "triangles": 2
+        },
+        {
+          "name": "light-spill",
+          "triangles": 2
+        },
+        {
+          "name": "w1-zone",
+          "triangles": 96
+        },
+        {
+          "name": "w1-zone",
+          "triangles": 96
+        },
+        {
+          "name": "w1-zone",
+          "triangles": 96
+        },
+        {
+          "name": "w1-zone-stock",
+          "triangles": 1584
+        },
+        {
+          "name": "crate-tower",
+          "triangles": 36
+        },
+        {
+          "name": "bush",
+          "triangles": 160
+        },
+        {
+          "name": "pot",
+          "triangles": 40
+        },
+        {
+          "name": "bush",
+          "triangles": 160
+        },
+        {
+          "name": "pot",
+          "triangles": 40
+        },
+        {
+          "name": "a-board",
+          "triangles": 26
+        },
+        {
+          "name": "e2-stock",
+          "triangles": 576
+        },
+        {
+          "name": "a-board",
+          "triangles": 26
+        },
+        {
+          "name": "bush",
+          "triangles": 160
+        },
+        {
+          "name": "pot",
+          "triangles": 40
+        },
+        {
+          "name": "bush",
+          "triangles": 160
+        },
+        {
+          "name": "pot",
+          "triangles": 40
+        },
+        {
+          "name": "crate-tower",
+          "triangles": 24
+        },
+        {
+          "name": "bush",
+          "triangles": 160
+        },
+        {
+          "name": "pot",
+          "triangles": 40
+        },
+        {
+          "name": "a-board",
+          "triangles": 26
+        },
+        {
+          "name": "a-board",
+          "triangles": 26
+        },
+        {
+          "name": "a-board",
+          "triangles": 26
+        },
+        {
+          "name": "a-board",
+          "triangles": 26
+        },
+        {
+          "name": "a-board",
+          "triangles": 26
+        },
+        {
+          "name": "nobori",
+          "triangles": 1512
+        }
+      ],
+      "shopBoards": [
+        "W2",
+        "W4",
+        "W6",
+        "E3",
+        "E5"
+      ],
+      "noboriLots": 7,
+      "nobori": {
+        "flags": 14,
+        "triangles": 1512,
+        "clothTriangles": 336
+      }
+    },
+    "cityArt": {
+      "notices": 27,
+      "alley": {
+        "fence": 2,
+        "cardboardStacks": 4,
+        "pipeRuns": 3,
+        "spots": 3
+      },
+      "standingBoards": 1,
+      "triangles": 418,
+      "texturePixels": 1048576
+    },
+    "blenderAssets": [
+      {
+        "path": "/mature-sakura/mature-sakura.glb",
+        "sourceBytes": 2193656,
+        "status": 200,
+        "transfer": 2193956
+      }
+    ],
+    "blenderCity": {
+      "buildings": [
+        "station-exchange",
+        "alley-workshop"
+      ],
+      "laundry": "Portal_wings"
+    },
+    "treeCounts": {
+      "W3": {
+        "bark": 1550,
+        "blob": 22027,
+        "cards": 424
+      },
+      "plaza": {
+        "bark": 2309,
+        "blob": 9540,
+        "cards": 2072
+      }
+    },
+    "reflections": {
+      "resolution": 256,
+      "panes": {
+        "W1": 8,
+        "E1": 4,
+        "W2": 5,
+        "E2": 5,
+        "E3": 5
+      },
+      "loadedFaces": 6,
+      "captures": 0,
+      "facesAtLoad": 0,
+      "passesPerFrame": 0,
+      "loadMs": 20
+    },
+    "propCounts": [
+      1,
+      21,
+      87,
+      53
+    ],
+    "groundR2": true,
+    "shadowBatches": null,
+    "sunAuto": [
+      true
+    ],
+    "cameraLayers": -1
+  },
+  "quietWindows": [
+    {
+      "filename": "frame-samples.json",
+      "start": {
+        "wallMs": 1795045827596,
+        "window": false,
+        "contents": false,
+        "page": {
+          "focused": false,
+          "visibility": "visible",
+          "view": "station-street",
+          "walker": "third"
+        }
+      },
+      "end": {
+        "wallMs": 1795045830734,
+        "window": false,
+        "contents": false,
+        "page": {
+          "focused": false,
+          "visibility": "visible",
+          "view": "station-street",
+          "walker": "third"
+        }
+      }
+    },
+    {
+      "filename": "frame-samples-art-a-street.json",
+      "start": {
+        "wallMs": 1795045832690,
+        "window": false,
+        "contents": false,
+        "page": {
+          "focused": false,
+          "visibility": "visible",
+          "view": "art-a-street",
+          "walker": "third"
+        }
+      },
+      "end": {
+        "wallMs": 1795045842820,
+        "window": false,
+        "contents": false,
+        "page": {
+          "focused": false,
+          "visibility": "visible",
+          "view": "art-a-street",
+          "walker": "third"
+        }
+      }
+    },
+    {
+      "filename": "frame-samples-art-b-konbini.json",
+      "start": {
+        "wallMs": 1795045844717,
+        "window": false,
+        "contents": false,
+        "page": {
+          "focused": false,
+          "visibility": "visible",
+          "view": "art-b-konbini",
+          "walker": "third"
+        }
+      },
+      "end": {
+        "wallMs": 1795045854839,
+        "window": false,
+        "contents": false,
+        "page": {
+          "focused": false,
+          "visibility": "visible",
+          "view": "art-b-konbini",
+          "walker": "third"
+        }
+      }
+    },
+    {
+      "filename": "frame-samples-art-c-alley.json",
+      "start": {
+        "wallMs": 1795045856733,
+        "window": false,
+        "contents": false,
+        "page": {
+          "focused": false,
+          "visibility": "visible",
+          "view": "art-c-alley",
+          "walker": "third"
+        }
+      },
+      "end": {
+        "wallMs": 1795045866849,
+        "window": false,
+        "contents": false,
+        "page": {
+          "focused": false,
+          "visibility": "visible",
+          "view": "art-c-alley",
+          "walker": "third"
+        }
+      }
+    },
+    {
+      "filename": "frame-samples-art-d-laundry.json",
+      "start": {
+        "wallMs": 1795045868738,
+        "window": false,
+        "contents": false,
+        "page": {
+          "focused": false,
+          "visibility": "visible",
+          "view": "art-d-laundry",
+          "walker": "third"
+        }
+      },
+      "end": {
+        "wallMs": 1795045878847,
+        "window": false,
+        "contents": false,
+        "page": {
+          "focused": false,
+          "visibility": "visible",
+          "view": "art-d-laundry",
+          "walker": "third"
+        }
+      }
+    },
+    {
+      "filename": "frame-samples-walking-third.json",
+      "start": {
+        "wallMs": 1795045883812,
+        "window": false,
+        "contents": false,
+        "page": {
+          "focused": true,
+          "visibility": "visible",
+          "view": "walking",
+          "walker": "third"
+        }
+      },
+      "end": {
+        "wallMs": 1795045886978,
+        "window": false,
+        "contents": false,
+        "page": {
+          "focused": true,
+          "visibility": "visible",
+          "view": "walking",
+          "walker": "third"
+        }
+      }
+    },
+    {
+      "filename": "frame-samples-walking-first.json",
+      "start": {
+        "wallMs": 1795045887924,
+        "window": false,
+        "contents": false,
+        "page": {
+          "focused": true,
+          "visibility": "visible",
+          "view": "walking",
+          "walker": "first"
+        }
+      },
+      "end": {
+        "wallMs": 1795045891083,
+        "window": false,
+        "contents": false,
+        "page": {
+          "focused": true,
+          "visibility": "visible",
+          "view": "walking",
+          "walker": "first"
+        }
+      }
+    }
+  ]
+}

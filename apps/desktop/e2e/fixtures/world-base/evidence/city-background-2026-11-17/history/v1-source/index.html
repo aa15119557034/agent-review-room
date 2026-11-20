@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>桜ヶ丘 · 港湾岛 | X-51</title>
+  <link rel="stylesheet" href="./src/style.css">
+  <script type="importmap">{"imports":{"three":"./upstream/petalwake/vendor/three/build/three.module.js","three/addons/":"./upstream/petalwake/vendor/three/examples/jsm/"}}</script>
+</head>
+<body>
+  <canvas id="world" tabindex="0" aria-label="桜ヶ丘车站与港湾岛"></canvas>
+  <div id="loading"><strong>桜ヶ丘 · 港湾岛</strong><span id="load-message">正在铺开岛屿…</span></div>
+  <header id="panel">
+    <div><span class="eyebrow">WORLD STUDY · X-51</span><h1>桜ヶ丘 · 港湾岛</h1></div>
+    <nav aria-label="固定机位">
+      <button data-view="station-street">1 街道</button><button data-view="station-port">2 港镇</button>
+      <button data-view="island-aerial">3 全岛</button><button data-view="shop-interior">4 店内</button>
+    </nav>
+    <div class="options">
+      <button id="walk">进入步行</button><button id="camera">第三人称 · V</button>
+      <label><input type="checkbox" id="toon" checked> 统一色阶与描边</label>
+      <label><input type="checkbox" id="effects"> 运动模糊与光束</label>
+    </div>
+    <details class="credits"><summary>建筑素材来源</summary><p><a href="https://www.fab.com/listings/ca10b839-7882-42f8-ab60-496610708a6c">High-Rise Building #01 · mirzaev3d</a>（<a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>）<br><a href="https://quaternius.com/packs/downtowncitymegakit.html">Downtown City MegaKit · Quaternius</a>（CC0 1.0）<br>本场景调整了材质、摆放与地基。</p></details>
+  </header>
+  <footer id="help"><span id="mode">固定机位</span><span>WASD 移动 · Shift 跑步 · 鼠标转向 · V 切视角 · Esc 释放鼠标 · H 隐藏面板</span><output id="performance"></output></footer>
+  <script type="module" src="./src/main.js"></script>
+</body>
+</html>

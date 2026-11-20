@@ -1,0 +1,4399 @@
+{
+  "sourceHead": "96ddf39ce4ca6448acf1a59dcc49dbf4ca4908ac",
+  "method": "Offline exact-camera/time/default-AO PNG comparison with C14 and current duplicate captures; original runtime report/frame samples. No GPU rerun or image editing.",
+  "reports": {
+    "diagnostic": {
+      "path": "D:\\codex\\2026-11-16\\world-implementation\\world-base\\apps\\desktop\\e2e\\fixtures\\world-base\\artifacts\\gpu-look-c15-v1\\look-report.json",
+      "sha256": "fa6caf890da400d6a7b4d0d46939ceeaf3b2c4a36b5a962dfc3d8fa9f6b1d7f7"
+    },
+    "normal": {
+      "path": "D:\\codex\\2026-11-16\\world-implementation\\world-base\\apps\\desktop\\e2e\\fixtures\\world-base\\artifacts\\gpu-town-c15\\render-report.json",
+      "sha256": "fd12c155017c0a44982fea56a01e594061ac8411c061e647cb5b9ee3733050cd"
+    }
+  },
+  "comparisons": [
+    {
+      "view": "service-corner",
+      "name": "service-corner-ao-on-capture-2",
+      "cameraEqual": true,
+      "timeEqual": true,
+      "aoEqual": true,
+      "paramsEqual": true,
+      "beforeSha256": "5c0c219f7bef51b0063fb826c924e645ba510c90bf77c8c2b76dc51ebb2dbe88",
+      "currentSha256": "75e0e5199a98d9e63a0c2db956bcaead57e32334fb4993062a6de3facea80cb2",
+      "pixels": {
+        "changedPixels": 4904,
+        "meanAbsRGB": 0.05165869341563786,
+        "maxAbsRGB": 52,
+        "bounds": [
+          207,
+          0,
+          1346,
+          810
+        ]
+      }
+    },
+    {
+      "view": "laundry-details",
+      "name": "laundry-details-ao-on-capture-2",
+      "cameraEqual": true,
+      "timeEqual": true,
+      "aoEqual": true,
+      "paramsEqual": true,
+      "beforeSha256": "9db302393d381a4e907e11e2b192c580098b0fc12d8c3d349a6b2929ff9c04b3",
+      "currentSha256": "7ddc7fc9a55996d1650da00c8b7e661937ea1881bda2e34981de3d3ffede4eb4",
+      "pixels": {
+        "changedPixels": 24786,
+        "meanAbsRGB": 0.429136316872428,
+        "maxAbsRGB": 139,
+        "bounds": [
+          149,
+          0,
+          1265,
+          886
+        ]
+      }
+    },
+    {
+      "view": "shop-interior",
+      "name": "shop-interior-ao-on-capture-2",
+      "cameraEqual": true,
+      "timeEqual": true,
+      "aoEqual": true,
+      "paramsEqual": true,
+      "beforeSha256": "16f4da4850f84b2008fe32cb69737ee8494514bab9690ea0b94926799bb65a05",
+      "currentSha256": "16f4da4850f84b2008fe32cb69737ee8494514bab9690ea0b94926799bb65a05",
+      "pixels": {
+        "changedPixels": 0,
+        "meanAbsRGB": 0,
+        "maxAbsRGB": 0,
+        "bounds": null
+      }
+    },
+    {
+      "view": "20-rear-eye",
+      "name": "20-rear-eye-ao-on-capture-2",
+      "cameraEqual": true,
+      "timeEqual": true,
+      "aoEqual": true,
+      "paramsEqual": true,
+      "beforeSha256": "3aff50b7753a466bdedc41d9e5f463b9f0cc137f25df1bb9804fe963d6911104",
+      "currentSha256": "1a80bbc4608f61be6931a5861dfd7df3bfaeb786529dc208ffdf26d085d7f209",
+      "pixels": {
+        "changedPixels": 47431,
+        "meanAbsRGB": 0.6522448559670782,
+        "maxAbsRGB": 186,
+        "bounds": [
+          327,
+          0,
+          1439,
+          899
+        ]
+      }
+    },
+    {
+      "view": "21-front-eye",
+      "name": "21-front-eye-ao-on-capture-2",
+      "cameraEqual": true,
+      "timeEqual": true,
+      "aoEqual": true,
+      "paramsEqual": true,
+      "beforeSha256": "e574dbc4760399243d8e78bb7321ea8808812afa8b172a619547fd34897578fa",
+      "currentSha256": "959584b584544ef3f13f53817181781621d68ab5426de8ba1ca6da6e0a32f8a8",
+      "pixels": {
+        "changedPixels": 52256,
+        "meanAbsRGB": 0.5517546296296296,
+        "maxAbsRGB": 175,
+        "bounds": [
+          0,
+          0,
+          1418,
+          899
+        ]
+      }
+    },
+    {
+      "view": "station-street",
+      "name": "station-street-ao-on-capture-2",
+      "cameraEqual": true,
+      "timeEqual": true,
+      "aoEqual": true,
+      "paramsEqual": true,
+      "beforeSha256": "da003044572f81279e241358b94a38dd20446e463e320eb7b3785cce691542a8",
+      "currentSha256": "93c124a1fc82cfaed74ed4a2770b134659bd0891c3b701136c7afcb1963591b5",
+      "pixels": {
+        "changedPixels": 83,
+        "meanAbsRGB": 0.000022376543209876542,
+        "maxAbsRGB": 1,
+        "bounds": [
+          573,
+          410,
+          1264,
+          643
+        ]
+      }
+    },
+    {
+      "view": "street-detail",
+      "name": "street-detail-ao-on-capture-2",
+      "cameraEqual": true,
+      "timeEqual": true,
+      "aoEqual": true,
+      "paramsEqual": true,
+      "beforeSha256": "5e36f3acae849ebd13f76e74906a75f8a6d737e9308da00c7cb9db405828e338",
+      "currentSha256": "5e36f3acae849ebd13f76e74906a75f8a6d737e9308da00c7cb9db405828e338",
+      "pixels": {
+        "changedPixels": 0,
+        "meanAbsRGB": 0,
+        "maxAbsRGB": 0,
+        "bounds": null
+      }
+    }
+  ],
+  "repeats": [
+    {
+      "view": "service-corner",
+      "pngEqual": true,
+      "cameraEqual": true,
+      "timeEqual": true,
+      "pixels": {
+        "changedPixels": 0,
+        "meanAbsRGB": 0,
+        "maxAbsRGB": 0,
+        "bounds": null
+      }
+    },
+    {
+      "view": "laundry-details",
+      "pngEqual": true,
+      "cameraEqual": true,
+      "timeEqual": true,
+      "pixels": {
+        "changedPixels": 0,
+        "meanAbsRGB": 0,
+        "maxAbsRGB": 0,
+        "bounds": null
+      }
+    },
+    {
+      "view": "shop-interior",
+      "pngEqual": true,
+      "cameraEqual": true,
+      "timeEqual": true,
+      "pixels": {
+        "changedPixels": 0,
+        "meanAbsRGB": 0,
+        "maxAbsRGB": 0,
+        "bounds": null
+      }
+    },
+    {
+      "view": "20-rear-eye",
+      "pngEqual": true,
+      "cameraEqual": true,
+      "timeEqual": true,
+      "pixels": {
+        "changedPixels": 0,
+        "meanAbsRGB": 0,
+        "maxAbsRGB": 0,
+        "bounds": null
+      }
+    },
+    {
+      "view": "21-front-eye",
+      "pngEqual": true,
+      "cameraEqual": true,
+      "timeEqual": true,
+      "pixels": {
+        "changedPixels": 0,
+        "meanAbsRGB": 0,
+        "maxAbsRGB": 0,
+        "bounds": null
+      }
+    },
+    {
+      "view": "station-street",
+      "pngEqual": false,
+      "cameraEqual": true,
+      "timeEqual": true,
+      "pixels": {
+        "changedPixels": 62,
+        "meanAbsRGB": 0.00001697530864197531,
+        "maxAbsRGB": 1,
+        "bounds": [
+          1006,
+          410,
+          1264,
+          474
+        ]
+      }
+    },
+    {
+      "view": "street-detail",
+      "pngEqual": true,
+      "cameraEqual": true,
+      "timeEqual": true,
+      "pixels": {
+        "changedPixels": 0,
+        "meanAbsRGB": 0,
+        "maxAbsRGB": 0,
+        "bounds": null
+      }
+    }
+  ],
+  "normal": {
+    "renderOk": true,
+    "transportClean": false,
+    "behavior": {
+      "ok": true,
+      "checks": [
+        {
+          "name": "closed shop door blocks the walking capsule",
+          "passed": true,
+          "evidence": {
+            "displacement": 0.34999999999999964,
+            "candidate": {
+              "x": -7.23,
+              "z": 8
+            }
+          }
+        },
+        {
+          "name": "approaching opens the real shop door collider",
+          "passed": true,
+          "evidence": {
+            "displacement": 0,
+            "candidate": {
+              "x": -7.58,
+              "z": 8
+            }
+          }
+        },
+        {
+          "name": "adjacent storefront wall remains solid",
+          "passed": true,
+          "evidence": {
+            "displacement": 0.40000000000000036,
+            "candidate": {
+              "x": -7.1,
+              "z": 12
+            }
+          }
+        },
+        {
+          "name": "open entrance provides a continuous capsule-width passage",
+          "passed": true,
+          "evidence": {
+            "maxCorrection": 0
+          }
+        },
+        {
+          "name": "interior floor uses its raised walkable surface",
+          "passed": true,
+          "evidence": {
+            "expectedFloor": 0.4134,
+            "maxHeightError": 0
+          }
+        },
+        {
+          "name": "W3 sidewalk walking clears existing furniture and new planters",
+          "passed": true,
+          "evidence": {
+            "endLotX": 3.9674163653903243,
+            "minLotZ": 1.061816375746971,
+            "maxLotZ": 1.1500000000000001,
+            "radius": 0.3,
+            "step": 0.1,
+            "inputDistance": 8
+          }
+        },
+        {
+          "name": "W3 planters leave the existing garden gate approach clear",
+          "passed": true,
+          "evidence": {
+            "maxCorrection": 0
+          }
+        },
+        {
+          "name": "low planter tops support approaching feet and release them on exit",
+          "passed": true,
+          "evidence": [
+            {
+              "id": "w3-planter-south",
+              "expectedTop": 1.1152975042415103,
+              "onTop": 1.1152975042415103,
+              "initialFeet": 0.8553631994889643,
+              "finalFeet": 0.8553631994889643,
+              "supported": true,
+              "returnedToSidewalk": true
+            },
+            {
+              "id": "w3-planter-north",
+              "expectedTop": 1.00881568627451,
+              "onTop": 1.00881568627451,
+              "initialFeet": 0.7488156862745098,
+              "finalFeet": 0.7488156862745098,
+              "supported": true,
+              "returnedToSidewalk": true
+            }
+          ]
+        },
+        {
+          "name": "first person camera is 1.52m above world-space feet",
+          "passed": true,
+          "evidence": {
+            "feet": [
+              281.6,
+              8.812,
+              934
+            ],
+            "camera": [
+              281.6,
+              10.331999999999999,
+              934
+            ],
+            "error": 0
+          }
+        },
+        {
+          "name": "third person camera follows within its obstruction-limited boom",
+          "passed": true,
+          "evidence": {
+            "followDistance": 4.224038352098614,
+            "maximum": 4.224038352098617
+          }
+        },
+        {
+          "name": "view switching preserves the body and collision position",
+          "passed": true,
+          "evidence": {
+            "feet": [
+              281.6,
+              8.812,
+              934
+            ],
+            "initialFeet": [
+              281.6,
+              8.812,
+              934
+            ]
+          }
+        },
+        {
+          "name": "station local/world coordinates round-trip at its nonzero placement",
+          "passed": true,
+          "evidence": {
+            "local": [
+              1.6000000000000227,
+              0.8119999999999994,
+              34
+            ],
+            "world": [
+              281.6,
+              8.812,
+              934
+            ]
+          }
+        },
+        {
+          "name": "real shop wall shortens third-person boom with near-plane clearance",
+          "passed": true,
+          "evidence": {
+            "shortened": 0.7951227548559752,
+            "cameraLotZ": -2.290597833643244,
+            "streetSideWallZ": -2.6,
+            "clearance": 0.30940216635678375,
+            "raycastCalls": 0
+          }
+        },
+        {
+          "name": "camera collision never scans rendered triangles",
+          "passed": true,
+          "evidence": {
+            "raycastCalls": 0
+          }
+        }
+      ]
+    },
+    "look": {
+      "ok": true,
+      "method": "Actual pipeline uniforms/parameters and UI state; central-pixel nonblack smoke checks. Images retain animation.",
+      "toon": {
+        "on": {
+          "state": {
+            "toon": 1,
+            "blur": 0,
+            "rays": 0,
+            "toonCheckbox": true,
+            "effectsCheckbox": false,
+            "currentView": "station-street"
+          },
+          "capture": {
+            "file": "05-street-toon-on.png",
+            "jpeg": "05-street-toon-on.jpg",
+            "jpegWidth": 960,
+            "pixels": {
+              "width": 1440,
+              "height": 900,
+              "samples": 39816,
+              "meanRgb": 100.61476123501585,
+              "nonBlackFraction": 1,
+              "notBlack": true
+            }
+          }
+        },
+        "off": {
+          "state": {
+            "toon": 0,
+            "blur": 0,
+            "rays": 0,
+            "toonCheckbox": false,
+            "effectsCheckbox": false,
+            "currentView": "station-street"
+          },
+          "capture": {
+            "file": "06-street-toon-off.png",
+            "jpeg": "06-street-toon-off.jpg",
+            "jpegWidth": 960,
+            "pixels": {
+              "width": 1440,
+              "height": 900,
+              "samples": 39816,
+              "meanRgb": 64.41762105686043,
+              "nonBlackFraction": 0.9179977898332329,
+              "notBlack": true
+            }
+          }
+        },
+        "difference": {
+          "meanAbsoluteRgbDifference": 36.11616255144033,
+          "isolatedFromAnimation": false
+        }
+      },
+      "flightEffects": {
+        "on": {
+          "state": {
+            "toon": 1,
+            "blur": 1,
+            "rays": 0.55,
+            "toonCheckbox": true,
+            "effectsCheckbox": true,
+            "currentView": "station-street"
+          },
+          "capture": {
+            "file": "07-flight-effects-on.png",
+            "jpeg": "07-flight-effects-on.jpg",
+            "jpegWidth": 960,
+            "pixels": {
+              "width": 1440,
+              "height": 900,
+              "samples": 39816,
+              "meanRgb": 100.74208860759748,
+              "nonBlackFraction": 1,
+              "notBlack": true
+            }
+          }
+        },
+        "off": {
+          "state": {
+            "toon": 1,
+            "blur": 0,
+            "rays": 0,
+            "toonCheckbox": true,
+            "effectsCheckbox": false,
+            "currentView": "station-street"
+          },
+          "capture": {
+            "file": "08-flight-effects-off.png",
+            "jpeg": "08-flight-effects-off.jpg",
+            "jpegWidth": 960,
+            "pixels": {
+              "width": 1440,
+              "height": 900,
+              "samples": 39816,
+              "meanRgb": 100.58381890027619,
+              "nonBlackFraction": 1,
+              "notBlack": true
+            }
+          }
+        },
+        "difference": {
+          "meanAbsoluteRgbDifference": 1.727278806584362,
+          "isolatedFromAnimation": false
+        }
+      }
+    },
+    "walkingOk": true,
+    "exceptions": [],
+    "networkFailures": [
+      {
+        "url": "http://127.0.0.1:53072/assets/models/boulders.glb",
+        "type": "Fetch",
+        "canceled": true,
+        "errorText": "net::ERR_ABORTED",
+        "requestId": "64216.121",
+        "timestamp": 1934309.921728,
+        "stage": "waiting-for-ready-frame",
+        "receivedWallTime": 1794924130.867
+      },
+      {
+        "url": "http://127.0.0.1:53072/assets/models/menhir.glb",
+        "type": "Fetch",
+        "canceled": true,
+        "errorText": "net::ERR_ABORTED",
+        "requestId": "64216.119",
+        "timestamp": 1934309.922688,
+        "stage": "waiting-for-ready-frame",
+        "receivedWallTime": 1794924130.868
+      }
+    ],
+    "segments": [
+      {
+        "name": "initial",
+        "frameCount": 972,
+        "fps": 64.33762692119302,
+        "p95FrameMs": 15.5,
+        "drawCalls": {
+          "mean": 1571.0720164609054,
+          "min": 1569,
+          "max": 1574
+        },
+        "triangles": {
+          "mean": 8311675.9794238685,
+          "min": 8311549,
+          "max": 8311869
+        },
+        "maxFrameMs": 30.80000000000291,
+        "longFramesOver20ms": [
+          {
+            "ms": 30.69999999999709,
+            "calls": 1571,
+            "triangles": 8311661,
+            "index": 245
+          },
+          {
+            "ms": 30.69999999999709,
+            "calls": 1571,
+            "triangles": 8311661,
+            "index": 261
+          },
+          {
+            "ms": 30.69999999999709,
+            "calls": 1571,
+            "triangles": 8311661,
+            "index": 264
+          },
+          {
+            "ms": 30.700000000004366,
+            "calls": 1571,
+            "triangles": 8311661,
+            "index": 266
+          },
+          {
+            "ms": 30.700000000004366,
+            "calls": 1571,
+            "triangles": 8311661,
+            "index": 303
+          },
+          {
+            "ms": 30.80000000000291,
+            "calls": 1574,
+            "triangles": 8311869,
+            "index": 561
+          },
+          {
+            "ms": 30.69999999999709,
+            "calls": 1574,
+            "triangles": 8311869,
+            "index": 606
+          },
+          {
+            "ms": 30.69999999999709,
+            "calls": 1574,
+            "triangles": 8311869,
+            "index": 624
+          },
+          {
+            "ms": 30.700000000004366,
+            "calls": 1569,
+            "triangles": 8311549,
+            "index": 693
+          },
+          {
+            "ms": 30.700000000004366,
+            "calls": 1573,
+            "triangles": 8311805,
+            "index": 722
+          }
+        ],
+        "samplesFile": "frame-samples.json",
+        "samplesSha256": "d010898c2f4d6347f98db9729578257f13948d1a6e0c4e1bd6b326af2be9d1ce"
+      },
+      {
+        "name": "station-street",
+        "frameCount": 197,
+        "fps": 63.08037143772014,
+        "p95FrameMs": 15.5,
+        "drawCalls": {
+          "mean": 1569,
+          "min": 1569,
+          "max": 1569
+        },
+        "triangles": {
+          "mean": 8311549,
+          "min": 8311549,
+          "max": 8311549
+        },
+        "maxFrameMs": 30.799999999995634,
+        "longFramesOver20ms": [
+          {
+            "ms": 30.799999999995634,
+            "calls": 1569,
+            "triangles": 8311549,
+            "index": 180
+          },
+          {
+            "ms": 30.799999999995634,
+            "calls": 1569,
+            "triangles": 8311549,
+            "index": 183
+          },
+          {
+            "ms": 30.700000000004366,
+            "calls": 1569,
+            "triangles": 8311549,
+            "index": 185
+          },
+          {
+            "ms": 30.69999999999709,
+            "calls": 1569,
+            "triangles": 8311549,
+            "index": 187
+          },
+          {
+            "ms": 30.700000000004366,
+            "calls": 1569,
+            "triangles": 8311549,
+            "index": 192
+          },
+          {
+            "ms": 30.700000000004366,
+            "calls": 1569,
+            "triangles": 8311549,
+            "index": 194
+          }
+        ],
+        "samplesFile": "frame-samples-station-street.json",
+        "samplesSha256": "d36763e9ab09647b81ef5073c7a7dde2ba8095f4f060ab837bf5a179865e6400"
+      },
+      {
+        "name": "station-port",
+        "frameCount": 202,
+        "fps": 64.67932502961804,
+        "p95FrameMs": 15.5,
+        "drawCalls": {
+          "mean": 856,
+          "min": 856,
+          "max": 856
+        },
+        "triangles": {
+          "mean": 7956222,
+          "min": 7956222,
+          "max": 7956222
+        },
+        "maxFrameMs": 30.700000000004366,
+        "longFramesOver20ms": [
+          {
+            "ms": 30.700000000004366,
+            "calls": 856,
+            "triangles": 7956222,
+            "index": 116
+          }
+        ],
+        "samplesFile": "frame-samples-station-port.json",
+        "samplesSha256": "8a73a85582709f9f1d8efb778541a25ce924c1d2c6b5b0a0c6b9e65396ad7d22"
+      },
+      {
+        "name": "island-aerial",
+        "frameCount": 196,
+        "fps": 62.760166506564204,
+        "p95FrameMs": 15.5,
+        "drawCalls": {
+          "mean": 1806,
+          "min": 1806,
+          "max": 1806
+        },
+        "triangles": {
+          "mean": 7782279,
+          "min": 7782279,
+          "max": 7782279
+        },
+        "maxFrameMs": 31,
+        "longFramesOver20ms": [
+          {
+            "ms": 30.80000000000291,
+            "calls": 1806,
+            "triangles": 7782279,
+            "index": 33
+          },
+          {
+            "ms": 30.69999999999709,
+            "calls": 1806,
+            "triangles": 7782279,
+            "index": 42
+          },
+          {
+            "ms": 31,
+            "calls": 1806,
+            "triangles": 7782279,
+            "index": 45
+          },
+          {
+            "ms": 30.79999999998836,
+            "calls": 1806,
+            "triangles": 7782279,
+            "index": 48
+          },
+          {
+            "ms": 30.70000000001164,
+            "calls": 1806,
+            "triangles": 7782279,
+            "index": 105
+          },
+          {
+            "ms": 30.80000000000291,
+            "calls": 1806,
+            "triangles": 7782279,
+            "index": 110
+          },
+          {
+            "ms": 30.69999999999709,
+            "calls": 1806,
+            "triangles": 7782279,
+            "index": 171
+          }
+        ],
+        "samplesFile": "frame-samples-island-aerial.json",
+        "samplesSha256": "2b941be3fe2fff8a700f7e08b4f2db3f4ef3674e4f39cebc8c95a65804c4e2a2"
+      },
+      {
+        "name": "shop-interior",
+        "frameCount": 202,
+        "fps": 64.99983910930919,
+        "p95FrameMs": 15.5,
+        "drawCalls": {
+          "mean": 926.0841584158416,
+          "min": 925,
+          "max": 930
+        },
+        "triangles": {
+          "mean": 7558473.495049505,
+          "min": 7542941,
+          "max": 7606613
+        },
+        "maxFrameMs": 15.60000000000582,
+        "longFramesOver20ms": [],
+        "samplesFile": "frame-samples-shop-interior.json",
+        "samplesSha256": "524f37a5a7af59eacf14a760ee96b8aea2c4908c1de751f040223faeed01008b"
+      },
+      {
+        "name": "walking-third",
+        "frameCount": 203,
+        "fps": 65.00160102465578,
+        "p95FrameMs": 15.5,
+        "drawCalls": {
+          "mean": 1548.1182266009853,
+          "min": 910,
+          "max": 1562
+        },
+        "triangles": {
+          "mean": 8255833.433497537,
+          "min": 7475601,
+          "max": 8324542
+        },
+        "maxFrameMs": 15.69999999999709,
+        "longFramesOver20ms": [],
+        "samplesFile": "frame-samples-walking-third.json",
+        "samplesSha256": "52674a5cc330e2d938ae2f7389dcebf1b762c882f1ffef033b76c54ee7e05e54"
+      },
+      {
+        "name": "walking-first",
+        "frameCount": 202,
+        "fps": 64.99983910930919,
+        "p95FrameMs": 15.5,
+        "drawCalls": {
+          "mean": 1409.0247524752476,
+          "min": 1337,
+          "max": 1476
+        },
+        "triangles": {
+          "mean": 8192345.178217822,
+          "min": 8046856,
+          "max": 8290612
+        },
+        "maxFrameMs": 15.599999999991269,
+        "longFramesOver20ms": [],
+        "samplesFile": "frame-samples-walking-first.json",
+        "samplesSha256": "41273e6818bcdd579490420fee4f42f93c2227c9a0528df111df6bcb0ea72b5a"
+      }
+    ]
+  },
+  "diagnostic": {
+    "ok": true,
+    "renderOk": true,
+    "transportClean": true,
+    "exceptions": [],
+    "httpErrors": [],
+    "networkFailures": [],
+    "sourceUnchanged": true,
+    "driverUnchanged": true,
+    "assetsUnchanged": true,
+    "restoreUnchanged": true,
+    "textObserver": {
+      "intact": true,
+      "restored": true
+    }
+  },
+  "atlas": {
+    "laundry": {
+      "page": 4,
+      "before": {
+        "pages": 5,
+        "x": 624,
+        "y": 0,
+        "rowH": 368
+      },
+      "after": {
+        "pages": 5,
+        "x": 984,
+        "y": 368,
+        "rowH": 200
+      },
+      "regions": [
+        {
+          "key": "name",
+          "w": 512,
+          "h": 96,
+          "uv": [
+            0.00390625,
+            0.54296875,
+            0.50390625,
+            0.63671875
+          ]
+        },
+        {
+          "key": "function",
+          "w": 256,
+          "h": 96,
+          "uv": [
+            0.51171875,
+            0.54296875,
+            0.76171875,
+            0.63671875
+          ]
+        },
+        {
+          "key": "aframe",
+          "w": 192,
+          "h": 192,
+          "uv": [
+            0.76953125,
+            0.44921875,
+            0.95703125,
+            0.63671875
+          ]
+        }
+      ],
+      "reusedRegions": false,
+      "newTextures": 0,
+      "text": [
+        "さくら コインランドリー",
+        "洗濯・乾燥",
+        "セルフサービス"
+      ],
+      "owner": "station",
+      "pixelsUpdated": true
+    },
+    "regions": [
+      {
+        "key": "name",
+        "uv": [
+          0.00390625,
+          0.54296875,
+          0.50390625,
+          0.63671875
+        ],
+        "x": 4,
+        "y": 372,
+        "width": 512,
+        "height": 96,
+        "rgbaSha256": "51903e8addd463048d3f4f92bbbf50f3bb18613bdf60ff7368aa703f04fa67e9",
+        "uniqueRGBA": 199,
+        "file": "laundry-atlas-name.png"
+      },
+      {
+        "key": "function",
+        "uv": [
+          0.51171875,
+          0.54296875,
+          0.76171875,
+          0.63671875
+        ],
+        "x": 524,
+        "y": 372,
+        "width": 256,
+        "height": 96,
+        "rgbaSha256": "26cc1a9b5b92766931d46b398cef6c09d6584329b3b111d156f84346269f9d98",
+        "uniqueRGBA": 209,
+        "file": "laundry-atlas-function.png"
+      },
+      {
+        "key": "aframe",
+        "uv": [
+          0.76953125,
+          0.44921875,
+          0.95703125,
+          0.63671875
+        ],
+        "x": 788,
+        "y": 372,
+        "width": 192,
+        "height": 192,
+        "rgbaSha256": "1a5a549571e640e71373db26debd43685c5439b99d15e7be9cef1e6918b8bb75",
+        "uniqueRGBA": 225,
+        "file": "laundry-atlas-aframe.png"
+      }
+    ],
+    "textCalls": [
+      {
+        "text": "桜川堤 さくら並木",
+        "args": [
+          512,
+          215.04
+        ],
+        "font": "106px \"Yuji Syuku\", \"Noto Serif JP\", \"Yu Mincho\", serif",
+        "fillStyle": "#fbf3e4",
+        "transform": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1
+        ],
+        "page": null
+      },
+      {
+        "text": "さくらがわづつみ さくらなみき",
+        "args": [
+          512,
+          337.92
+        ],
+        "font": "bold 40px \"Noto Serif JP\", \"Yu Mincho\", \"Hiragino Mincho ProN\", serif",
+        "fillStyle": "#f4e3cf",
+        "transform": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1
+        ],
+        "page": null
+      },
+      {
+        "text": "さくらがわばし",
+        "args": [
+          128,
+          104.96
+        ],
+        "font": "bold 22px \"Noto Serif JP\", \"Yu Mincho\", \"Hiragino Mincho ProN\", serif",
+        "fillStyle": "#e8e4d8",
+        "transform": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1
+        ],
+        "page": null
+      },
+      {
+        "text": "さくらがおか ふれあいりょくち",
+        "args": [
+          256,
+          163.84
+        ],
+        "font": "bold 24px \"Zen Maru Gothic\", \"Noto Sans JP\", \"Yu Gothic\", sans-serif",
+        "fillStyle": "#fbf3e4",
+        "transform": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1
+        ],
+        "page": null
+      },
+      {
+        "text": "さくら通信",
+        "args": [
+          32,
+          15
+        ],
+        "font": "bold 12px \"Noto Sans JP\", \"Yu Gothic UI\", \"Yu Gothic\", Meiryo, \"Hiragino Sans\", sans-serif",
+        "fillStyle": "#ffffff",
+        "transform": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          128,
+          512,
+          0,
+          1
+        ],
+        "page": null
+      },
+      {
+        "text": "さくら通信",
+        "args": [
+          32,
+          15
+        ],
+        "font": "bold 12px \"Noto Sans JP\", \"Yu Gothic UI\", \"Yu Gothic\", Meiryo, \"Hiragino Sans\", sans-serif",
+        "fillStyle": "#ffffff",
+        "transform": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          192,
+          512,
+          0,
+          1
+        ],
+        "page": null
+      },
+      {
+        "text": "さくら通信",
+        "args": [
+          32,
+          15
+        ],
+        "font": "bold 12px \"Noto Sans JP\", \"Yu Gothic UI\", \"Yu Gothic\", Meiryo, \"Hiragino Sans\", sans-serif",
+        "fillStyle": "#ffffff",
+        "transform": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          256,
+          512,
+          0,
+          1
+        ],
+        "page": null
+      },
+      {
+        "text": "さくら通信",
+        "args": [
+          32,
+          15
+        ],
+        "font": "bold 12px \"Noto Sans JP\", \"Yu Gothic UI\", \"Yu Gothic\", Meiryo, \"Hiragino Sans\", sans-serif",
+        "fillStyle": "#ffffff",
+        "transform": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          320,
+          512,
+          0,
+          1
+        ],
+        "page": null
+      },
+      {
+        "text": "さくら通信",
+        "args": [
+          32,
+          15
+        ],
+        "font": "bold 12px \"Noto Sans JP\", \"Yu Gothic UI\", \"Yu Gothic\", Meiryo, \"Hiragino Sans\", sans-serif",
+        "fillStyle": "#ffffff",
+        "transform": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          384,
+          512,
+          0,
+          1
+        ],
+        "page": null
+      },
+      {
+        "text": "さくら通信",
+        "args": [
+          32,
+          15
+        ],
+        "font": "bold 12px \"Noto Sans JP\", \"Yu Gothic UI\", \"Yu Gothic\", Meiryo, \"Hiragino Sans\", sans-serif",
+        "fillStyle": "#ffffff",
+        "transform": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          128,
+          672,
+          0,
+          1
+        ],
+        "page": null
+      },
+      {
+        "text": "さくら通信",
+        "args": [
+          32,
+          15
+        ],
+        "font": "bold 12px \"Noto Sans JP\", \"Yu Gothic UI\", \"Yu Gothic\", Meiryo, \"Hiragino Sans\", sans-serif",
+        "fillStyle": "#ffffff",
+        "transform": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          192,
+          672,
+          0,
+          1
+        ],
+        "page": null
+      },
+      {
+        "text": "さくら通信",
+        "args": [
+          32,
+          15
+        ],
+        "font": "bold 12px \"Noto Sans JP\", \"Yu Gothic UI\", \"Yu Gothic\", Meiryo, \"Hiragino Sans\", sans-serif",
+        "fillStyle": "#ffffff",
+        "transform": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          256,
+          672,
+          0,
+          1
+        ],
+        "page": null
+      },
+      {
+        "text": "さくら通信",
+        "args": [
+          32,
+          15
+        ],
+        "font": "bold 12px \"Noto Sans JP\", \"Yu Gothic UI\", \"Yu Gothic\", Meiryo, \"Hiragino Sans\", sans-serif",
+        "fillStyle": "#ffffff",
+        "transform": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          320,
+          672,
+          0,
+          1
+        ],
+        "page": null
+      },
+      {
+        "text": "さくら通信",
+        "args": [
+          32,
+          15
+        ],
+        "font": "bold 12px \"Noto Sans JP\", \"Yu Gothic UI\", \"Yu Gothic\", Meiryo, \"Hiragino Sans\", sans-serif",
+        "fillStyle": "#ffffff",
+        "transform": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          384,
+          672,
+          0,
+          1
+        ],
+        "page": null
+      },
+      {
+        "text": "さくら通信",
+        "args": [
+          32,
+          15
+        ],
+        "font": "bold 12px \"Noto Sans JP\", \"Yu Gothic UI\", \"Yu Gothic\", Meiryo, \"Hiragino Sans\", sans-serif",
+        "fillStyle": "#ffffff",
+        "transform": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          128,
+          832,
+          0,
+          1
+        ],
+        "page": null
+      },
+      {
+        "text": "さくら通信",
+        "args": [
+          32,
+          15
+        ],
+        "font": "bold 12px \"Noto Sans JP\", \"Yu Gothic UI\", \"Yu Gothic\", Meiryo, \"Hiragino Sans\", sans-serif",
+        "fillStyle": "#ffffff",
+        "transform": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          192,
+          832,
+          0,
+          1
+        ],
+        "page": null
+      },
+      {
+        "text": "さくら通信",
+        "args": [
+          32,
+          15
+        ],
+        "font": "bold 12px \"Noto Sans JP\", \"Yu Gothic UI\", \"Yu Gothic\", Meiryo, \"Hiragino Sans\", sans-serif",
+        "fillStyle": "#ffffff",
+        "transform": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          256,
+          832,
+          0,
+          1
+        ],
+        "page": null
+      },
+      {
+        "text": "さくら通信",
+        "args": [
+          32,
+          15
+        ],
+        "font": "bold 12px \"Noto Sans JP\", \"Yu Gothic UI\", \"Yu Gothic\", Meiryo, \"Hiragino Sans\", sans-serif",
+        "fillStyle": "#ffffff",
+        "transform": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          320,
+          832,
+          0,
+          1
+        ],
+        "page": null
+      },
+      {
+        "text": "さくら通信",
+        "args": [
+          32,
+          15
+        ],
+        "font": "bold 12px \"Noto Sans JP\", \"Yu Gothic UI\", \"Yu Gothic\", Meiryo, \"Hiragino Sans\", sans-serif",
+        "fillStyle": "#ffffff",
+        "transform": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          384,
+          832,
+          0,
+          1
+        ],
+        "page": null
+      },
+      {
+        "text": "さくらぽん",
+        "args": [
+          80,
+          133
+        ],
+        "font": "bold 24px \"Zen Maru Gothic\", \"Noto Sans JP\", \"Yu Gothic\", sans-serif",
+        "fillStyle": "#ffffff",
+        "transform": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1
+        ],
+        "page": null
+      },
+      {
+        "text": "さくらぽん",
+        "args": [
+          80,
+          133
+        ],
+        "font": "bold 24px \"Zen Maru Gothic\", \"Noto Sans JP\", \"Yu Gothic\", sans-serif",
+        "fillStyle": "#ffffff",
+        "transform": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          320,
+          0,
+          0,
+          1
+        ],
+        "page": null
+      },
+      {
+        "text": "さくらまつり",
+        "args": [
+          125,
+          298
+        ],
+        "font": "900 32px \"Zen Maru Gothic\", \"Noto Sans JP\", \"Yu Gothic\", sans-serif",
+        "fillStyle": "#c2456e",
+        "transform": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          4,
+          4,
+          0,
+          1
+        ],
+        "page": null
+      },
+      {
+        "text": "さくら散歩マップ",
+        "args": [
+          77,
+          204
+        ],
+        "font": "900 16px \"Zen Maru Gothic\", \"Noto Sans JP\", \"Yu Gothic\", sans-serif",
+        "fillStyle": "#c2456e",
+        "transform": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          438,
+          362,
+          0,
+          1
+        ],
+        "page": null
+      },
+      {
+        "text": "わたしのすきな さくらがおか",
+        "args": [
+          250,
+          20
+        ],
+        "font": "bold 20px \"Yusei Magic\", \"Zen Maru Gothic\", \"Noto Sans JP\", sans-serif",
+        "fillStyle": "#c2456e",
+        "transform": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          4,
+          4,
+          0,
+          1
+        ],
+        "page": null
+      },
+      {
+        "text": "さくら ゆうな",
+        "args": [
+          118,
+          94
+        ],
+        "font": "bold 10px \"Yusei Magic\", \"Zen Maru Gothic\", \"Noto Sans JP\", sans-serif",
+        "fillStyle": "#555555",
+        "transform": [
+          0.9998941295632965,
+          -0.014550933470321955,
+          0,
+          0,
+          0.014550933470321955,
+          0.9998941295632965,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          15.280393609236668,
+          55.09661353210932,
+          0,
+          1
+        ],
+        "page": null
+      },
+      {
+        "text": "さくらライン",
+        "args": [
+          64,
+          22
+        ],
+        "font": "900 18px \"Zen Maru Gothic\", \"Noto Sans JP\", \"Yu Gothic\", sans-serif",
+        "fillStyle": "#2d5b52",
+        "transform": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          816,
+          308,
+          0,
+          1
+        ],
+        "page": null
+      },
+      {
+        "text": "さくらパス チャージ",
+        "args": [
+          150,
+          118
+        ],
+        "font": "bold 14px \"Noto Sans JP\", \"Yu Gothic UI\", \"Yu Gothic\", Meiryo, \"Hiragino Sans\", sans-serif",
+        "fillStyle": "#34303f",
+        "transform": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          4,
+          4,
+          0,
+          1
+        ],
+        "page": null
+      },
+      {
+        "text": "さくら ゆうな",
+        "args": [
+          112,
+          95
+        ],
+        "font": "bold 10px \"Yusei Magic\", \"Zen Maru Gothic\", \"Noto Sans JP\", sans-serif",
+        "fillStyle": "#555555",
+        "transform": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          600,
+          432,
+          0,
+          1
+        ],
+        "page": null
+      },
+      {
+        "text": "さくらめぐり",
+        "args": [
+          36,
+          88
+        ],
+        "font": "bold 10px \"Noto Sans JP\", \"Yu Gothic UI\", \"Yu Gothic\", Meiryo, \"Hiragino Sans\", sans-serif",
+        "fillStyle": "#34303f",
+        "transform": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          784,
+          564,
+          0,
+          1
+        ],
+        "page": null
+      },
+      {
+        "text": "さくらライン",
+        "args": [
+          36,
+          15
+        ],
+        "font": "900 11px \"Noto Sans JP\", \"Yu Gothic UI\", \"Yu Gothic\", Meiryo, \"Hiragino Sans\", sans-serif",
+        "fillStyle": "#2d5b52",
+        "transform": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          860,
+          564,
+          0,
+          1
+        ],
+        "page": null
+      },
+      {
+        "text": "さくらドリンク",
+        "args": [
+          128,
+          30
+        ],
+        "font": "900 28px \"Zen Maru Gothic\", \"Noto Sans JP\", \"Yu Gothic\", sans-serif",
+        "fillStyle": "#ffffff",
+        "transform": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          468,
+          672,
+          0,
+          1
+        ],
+        "page": null
+      },
+      {
+        "text": "わたしのすきな さくらがおか",
+        "args": [
+          150,
+          16
+        ],
+        "font": "bold 18px \"Yusei Magic\", \"Zen Maru Gothic\", \"Noto Sans JP\", sans-serif",
+        "fillStyle": "#c2456e",
+        "transform": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          4,
+          836,
+          0,
+          1
+        ],
+        "page": null
+      },
+      {
+        "text": "さくらまる",
+        "args": [
+          0,
+          34
+        ],
+        "font": "900 14px \"Zen Maru Gothic\", \"Noto Sans JP\", \"Yu Gothic\", sans-serif",
+        "fillStyle": "#c24a6e",
+        "transform": [
+          0.9800665778412416,
+          -0.19866933079506122,
+          0,
+          0,
+          0.19866933079506122,
+          0.9800665778412416,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          900,
+          560,
+          0,
+          1
+        ],
+        "page": null
+      },
+      {
+        "text": "さくらがおかえきまえ",
+        "args": [
+          128,
+          160
+        ],
+        "font": "bold 17px \"Noto Sans JP\", \"Yu Gothic UI\", \"Yu Gothic\", Meiryo, \"Hiragino Sans\", sans-serif",
+        "fillStyle": "#2f3a58",
+        "transform": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1
+        ],
+        "page": null
+      },
+      {
+        "text": "沿線 さくらめぐり",
+        "args": [
+          128,
+          440
+        ],
+        "font": "900 22px \"Noto Sans JP\", \"Yu Gothic UI\", \"Yu Gothic\", Meiryo, \"Hiragino Sans\", sans-serif",
+        "fillStyle": "#c24a6e",
+        "transform": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1
+        ],
+        "page": null
+      },
+      {
+        "text": "さくらの町へ ようこそ",
+        "args": [
+          256,
+          50.88
+        ],
+        "font": "43.52px \"Yuji Syuku\", \"Noto Serif JP\", \"Yu Mincho\", serif",
+        "fillStyle": "#4a3438",
+        "transform": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1
+        ],
+        "page": null
+      },
+      {
+        "text": "さくらがおか",
+        "args": [
+          120,
+          130
+        ],
+        "font": "bold 24px \"Zen Maru Gothic\", \"Noto Sans JP\", \"Yu Gothic\", sans-serif",
+        "fillStyle": "#6a6272",
+        "transform": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1
+        ],
+        "page": null
+      },
+      {
+        "text": "さくらまる",
+        "args": [
+          64,
+          108
+        ],
+        "font": "900 17px \"Zen Maru Gothic\", \"Noto Sans JP\", \"Yu Gothic\", sans-serif",
+        "fillStyle": "#c24a6e",
+        "transform": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1
+        ],
+        "page": null
+      },
+      {
+        "text": "新作 さくらもち味",
+        "args": [
+          110,
+          279
+        ],
+        "font": "900 24px \"Zen Maru Gothic\", \"Noto Sans JP\", \"Yu Gothic\", sans-serif",
+        "fillStyle": "#2c8a7e",
+        "transform": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          708,
+          4,
+          0,
+          1
+        ],
+        "page": {
+          "kind": "lit",
+          "index": 0
+        }
+      },
+      {
+        "text": "さくらフェア",
+        "args": [
+          110,
+          146
+        ],
+        "font": "900 29px \"Zen Maru Gothic\", \"Noto Sans JP\", \"Yu Gothic\", sans-serif",
+        "fillStyle": "#c2476a",
+        "transform": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          4,
+          322,
+          0,
+          1
+        ],
+        "page": {
+          "kind": "lit",
+          "index": 0
+        }
+      },
+      {
+        "text": "さくらん",
+        "args": [
+          64,
+          112
+        ],
+        "font": "900 17px \"Zen Maru Gothic\", \"Noto Sans JP\", \"Yu Gothic\", sans-serif",
+        "fillStyle": "#c2476a",
+        "transform": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          796,
+          322,
+          0,
+          1
+        ],
+        "page": {
+          "kind": "lit",
+          "index": 0
+        }
+      },
+      {
+        "text": "春のさくらフェア",
+        "args": [
+          116,
+          34
+        ],
+        "font": "900 17px \"Zen Maru Gothic\", \"Noto Sans JP\", \"Yu Gothic\", sans-serif",
+        "fillStyle": "#c2476a",
+        "transform": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          732,
+          4,
+          0,
+          1
+        ],
+        "page": {
+          "kind": "inner",
+          "index": 0
+        }
+      },
+      {
+        "text": "さくらラテ",
+        "args": [
+          16,
+          63
+        ],
+        "font": "bold 14px \"Noto Sans JP\", \"Yu Gothic UI\", \"Yu Gothic\", Meiryo, \"Hiragino Sans\", sans-serif",
+        "fillStyle": "#3a3346",
+        "transform": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          316,
+          388,
+          0,
+          1
+        ],
+        "page": {
+          "kind": "lit",
+          "index": 1
+        }
+      },
+      {
+        "text": "さくらラテ",
+        "args": [
+          22,
+          134
+        ],
+        "font": "24px \"Yusei Magic\", \"Zen Maru Gothic\", \"Noto Sans JP\", sans-serif",
+        "fillStyle": "#f4efe4",
+        "transform": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          532,
+          388,
+          0,
+          1
+        ],
+        "page": {
+          "kind": "lit",
+          "index": 1
+        }
+      },
+      {
+        "text": "さくらラテ",
+        "args": [
+          28,
+          108
+        ],
+        "font": "17px \"Yusei Magic\", \"Zen Maru Gothic\", \"Noto Sans JP\", sans-serif",
+        "fillStyle": "#f4efe4",
+        "transform": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          4,
+          586,
+          0,
+          1
+        ],
+        "page": {
+          "kind": "inner",
+          "index": 0
+        }
+      },
+      {
+        "text": "コミックさくら",
+        "args": [
+          58,
+          15
+        ],
+        "font": "900 12px \"Noto Sans JP\", \"Yu Gothic UI\", \"Yu Gothic\", Meiryo, \"Hiragino Sans\", sans-serif",
+        "fillStyle": "#fbf8f0",
+        "transform": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          204,
+          462,
+          0,
+          1
+        ],
+        "page": {
+          "kind": "lit",
+          "index": 3
+        }
+      },
+      {
+        "text": "放課後さくら通信",
+        "args": [
+          120,
+          24
+        ],
+        "font": "900 28px \"Zen Maru Gothic\", \"Noto Sans JP\", \"Yu Gothic\", sans-serif",
+        "fillStyle": "#c2476a",
+        "transform": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          380,
+          4,
+          0,
+          1
+        ],
+        "page": {
+          "kind": "lit",
+          "index": 4
+        }
+      },
+      {
+        "text": "さくらポテト",
+        "args": [
+          64,
+          28.8
+        ],
+        "font": "900 19px \"Zen Maru Gothic\", \"Noto Sans JP\", \"Yu Gothic\", sans-serif",
+        "fillStyle": "#fbf8f0",
+        "transform": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          256,
+          160,
+          0,
+          1
+        ],
+        "page": null
+      },
+      {
+        "text": "さくらクッキー",
+        "args": [
+          64,
+          21.599999999999998
+        ],
+        "font": "900 16px \"Zen Maru Gothic\", \"Noto Sans JP\", \"Yu Gothic\", sans-serif",
+        "fillStyle": "#f2b5c8",
+        "transform": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          512,
+          160,
+          0,
+          1
+        ],
+        "page": null
+      },
+      {
+        "text": "さくらもち",
+        "args": [
+          64,
+          21.599999999999998
+        ],
+        "font": "900 22px \"Zen Maru Gothic\", \"Noto Sans JP\", \"Yu Gothic\", sans-serif",
+        "fillStyle": "#fbf8f0",
+        "transform": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          640,
+          160,
+          0,
+          1
+        ],
+        "page": null
+      },
+      {
+        "text": "さくらラテ",
+        "args": [
+          48,
+          60.48
+        ],
+        "font": "900 17px \"Zen Maru Gothic\", \"Noto Sans JP\", \"Yu Gothic\", sans-serif",
+        "fillStyle": "#c2476a",
+        "transform": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          672,
+          0,
+          0,
+          1
+        ],
+        "page": null
+      },
+      {
+        "text": "さくらソーダ",
+        "args": [
+          0,
+          0
+        ],
+        "font": "900 8px \"Zen Maru Gothic\", \"Noto Sans JP\", \"Yu Gothic\", sans-serif",
+        "fillStyle": "#dd7f9d",
+        "transform": [
+          6.123233995736766e-17,
+          -1,
+          0,
+          0,
+          1,
+          6.123233995736766e-17,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          672,
+          167.67999267578125,
+          0,
+          1
+        ],
+        "page": null
+      },
+      {
+        "text": "さくらえび",
+        "args": [
+          64,
+          65.28
+        ],
+        "font": "900 22px \"Zen Maru Gothic\", \"Noto Sans JP\", \"Yu Gothic\", sans-serif",
+        "fillStyle": "#f2b5c8",
+        "transform": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          896,
+          0,
+          0,
+          1
+        ],
+        "page": null
+      },
+      {
+        "text": "さくら",
+        "args": [
+          0,
+          0
+        ],
+        "font": "900 8px \"Noto Sans JP\", \"Segoe UI\", Arial, sans-serif",
+        "fillStyle": "#f7d3de",
+        "transform": [
+          6.123233995736766e-17,
+          -1,
+          0,
+          0,
+          1,
+          6.123233995736766e-17,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          800,
+          64,
+          0,
+          1
+        ],
+        "page": null
+      },
+      {
+        "text": "コミックさくら",
+        "args": [
+          64,
+          15.840000000000002
+        ],
+        "font": "900 22px \"Noto Sans JP\", \"Yu Gothic UI\", \"Yu Gothic\", Meiryo, \"Hiragino Sans\", sans-serif",
+        "fillStyle": "#fbf8f0",
+        "transform": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          768,
+          0,
+          0,
+          1
+        ],
+        "page": null
+      },
+      {
+        "text": "さくら坂の約束",
+        "args": [
+          64,
+          27.503999999999998
+        ],
+        "font": "bold 15px \"Noto Serif JP\", \"Yu Mincho\", \"Hiragino Mincho ProN\", serif",
+        "fillStyle": "#3a3346",
+        "transform": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1
+        ],
+        "page": null
+      },
+      {
+        "text": "放課後さくら通信",
+        "args": [
+          64,
+          27.503999999999998
+        ],
+        "font": "bold 13px \"Noto Serif JP\", \"Yu Mincho\", \"Hiragino Mincho ProN\", serif",
+        "fillStyle": "#3a3346",
+        "transform": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          384,
+          0,
+          0,
+          1
+        ],
+        "page": null
+      },
+      {
+        "text": "さくら坂の約束",
+        "args": [
+          64,
+          27.503999999999998
+        ],
+        "font": "bold 15px \"Noto Serif JP\", \"Yu Mincho\", \"Hiragino Mincho ProN\", serif",
+        "fillStyle": "#3a3346",
+        "transform": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          352,
+          0,
+          1
+        ],
+        "page": null
+      },
+      {
+        "text": "放課後さくら通信",
+        "args": [
+          64,
+          27.503999999999998
+        ],
+        "font": "bold 13px \"Noto Serif JP\", \"Yu Mincho\", \"Hiragino Mincho ProN\", serif",
+        "fillStyle": "#3a3346",
+        "transform": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          384,
+          352,
+          0,
+          1
+        ],
+        "page": null
+      },
+      {
+        "text": "水はセルフサービスです",
+        "args": [
+          128,
+          49.6
+        ],
+        "font": "bold 22px \"Noto Sans JP\", \"Yu Gothic UI\", \"Yu Gothic\", Meiryo, \"Hiragino Sans\", sans-serif",
+        "fillStyle": "#2f4d7a",
+        "transform": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1
+        ],
+        "page": null
+      },
+      {
+        "text": "さくら牧場",
+        "args": [
+          36,
+          12
+        ],
+        "font": "bold 11px \"Noto Sans JP\", \"Yu Gothic UI\", \"Yu Gothic\", Meiryo, \"Hiragino Sans\", sans-serif",
+        "fillStyle": "#ffffff",
+        "transform": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          308,
+          687,
+          0,
+          1
+        ],
+        "page": null
+      },
+      {
+        "text": "さくらまつり 4/1〜4/15",
+        "args": [
+          278,
+          616
+        ],
+        "font": "bold 20px \"Noto Sans JP\", \"Yu Gothic UI\", \"Yu Gothic\", Meiryo, \"Hiragino Sans\", sans-serif",
+        "fillStyle": "#4a4552",
+        "transform": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1
+        ],
+        "page": null
+      },
+      {
+        "text": "さくら進学ゼミ",
+        "args": [
+          790,
+          572
+        ],
+        "font": "900 38px \"Noto Sans JP\", \"Yu Gothic UI\", \"Yu Gothic\", Meiryo, \"Hiragino Sans\", sans-serif",
+        "fillStyle": "#9a6a1f",
+        "transform": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1
+        ],
+        "page": null
+      },
+      {
+        "text": "季刊 さくら文庫",
+        "args": [
+          542,
+          720
+        ],
+        "font": "900 33px \"Noto Sans JP\", \"Yu Gothic UI\", \"Yu Gothic\", Meiryo, \"Hiragino Sans\", sans-serif",
+        "fillStyle": "#c65a82",
+        "transform": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1
+        ],
+        "page": null
+      },
+      {
+        "text": "さくらがおか だい１ ふみきり",
+        "args": [
+          192,
+          136
+        ],
+        "font": "500 20px \"Noto Sans JP\", \"Yu Gothic UI\", \"Yu Gothic\", Meiryo, \"Hiragino Sans\", sans-serif",
+        "fillStyle": "#5b5868",
+        "transform": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          492,
+          0,
+          0,
+          1
+        ],
+        "page": null
+      },
+      {
+        "text": "さくら",
+        "args": [
+          128,
+          39.2
+        ],
+        "font": "900 30px \"Zen Maru Gothic\", \"Noto Sans JP\", \"Yu Gothic\", sans-serif",
+        "fillStyle": "#c9557a",
+        "transform": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          768,
+          144,
+          0,
+          1
+        ],
+        "page": null
+      },
+      {
+        "text": "さくらドリンクス",
+        "args": [
+          560,
+          178
+        ],
+        "font": "900 34px \"Zen Maru Gothic\", \"Noto Sans JP\", \"Yu Gothic\", sans-serif",
+        "fillStyle": "#b8433d",
+        "transform": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1
+        ],
+        "page": null
+      },
+      {
+        "text": "さくらぽん",
+        "args": [
+          128,
+          205
+        ],
+        "font": "900 28px \"Zen Maru Gothic\", \"Noto Sans JP\", \"Yu Gothic\", sans-serif",
+        "fillStyle": "#d24f7a",
+        "transform": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1
+        ],
+        "page": null
+      },
+      {
+        "text": "さくらラテ",
+        "args": [
+          124.5776842105263,
+          90.67951807228914
+        ],
+        "font": "900 40px \"Zen Maru Gothic\", \"Noto Sans JP\", \"Yu Gothic\", sans-serif",
+        "fillStyle": "#b8456a",
+        "transform": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1
+        ],
+        "page": null
+      },
+      {
+        "text": "さくらドリンクス",
+        "args": [
+          256,
+          431.8072289156627
+        ],
+        "font": "bold 14px \"Noto Sans JP\", \"Segoe UI\", Arial, sans-serif",
+        "fillStyle": "rgba(60, 56, 70, 0.55)",
+        "transform": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1
+        ],
+        "page": null
+      },
+      {
+        "text": "さくらドリンクス",
+        "args": [
+          256,
+          431.8072289156627
+        ],
+        "font": "bold 14px \"Noto Sans JP\", \"Segoe UI\", Arial, sans-serif",
+        "fillStyle": "rgba(60, 56, 70, 0.55)",
+        "transform": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1
+        ],
+        "page": null
+      },
+      {
+        "text": "さくら",
+        "args": [
+          194.56,
+          156
+        ],
+        "font": "16px \"Yusei Magic\", \"Zen Maru Gothic\", \"Noto Sans JP\", sans-serif",
+        "fillStyle": "#2e2a36",
+        "transform": [
+          0.796875,
+          0,
+          0,
+          0,
+          0,
+          0.796875,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          816,
+          0,
+          0,
+          1
+        ],
+        "page": null
+      },
+      {
+        "text": "さくら設備",
+        "args": [
+          300,
+          50
+        ],
+        "font": "bold 64px \"Zen Maru Gothic\", \"Noto Sans JP\", \"Yu Gothic\", sans-serif",
+        "fillStyle": "#2f5d95",
+        "transform": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          512,
+          128,
+          0,
+          1
+        ],
+        "page": null
+      },
+      {
+        "text": "さくら設備  ☎ 25-3321",
+        "args": [
+          128,
+          32
+        ],
+        "font": "bold 22px \"Zen Maru Gothic\", \"Noto Sans JP\", \"Yu Gothic\", sans-serif",
+        "fillStyle": "#2f5d95",
+        "transform": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          768,
+          448,
+          0,
+          1
+        ],
+        "page": null
+      },
+      {
+        "text": "さくら コインランドリー",
+        "args": [
+          256,
+          48
+        ],
+        "font": "bold 42px \"Noto Sans JP\", \"Yu Gothic UI\", \"Yu Gothic\", Meiryo, \"Hiragino Sans\", sans-serif",
+        "fillStyle": "#344e50",
+        "transform": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          4,
+          372,
+          0,
+          1
+        ],
+        "page": {
+          "kind": "lit",
+          "index": 4
+        }
+      },
+      {
+        "text": "洗濯・乾燥",
+        "args": [
+          128,
+          30
+        ],
+        "font": "bold 30px \"Noto Sans JP\", \"Yu Gothic UI\", \"Yu Gothic\", Meiryo, \"Hiragino Sans\", sans-serif",
+        "fillStyle": "#344e50",
+        "transform": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          524,
+          372,
+          0,
+          1
+        ],
+        "page": {
+          "kind": "lit",
+          "index": 4
+        }
+      },
+      {
+        "text": "セルフサービス",
+        "args": [
+          128,
+          69
+        ],
+        "font": "bold 26px \"Noto Sans JP\", \"Yu Gothic UI\", \"Yu Gothic\", Meiryo, \"Hiragino Sans\", sans-serif",
+        "fillStyle": "#344e50",
+        "transform": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          524,
+          372,
+          0,
+          1
+        ],
+        "page": {
+          "kind": "lit",
+          "index": 4
+        }
+      },
+      {
+        "text": "さくら",
+        "args": [
+          96,
+          33
+        ],
+        "font": "bold 28px \"Noto Sans JP\", \"Yu Gothic UI\", \"Yu Gothic\", Meiryo, \"Hiragino Sans\", sans-serif",
+        "fillStyle": "#344e50",
+        "transform": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          788,
+          372,
+          0,
+          1
+        ],
+        "page": {
+          "kind": "lit",
+          "index": 4
+        }
+      },
+      {
+        "text": "コインランドリー",
+        "args": [
+          96,
+          72
+        ],
+        "font": "bold 25px \"Noto Sans JP\", \"Yu Gothic UI\", \"Yu Gothic\", Meiryo, \"Hiragino Sans\", sans-serif",
+        "fillStyle": "#344e50",
+        "transform": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          788,
+          372,
+          0,
+          1
+        ],
+        "page": {
+          "kind": "lit",
+          "index": 4
+        }
+      },
+      {
+        "text": "洗濯・乾燥",
+        "args": [
+          96,
+          121
+        ],
+        "font": "bold 27px \"Noto Sans JP\", \"Yu Gothic UI\", \"Yu Gothic\", Meiryo, \"Hiragino Sans\", sans-serif",
+        "fillStyle": "#344e50",
+        "transform": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          788,
+          372,
+          0,
+          1
+        ],
+        "page": {
+          "kind": "lit",
+          "index": 4
+        }
+      },
+      {
+        "text": "セルフサービス",
+        "args": [
+          96,
+          157
+        ],
+        "font": "bold 21px \"Noto Sans JP\", \"Yu Gothic UI\", \"Yu Gothic\", Meiryo, \"Hiragino Sans\", sans-serif",
+        "fillStyle": "#344e50",
+        "transform": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          788,
+          372,
+          0,
+          1
+        ],
+        "page": {
+          "kind": "lit",
+          "index": 4
+        }
+      }
+    ],
+    "pages": [
+      {
+        "kind": "lit",
+        "index": 0,
+        "pageCount": 5,
+        "texture": {
+          "uuid": "19f0f2b9-a23a-4e25-86c4-184efe285af6",
+          "name": "",
+          "type": 1009,
+          "colorSpace": "srgb",
+          "width": 1024,
+          "height": 1024,
+          "repeat": [
+            1,
+            1
+          ],
+          "offset": [
+            0,
+            0
+          ],
+          "matrix": [
+            1,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            1
+          ],
+          "wrapS": 1001,
+          "wrapT": 1001,
+          "channel": 0,
+          "version": 3,
+          "sourceVersion": 3,
+          "uploadedVersion": 3,
+          "hasGLTexture": true
+        },
+        "pixels": 1048576,
+        "rgbaSha256": "0005e0465f68a0dfee1c57b8f004cb6cc8b29156517c922ccb6c20ed3d18932a",
+        "sceneMaterialCount": 1
+      },
+      {
+        "kind": "lit",
+        "index": 1,
+        "pageCount": 5,
+        "texture": {
+          "uuid": "42a25975-828c-4385-8c21-283366c2b4d2",
+          "name": "",
+          "type": 1009,
+          "colorSpace": "srgb",
+          "width": 1024,
+          "height": 1024,
+          "repeat": [
+            1,
+            1
+          ],
+          "offset": [
+            0,
+            0
+          ],
+          "matrix": [
+            1,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            1
+          ],
+          "wrapS": 1001,
+          "wrapT": 1001,
+          "channel": 0,
+          "version": 3,
+          "sourceVersion": 3,
+          "uploadedVersion": null,
+          "hasGLTexture": false
+        },
+        "pixels": 1048576,
+        "rgbaSha256": "5abc5b2a5e003920ed91a7e135c24bd1ec62495e53af5dc0578dc2c328a5c948",
+        "sceneMaterialCount": 0
+      },
+      {
+        "kind": "lit",
+        "index": 2,
+        "pageCount": 5,
+        "texture": {
+          "uuid": "7c430119-fda1-4ea9-9960-0e4f708f3fa8",
+          "name": "",
+          "type": 1009,
+          "colorSpace": "srgb",
+          "width": 1024,
+          "height": 1024,
+          "repeat": [
+            1,
+            1
+          ],
+          "offset": [
+            0,
+            0
+          ],
+          "matrix": [
+            1,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            1
+          ],
+          "wrapS": 1001,
+          "wrapT": 1001,
+          "channel": 0,
+          "version": 3,
+          "sourceVersion": 3,
+          "uploadedVersion": 3,
+          "hasGLTexture": true
+        },
+        "pixels": 1048576,
+        "rgbaSha256": "dcc954bbde4f2199c40605dda0bf76342e9dd129ed1b45ee551e83d0ad5bd565",
+        "sceneMaterialCount": 1
+      },
+      {
+        "kind": "lit",
+        "index": 3,
+        "pageCount": 5,
+        "texture": {
+          "uuid": "08f70431-ed8f-4ede-ab4c-fa31048b325c",
+          "name": "",
+          "type": 1009,
+          "colorSpace": "srgb",
+          "width": 1024,
+          "height": 1024,
+          "repeat": [
+            1,
+            1
+          ],
+          "offset": [
+            0,
+            0
+          ],
+          "matrix": [
+            1,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            1
+          ],
+          "wrapS": 1001,
+          "wrapT": 1001,
+          "channel": 0,
+          "version": 3,
+          "sourceVersion": 3,
+          "uploadedVersion": 3,
+          "hasGLTexture": true
+        },
+        "pixels": 1048576,
+        "rgbaSha256": "65010984eeb4a1fe7624bf37ff66ed4af464d59e49aa56f8a5e19aaf8f4d3553",
+        "sceneMaterialCount": 1
+      },
+      {
+        "kind": "lit",
+        "index": 4,
+        "pageCount": 5,
+        "texture": {
+          "uuid": "63f5174e-e444-4148-bc21-276c95107e96",
+          "name": "",
+          "type": 1009,
+          "colorSpace": "srgb",
+          "width": 1024,
+          "height": 1024,
+          "repeat": [
+            1,
+            1
+          ],
+          "offset": [
+            0,
+            0
+          ],
+          "matrix": [
+            1,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            1
+          ],
+          "wrapS": 1001,
+          "wrapT": 1001,
+          "channel": 0,
+          "version": 4,
+          "sourceVersion": 4,
+          "uploadedVersion": 4,
+          "hasGLTexture": true
+        },
+        "pixels": 1048576,
+        "rgbaSha256": "23a1ac5a73cd077a62d2a3b7aa7fbcd73bd31b27a4a3c0de2271e8cd1a6a9cb8",
+        "sceneMaterialCount": 1
+      },
+      {
+        "kind": "glow",
+        "index": 0,
+        "pageCount": 1,
+        "texture": {
+          "uuid": "bce63057-5165-4961-9cb0-5aacc3a2a5a1",
+          "name": "",
+          "type": 1009,
+          "colorSpace": "srgb",
+          "width": 1024,
+          "height": 1024,
+          "repeat": [
+            1,
+            1
+          ],
+          "offset": [
+            0,
+            0
+          ],
+          "matrix": [
+            1,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            1
+          ],
+          "wrapS": 1001,
+          "wrapT": 1001,
+          "channel": 0,
+          "version": 3,
+          "sourceVersion": 3,
+          "uploadedVersion": null,
+          "hasGLTexture": false
+        },
+        "pixels": 1048576,
+        "rgbaSha256": "38541fcb776387fc6c42d5b8015aeebc84b3fdfe2298048987b606948ec1c504",
+        "sceneMaterialCount": 0
+      },
+      {
+        "kind": "cut",
+        "index": 0,
+        "pageCount": 1,
+        "texture": {
+          "uuid": "0755d099-1511-4f2c-8e4c-78164785ec6e",
+          "name": "",
+          "type": 1009,
+          "colorSpace": "srgb",
+          "width": 1024,
+          "height": 1024,
+          "repeat": [
+            1,
+            1
+          ],
+          "offset": [
+            0,
+            0
+          ],
+          "matrix": [
+            1,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            1
+          ],
+          "wrapS": 1001,
+          "wrapT": 1001,
+          "channel": 0,
+          "version": 3,
+          "sourceVersion": 3,
+          "uploadedVersion": null,
+          "hasGLTexture": false
+        },
+        "pixels": 1048576,
+        "rgbaSha256": "474d7f5b3de732f00db18a895a97a9d532ec02b5336ab84b4fcedf94ea16f254",
+        "sceneMaterialCount": 0
+      },
+      {
+        "kind": "inner",
+        "index": 0,
+        "pageCount": 2,
+        "texture": {
+          "uuid": "9b589264-1720-4865-92ee-3f6fcd1d7a9d",
+          "name": "",
+          "type": 1009,
+          "colorSpace": "srgb",
+          "width": 1024,
+          "height": 1024,
+          "repeat": [
+            1,
+            1
+          ],
+          "offset": [
+            0,
+            0
+          ],
+          "matrix": [
+            1,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            1
+          ],
+          "wrapS": 1001,
+          "wrapT": 1001,
+          "channel": 0,
+          "version": 3,
+          "sourceVersion": 3,
+          "uploadedVersion": null,
+          "hasGLTexture": false
+        },
+        "pixels": 1048576,
+        "rgbaSha256": "95eb9a4e414ffc5883a10755d2e483f2ccfe94881f6f6a16c6fa9fa9536630f6",
+        "sceneMaterialCount": 0
+      },
+      {
+        "kind": "inner",
+        "index": 1,
+        "pageCount": 2,
+        "texture": {
+          "uuid": "38af510c-bbc3-46ef-ad4a-433f0249446e",
+          "name": "",
+          "type": 1009,
+          "colorSpace": "srgb",
+          "width": 1024,
+          "height": 1024,
+          "repeat": [
+            1,
+            1
+          ],
+          "offset": [
+            0,
+            0
+          ],
+          "matrix": [
+            1,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            1
+          ],
+          "wrapS": 1001,
+          "wrapT": 1001,
+          "channel": 0,
+          "version": 3,
+          "sourceVersion": 3,
+          "uploadedVersion": null,
+          "hasGLTexture": false
+        },
+        "pixels": 1048576,
+        "rgbaSha256": "334300fc67467f45bdfc429a31b52b10c1fd7cd0f0e83577d2f1a421d73f92e1",
+        "sceneMaterialCount": 0
+      }
+    ],
+    "textureCache": {
+      "entries": 468,
+      "pixels": 86731392
+    }
+  },
+  "cityStats": {
+    "buildings": 5,
+    "apartments": 3,
+    "lowHouses": 2,
+    "modelTriangles": 29933,
+    "modelPrimitives": 138,
+    "connections": {
+      "roads": [
+        {
+          "name": "town-front-lane",
+          "minX": -56,
+          "maxX": 37,
+          "minZ": -118.5,
+          "maxZ": -115.8,
+          "triangles": 558,
+          "groundOffset": 0.06
+        },
+        {
+          "name": "town-levee-lane",
+          "minX": 32,
+          "maxX": 37,
+          "minZ": -115.8,
+          "maxZ": -101,
+          "triangles": 150,
+          "groundOffset": 0.06
+        }
+      ],
+      "stairs": [
+        {
+          "name": "town-apartment-3f-entry",
+          "x": -17,
+          "width": 2.2,
+          "highZ": -123.5,
+          "lowZ": -118.51,
+          "steps": 12,
+          "rise": 0.16522699094701745,
+          "tread": 0.4158333333333329,
+          "top": 5.458040148417157,
+          "bottom": 3.4753162570529477,
+          "minClearance": 0.1520745146716722
+        },
+        {
+          "name": "town-apartment-4f-entry",
+          "x": 2,
+          "width": 2.2,
+          "highZ": -122,
+          "lowZ": -118.51,
+          "steps": 9,
+          "rise": 0.16519691556765836,
+          "tread": 0.3877777777777772,
+          "top": 4.904808464050293,
+          "bottom": 3.418036223941368,
+          "minClearance": 0.16489170203975156
+        },
+        {
+          "name": "town-apartment-5f-entry",
+          "x": 22,
+          "width": 2.2,
+          "highZ": -121,
+          "lowZ": -118.51,
+          "steps": 8,
+          "rise": 0.16888438367843667,
+          "tread": 0.31124999999999936,
+          "top": 4.783957901000977,
+          "bottom": 3.4328828315734836,
+          "minClearance": 0.19491120815277263
+        },
+        {
+          "name": "town-house-0-entry",
+          "x": -37,
+          "width": 2.2,
+          "highZ": -121.50032998154778,
+          "lowZ": -118.51,
+          "steps": 8,
+          "rise": 0.16701789847613763,
+          "tread": 0.3737912476934717,
+          "top": 4.265555652798646,
+          "bottom": 2.929412464989545,
+          "minClearance": 0.1903727568173812
+        },
+        {
+          "name": "town-house-1-entry",
+          "x": -50,
+          "width": 2.2,
+          "highZ": -122.16807376975453,
+          "lowZ": -118.51,
+          "steps": 9,
+          "rise": 0.1703773724573469,
+          "tread": 0.4064526410838359,
+          "top": 4.317841223382807,
+          "bottom": 2.7844448712666847,
+          "minClearance": 0.1884255007462241
+        },
+        {
+          "name": "town-levee-stairs",
+          "x": 34.5,
+          "width": 5,
+          "highZ": -94.53,
+          "lowZ": -101,
+          "steps": 10,
+          "rise": 0.17436214139726358,
+          "tread": 0.6469999999999999,
+          "top": 3.23,
+          "bottom": 1.4863785860273642,
+          "minClearance": 0.030398222222221882
+        }
+      ],
+      "walkable": false
+    },
+    "trees": [
+      {
+        "x": -57.5,
+        "y": 3.5195525222354185,
+        "z": -122.5,
+        "triangles": 364
+      },
+      {
+        "x": 30.5,
+        "y": 4.387975295384702,
+        "z": -127,
+        "triangles": 364
+      }
+    ],
+    "poles": [
+      {
+        "x": -28,
+        "z": -116.2,
+        "height": 7.4
+      },
+      {
+        "x": 30.4,
+        "z": -116.2,
+        "height": 7.4
+      }
+    ],
+    "laundrySignAtlas": {
+      "page": 4,
+      "before": {
+        "pages": 5,
+        "x": 624,
+        "y": 0,
+        "rowH": 368
+      },
+      "after": {
+        "pages": 5,
+        "x": 984,
+        "y": 368,
+        "rowH": 200
+      },
+      "regions": [
+        {
+          "key": "name",
+          "w": 512,
+          "h": 96,
+          "uv": [
+            0.00390625,
+            0.54296875,
+            0.50390625,
+            0.63671875
+          ]
+        },
+        {
+          "key": "function",
+          "w": 256,
+          "h": 96,
+          "uv": [
+            0.51171875,
+            0.54296875,
+            0.76171875,
+            0.63671875
+          ]
+        },
+        {
+          "key": "aframe",
+          "w": 192,
+          "h": 192,
+          "uv": [
+            0.76953125,
+            0.44921875,
+            0.95703125,
+            0.63671875
+          ]
+        }
+      ],
+      "reusedRegions": false,
+      "newTextures": 0,
+      "text": [
+        "さくら コインランドリー",
+        "洗濯・乾燥",
+        "セルフサービス"
+      ],
+      "owner": "station",
+      "pixelsUpdated": true
+    },
+    "planting": [
+      {
+        "name": "town-apartment-3f",
+        "hedgeZ": -122.8,
+        "triangles": 1538
+      },
+      {
+        "name": "town-apartment-4f",
+        "hedgeZ": -121.3,
+        "triangles": 1634
+      },
+      {
+        "name": "town-apartment-5f",
+        "hedgeZ": -120.3,
+        "triangles": 1636
+      },
+      {
+        "name": "town-house-0",
+        "hedgeZ": -120.95032998154778,
+        "triangles": 1274
+      },
+      {
+        "name": "town-house-1",
+        "hedgeZ": -121.61807376975453,
+        "triangles": 1132
+      }
+    ],
+    "densityProps": {
+      "gbTriangles": 252,
+      "umbrellaTriangles": 192,
+      "laundry": {
+        "umbrellaStand": [
+          3.65,
+          4.784808464050293,
+          -123
+        ],
+        "sortingBins": [
+          -0.4,
+          4.784808464050293,
+          -122.93
+        ],
+        "binCount": 2
+      },
+      "rear": {
+        "origin": [
+          2,
+          4.904808464050293,
+          -131
+        ],
+        "rotationY": 3.141592653589793,
+        "broom": [
+          -5.2,
+          0,
+          0.14
+        ],
+        "dustpan": [
+          -4.85,
+          0,
+          0.26
+        ],
+        "bucket": [
+          -5.15,
+          0,
+          0.74
+        ],
+        "meter": [
+          -3.15,
+          1.3
+        ],
+        "parcels": [
+          {
+            "center": [
+              -5.15,
+              2.85,
+              0.37
+            ],
+            "size": [
+              0.46,
+              0.27,
+              0.36
+            ]
+          },
+          {
+            "center": [
+              -5.12,
+              3.12,
+              0.37
+            ],
+            "size": [
+              0.34,
+              0.18,
+              0.3
+            ]
+          }
+        ]
+      },
+      "source": "Pinned Sakuragaoka MIT builders and existing house atlas; no new textures",
+      "walkable": false,
+      "totalTriangles": 444
+    },
+    "texturedProps": {
+      "crate": {
+        "position": [
+          5.55,
+          4.784824423193932,
+          -122.58
+        ],
+        "triangles": 5840
+      },
+      "sign": {
+        "position": [
+          4.55,
+          4.784808464050293,
+          -122.35
+        ],
+        "rotationY": 0.35,
+        "size": [
+          0.45,
+          0.68
+        ],
+        "blank": false,
+        "text": "さくら コインランドリー / 洗濯・乾燥 / セルフサービス"
+      },
+      "pot": {
+        "position": [
+          6.25,
+          4.784808464050293,
+          -122.7
+        ],
+        "triangles": 141
+      },
+      "view": {
+        "position": [
+          8,
+          6.384808464050293,
+          -122.1
+        ],
+        "target": [
+          5.15,
+          5.144808464050294,
+          -122.7
+        ]
+      },
+      "walkable": false,
+      "borrowedAssetTextures": 4
+    },
+    "facadeLife": {
+      "buildings": [
+        {
+          "name": "town-apartment-3f",
+          "origin": [
+            -17,
+            5.3180401484171576,
+            -123.5
+          ],
+          "items": [],
+          "gbTriangles": 0,
+          "clothTriangles": 0,
+          "totalTriangles": 0
+        },
+        {
+          "name": "town-apartment-4f",
+          "origin": [
+            2,
+            4.764808464050294,
+            -122
+          ],
+          "items": [
+            {
+              "kind": "ac",
+              "position": [
+                -6.15,
+                3.75,
+                -3.475
+              ],
+              "triangles": 36,
+              "face": "west",
+              "floor": 2
+            },
+            {
+              "kind": "ac",
+              "position": [
+                -6.15,
+                6.6000000000000005,
+                -3.475
+              ],
+              "triangles": 36,
+              "face": "west",
+              "floor": 3
+            },
+            {
+              "kind": "ac",
+              "position": [
+                -2.9,
+                4.25,
+                -9.15
+              ],
+              "triangles": 36,
+              "face": "rear",
+              "floor": 2
+            },
+            {
+              "kind": "ac",
+              "position": [
+                -2.9,
+                7.1,
+                -9.15
+              ],
+              "triangles": 36,
+              "face": "rear",
+              "floor": 3
+            },
+            {
+              "kind": "ac",
+              "position": [
+                2.9,
+                4.25,
+                -9.15
+              ],
+              "triangles": 36,
+              "face": "rear",
+              "floor": 2
+            },
+            {
+              "kind": "rainpipe",
+              "position": [
+                -6.045,
+                0.16,
+                -8.7
+              ],
+              "triangles": 60,
+              "top": 11.200000000000001,
+              "clips": 2
+            },
+            {
+              "kind": "gutter",
+              "position": [
+                -6.23,
+                11.48,
+                -8.25
+              ],
+              "triangles": 12,
+              "length": 1.8
+            },
+            {
+              "kind": "rainpipe",
+              "position": [
+                -6.045,
+                0.16,
+                -1.55
+              ],
+              "triangles": 60,
+              "top": 11.200000000000001,
+              "clips": 2
+            },
+            {
+              "kind": "gutter",
+              "position": [
+                -6.23,
+                11.48,
+                -2
+              ],
+              "triangles": 12,
+              "length": 1.8
+            },
+            {
+              "kind": "balcony-top-rail",
+              "position": [
+                0,
+                4.29,
+                -0.185
+              ],
+              "triangles": 36,
+              "floor": 2,
+              "length": 3.78
+            },
+            {
+              "kind": "balcony-top-rail",
+              "position": [
+                0,
+                7.140000000000001,
+                -0.185
+              ],
+              "triangles": 36,
+              "floor": 3,
+              "length": 3.78
+            },
+            {
+              "kind": "laundry-pole",
+              "position": [
+                0,
+                5.07,
+                -0.57
+              ],
+              "triangles": 36
+            },
+            {
+              "kind": "laundry",
+              "position": [
+                0,
+                5.0600000000000005,
+                -0.57
+              ],
+              "triangles": 48,
+              "garments": 2
+            },
+            {
+              "kind": "electric-meter",
+              "position": [
+                3,
+                1.35,
+                -9.07
+              ],
+              "triangles": 36
+            },
+            {
+              "kind": "nameplate",
+              "position": [
+                4.72,
+                1.65,
+                -9.012
+              ],
+              "triangles": 12,
+              "atlas": "plateH0"
+            },
+            {
+              "kind": "nameplate",
+              "position": [
+                -4.72,
+                1.65,
+                -9.012
+              ],
+              "triangles": 12,
+              "atlas": "plateH1"
+            }
+          ],
+          "gbTriangles": 492,
+          "clothTriangles": 48,
+          "totalTriangles": 540
+        },
+        {
+          "name": "town-apartment-5f",
+          "origin": [
+            22,
+            4.643957901000977,
+            -121
+          ],
+          "items": [
+            {
+              "kind": "ac",
+              "position": [
+                -6.15,
+                3.75,
+                -2.725
+              ],
+              "triangles": 36,
+              "face": "west",
+              "floor": 2
+            },
+            {
+              "kind": "ac",
+              "position": [
+                -6.15,
+                6.6000000000000005,
+                -2.725
+              ],
+              "triangles": 36,
+              "face": "west",
+              "floor": 3
+            },
+            {
+              "kind": "ac",
+              "position": [
+                -6.15,
+                9.450000000000001,
+                -2.725
+              ],
+              "triangles": 36,
+              "face": "west",
+              "floor": 4
+            },
+            {
+              "kind": "ac",
+              "position": [
+                -6.15,
+                12.3,
+                -2.725
+              ],
+              "triangles": 36,
+              "face": "west",
+              "floor": 5
+            },
+            {
+              "kind": "rainpipe",
+              "position": [
+                -6.045,
+                0.16,
+                -1.55
+              ],
+              "triangles": 60,
+              "top": 14.05,
+              "clips": 2
+            },
+            {
+              "kind": "gutter",
+              "position": [
+                -6.23,
+                14.33,
+                -2
+              ],
+              "triangles": 12,
+              "length": 1.8
+            },
+            {
+              "kind": "balcony-top-rail",
+              "position": [
+                -4,
+                4.29,
+                -0.185
+              ],
+              "triangles": 36,
+              "floor": 2,
+              "length": 3.78
+            },
+            {
+              "kind": "laundry-pole",
+              "position": [
+                0,
+                5.07,
+                -0.57
+              ],
+              "triangles": 36
+            },
+            {
+              "kind": "laundry",
+              "position": [
+                0,
+                5.0600000000000005,
+                -0.57
+              ],
+              "triangles": 48,
+              "garments": 2
+            }
+          ],
+          "gbTriangles": 288,
+          "clothTriangles": 48,
+          "totalTriangles": 336
+        }
+      ],
+      "signTriangles": 20,
+      "signs": {
+        "horizontal": {
+          "position": [
+            2.45,
+            7.194808464050293,
+            -122.1745
+          ],
+          "size": [
+            4.56,
+            0.22
+          ]
+        },
+        "glass": [
+          {
+            "position": [
+              0.19999999999999996,
+              5.944808464050293,
+              -123.216
+            ],
+            "size": [
+              0.82,
+              0.3
+            ]
+          },
+          {
+            "position": [
+              3.8,
+              5.944808464050293,
+              -123.216
+            ],
+            "size": [
+              0.82,
+              0.3
+            ]
+          }
+        ],
+        "aFrame": {
+          "position": [
+            4.55,
+            4.784808464050293,
+            -122.35
+          ],
+          "rotationY": 0.35,
+          "size": [
+            0.45,
+            0.68
+          ],
+          "blank": false,
+          "text": "さくら コインランドリー / 洗濯・乾燥 / セルフサービス"
+        }
+      },
+      "totalTriangles": 896,
+      "walkable": false
+    },
+    "totalTriangles": 29933,
+    "materials": 31,
+    "geometries": 28,
+    "borrowedTextures": 14,
+    "uniqueTextures": 14,
+    "ownedTextures": 0,
+    "newTexturePixels": 0,
+    "ownedTextureRGBA8WithMipsEstimateBytes": 0,
+    "textureCacheEntriesAdded": 0,
+    "laundryItems": 12,
+    "suppressedPhysicsCalls": 0,
+    "ownership": "Own emitted geometry, far instances and material clones; borrow all station atlases, far facade textures and gradient maps. Dispose before station.",
+    "limitation": "Background only: no new physics or navigable interiors. Foundations and stairs are CPU checked; camera composition and visible CDLOD contacts need GPU acceptance."
+  },
+  "streetscapeStats": {
+    "triangles": 2442,
+    "densityTriangles": 132,
+    "densityObjects": 4,
+    "densityColliders": 6,
+    "serviceDetailTriangles": 18,
+    "serviceDetailObjects": 3,
+    "serviceDetailColliders": 0,
+    "newTexturePixels": 0,
+    "coordinates": "station-local; apply station.toWorld after placement"
+  },
+  "limits": [
+    "Pixel differences are full final encoded RGB, not material-isolated attribution.",
+    "Equal duplicate captures are a fixed-frame check, not walking stability.",
+    "Actual text calls and atlas crop show generated pixels; scene screenshots still require visual review.",
+    "Performance includes real baseline counting overhead and is a single run, not a causal benchmark."
+  ]
+}

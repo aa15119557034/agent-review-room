@@ -1,0 +1,96 @@
+{
+  "source": {
+    "head": "0d97731bd7cb4f4634f4c9fdc0e1033ae7585f2a",
+    "sha256": "cb2d1faeb9023f22a6a96895afcc6543afcd29908cfc15777f5a8043d2e0ab73",
+    "trackedFilesVerified": 203,
+    "pinnedIgnoredFilesVerified": 9,
+    "receipt": "embedded"
+  },
+  "stage": "waiting-for-ready-frame",
+  "ok": false,
+  "renderOk": false,
+  "actualExit": 1,
+  "session": 16446,
+  "pid": 38628,
+  "failure": {
+    "kind": "exception",
+    "message": "Script failed to execute, this normally means an error was thrown. Check the renderer console for the error.",
+    "stack": "Error: Script failed to execute, this normally means an error was thrown. Check the renderer console for the error.\n    at node:electron/js2c/sandbox_bundle:2:98605\n    at IpcRendererInternal.<anonymous> (node:electron/js2c/sandbox_bundle:2:93432)\n    at IpcRendererInternal.emit (node:electron/js2c/sandbox_bundle:2:35958)\n    at Object.onMessage (node:electron/js2c/sandbox_bundle:2:92646)"
+  },
+  "exceptions": [
+    {
+      "columnNumber": 45,
+      "exception": {
+        "className": "TypeError",
+        "description": "TypeError: Cannot convert undefined or null to object\n    at Object.entries (<anonymous>)\n    at <anonymous>:36:46\n    at Array.map (<anonymous>)\n    at snapshot (<anonymous>:34:50)\n    at <anonymous>:45:3",
+        "objectId": "3503307849696835454.3.1",
+        "preview": {
+          "description": "TypeError: Cannot convert undefined or null to object\n    at Object.entries (<anonymous>)\n    at <anonymous>:36:46\n    at Array.map (<anonymous>)\n    at snapshot (<anonymous>:34:50)\n    at <anonymous>:45:3",
+          "overflow": false,
+          "properties": [
+            {
+              "name": "stack",
+              "type": "string",
+              "value": "TypeError: Cannot convert undefined or null to obj…pshot (<anonymous>:34:50)\n    at <anonymous>:45:3"
+            },
+            {
+              "name": "message",
+              "type": "string",
+              "value": "Cannot convert undefined or null to object"
+            }
+          ],
+          "subtype": "error",
+          "type": "object"
+        },
+        "subtype": "error",
+        "type": "object"
+      },
+      "exceptionId": 1,
+      "executionContextId": 3,
+      "lineNumber": 35,
+      "scriptId": "155",
+      "stackTrace": {
+        "callFrames": [
+          {
+            "columnNumber": 45,
+            "functionName": "",
+            "lineNumber": 35,
+            "scriptId": "155",
+            "url": ""
+          },
+          {
+            "columnNumber": 49,
+            "functionName": "snapshot",
+            "lineNumber": 33,
+            "scriptId": "155",
+            "url": ""
+          },
+          {
+            "columnNumber": 2,
+            "functionName": "",
+            "lineNumber": 44,
+            "scriptId": "155",
+            "url": ""
+          }
+        ]
+      },
+      "text": "Uncaught"
+    }
+  ],
+  "networkFailures": [
+    {
+      "url": "http://127.0.0.1:55383/assets/models/boulders.glb",
+      "type": "Fetch",
+      "canceled": true,
+      "errorText": "net::ERR_ABORTED",
+      "requestId": "65432.119",
+      "timestamp": 1925709.427547,
+      "stage": "waiting-for-ready-frame",
+      "receivedWallTime": 1794915530.373
+    }
+  ],
+  "views": [],
+  "selectedImages": [],
+  "frameSamples": [],
+  "scope": "Snapshot exception before capture. No normal-baseline performance/walking/visual pass established."
+}

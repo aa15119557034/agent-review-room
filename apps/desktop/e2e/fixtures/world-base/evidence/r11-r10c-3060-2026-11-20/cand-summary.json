@@ -1,0 +1,423 @@
+{
+  "label": "cand",
+  "target": "http://127.0.0.1:4173/?time=evening",
+  "at": "2026-11-19T20:29:01.913Z",
+  "expected": [
+    1440,
+    900
+  ],
+  "views": [
+    {
+      "view": "art-a-street",
+      "buffer": [
+        1440,
+        900
+      ],
+      "pngPixels": [
+        1440,
+        900
+      ],
+      "calls": 1612,
+      "triangles": 7870052,
+      "fps": 34.88,
+      "proj": {
+        "world": [
+          274.27,
+          8.47,
+          914.08
+        ],
+        "ndc": [
+          -0.4416,
+          -0.2671,
+          0.9817
+        ],
+        "px": [
+          402,
+          570
+        ],
+        "inFront": true
+      },
+      "file": "cand-art-a-street.png"
+    },
+    {
+      "view": "art-b-konbini",
+      "buffer": [
+        1440,
+        900
+      ],
+      "pngPixels": [
+        1440,
+        900
+      ],
+      "calls": 1046,
+      "triangles": 7659903,
+      "fps": 30,
+      "proj": {
+        "world": [
+          274.27,
+          8.47,
+          914.08
+        ],
+        "ndc": [
+          -0.7471,
+          -0.6498,
+          0.9032
+        ],
+        "px": [
+          182,
+          742
+        ],
+        "inFront": true
+      },
+      "file": "cand-art-b-konbini.png"
+    },
+    {
+      "view": "art-c-alley",
+      "buffer": [
+        1440,
+        900
+      ],
+      "pngPixels": [
+        1440,
+        900
+      ],
+      "calls": 989,
+      "triangles": 8667262,
+      "fps": 30,
+      "proj": {
+        "world": [
+          274.27,
+          8.47,
+          914.08
+        ],
+        "ndc": [
+          -3.7975,
+          -0.3039,
+          0.9927
+        ],
+        "px": [
+          -2014,
+          587
+        ],
+        "inFront": true
+      },
+      "file": "cand-art-c-alley.png"
+    },
+    {
+      "view": "art-d-laundry",
+      "buffer": [
+        1440,
+        900
+      ],
+      "pngPixels": [
+        1440,
+        900
+      ],
+      "calls": 920,
+      "triangles": 8395421,
+      "fps": 43.26,
+      "proj": {
+        "world": [
+          274.27,
+          8.47,
+          914.08
+        ],
+        "ndc": [
+          0.3308,
+          -0.5239,
+          1.0033
+        ],
+        "px": [
+          958,
+          686
+        ],
+        "inFront": false
+      },
+      "file": "cand-art-d-laundry.png"
+    },
+    {
+      "view": "sample-e-harbour",
+      "buffer": [
+        1440,
+        900
+      ],
+      "pngPixels": [
+        1440,
+        900
+      ],
+      "calls": 1536,
+      "triangles": 8253650,
+      "fps": 34.88,
+      "proj": {
+        "world": [
+          274.27,
+          8.47,
+          914.08
+        ],
+        "ndc": [
+          -0.8736,
+          -0.0657,
+          0.9987
+        ],
+        "px": [
+          91,
+          480
+        ],
+        "inFront": true
+      },
+      "file": "cand-sample-e-harbour.png"
+    },
+    {
+      "view": "sample-f-hillside",
+      "buffer": [
+        1440,
+        900
+      ],
+      "pngPixels": [
+        1440,
+        900
+      ],
+      "calls": 778,
+      "triangles": 8214011,
+      "fps": 30.7,
+      "proj": {
+        "world": [
+          274.27,
+          8.47,
+          914.08
+        ],
+        "ndc": [
+          1.7139,
+          -0.5033,
+          1.0009
+        ],
+        "px": [
+          1954,
+          677
+        ],
+        "inFront": false
+      },
+      "file": "cand-sample-f-hillside.png"
+    },
+    {
+      "view": "sample-g-rail",
+      "buffer": [
+        1440,
+        900
+      ],
+      "pngPixels": [
+        1440,
+        900
+      ],
+      "calls": 1548,
+      "triangles": 8508039,
+      "fps": 30,
+      "proj": {
+        "world": [
+          274.27,
+          8.47,
+          914.08
+        ],
+        "ndc": [
+          -0.8814,
+          -0.0525,
+          0.9947
+        ],
+        "px": [
+          85,
+          474
+        ],
+        "inFront": true
+      },
+      "file": "cand-sample-g-rail.png"
+    },
+    {
+      "view": "sample-h-north",
+      "buffer": [
+        1440,
+        900
+      ],
+      "pngPixels": [
+        1440,
+        900
+      ],
+      "calls": 712,
+      "triangles": 6708014,
+      "fps": 30,
+      "proj": {
+        "world": [
+          274.27,
+          8.47,
+          914.08
+        ],
+        "ndc": [
+          -0.0019,
+          -0.2733,
+          1.0002
+        ],
+        "px": [
+          719,
+          573
+        ],
+        "inFront": false
+      },
+      "file": "cand-sample-h-north.png"
+    }
+  ],
+  "callsTop": {
+    "totalMeshes": 1409,
+    "groups": 136,
+    "top": [
+      {
+        "key": "MeshToonMaterial | BufferGeometry",
+        "meshes": 640,
+        "instances": 5527,
+        "tris": 1723684
+      },
+      {
+        "key": "ShaderMaterial | BufferGeometry",
+        "meshes": 192,
+        "instances": 350,
+        "tris": 3092721
+      },
+      {
+        "key": "MeshBasicMaterial | BufferGeometry",
+        "meshes": 89,
+        "instances": 89,
+        "tris": 49206
+      },
+      {
+        "key": "ShaderMaterial | InstancedBufferGeometry",
+        "meshes": 70,
+        "instances": 70,
+        "tris": 1078
+      },
+      {
+        "key": "MeshToonMaterial | BoxGeometry",
+        "meshes": 59,
+        "instances": 4877,
+        "tris": 50660
+      },
+      {
+        "key": "MeshToonMaterial | PlaneGeometry",
+        "meshes": 30,
+        "instances": 139,
+        "tris": 1082
+      },
+      {
+        "key": "MeshToonMaterial | CylinderGeometry",
+        "meshes": 25,
+        "instances": 1464,
+        "tris": 24916
+      },
+      {
+        "key": "MeshBasicMaterial | PlaneGeometry",
+        "meshes": 22,
+        "instances": 22,
+        "tris": 44
+      },
+      {
+        "key": "sakura:cards | BufferGeometry",
+        "meshes": 19,
+        "instances": 19,
+        "tris": 88216
+      },
+      {
+        "key": "sakura:blob | BufferGeometry",
+        "meshes": 18,
+        "instances": 18,
+        "tris": 305047
+      },
+      {
+        "key": "MeshToonMaterial | SphereGeometry",
+        "meshes": 12,
+        "instances": 12,
+        "tris": 1080
+      },
+      {
+        "key": "art-r1-fence-steel | BoxGeometry",
+        "meshes": 11,
+        "instances": 11,
+        "tris": 132
+      },
+      {
+        "key": "ShaderMaterial | BoxGeometry",
+        "meshes": 10,
+        "instances": 10,
+        "tris": 120
+      },
+      {
+        "key": "foliage-clumps | BufferGeometry",
+        "meshes": 10,
+        "instances": 10,
+        "tris": 225055
+      },
+      {
+        "key": "env-sway-flowers | BufferGeometry",
+        "meshes": 9,
+        "instances": 8246,
+        "tris": 32984
+      },
+      {
+        "key": "env-sway-tufts | BufferGeometry",
+        "meshes": 8,
+        "instances": 5421,
+        "tris": 32526
+      },
+      {
+        "key": "env-sway-mats | PlaneGeometry",
+        "meshes": 7,
+        "instances": 1761,
+        "tris": 3522
+      },
+      {
+        "key": "shopsB-inst | CylinderGeometry",
+        "meshes": 7,
+        "instances": 1722,
+        "tris": 57948
+      },
+      {
+        "key": "ShaderMaterial | PlaneGeometry",
+        "meshes": 6,
+        "instances": 6,
+        "tris": 12
+      },
+      {
+        "key": "shopsB-inst | LatheGeometry",
+        "meshes": 5,
+        "instances": 369,
+        "tris": 43900
+      },
+      {
+        "key": "vehicle-glass | BufferGeometry",
+        "meshes": 5,
+        "instances": 5,
+        "tris": 40
+      },
+      {
+        "key": "env-distant | BufferGeometry",
+        "meshes": 4,
+        "instances": 4,
+        "tris": 37124
+      },
+      {
+        "key": "station-street-window | BufferGeometry",
+        "meshes": 4,
+        "instances": 4,
+        "tris": 126
+      },
+      {
+        "key": "town-evergreen-leaf-cards | BufferGeometry",
+        "meshes": 4,
+        "instances": 4940,
+        "tris": 19760
+      },
+      {
+        "key": "MeshToonMaterial | IcosahedronGeometry",
+        "meshes": 3,
+        "instances": 1026,
+        "tris": 34380
+      }
+    ]
+  }
+}

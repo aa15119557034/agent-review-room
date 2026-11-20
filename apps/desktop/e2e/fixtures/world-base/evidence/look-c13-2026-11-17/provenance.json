@@ -1,0 +1,438 @@
+{
+  "head": "1677ea3167905a180d8b26c48a4b0c0ffece4325",
+  "createdAt": "2026-11-17T12:26:47.177Z",
+  "files": [
+    {
+      "file": "source-map/pinned-assets.json",
+      "bytes": 2344,
+      "sha256": "d8b6249f78b42cb5e506220ac9264edf4063e5158f4936d35a888392e4a70c04",
+      "generatedSummary": true
+    },
+    {
+      "file": "source-map/prop-assets.json",
+      "bytes": 6576,
+      "sha256": "6a4b86e144b50835b1152f4aa32ac4c5e50e352956979cd4ca5fc5f21561810a",
+      "exactCommit": "1677ea3167905a180d8b26c48a4b0c0ffece4325"
+    },
+    {
+      "file": "baseline/source-manifest.json",
+      "bytes": 30609,
+      "sha256": "3919fee1667201fb6c59cc6fbfe68c525fe4600f77a556cbf756c1745bc26369",
+      "source": "artifacts/gpu-town-c13/source-manifest.json"
+    },
+    {
+      "file": "baseline/run-config.json",
+      "bytes": 1077,
+      "sha256": "80ec1e24a7ea2849bcb34c7ca870339da94914f2436a0220086ac3a013a6c7c7",
+      "source": "artifacts/gpu-town-c13/run-config.json"
+    },
+    {
+      "file": "baseline/process.json",
+      "bytes": 134,
+      "sha256": "5b3fa9eff78f1f6ae1acefe572500a596a2dfd453a505db2e36115d85d7f3fe1",
+      "source": "artifacts/gpu-town-c13/process.json"
+    },
+    {
+      "file": "baseline/electron.log.gz",
+      "bytes": 824,
+      "sha256": "7a4c62e58530cc4042b9d80553e65febf3617abb9db58cde4837cde0ef962d48",
+      "source": "artifacts/gpu-town-c13/electron.log",
+      "originalBytes": 1831,
+      "originalSha256": "1c3e48221765e5f3c8cd09fa35d1cb40806dfd99ba40afd5a303fba2a0c3c7c2",
+      "losslessGzip": true
+    },
+    {
+      "file": "baseline/render-report.json.gz",
+      "bytes": 75461,
+      "sha256": "689b21aef050dc2fc426e174638701fd22a75916d4ad5b7f682667f41cb0f77e",
+      "source": "artifacts/gpu-town-c13/render-report.json",
+      "originalBytes": 509879,
+      "originalSha256": "b85b4c3d40871c75de1949d31479879796e070a70777f6c2ff04825e285e04dc",
+      "losslessGzip": true
+    },
+    {
+      "file": "baseline/01-station-street.jpg",
+      "bytes": 113924,
+      "sha256": "34ee622aa59ce2dfb2d4be40aa63ae4f9c14e8cd7c7ab463188336d63c0a0edc",
+      "source": "artifacts/gpu-town-c13/01-station-street.jpg"
+    },
+    {
+      "file": "baseline/02-station-port.jpg",
+      "bytes": 117637,
+      "sha256": "ae679b2400cb4436080a41acc3e2aabf39f06ad233567f95783243becc1c8b51",
+      "source": "artifacts/gpu-town-c13/02-station-port.jpg"
+    },
+    {
+      "file": "baseline/03-island-aerial.jpg",
+      "bytes": 54507,
+      "sha256": "8d5b7361b76a051aa32b5fa3aacc90621a63921b72f5df5c305a8f07c99a77a2",
+      "source": "artifacts/gpu-town-c13/03-island-aerial.jpg"
+    },
+    {
+      "file": "baseline/04-shop-interior.jpg",
+      "bytes": 106339,
+      "sha256": "ef6e60d10827679dbd13b1fc93f00f9a3c7ecf65db0a522beedd75235b3b4b9c",
+      "source": "artifacts/gpu-town-c13/04-shop-interior.jpg"
+    },
+    {
+      "file": "baseline/19-town-rear-stairs.jpg",
+      "bytes": 125598,
+      "sha256": "c8c0473820c39646398f00ecee8fd4e27f97be2f7dc2257399d99e982febbb57",
+      "source": "artifacts/gpu-town-c13/19-town-rear-stairs.jpg"
+    },
+    {
+      "file": "baseline/23-service-corner.jpg",
+      "bytes": 75505,
+      "sha256": "b4fca889e52f0e3357cac75693a693d013aad3e31348261c1716df396a2ecef7",
+      "source": "artifacts/gpu-town-c13/23-service-corner.jpg"
+    },
+    {
+      "file": "baseline/24-laundry-details.jpg",
+      "bytes": 52089,
+      "sha256": "0010b13bee1981dbec40b4f3a99edb4f15fa4d418e44f87ab1063726241e32ef",
+      "source": "artifacts/gpu-town-c13/24-laundry-details.jpg"
+    },
+    {
+      "file": "baseline/walking-first.jpg",
+      "bytes": 107991,
+      "sha256": "85af9ad50344c2cc014906b0eaa10f2ab1bc9605fb409559d5d85da6ed8b96bb",
+      "source": "artifacts/gpu-town-c13/walking-first.jpg"
+    },
+    {
+      "file": "baseline/walking-third.jpg",
+      "bytes": 112824,
+      "sha256": "a61aa89968fd3ee18ac73f113cab0af4a47aed1814bc78bd29a6d55c7b484af1",
+      "source": "artifacts/gpu-town-c13/walking-third.jpg"
+    },
+    {
+      "file": "baseline/frame-samples-island-aerial.json",
+      "bytes": 11328,
+      "sha256": "97b70f6da0198485e1593483a06bfe447e9659a80dbc0e00eb4de6029bcb8888",
+      "source": "artifacts/gpu-town-c13/frame-samples-island-aerial.json"
+    },
+    {
+      "file": "baseline/frame-samples-shop-interior.json",
+      "bytes": 11153,
+      "sha256": "30b6aab95102d61dda9c6199f5484bb7bb2839f3d8bdec629d30410f11ec844d",
+      "source": "artifacts/gpu-town-c13/frame-samples-shop-interior.json"
+    },
+    {
+      "file": "baseline/frame-samples-station-port.json",
+      "bytes": 11247,
+      "sha256": "f08f09b5fef495dc4897f8c77b90f05d411af6c730afb2b6ae12cecc52a74d58",
+      "source": "artifacts/gpu-town-c13/frame-samples-station-port.json"
+    },
+    {
+      "file": "baseline/frame-samples-station-street.json",
+      "bytes": 11450,
+      "sha256": "12735279def54871f45e7dfd9b7f499192a2c5a34f9a4f6d17c6ccde5c70ab0e",
+      "source": "artifacts/gpu-town-c13/frame-samples-station-street.json"
+    },
+    {
+      "file": "baseline/frame-samples-walking-first.json",
+      "bytes": 11368,
+      "sha256": "8272bab819a7797e1a4163fe93e71b671a5d95d793d8add910e9838b7de0109a",
+      "source": "artifacts/gpu-town-c13/frame-samples-walking-first.json"
+    },
+    {
+      "file": "baseline/frame-samples-walking-third.json",
+      "bytes": 11487,
+      "sha256": "7608e9188a1b8b3fc19aa63d67262eb80b548eb475305d6eb5f0c13ebf24922b",
+      "source": "artifacts/gpu-town-c13/frame-samples-walking-third.json"
+    },
+    {
+      "file": "baseline/frame-samples.json",
+      "bytes": 55151,
+      "sha256": "2aa07f59902011120099f55c87f1e88c99645228e8bdcb82eed281e2cfddf768",
+      "source": "artifacts/gpu-town-c13/frame-samples.json"
+    },
+    {
+      "file": "baseline/measurements.json",
+      "bytes": 71872,
+      "sha256": "660b961b26fcabb9ebd445b001554d7ca8138cc9dc8d4c53f940aa24d1533373",
+      "generatedSummary": true
+    },
+    {
+      "file": "diagnostic/source-manifest.json",
+      "bytes": 25541,
+      "sha256": "8078a9a69a58fadba1ab6561675a8512588263e16a7bcf19913f073f6be8d5a5",
+      "source": "artifacts/gpu-look-c13-v1/source-manifest.json"
+    },
+    {
+      "file": "diagnostic/run-config.json",
+      "bytes": 2879,
+      "sha256": "dc82590c638deb6a806e1357248f264a8bf607abff0faf0b7b4698084427ccef",
+      "source": "artifacts/gpu-look-c13-v1/run-config.json"
+    },
+    {
+      "file": "diagnostic/process.json",
+      "bytes": 13,
+      "sha256": "aa63781102e6b792b87ce02edfc5d769e76f27d533ee3de12c98add95e753960",
+      "source": "artifacts/gpu-look-c13-v1/process.json"
+    },
+    {
+      "file": "diagnostic/electron.log.gz",
+      "bytes": 136,
+      "sha256": "65300fe542da1bbd846a662386b1805d3ccbb9d82a13e630230ec9840dacc153",
+      "source": "artifacts/gpu-look-c13-v1/electron.log",
+      "originalBytes": 148,
+      "originalSha256": "182a78621c32b8fb63fe80c9de526ccecde3a3c49052cfc9c8979aa8c1bc3511",
+      "losslessGzip": true
+    },
+    {
+      "file": "diagnostic/look-report.json.gz",
+      "bytes": 275665,
+      "sha256": "8e2c86079e0c9d38e1ba9ea00851835545ee7fe4643c98fdfb87a12b4387ccc5",
+      "source": "artifacts/gpu-look-c13-v1/look-report.json",
+      "originalBytes": 4941086,
+      "originalSha256": "748f14317ebe48a8d845ba0f4e25627feeabe418c5ddf0faf816b25902daf1af",
+      "losslessGzip": true
+    },
+    {
+      "file": "diagnostic/x51-c13-diagnostic-gpu.cjs",
+      "bytes": 34215,
+      "sha256": "069ca63549d01ddad2eb62e95de1eb70fa9f2c6e5fa5ab7133cfcef720b2de20",
+      "source": "../../../../../../handoff/x51-c13-diagnostic-gpu.cjs"
+    },
+    {
+      "file": "diagnostic/prop-assets-manifest.json",
+      "bytes": 3941,
+      "sha256": "dd8734fb67c85176d5061a76463eb61801dff175053a82b1c5bb0c22e2723ccc",
+      "source": "artifacts/gpu-look-c13-v1/prop-assets-manifest.json"
+    },
+    {
+      "file": "diagnostic/density-reference.json",
+      "bytes": 2339,
+      "sha256": "04da0cdf2ea50ee399950a644267846c9094c49f1f27525003133a2637499f23",
+      "source": "artifacts/gpu-look-c13-v1/density-reference.json"
+    },
+    {
+      "file": "diagnostic/c12-reference.json",
+      "bytes": 464,
+      "sha256": "0fa486026f78d76ee7c45b8a194390ac00606a2ed96136bb08393e28716227b4",
+      "source": "artifacts/gpu-look-c13-v1/c12-reference.json"
+    },
+    {
+      "file": "diagnostic/city-shadow-audit.json",
+      "bytes": 188316,
+      "sha256": "007a8177eb7b8c5e20d432dada8b8ba56ce4cd78c7eaad1a2700ef987fee4d87",
+      "source": "artifacts/gpu-look-c13-v1/city-shadow-audit.json"
+    },
+    {
+      "file": "diagnostic/capture-index.json",
+      "bytes": 20226,
+      "sha256": "26157c1bdd275dc76b92ce47ea91b8d1e6927351dd7b9257ce9a0de88dad68b9",
+      "generatedSummary": true
+    },
+    {
+      "file": "diagnostic/service-corner-ao-on-capture-2.jpg",
+      "bytes": 94841,
+      "sha256": "1ec184279132d93165f6f2301124468e4edd56b0127c12c9d5b406f8736d9e1f",
+      "source": "artifacts/gpu-look-c13-v1/service-corner-ao-on-capture-2.jpg"
+    },
+    {
+      "file": "diagnostic/laundry-details-ao-on-capture-2.jpg",
+      "bytes": 66907,
+      "sha256": "a0188d308e40f7deb08bf650bf5ac410a1dff33395e8d378904cda66bf5c9ec3",
+      "source": "artifacts/gpu-look-c13-v1/laundry-details-ao-on-capture-2.jpg"
+    },
+    {
+      "file": "diagnostic/shop-interior-ao-on-capture-2.jpg",
+      "bytes": 124927,
+      "sha256": "a237f43acc360e690bea44020b3895defd6cbe864722e3d429b8b8e17d14d84a",
+      "source": "artifacts/gpu-look-c13-v1/shop-interior-ao-on-capture-2.jpg"
+    },
+    {
+      "file": "diagnostic/20-rear-eye-ao-on-capture-2.jpg",
+      "bytes": 167196,
+      "sha256": "23c9e356c19eeae9b0eee1f51ba67d80d4fe27e14b107a5b2508f9dfe4eb6c87",
+      "source": "artifacts/gpu-look-c13-v1/20-rear-eye-ao-on-capture-2.jpg"
+    },
+    {
+      "file": "diagnostic/21-front-eye-ao-on-capture-2.jpg",
+      "bytes": 88272,
+      "sha256": "4ac503a2c877db662997bcf2aa644984d40e851e23daaa2dbedccaf962970760",
+      "source": "artifacts/gpu-look-c13-v1/21-front-eye-ao-on-capture-2.jpg"
+    },
+    {
+      "file": "diagnostic/station-street-ao-on-capture-2.jpg",
+      "bytes": 146139,
+      "sha256": "f68a4a9125180e359c909fa508e77d1a926fbc7d0a82e641f96f544485d55e02",
+      "source": "artifacts/gpu-look-c13-v1/station-street-ao-on-capture-2.jpg"
+    },
+    {
+      "file": "diagnostic/street-detail-ao-on-capture-2.jpg",
+      "bytes": 100935,
+      "sha256": "88dcd02dd328c11e02f65e08ae91977a469217d016418bfeca20e19d32d599cf",
+      "source": "artifacts/gpu-look-c13-v1/street-detail-ao-on-capture-2.jpg"
+    },
+    {
+      "file": "diagnostic/21-front-eye-ao-on-capture-2.png",
+      "bytes": 2072650,
+      "sha256": "bfda1d747a438433d23efee6794b6eaa1ddd319375ab8086126adfbdd422e7b6",
+      "source": "artifacts/gpu-look-c13-v1/21-front-eye-ao-on-capture-2.png"
+    },
+    {
+      "file": "diagnostic/laundry-details-ao-on-capture-2.png",
+      "bytes": 1941221,
+      "sha256": "1eb2d9298f5476bf97d77d52254326c058266e755691971df2487b0e6c7baf36",
+      "source": "artifacts/gpu-look-c13-v1/laundry-details-ao-on-capture-2.png"
+    },
+    {
+      "file": "diagnostic/shop-interior-ao-on-capture-2.png",
+      "bytes": 1961094,
+      "sha256": "16f4da4850f84b2008fe32cb69737ee8494514bab9690ea0b94926799bb65a05",
+      "source": "artifacts/gpu-look-c13-v1/shop-interior-ao-on-capture-2.png"
+    },
+    {
+      "file": "diagnostic/measurements.json",
+      "bytes": 35861,
+      "sha256": "f168bb18aadce2ea03f5b3837cda33ee458a87975d116e573573fa3fb5a54f01",
+      "generatedSummary": true
+    },
+    {
+      "file": "cpu/x51-c13-city-cpu.mjs",
+      "bytes": 15257,
+      "sha256": "e9e711635b07760e6f6e48395639faca3397f9d524fe6ea82fc3c48197bb202a",
+      "source": "../../../../../../handoff/x51-c13-city-cpu.mjs"
+    },
+    {
+      "file": "cpu/x51-c13-city-result.json",
+      "bytes": 147905,
+      "sha256": "0701a52381597d5e5acdbd0368bc89f29947cac03a59e40326268a84cb349ba2",
+      "source": "../../../../../../handoff/x51-c13-city-result.json"
+    },
+    {
+      "file": "cpu/x51-c13-city-stderr.txt.gz",
+      "bytes": 122,
+      "sha256": "a7d5ca200582dd5a6cb1f5867d56656ccb0ebbb6093986702fba10d2c719e1ce",
+      "source": "../../../../../../handoff/x51-c13-city-stderr.txt",
+      "originalBytes": 302,
+      "originalSha256": "88e5e87bb1ee2effd49823df359dcb4015570ecbd885218a03921fcf3d020871",
+      "losslessGzip": true
+    },
+    {
+      "file": "cpu/x51-c13-readonly-audit.json",
+      "bytes": 6777,
+      "sha256": "3fddc55b33b7895ab078ce919213355d5f2599a19baf971b285523833f70bf39",
+      "source": "../../../../../../handoff/x51-c13-readonly-audit.json"
+    },
+    {
+      "file": "cpu/x51-c13-readonly-audit.md",
+      "bytes": 1590,
+      "sha256": "bded65f19ca4bb98575e4386b6fc6de6195d52c9f4de325784c885f23d9e199d",
+      "source": "../../../../../../handoff/x51-c13-readonly-audit.md"
+    },
+    {
+      "file": "cpu/scope.json",
+      "bytes": 879,
+      "sha256": "46c28baba4079242646ce8747d0b0185a2a8a5f060aacb21564b00c79d9acb16",
+      "generatedSummary": true
+    },
+    {
+      "file": "ci/x51-c13-ci-summary.json",
+      "bytes": 6386,
+      "sha256": "796f0736944de02d9a2ed80068fb480254aac4d9372214a4f45dfee47ee77c03",
+      "source": "../../../../../../handoff/x51-c13-ci-summary.json"
+    },
+    {
+      "file": "ci/x51-c13-ci-summary.cjs",
+      "bytes": 1918,
+      "sha256": "46081ff82931b884d6978c6a8ab190552cd5034b7310e8fa4bcac9bb4ee95df1",
+      "source": "../../../../../../handoff/x51-c13-ci-summary.cjs"
+    },
+    {
+      "file": "ci/x51-c13-ci-checks.json",
+      "bytes": 5322,
+      "sha256": "ec9ec9ba2f030771e0a918feb568f0af8282cbfac115db8c4c11196b92721274",
+      "source": "../../../../../../handoff/x51-c13-ci-checks.json"
+    },
+    {
+      "file": "ci/x51-c13-ci-jobs.json",
+      "bytes": 4139,
+      "sha256": "b70e15f7f83cfe179a37d04de5dcffe29a005915c1a875b3d418b319b5469941",
+      "source": "../../../../../../handoff/x51-c13-ci-jobs.json"
+    },
+    {
+      "file": "ci/job-log.json.gz",
+      "bytes": 6412,
+      "sha256": "ac5f1205baed5c030d560016ad346b50ba50f9962740f8ebc5a07471181681b8",
+      "source": "../../../../../../handoff/x51-c13-ci-log.json",
+      "originalBytes": 31340,
+      "originalSha256": "464ab3bd5fbe28344430cb179ec1b3694504d1370538ba2a632a945ccfa620a0",
+      "losslessGzip": true
+    },
+    {
+      "file": "analysis/x51-c13-visual-readonly.json",
+      "bytes": 2998,
+      "sha256": "9f2c9d88de868ce86cb0bb82fd405d3449c5fa779cb13cc2d8855690221bb4f6",
+      "source": "../../../../../../handoff/x51-c13-visual-readonly.json"
+    },
+    {
+      "file": "analysis/x51-c13-v1-analysis.json",
+      "bytes": 39049,
+      "sha256": "a4228a672506e003066b09bc5250228259a785194e638bfc28dee286e903b2f2",
+      "source": "../../../../../../handoff/x51-c13-v1-analysis.json"
+    },
+    {
+      "file": "analysis/x51-c13-v1-analysis.md",
+      "bytes": 4181,
+      "sha256": "6b2bf0e49745f52e2cee1a86ee2dbc4999a51bc1a3f9e18c5bb52444e59e4e6e",
+      "source": "../../../../../../handoff/x51-c13-v1-analysis.md"
+    },
+    {
+      "file": "analysis/x51-c13-v1-numeric.json",
+      "bytes": 713149,
+      "sha256": "409b6eb4e7caf5822d144d5ec30a0014ee11d86bf2113b94ef98ea6274cfb763",
+      "source": "../../../../../../handoff/x51-c13-v1-numeric.json"
+    },
+    {
+      "file": "analysis/x51-c13-offline-analysis.cjs",
+      "bytes": 5254,
+      "sha256": "e981c437bf56722b5ce0368089ed7f20eed0375b85b04dd9ac369b2d5da4a591",
+      "source": "../../../../../../handoff/x51-c13-offline-analysis.cjs"
+    },
+    {
+      "file": "prior-references.json",
+      "bytes": 947,
+      "sha256": "1cef9deec61d67e1fee7d52cbb780f2367041fe33a4b637fc73c3899d26a8f1b",
+      "generatedSummary": true
+    },
+    {
+      "file": "curate-c13.cjs",
+      "bytes": 11913,
+      "sha256": "106196fbd0b68235b906014c724e45bc7a27ea691429f5f57ddf5d07d70a4d91",
+      "source": "../../../../../../handoff/x51-curate-c13.cjs"
+    },
+    {
+      "file": "x51-curation-core.cjs",
+      "bytes": 4538,
+      "sha256": "22d93af7ae3d4c560784326b5ae2d8b2ab0cd63fc2a7ed9618c57e9b6b383a89",
+      "source": "../../../../../../handoff/x51-curation-core.cjs"
+    },
+    {
+      "file": "verify-evidence.cjs",
+      "bytes": 3569,
+      "sha256": "b7287c3d4d3a03987e6692bce15f37ca0ecc2579a1bcbc9252e018596885fadd",
+      "source": "../../../../../../handoff/x51-verify-evidence.cjs"
+    },
+    {
+      "file": "README.md",
+      "bytes": 6448,
+      "sha256": "542ed40e785ce7c108331d7b4867ad7235dcb1075444f4b0d5c98bc5673d9cfb",
+      "source": "../../../../../../handoff/x51-c13-evidence-readme.md"
+    },
+    {
+      "file": ".gitattributes",
+      "bytes": 86,
+      "sha256": "7d5cf34924e48f80bc1647256616f3b71eae38610009529eed16b01b797f8517"
+    },
+    {
+      "file": "summary.json",
+      "bytes": 8517,
+      "sha256": "0ca6a9723e6d7d82a67ad8efd8309df5612df11caec448390c4263ef4421169b",
+      "generatedSummary": true
+    }
+  ],
+  "countExcludesThisInventory": true
+}

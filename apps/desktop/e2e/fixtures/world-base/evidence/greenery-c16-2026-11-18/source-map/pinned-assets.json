@@ -1,0 +1,51 @@
+{
+  "commit": "50e190b092fb2b30ab9ed19a28302d5638f947f4",
+  "manifestSha256": "6a4b86e144b50835b1152f4aa32ac4c5e50e352956979cd4ca5fc5f21561810a",
+  "files": {
+    ".local/textured-props/plastic_crate_02/plastic_crate_02_1k.gltf": {
+      "bytes": 2947,
+      "md5": "ab133a1d655e004fa2f22f039e24efbe",
+      "sha256": "531f7ba7d4b501759b04fb704db1948bcaab34d8342e71e3f5877d9f0340dba7"
+    },
+    ".local/textured-props/plastic_crate_02/textures/plastic_crate_02_nor_gl_1k.jpg": {
+      "bytes": 558561,
+      "md5": "3fd1bb590ead064e6b7cf6eb3cd46fa6",
+      "sha256": "492b4cb03b043fb30a21b5de1cdf91dfbcd9bb7d080957af69a333d622050f30"
+    },
+    ".local/textured-props/plastic_crate_02/textures/plastic_crate_02_diff_1k.jpg": {
+      "bytes": 492862,
+      "md5": "55ddafcf50ffebdb2806e6b863e9b254",
+      "sha256": "f153478d5f44f39ab27a967850caac27b35ee8f04185d0d4eaf7ad501742fb15"
+    },
+    ".local/textured-props/plastic_crate_02/textures/plastic_crate_02_arm_1k.jpg": {
+      "bytes": 597561,
+      "md5": "032b8738359d2423f7bf8dd0aa6f3e5b",
+      "sha256": "f0c667358c7afd46be37b40c30435b63ae3dba8432b45c507f3298fc6f163418"
+    },
+    ".local/textured-props/plastic_crate_02/plastic_crate_02.bin": {
+      "bytes": 186848,
+      "md5": "a91c131589eae7242c162782cff0290a",
+      "sha256": "f51696aa04643b5c1948da88be8ce1d4e92596ae4908b0132cd690f8fb8e0b63"
+    },
+    ".local/textured-props/worn_shutter/textures/worn_shutter_nor_gl_1k.jpg": {
+      "bytes": 717669,
+      "md5": "77ea82308a69cfefeb9b42ef55d34179",
+      "sha256": "924e3948a4f654322ddb595b9abca4b0b491d70fd69453f479c108d5ac815c93"
+    },
+    ".local/textured-props/worn_shutter/textures/worn_shutter_diff_1k.jpg": {
+      "bytes": 560285,
+      "md5": "c6acc47a7bf04379cbf779d64aac8c3b",
+      "sha256": "1e1a84c4f2ce5d005c9c3e8860d23370e2ad6dcc4040cd972803ad700e516a08"
+    },
+    ".local/textured-props/worn_shutter/textures/worn_shutter_arm_1k.jpg": {
+      "bytes": 445738,
+      "md5": "0deea2efe48ac347e345ab094650f612",
+      "sha256": "daeb8be23cd97a39d3b2bf11e6b57ccab7b5e1fbd65672472a8b93c8fe3e3fdd"
+    },
+    ".local/textured-props/plastic_crate_02/textures/plastic_crate_02_opacity_1k.png": {
+      "bytes": 16785,
+      "md5": "1b087615419b81cc55241fa7cdbe36f7",
+      "sha256": "2f755d95d8c28792c54b31427523bdd5ada6ddc003762ac6d057530d224fa170"
+    }
+  }
+}

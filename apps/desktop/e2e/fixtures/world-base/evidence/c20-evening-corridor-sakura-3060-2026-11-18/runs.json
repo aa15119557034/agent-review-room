@@ -1,0 +1,865 @@
+{
+  "sourceHead": "e78c52ce50205f85a4af02bfa78fb8f230b3644b",
+  "sourceBefore": "41c4fa8e5e84cc2a9e0087deb2097059a4aa95d2",
+  "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "sceneFileCount": 243,
+  "sceneDiff": [
+    "src/evening-glow.js",
+    "src/main.js"
+  ],
+  "manifestSha256": "1bfcf3e31f7e73ceaed6cfdb948133e599ceeba19d762435047ca7abd85f24a5",
+  "actualAssetResponses": [
+    {
+      "url": "/apartment-assets/white_plaster_02/white_plaster_02_diff_1k.jpg",
+      "http": 200,
+      "status": "finished"
+    },
+    {
+      "url": "/apartment-assets/white_plaster_02/white_plaster_02_nor_gl_1k.jpg",
+      "http": 200,
+      "status": "finished"
+    },
+    {
+      "url": "/apartment-assets/white_plaster_02/white_plaster_02_arm_1k.jpg",
+      "http": 200,
+      "status": "finished"
+    },
+    {
+      "url": "/apartment-assets/rectangular_facade_tiles/rectangular_facade_tiles_diff_1k.jpg",
+      "http": 200,
+      "status": "finished"
+    },
+    {
+      "url": "/apartment-assets/rectangular_facade_tiles/rectangular_facade_tiles_nor_gl_1k.jpg",
+      "http": 200,
+      "status": "finished"
+    },
+    {
+      "url": "/apartment-assets/rectangular_facade_tiles/rectangular_facade_tiles_arm_1k.jpg",
+      "http": 200,
+      "status": "finished"
+    },
+    {
+      "url": "/apartment-assets/worn_shutter/textures/worn_shutter_diff_1k.jpg",
+      "http": 200,
+      "status": "finished"
+    },
+    {
+      "url": "/apartment-assets/worn_shutter/textures/worn_shutter_nor_gl_1k.jpg",
+      "http": 200,
+      "status": "finished"
+    },
+    {
+      "url": "/apartment-assets/worn_shutter/textures/worn_shutter_arm_1k.jpg",
+      "http": 200,
+      "status": "finished"
+    }
+  ],
+  "apartmentMaterials": {
+    "apartment-pbr-plaster": {
+      "type": "MeshStandardMaterial",
+      "maps": {
+        "map": {
+          "url": "/apartment-assets/white_plaster_02/white_plaster_02_diff_1k.jpg",
+          "width": 1024,
+          "height": 1024,
+          "textureName": "apartment-plaster-diff"
+        },
+        "normalMap": {
+          "url": "/apartment-assets/white_plaster_02/white_plaster_02_nor_gl_1k.jpg",
+          "width": 1024,
+          "height": 1024,
+          "textureName": "apartment-plaster-nor_gl"
+        },
+        "roughnessMap": {
+          "url": "/apartment-assets/white_plaster_02/white_plaster_02_arm_1k.jpg",
+          "width": 1024,
+          "height": 1024,
+          "textureName": "apartment-plaster-arm"
+        },
+        "metalnessMap": {
+          "url": "/apartment-assets/white_plaster_02/white_plaster_02_arm_1k.jpg",
+          "width": 1024,
+          "height": 1024,
+          "textureName": "apartment-plaster-arm"
+        },
+        "aoMap": {
+          "url": "/apartment-assets/white_plaster_02/white_plaster_02_arm_1k.jpg",
+          "width": 1024,
+          "height": 1024,
+          "textureName": "apartment-plaster-arm"
+        }
+      }
+    },
+    "apartment-pbr-metal": {
+      "type": "MeshStandardMaterial",
+      "maps": {
+        "map": {
+          "url": "/apartment-assets/worn_shutter/textures/worn_shutter_diff_1k.jpg",
+          "width": 1024,
+          "height": 1024,
+          "textureName": "apartment-metal-diff"
+        },
+        "normalMap": {
+          "url": "/apartment-assets/worn_shutter/textures/worn_shutter_nor_gl_1k.jpg",
+          "width": 1024,
+          "height": 1024,
+          "textureName": "apartment-metal-nor_gl"
+        },
+        "roughnessMap": {
+          "url": "/apartment-assets/worn_shutter/textures/worn_shutter_arm_1k.jpg",
+          "width": 1024,
+          "height": 1024,
+          "textureName": "apartment-metal-arm"
+        },
+        "metalnessMap": {
+          "url": "/apartment-assets/worn_shutter/textures/worn_shutter_arm_1k.jpg",
+          "width": 1024,
+          "height": 1024,
+          "textureName": "apartment-metal-arm"
+        },
+        "aoMap": {
+          "url": "/apartment-assets/worn_shutter/textures/worn_shutter_arm_1k.jpg",
+          "width": 1024,
+          "height": 1024,
+          "textureName": "apartment-metal-arm"
+        }
+      }
+    },
+    "apartment-pbr-tile": {
+      "type": "MeshStandardMaterial",
+      "maps": {
+        "map": {
+          "url": "/apartment-assets/rectangular_facade_tiles/rectangular_facade_tiles_diff_1k.jpg",
+          "width": 1024,
+          "height": 1024,
+          "textureName": "apartment-tile-diff"
+        },
+        "normalMap": {
+          "url": "/apartment-assets/rectangular_facade_tiles/rectangular_facade_tiles_nor_gl_1k.jpg",
+          "width": 1024,
+          "height": 1024,
+          "textureName": "apartment-tile-nor_gl"
+        },
+        "roughnessMap": {
+          "url": "/apartment-assets/rectangular_facade_tiles/rectangular_facade_tiles_arm_1k.jpg",
+          "width": 1024,
+          "height": 1024,
+          "textureName": "apartment-tile-arm"
+        },
+        "metalnessMap": {
+          "url": "/apartment-assets/rectangular_facade_tiles/rectangular_facade_tiles_arm_1k.jpg",
+          "width": 1024,
+          "height": 1024,
+          "textureName": "apartment-tile-arm"
+        },
+        "aoMap": {
+          "url": "/apartment-assets/rectangular_facade_tiles/rectangular_facade_tiles_arm_1k.jpg",
+          "width": 1024,
+          "height": 1024,
+          "textureName": "apartment-tile-arm"
+        }
+      }
+    },
+    "apartment-pbr-roof": {
+      "type": "MeshStandardMaterial",
+      "maps": {
+        "map": {
+          "url": "/apartment-assets/worn_shutter/textures/worn_shutter_diff_1k.jpg",
+          "width": 1024,
+          "height": 1024,
+          "textureName": "apartment-metal-diff"
+        },
+        "normalMap": {
+          "url": "/apartment-assets/worn_shutter/textures/worn_shutter_nor_gl_1k.jpg",
+          "width": 1024,
+          "height": 1024,
+          "textureName": "apartment-metal-nor_gl"
+        },
+        "roughnessMap": {
+          "url": "/apartment-assets/worn_shutter/textures/worn_shutter_arm_1k.jpg",
+          "width": 1024,
+          "height": 1024,
+          "textureName": "apartment-metal-arm"
+        },
+        "metalnessMap": {
+          "url": "/apartment-assets/worn_shutter/textures/worn_shutter_arm_1k.jpg",
+          "width": 1024,
+          "height": 1024,
+          "textureName": "apartment-metal-arm"
+        },
+        "aoMap": {
+          "url": "/apartment-assets/worn_shutter/textures/worn_shutter_arm_1k.jpg",
+          "width": 1024,
+          "height": 1024,
+          "textureName": "apartment-metal-arm"
+        }
+      }
+    }
+  },
+  "apartmentAssetsVerified": [
+    {
+      "path": ".local/apartment-surfaces/white_plaster_02/white_plaster_02_diff_1k.jpg",
+      "sourceUrl": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/white_plaster_02/white_plaster_02_diff_1k.jpg",
+      "bytes": 527219,
+      "md5": "7b10c2686bcfd76d1f309a20fd06b57e",
+      "sha256": "a1ebbe091bd1ae93d2abd5de8d69f9003a8d0ee6532bcf9a87c2492c97051f23"
+    },
+    {
+      "path": ".local/apartment-surfaces/white_plaster_02/white_plaster_02_nor_gl_1k.jpg",
+      "sourceUrl": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/white_plaster_02/white_plaster_02_nor_gl_1k.jpg",
+      "bytes": 652310,
+      "md5": "55fc03203ebf1dc703a380fde93ff502",
+      "sha256": "eb572ca3630d5bfde72e2601b1f02412da23ca005cd19384dced8690be4cb783"
+    },
+    {
+      "path": ".local/apartment-surfaces/white_plaster_02/white_plaster_02_arm_1k.jpg",
+      "sourceUrl": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/white_plaster_02/white_plaster_02_arm_1k.jpg",
+      "bytes": 191017,
+      "md5": "4a5a080e2421fac4fa602680bef4c8b1",
+      "sha256": "2bb1115821715dfd8bbd1c5a294a5bb43b97d5c46b1aa8aa8f744bcaf5eeeb10"
+    },
+    {
+      "path": ".local/apartment-surfaces/rectangular_facade_tiles/rectangular_facade_tiles_diff_1k.jpg",
+      "sourceUrl": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/rectangular_facade_tiles/rectangular_facade_tiles_diff_1k.jpg",
+      "bytes": 528739,
+      "md5": "9a4d89351d69057e43ccbed08db9ec01",
+      "sha256": "583eafdfc03da4a74509ba545c5ea808c8bdc6e883763a804fcbe859c120afb9"
+    },
+    {
+      "path": ".local/apartment-surfaces/rectangular_facade_tiles/rectangular_facade_tiles_nor_gl_1k.jpg",
+      "sourceUrl": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/rectangular_facade_tiles/rectangular_facade_tiles_nor_gl_1k.jpg",
+      "bytes": 819898,
+      "md5": "623a0d084940750c1e48ddee95ad54b8",
+      "sha256": "8a7d8db468fe5bd37a2fc14ff6012855b14bec03dd413e034a376902a723b44c"
+    },
+    {
+      "path": ".local/apartment-surfaces/rectangular_facade_tiles/rectangular_facade_tiles_arm_1k.jpg",
+      "sourceUrl": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/rectangular_facade_tiles/rectangular_facade_tiles_arm_1k.jpg",
+      "bytes": 489374,
+      "md5": "059e52cb701f4e451f930c81f7f7ccd5",
+      "sha256": "6be9a4e34057fc90ab450624cf83d2f5bc67bf59d5c137617ea62d8206540011"
+    },
+    {
+      "path": ".local/apartment-surfaces/worn_shutter/textures/worn_shutter_nor_gl_1k.jpg",
+      "sourceUrl": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/worn_shutter/worn_shutter_nor_gl_1k.jpg",
+      "bytes": 717669,
+      "md5": "77ea82308a69cfefeb9b42ef55d34179",
+      "sha256": "924e3948a4f654322ddb595b9abca4b0b491d70fd69453f479c108d5ac815c93"
+    },
+    {
+      "path": ".local/apartment-surfaces/worn_shutter/textures/worn_shutter_diff_1k.jpg",
+      "sourceUrl": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/worn_shutter/worn_shutter_diff_1k.jpg",
+      "bytes": 560285,
+      "md5": "c6acc47a7bf04379cbf779d64aac8c3b",
+      "sha256": "1e1a84c4f2ce5d005c9c3e8860d23370e2ad6dcc4040cd972803ad700e516a08"
+    },
+    {
+      "path": ".local/apartment-surfaces/worn_shutter/textures/worn_shutter_arm_1k.jpg",
+      "sourceUrl": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/worn_shutter/worn_shutter_arm_1k.jpg",
+      "bytes": 445738,
+      "md5": "0deea2efe48ac347e345ab094650f612",
+      "sha256": "daeb8be23cd97a39d3b2bf11e6b57ccab7b5e1fbd65672472a8b93c8fe3e3fdd"
+    }
+  ],
+  "propAssetsVerified": 9,
+  "sceneTriangles": {
+    "before": 80758,
+    "after": 80758
+  },
+  "runtime": {
+    "hemisphereBefore": {
+      "type": "HemisphereLight",
+      "name": "",
+      "color": [
+        0.3915724777393922,
+        0.45641102317066595,
+        0.8387990117372213
+      ],
+      "groundColor": [
+        0.2541520943200296,
+        0.15592646369776456,
+        0.10702310296918527
+      ],
+      "intensity": 0.95,
+      "position": [
+        0,
+        1,
+        0
+      ],
+      "castShadow": false,
+      "shadow": null
+    },
+    "hemisphereAfter": {
+      "type": "HemisphereLight",
+      "name": "",
+      "color": [
+        0.45641102317066595,
+        0.5028864580233624,
+        0.8069522576650873
+      ],
+      "groundColor": [
+        0.3515325994898463,
+        0.21586050010324417,
+        0.13843161502267545
+      ],
+      "intensity": 1.6,
+      "position": [
+        0,
+        1,
+        0
+      ],
+      "castShadow": false,
+      "shadow": null
+    },
+    "sakura": {
+      "materials": [
+        "sakura:cards",
+        "sakura:blob"
+      ]
+    },
+    "glowBefore": {
+      "lamps": 13,
+      "prints": 1
+    },
+    "glowAfter": {
+      "lamps": 6,
+      "prints": 1
+    },
+    "reflections": {
+      "resolution": 256,
+      "panes": {
+        "W1": 8,
+        "E1": 4,
+        "W2": 5,
+        "E2": 5,
+        "E3": 5
+      },
+      "loadedFaces": 6,
+      "captures": 0,
+      "facesAtLoad": 0,
+      "passesPerFrame": 0,
+      "loadMs": 15
+    }
+  },
+  "commandReceipts": [
+    {
+      "key": "fixed",
+      "started": "2026-11-17T22:55:56.808Z",
+      "finished": "2026-11-17T22:56:41.192Z",
+      "cwd": "D:\\codex\\2026-11-16\\world-implementation\\handoff",
+      "args": [
+        "D:\\codex\\2026-11-16\\world-implementation\\handoff\\x51-c20-fixed.cjs",
+        "gpu-modern-after-c20-e78c52c",
+        "e78c52ce50205f85a4af02bfa78fb8f230b3644b"
+      ],
+      "exit": 1,
+      "signal": null
+    },
+    {
+      "key": "firstNormal",
+      "started": "2026-11-17T22:56:41.241Z",
+      "finished": "2026-11-17T22:59:42.466Z",
+      "cwd": "D:\\codex\\2026-11-16\\world-implementation\\world-base\\apps\\desktop\\e2e\\fixtures\\world-base",
+      "args": [
+        "scripts/baseline.cjs",
+        "--scene=combined",
+        "--electron=D:/codex/2026-11-16/world-implementation/runtime-path-probe/electron.exe",
+        "--output=artifacts/gpu-c20-normal-e78c52c",
+        "--stills"
+      ],
+      "exit": 1,
+      "signal": null
+    },
+    {
+      "key": "normal",
+      "started": "2026-11-17T23:00:51.589Z",
+      "finished": "2026-11-17T23:02:35.849Z",
+      "cwd": "D:\\codex\\2026-11-16\\world-implementation\\world-base\\apps\\desktop\\e2e\\fixtures\\world-base",
+      "args": [
+        "scripts/baseline.cjs",
+        "--scene=combined",
+        "--electron=D:/codex/2026-11-16/world-implementation/runtime-path-probe/electron.exe",
+        "--output=artifacts/gpu-c20-normal-e78c52c-complete",
+        "--stills",
+        "--timeout-ms=420000"
+      ],
+      "exit": 1,
+      "signal": null
+    },
+    {
+      "key": "town",
+      "started": "2026-11-17T23:02:35.891Z",
+      "finished": "2026-11-17T23:04:03.102Z",
+      "cwd": "D:\\codex\\2026-11-16\\world-implementation\\handoff",
+      "args": [
+        "D:\\codex\\2026-11-16\\world-implementation\\world-base\\apps\\desktop\\e2e\\fixtures\\world-base\\evidence\\street-upgrade-2026-11-18\\town\\town-frame-times.cjs",
+        "D:\\codex\\2026-11-16\\world-implementation\\world-base\\apps\\desktop\\e2e\\fixtures\\world-base",
+        "D:/codex/2026-11-16/world-implementation/runtime-path-probe/electron.exe",
+        "D:\\codex\\2026-11-16\\world-implementation\\world-base\\apps\\desktop\\e2e\\fixtures\\world-base\\artifacts\\gpu-modern-after-c20-e78c52c\\c17-reference.json",
+        "D:\\codex\\2026-11-16\\world-implementation\\world-base\\apps\\desktop\\e2e\\fixtures\\world-base\\artifacts\\gpu-c20-normal-e78c52c-complete\\source-manifest.json",
+        "D:\\codex\\2026-11-16\\world-implementation\\world-base\\apps\\desktop\\e2e\\fixtures\\world-base\\artifacts\\gpu-c20-town-e78c52c"
+      ],
+      "exit": 1,
+      "signal": null
+    },
+    {
+      "key": "day",
+      "started": "2026-11-17T23:04:03.135Z",
+      "finished": "2026-11-17T23:04:42.216Z",
+      "cwd": "D:\\codex\\2026-11-16\\world-implementation\\handoff",
+      "args": [
+        "D:\\codex\\2026-11-16\\world-implementation\\handoff\\x51-c20-day.cjs",
+        "gpu-modern-after-c20-afternoon-e78c52c",
+        "e78c52ce50205f85a4af02bfa78fb8f230b3644b",
+        "D:\\codex\\2026-11-16\\world-implementation\\world-base\\apps\\desktop\\e2e\\fixtures\\world-base",
+        "aerial-only"
+      ],
+      "exit": 1,
+      "signal": null
+    },
+    {
+      "key": "halo",
+      "args": [
+        "x51-c20-halo.cjs",
+        "gpu-modern-after-c20-halo-aerial-e78c52c",
+        "e78c52ce50205f85a4af02bfa78fb8f230b3644b",
+        "D:\\codex\\2026-11-16\\world-implementation\\world-base\\apps\\desktop\\e2e\\fixtures\\world-base",
+        "aerial-only"
+      ],
+      "code": 1,
+      "signal": null,
+      "completedAt": "2026-11-17T23:07:22.398Z"
+    }
+  ],
+  "runs": {
+    "fixed": {
+      "stage": "complete",
+      "exit": 1,
+      "signal": null,
+      "renderOk": true,
+      "transportClean": false,
+      "exceptions": [],
+      "networkFailures": [
+        {
+          "stage": "loading",
+          "url": "http://127.0.0.1:50774/assets/models/boulders.glb",
+          "canceled": true,
+          "errorText": "net::ERR_ABORTED",
+          "requestId": "64612.130",
+          "timestamp": 1966339.192621,
+          "type": "Fetch"
+        },
+        {
+          "stage": "loading",
+          "url": "http://127.0.0.1:50774/prop-assets/plastic_crate_02/plastic_crate_02.bin",
+          "canceled": true,
+          "errorText": "net::ERR_ABORTED",
+          "requestId": "64612.249",
+          "timestamp": 1966351.029247,
+          "type": "Fetch"
+        }
+      ],
+      "httpErrors": [],
+      "failure": null
+    },
+    "normal": {
+      "stage": "complete",
+      "exit": 1,
+      "signal": null,
+      "renderOk": true,
+      "transportClean": false,
+      "exceptions": [],
+      "networkFailures": [
+        {
+          "url": "http://127.0.0.1:52995/assets/models/menhir.glb",
+          "type": "Fetch",
+          "canceled": true,
+          "errorText": "net::ERR_ABORTED",
+          "requestId": "65496.128",
+          "timestamp": 1966634.434242,
+          "stage": "waiting-for-ready-frame",
+          "receivedWallTime": 1794956455.38
+        },
+        {
+          "url": "http://127.0.0.1:52995/assets/models/boulders.glb",
+          "type": "Fetch",
+          "canceled": true,
+          "errorText": "net::ERR_ABORTED",
+          "requestId": "65496.130",
+          "timestamp": 1966634.43534,
+          "stage": "waiting-for-ready-frame",
+          "receivedWallTime": 1794956455.381
+        },
+        {
+          "url": "http://127.0.0.1:52995/prop-assets/plastic_crate_02/plastic_crate_02_1k.gltf",
+          "type": "Fetch",
+          "canceled": true,
+          "errorText": "net::ERR_ABORTED",
+          "requestId": "65496.244",
+          "timestamp": 1966646.579593,
+          "stage": "waiting-for-ready-frame",
+          "receivedWallTime": 1794956467.525
+        },
+        {
+          "url": "http://127.0.0.1:52995/prop-assets/plastic_crate_02/plastic_crate_02.bin",
+          "type": "Fetch",
+          "canceled": true,
+          "errorText": "net::ERR_ABORTED",
+          "requestId": "65496.249",
+          "timestamp": 1966646.592093,
+          "stage": "waiting-for-ready-frame",
+          "receivedWallTime": 1794956467.537
+        }
+      ],
+      "httpErrors": [],
+      "failure": null
+    },
+    "town": {
+      "stage": "complete",
+      "exit": 1,
+      "signal": null,
+      "renderOk": true,
+      "transportClean": false,
+      "exceptions": [],
+      "networkFailures": [
+        {
+          "url": "http://127.0.0.1:53267/assets/models/boulders.glb",
+          "stage": "loading",
+          "canceled": true,
+          "errorText": "net::ERR_ABORTED",
+          "requestId": "67516.130",
+          "timestamp": 1966737.956695,
+          "type": "Fetch"
+        },
+        {
+          "url": "http://127.0.0.1:53267/prop-assets/plastic_crate_02/plastic_crate_02_1k.gltf",
+          "stage": "loading",
+          "canceled": true,
+          "errorText": "net::ERR_ABORTED",
+          "requestId": "67516.244",
+          "timestamp": 1966748.85633,
+          "type": "Fetch"
+        }
+      ],
+      "httpErrors": [],
+      "failure": null
+    },
+    "day": {
+      "stage": "complete",
+      "exit": 1,
+      "signal": null,
+      "renderOk": true,
+      "transportClean": false,
+      "exceptions": [],
+      "networkFailures": [
+        {
+          "stage": "loading",
+          "url": "http://127.0.0.1:53362/assets/models/menhir.glb",
+          "canceled": true,
+          "errorText": "net::ERR_ABORTED",
+          "requestId": "52280.126",
+          "timestamp": 1966825.100007,
+          "type": "Fetch"
+        },
+        {
+          "stage": "loading",
+          "url": "http://127.0.0.1:53362/prop-assets/plastic_crate_02/plastic_crate_02_1k.gltf",
+          "canceled": true,
+          "errorText": "net::ERR_ABORTED",
+          "requestId": "52280.242",
+          "timestamp": 1966836.105247,
+          "type": "Fetch"
+        },
+        {
+          "stage": "loading",
+          "url": "http://127.0.0.1:53362/prop-assets/plastic_crate_02/plastic_crate_02.bin",
+          "canceled": true,
+          "errorText": "net::ERR_ABORTED",
+          "requestId": "52280.247",
+          "timestamp": 1966836.118034,
+          "type": "Fetch"
+        }
+      ],
+      "httpErrors": [],
+      "failure": null
+    },
+    "firstNormal": {
+      "stage": "capturing-streetscape",
+      "exit": 1,
+      "signal": null,
+      "renderOk": false,
+      "transportClean": null,
+      "exceptions": [],
+      "networkFailures": [
+        {
+          "url": "http://127.0.0.1:50875/assets/models/menhir.glb",
+          "type": "Fetch",
+          "canceled": true,
+          "errorText": "net::ERR_ABORTED",
+          "requestId": "58608.128",
+          "timestamp": 1966478.847654,
+          "stage": "waiting-for-ready-frame",
+          "receivedWallTime": 1794956299.794
+        },
+        {
+          "url": "http://127.0.0.1:50875/prop-assets/plastic_crate_02/plastic_crate_02.bin",
+          "type": "Fetch",
+          "canceled": true,
+          "errorText": "net::ERR_ABORTED",
+          "requestId": "58608.249",
+          "timestamp": 1966490.933862,
+          "stage": "waiting-for-ready-frame",
+          "receivedWallTime": 1794956311.88
+        }
+      ],
+      "httpErrors": [],
+      "failure": {
+        "kind": "timeout",
+        "stage": "capturing-streetscape",
+        "timeoutMs": 180000
+      }
+    },
+    "halo": {
+      "stage": "complete",
+      "exit": 1,
+      "signal": null,
+      "renderOk": true,
+      "transportClean": false,
+      "exceptions": [],
+      "networkFailures": [
+        {
+          "stage": "loading",
+          "url": "http://127.0.0.1:53515/assets/models/boulders.glb",
+          "canceled": true,
+          "errorText": "net::ERR_ABORTED",
+          "requestId": "60940.130",
+          "timestamp": 1966984.858117,
+          "type": "Fetch"
+        },
+        {
+          "stage": "loading",
+          "url": "http://127.0.0.1:53515/prop-assets/plastic_crate_02/plastic_crate_02.bin",
+          "canceled": true,
+          "errorText": "net::ERR_ABORTED",
+          "requestId": "60940.249",
+          "timestamp": 1966995.875387,
+          "type": "Fetch"
+        }
+      ],
+      "httpErrors": [],
+      "failure": null
+    }
+  },
+  "normal": {
+    "navigationToReadyMs": {
+      "prior": 37253.000020980835,
+      "initial": 133977.9999256134,
+      "complete": 37400.00009536743
+    },
+    "behaviors": {
+      "ok": true,
+      "checks": [
+        {
+          "name": "closed shop door blocks the walking capsule",
+          "passed": true,
+          "evidence": {
+            "displacement": 0.34999999999999964,
+            "candidate": {
+              "x": -7.23,
+              "z": 8
+            }
+          }
+        },
+        {
+          "name": "approaching opens the real shop door collider",
+          "passed": true,
+          "evidence": {
+            "displacement": 0,
+            "candidate": {
+              "x": -7.58,
+              "z": 8
+            }
+          }
+        },
+        {
+          "name": "adjacent storefront wall remains solid",
+          "passed": true,
+          "evidence": {
+            "displacement": 0.40000000000000036,
+            "candidate": {
+              "x": -7.1,
+              "z": 12
+            }
+          }
+        },
+        {
+          "name": "open entrance provides a continuous capsule-width passage",
+          "passed": true,
+          "evidence": {
+            "maxCorrection": 0
+          }
+        },
+        {
+          "name": "interior floor uses its raised walkable surface",
+          "passed": true,
+          "evidence": {
+            "expectedFloor": 0.4134,
+            "maxHeightError": 0
+          }
+        },
+        {
+          "name": "W3 sidewalk walking clears existing furniture and new planters",
+          "passed": true,
+          "evidence": {
+            "endLotX": 3.9674163653903243,
+            "minLotZ": 1.061816375746971,
+            "maxLotZ": 1.1500000000000001,
+            "radius": 0.3,
+            "step": 0.1,
+            "inputDistance": 8
+          }
+        },
+        {
+          "name": "W3 planters leave the existing garden gate approach clear",
+          "passed": true,
+          "evidence": {
+            "maxCorrection": 0
+          }
+        },
+        {
+          "name": "low planter tops support approaching feet and release them on exit",
+          "passed": true,
+          "evidence": [
+            {
+              "id": "w3-planter-south",
+              "expectedTop": 1.1152975042415103,
+              "onTop": 1.1152975042415103,
+              "initialFeet": 0.8553631994889643,
+              "finalFeet": 0.8553631994889643,
+              "supported": true,
+              "returnedToSidewalk": true
+            },
+            {
+              "id": "w3-planter-north",
+              "expectedTop": 1.00881568627451,
+              "onTop": 1.00881568627451,
+              "initialFeet": 0.7488156862745098,
+              "finalFeet": 0.7488156862745098,
+              "supported": true,
+              "returnedToSidewalk": true
+            }
+          ]
+        },
+        {
+          "name": "first person camera is 1.52m above world-space feet",
+          "passed": true,
+          "evidence": {
+            "feet": [
+              281.6,
+              8.812,
+              934
+            ],
+            "camera": [
+              281.6,
+              10.331999999999999,
+              934
+            ],
+            "error": 0
+          }
+        },
+        {
+          "name": "third person camera follows within its obstruction-limited boom",
+          "passed": true,
+          "evidence": {
+            "followDistance": 4.224038352098614,
+            "maximum": 4.224038352098617
+          }
+        },
+        {
+          "name": "view switching preserves the body and collision position",
+          "passed": true,
+          "evidence": {
+            "feet": [
+              281.6,
+              8.812,
+              934
+            ],
+            "initialFeet": [
+              281.6,
+              8.812,
+              934
+            ]
+          }
+        },
+        {
+          "name": "station local/world coordinates round-trip at its nonzero placement",
+          "passed": true,
+          "evidence": {
+            "local": [
+              1.6000000000000227,
+              0.8119999999999994,
+              34
+            ],
+            "world": [
+              281.6,
+              8.812,
+              934
+            ]
+          }
+        },
+        {
+          "name": "real shop wall shortens third-person boom with near-plane clearance",
+          "passed": true,
+          "evidence": {
+            "shortened": 0.7951227548559752,
+            "cameraLotZ": -2.290597833643244,
+            "streetSideWallZ": -2.6,
+            "clearance": 0.30940216635678375,
+            "raycastCalls": 0
+          }
+        },
+        {
+          "name": "camera collision never scans rendered triangles",
+          "passed": true,
+          "evidence": {
+            "raycastCalls": 0
+          }
+        }
+      ]
+    },
+    "look": true,
+    "walking": [
+      {
+        "mode": "third",
+        "ok": true,
+        "horizontalDistance": 9.372243632513067
+      },
+      {
+        "mode": "first",
+        "ok": true,
+        "horizontalDistance": 9.37163779419376
+      }
+    ]
+  },
+  "afternoonControl": {
+    "beforeSha256": "5187f920ae5b735ad1cd2aa2b29ceff43ae29be5561f4b193a4ad14da49e3d99",
+    "afterSha256": "5187f920ae5b735ad1cd2aa2b29ceff43ae29be5561f4b193a4ad14da49e3d99",
+    "samePNG": true,
+    "view": "station-street",
+    "camera": {
+      "position": [
+        278.8,
+        10.4,
+        936
+      ],
+      "quaternion": [
+        -0.003277842930440423,
+        -0.009834585659995631,
+        -0.000032237959341941705,
+        0.9999462663720154
+      ],
+      "fov": 58
+    }
+  }
+}

@@ -1,0 +1,111 @@
+{
+  "schema": "x51-c15-curation-config-v1",
+  "head": "96ddf39ce4ca6448acf1a59dcc49dbf4ca4908ac",
+  "output": "evidence/facade-c15-2026-11-17",
+  "historicalHead": "0904d870068e0138ba633b47faaf927feb684194",
+  "serviceActualExit": 0,
+  "runs": [
+    {
+      "label": "baseline",
+      "directory": "gpu-town-c15",
+      "report": "render-report.json",
+      "baseline": true,
+      "pid": 59144,
+      "session": 87880,
+      "exit": 1
+    },
+    {
+      "label": "diagnostic",
+      "directory": "gpu-look-c15-v1",
+      "report": "look-report.json",
+      "baseline": false,
+      "pid": 67136,
+      "session": 54034,
+      "exit": 0,
+      "driver": "x51-c15-diagnostic-gpu.cjs",
+      "readbacks": [
+        "c14-reference.json",
+        "c12-reference.json",
+        "city-shadow-audit.json",
+        "wall-material-audit.json",
+        "scene-assets-audit.json",
+        "laundry-atlas-name.png",
+        "laundry-atlas-function.png",
+        "laundry-atlas-aframe.png"
+      ]
+    }
+  ],
+  "analysis": {
+    "validationModule": "x51-c15-analysis-curation.cjs",
+    "files": {
+      "x51-c15-execution-receipt.json": {
+        "bytes": 6688,
+        "sha256": "08425702d0525a626f0fc6637596b3ad5b0927e23336d0ed06ce1242103edbf7"
+      },
+      "x51-c15-atlas-execution-summary.json": {
+        "bytes": 11973,
+        "sha256": "1d484e91679f4a08ab236963c25c95cd509bd3ce87a44cf30601b45702e9998a"
+      },
+      "x51-c15-atlas-execution-summary.md": {
+        "bytes": 2432,
+        "sha256": "db8dcb53b422bc8895fac8db0637db89b6d81aeebc2e9a440c37b9537c2ea965"
+      },
+      "x51-c15-offline-analysis.cjs": {
+        "bytes": 5481,
+        "sha256": "80fc26eab18abba78e55094f42a05ff4dc3f8f2ec5a0185a75dc565072b41a54"
+      },
+      "x51-c15-offline-analysis.json": {
+        "bytes": 94324,
+        "sha256": "55f9c5b335149c8982ac306ccdbd5d84ab3f1b2c1ee8f67100b29412ff35ee45"
+      }
+    }
+  },
+  "ci": {
+    "prefix": "x51-c15-source-ci-",
+    "files": {
+      "x51-c15-source-ci-checks.json": {
+        "bytes": 5322,
+        "sha256": "81ff8cef9959547cf3c3fc070c704bbaa966021255595004b789df60d3361e81"
+      },
+      "x51-c15-source-ci-runs.json": {
+        "bytes": 17136,
+        "sha256": "400d4860535549106df3c0229e643b29f32a5e5e161129099daffcdfe862a28e"
+      },
+      "x51-c15-source-ci-jobs.json": {
+        "bytes": 4139,
+        "sha256": "10e703fb253e52b31ab450fc444ee23fb2e0493ef28b396ba48d49320f53b7b4"
+      },
+      "x51-c15-source-ci-run.json": {
+        "bytes": 16093,
+        "sha256": "2b7ccbc7332644dbfc350f24fde58cb9bb81beeacdf63ab233eb08a935f6ecca"
+      },
+      "x51-c15-source-ci-log.json": {
+        "bytes": 29810,
+        "sha256": "4edaa82dbf809b17c7533d8265a02a5e9d2b1dc6e228f671006c0dfdbe3a0fef"
+      },
+      "x51-c15-source-ci-summary.cjs": {
+        "bytes": 2521,
+        "sha256": "cca07db51d9c5751ab0eef9aceca24622f0dc147c5241f5db630debac185383c"
+      },
+      "x51-c15-source-ci-summary.json": {
+        "bytes": 6774,
+        "sha256": "cab335325e43e36331fab548854fa253e2dca007d886d8417312c2c4ee9dcb0d"
+      },
+      "x51-c15-source-ci-provenance.json": {
+        "bytes": 2701,
+        "sha256": "a5bac8b4e326147c2d4a892845b7b83b922eb262d62aa268891aca1b8f4e7530"
+      }
+    }
+  },
+  "pending": [],
+  "serviceExitEvidence": {
+    "receipt": "x51-c15-execution-receipt.json",
+    "kind": "Post-execution executing-agent tool-result record; no contemporaneous supervisor receipt",
+    "actualExit": 0
+  },
+  "readme": {
+    "file": "x51-c15-evidence-readme.md",
+    "bytes": 6689,
+    "sha256": "2fdfe41278458f297137c52f9a66849ff55d29e60772cb4375932a6c1f7fa07f"
+  }
+}

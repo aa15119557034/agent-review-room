@@ -1,0 +1,62 @@
+{
+  "source": "58a46094de1ac23493f35f1bea94683df5d49c2d",
+  "tag": "01-v2",
+  "stage": "complete",
+  "start": 1795021536444,
+  "events": [
+    {
+      "stage": "loading",
+      "wall": 1795021536598
+    },
+    {
+      "stage": "ready",
+      "wall": 1795021581505
+    },
+    {
+      "stage": "control-A",
+      "wall": 1795021588189
+    },
+    {
+      "stage": "control-third",
+      "wall": 1795021599231
+    },
+    {
+      "stage": "sparse-A",
+      "wall": 1795021604449
+    },
+    {
+      "stage": "sparse-third",
+      "wall": 1795021615529
+    },
+    {
+      "stage": "complete",
+      "wall": 1795021619401
+    }
+  ],
+  "exceptions": [],
+  "network": [
+    {
+      "asset": "menhir.glb",
+      "error": "net::ERR_ABORTED",
+      "canceled": true
+    },
+    {
+      "asset": "boulders.glb",
+      "error": "net::ERR_ABORTED",
+      "canceled": true
+    },
+    {
+      "asset": "mature-sakura.glb",
+      "error": "net::ERR_ABORTED",
+      "canceled": true
+    },
+    {
+      "asset": "plastic_crate_02_1k.gltf",
+      "error": "net::ERR_ABORTED",
+      "canceled": true
+    }
+  ],
+  "mainSha256": "a24df689007b299a462bc48d4303aa128956cea93eacb6d2483e04b86b9ed1d2",
+  "readyMs": 44907,
+  "rawSha256": "9fc9b5af8398c549b7c2eb2034e89668a0833925b728241727e995eb46c53ccd"
+}

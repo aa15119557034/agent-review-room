@@ -1,0 +1,181 @@
+{
+  "head": "33b487f611ec2529eb40a1a0bdee41cfffec2c82",
+  "normal": {
+    "renderOk": true,
+    "transportClean": false,
+    "networkFailures": [
+      {
+        "url": "http://127.0.0.1:60915/prop-assets/plastic_crate_02/plastic_crate_02.bin",
+        "type": "Fetch",
+        "canceled": true,
+        "errorText": "net::ERR_ABORTED",
+        "requestId": "42208.249",
+        "timestamp": 1961242.233104,
+        "stage": "waiting-for-ready-frame",
+        "receivedWallTime": 1794951063.179
+      }
+    ],
+    "exceptions": [],
+    "behavior": true,
+    "walking": true
+  },
+  "town": {
+    "renderOk": true,
+    "transportClean": false,
+    "actualExit": 1,
+    "networkFailures": [
+      {
+        "url": "http://127.0.0.1:61093/prop-assets/plastic_crate_02/plastic_crate_02.bin",
+        "stage": "loading",
+        "canceled": true,
+        "errorText": "net::ERR_ABORTED",
+        "requestId": "68184.249",
+        "timestamp": 1961347.963213,
+        "type": "Fetch"
+      }
+    ],
+    "exceptions": []
+  },
+  "segments": {
+    "20": {
+      "sample": "frames-20.json",
+      "sha256": "9f457b847784b534c4f67c8d78a29b0a5915294f73120e1c2b818edeee2ff055",
+      "frames": 657,
+      "totalMs": 10107.799999999996,
+      "fps": 64.99930746552171,
+      "p95Ms": 15.5,
+      "maxMs": 15.599999999998545,
+      "over20ms": 0,
+      "emptyDraws": 0,
+      "meanDrawCalls": 1279.345509893455,
+      "meanTriangles": 9662639.410958905,
+      "meetsBudget": true
+    },
+    "21": {
+      "sample": "frames-21.json",
+      "sha256": "66e332fc0844085992865f3bcd101ab39ce583602f6264692e584c69604dbd32",
+      "frames": 657,
+      "totalMs": 10107.700000000004,
+      "fps": 64.99995053276213,
+      "p95Ms": 15.5,
+      "maxMs": 15.599999999998545,
+      "over20ms": 0,
+      "emptyDraws": 0,
+      "meanDrawCalls": 851.1826484018264,
+      "meanTriangles": 8782733.689497717,
+      "meetsBudget": true
+    },
+    "23": {
+      "sample": "frames-23.json",
+      "sha256": "bf1c839f2e8f95344a24a9631c8edbdd00214247a90809310f0949b0f05e5948",
+      "frames": 654,
+      "totalMs": 10123.199999999997,
+      "fps": 64.60407776197252,
+      "p95Ms": 15.5,
+      "maxMs": 30.89999999999418,
+      "over20ms": 4,
+      "emptyDraws": 0,
+      "meanDrawCalls": 1156.9051987767584,
+      "meanTriangles": 7598744.856269113,
+      "meetsBudget": true
+    },
+    "24": {
+      "sample": "frames-24.json",
+      "sha256": "c9700f29cd50e402311572ce23a5f28822e9f11ffeabc4be7148c6e6cb43b183",
+      "frames": 658,
+      "totalMs": 10123.099999999991,
+      "fps": 64.99985182404605,
+      "p95Ms": 15.5,
+      "maxMs": 15.69999999999709,
+      "over20ms": 0,
+      "emptyDraws": 0,
+      "meanDrawCalls": 909.563829787234,
+      "meanTriangles": 8859078.689969605,
+      "meetsBudget": true
+    },
+    "station-street": {
+      "sample": "frame-samples-station-street.json",
+      "sha256": "744f638e1e76090df260cedf8e065677f1c0697865c569e498c3c53c9ada5bf2",
+      "frames": 200,
+      "totalMs": 3107.7999999999956,
+      "fps": 64.35420554733261,
+      "p95Ms": 15.5,
+      "maxMs": 30.80000000000291,
+      "over20ms": 2,
+      "emptyDraws": 0,
+      "meanDrawCalls": 1605.55,
+      "meanTriangles": 8399738.4,
+      "meetsBudget": true
+    },
+    "station-port": {
+      "sample": "frame-samples-station-port.json",
+      "sha256": "29f532b804daf85a3e18d7cf3658ff8f865dbe504056446a45057d76f5511339",
+      "frames": 203,
+      "totalMs": 3123.2000000000044,
+      "fps": 64.99743852459007,
+      "p95Ms": 15.5,
+      "maxMs": 15.60000000000582,
+      "over20ms": 0,
+      "emptyDraws": 0,
+      "meanDrawCalls": 870.2807881773399,
+      "meanTriangles": 7999593.477832512,
+      "meetsBudget": true
+    },
+    "island-aerial": {
+      "sample": "frame-samples-island-aerial.json",
+      "sha256": "35af9ed382a2d48886d775f5e0442a61eeee84dfe32d96ea0200aacfa8844c05",
+      "frames": 189,
+      "totalMs": 3123.199999999997,
+      "fps": 60.51485655737711,
+      "p95Ms": 30.69999999999709,
+      "maxMs": 30.90000000000873,
+      "over20ms": 14,
+      "emptyDraws": 0,
+      "meanDrawCalls": 1775.3703703703704,
+      "meanTriangles": 7391773.978835979,
+      "meetsBudget": false
+    },
+    "shop-interior": {
+      "sample": "frame-samples-shop-interior.json",
+      "sha256": "df82296ebd5526bd852690e2ef743e636d72d2bb5e5457729a8c61eb43c9ed3f",
+      "frames": 202,
+      "totalMs": 3107.699999999997,
+      "fps": 64.99983910930919,
+      "p95Ms": 15.5,
+      "maxMs": 15.60000000000582,
+      "over20ms": 0,
+      "emptyDraws": 0,
+      "meanDrawCalls": 941.3960396039604,
+      "meanTriangles": 7620770.346534654,
+      "meetsBudget": true
+    },
+    "walking-third": {
+      "sample": "frame-samples-walking-third.json",
+      "sha256": "9d92bf4fe34e697c2f011a77069a9662709cd9eab72e1688c331c6da27876a15",
+      "frames": 196,
+      "totalMs": 3123,
+      "fps": 62.760166506564204,
+      "p95Ms": 15.5,
+      "maxMs": 30.89999999999418,
+      "over20ms": 7,
+      "emptyDraws": 0,
+      "meanDrawCalls": 1589.0357142857142,
+      "meanTriangles": 8368998.602040816,
+      "meetsBudget": true
+    },
+    "walking-first": {
+      "sample": "frame-samples-walking-first.json",
+      "sha256": "9be544a5d5e8239a1070336d4b2f7e8a5f7ebc4f4664afd8199b63a4926a78c9",
+      "frames": 204,
+      "totalMs": 3138.5,
+      "fps": 64.9992034411343,
+      "p95Ms": 15.5,
+      "maxMs": 15.60000000000582,
+      "over20ms": 0,
+      "emptyDraws": 0,
+      "meanDrawCalls": 1446.6813725490197,
+      "meanTriangles": 8342355.235294118,
+      "meetsBudget": true
+    }
+  }
+}

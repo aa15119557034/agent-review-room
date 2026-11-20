@@ -1,0 +1,355 @@
+{
+  "fixture": "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base",
+  "output": "D:\\codex\\2026-11-16\\world-implementation\\world-base\\apps\\desktop\\e2e\\fixtures\\world-base\\artifacts\\gpu-look-c17-v1",
+  "runtime": "D:\\codex\\2026-11-16\\world-implementation\\world-base\\apps\\desktop\\e2e\\fixtures\\world-base\\artifacts\\gpu-look-c17-v1\\runtime-G2Tf7d",
+  "startedAt": "2026-11-17T17:46:18.585Z",
+  "timeoutMs": 300000,
+  "expectedHead": "0184c79d94094c7d76378302592572bf367be6c7",
+  "referenceCameras": {
+    "service-corner": {
+      "position": [
+        308.4,
+        9.612,
+        872.9
+      ],
+      "quaternion": [
+        -0.08432325046436126,
+        0.5331397072650681,
+        0.05351200213385738,
+        0.8401119613456697
+      ],
+      "fov": 55
+    },
+    "laundry-details": {
+      "position": [
+        288,
+        14.384808464050293,
+        777.9
+      ],
+      "quaternion": [
+        -0.15522850149956677,
+        0.6173580660361093,
+        0.12595148976979553,
+        0.7608609287163607
+      ],
+      "fov": 55
+    },
+    "shop-interior": {
+      "position": [
+        271.7,
+        9.9134,
+        908
+      ],
+      "quaternion": [
+        -0.015701859235384273,
+        0.7069324236562871,
+        0.015701859235384273,
+        0.7069324236562871
+      ],
+      "fov": 58
+    },
+    "20-rear-eye": {
+      "position": [
+        273,
+        14.755245542526229,
+        758
+      ],
+      "quaternion": [
+        -0.00013011891877658623,
+        0.9145142483742376,
+        -0.00029414054360230415,
+        -0.40455356390830466
+      ],
+      "fov": 58
+    },
+    "21-front-eye": {
+      "position": [
+        274,
+        12.87812709172567,
+        783
+      ],
+      "quaternion": [
+        0.07422133960767584,
+        -0.5103582416049142,
+        0.044271975994965136,
+        0.8556083508909221
+      ],
+      "fov": 58
+    },
+    "station-street": {
+      "position": [
+        278.8,
+        10.4,
+        936
+      ],
+      "quaternion": [
+        -0.003277842930440423,
+        -0.009834585659995631,
+        -0.000032237959341941705,
+        0.9999462663720154
+      ],
+      "fov": 58
+    },
+    "street-detail": {
+      "position": [
+        284.4,
+        10.281286274509803,
+        924
+      ],
+      "quaternion": [
+        -0.12465537443110519,
+        -0.38126635888515065,
+        -0.05196769176958736,
+        0.914547079280253
+      ],
+      "fov": 58
+    }
+  },
+  "c16Reference": {
+    "path": "D:\\codex\\2026-11-16\\world-implementation\\world-base\\apps\\desktop\\e2e\\fixtures\\world-base\\artifacts\\gpu-look-c16-v1\\look-report.json",
+    "sha256": "8c6ef20d18e2d4e94b9e8c966e4accc64d3c74f0f5126d45f92357eb1f2ca335",
+    "head": "50e190b092fb2b30ab9ed19a28302d5638f947f4"
+  },
+  "seamCandidates": {
+    "views": [
+      {
+        "name": "north-seam-central",
+        "x": 5,
+        "z": -105,
+        "tx": 5,
+        "tz": -97.7,
+        "position": [
+          5,
+          3.2366846561431886,
+          -105
+        ],
+        "target": [
+          5,
+          1.5048261889179049,
+          -97.7
+        ],
+        "worldPosition": [
+          285,
+          11.236684656143188,
+          795
+        ],
+        "worldTarget": [
+          285,
+          9.504826188917905,
+          802.3
+        ],
+        "eyeAboveTerrain": 1.6,
+        "fov": 55,
+        "minCenterRayAboveVisibleTerrainExcludingLast1Percent": 0.12010229034514563,
+        "samples": [
+          {
+            "local": [
+              5,
+              1.3765083312988278,
+              -99.05
+            ],
+            "world": [
+              285,
+              9.376508331298828,
+              800.95
+            ]
+          },
+          {
+            "local": [
+              5,
+              1.3761658668518066,
+              -99
+            ],
+            "world": [
+              285,
+              9.376165866851807,
+              801
+            ]
+          },
+          {
+            "local": [
+              5,
+              1.3780357693918006,
+              -98.95
+            ],
+            "world": [
+              285,
+              9.3780357693918,
+              801.05
+            ]
+          },
+          {
+            "local": [
+              5,
+              1.4135964882316472,
+              -98
+            ],
+            "world": [
+              285,
+              9.413596488231647,
+              802
+            ]
+          },
+          {
+            "local": [
+              5,
+              1.4491572070714938,
+              -97.05
+            ],
+            "world": [
+              285,
+              9.449157207071494,
+              802.95
+            ]
+          },
+          {
+            "local": [
+              5,
+              1.4510288065843622,
+              -97
+            ],
+            "world": [
+              285,
+              9.451028806584363,
+              803
+            ]
+          },
+          {
+            "local": [
+              5,
+              1.5005267489711909,
+              -96.95
+            ],
+            "world": [
+              285,
+              9.500526748971192,
+              803.05
+            ]
+          }
+        ]
+      },
+      {
+        "name": "north-seam-oblique",
+        "x": 25,
+        "z": -105,
+        "tx": 18,
+        "tz": -97.7,
+        "position": [
+          25,
+          3.2205841700235998,
+          -105
+        ],
+        "target": [
+          18,
+          1.5045947187946798,
+          -97.7
+        ],
+        "worldPosition": [
+          305,
+          11.2205841700236,
+          795
+        ],
+        "worldTarget": [
+          298,
+          9.50459471879468,
+          802.3
+        ],
+        "eyeAboveTerrain": 1.6,
+        "fov": 55,
+        "minCenterRayAboveVisibleTerrainExcludingLast1Percent": 0.11983906845587566,
+        "samples": [
+          {
+            "local": [
+              18,
+              1.3757933722601994,
+              -99.05
+            ],
+            "world": [
+              298,
+              9.3757933722602,
+              800.95
+            ]
+          },
+          {
+            "local": [
+              18,
+              1.3754955927530936,
+              -99
+            ],
+            "world": [
+              298,
+              9.375495592753094,
+              801
+            ]
+          },
+          {
+            "local": [
+              18,
+              1.3773909597627636,
+              -98.95
+            ],
+            "world": [
+              298,
+              9.377390959762764,
+              801.05
+            ]
+          },
+          {
+            "local": [
+              18,
+              1.4132658166270033,
+              -98
+            ],
+            "world": [
+              298,
+              9.413265816627003,
+              802
+            ]
+          },
+          {
+            "local": [
+              18,
+              1.4491406734912573,
+              -97.05
+            ],
+            "world": [
+              298,
+              9.449140673491257,
+              802.95
+            ]
+          },
+          {
+            "local": [
+              18,
+              1.4510288065843622,
+              -97
+            ],
+            "world": [
+              298,
+              9.451028806584363,
+              803
+            ]
+          },
+          {
+            "local": [
+              18,
+              1.5005267489711909,
+              -96.95
+            ],
+            "world": [
+              298,
+              9.500526748971192,
+              803.05
+            ]
+          }
+        ]
+      }
+    ],
+    "limits": "Only exact CPU terrain and transition triangles; no render/camera frustum or all-scene geometry occlusion proof. Heights use actual flattened u16 data and original L.heightAt."
+  },
+  "seamCandidateSource": {
+    "path": "D:\\codex\\2026-11-16\\world-implementation\\handoff\\x51-c16-north-seam-views.json",
+    "sha256": "58d4705a0fa3c0404a8d4d336f28c4ffd997f66afa027540ffe9e3c36ee8cccf"
+  },
+  "driverSha256": "16c0e570ba5a7888f6dedd7b1293440a0c7444fe1313772ce1080195c42f001c"
+}

@@ -1,0 +1,765 @@
+{
+  "source": "2ae05c5b0715fba94a167fa103babb72ae0ef9cf",
+  "baseline": "47a5c12eba910682ccbf8bc9138510bc01737bf3",
+  "method": "Independent software-only normal fixture scene, final source including both new installed street probes. node probe-cpu.cjs from this evidence directory; desktop Electron with hardware acceleration disabled. Compared all original collision/plan entries with real matched R3 capture.",
+  "processExit": 0,
+  "baked": "baked",
+  "fingerprint": "1065:2670334:299375.3:953080.7",
+  "planningRays": 0,
+  "items": 26,
+  "itemsOrderAndPropertiesSHA256": "2e17ad7b2de399565ed74fabc4d8deda50d25f780dde5e36d1d086d8a8539fc3",
+  "decalSupport": [
+    {
+      "index": 0,
+      "area": "01-left-wall",
+      "cell": 0,
+      "ninePoint": true,
+      "curved": null,
+      "obstructingMeshes": 0
+    },
+    {
+      "index": 1,
+      "area": "01-left-wall",
+      "cell": 9,
+      "ninePoint": true,
+      "curved": null,
+      "obstructingMeshes": 0
+    },
+    {
+      "index": 2,
+      "area": "01-left-wall",
+      "cell": 3,
+      "ninePoint": true,
+      "curved": null,
+      "obstructingMeshes": 0
+    },
+    {
+      "index": 3,
+      "area": "01-left-pole",
+      "cell": 10,
+      "ninePoint": null,
+      "curved": {
+        "atOldCenter": {
+          "pass": true,
+          "distance": 0.50004,
+          "worldHit": [
+            276.64961,
+            9.75,
+            928.83877
+          ],
+          "wall": true,
+          "material": "MeshToonMaterial",
+          "path": "Sakuragaoka/static/static-batched",
+          "distanceFromOldBakedCenter": 0.00004,
+          "normalDotOld": 1
+        },
+        "atSourceDirective": {
+          "pass": true,
+          "distance": 0.5013,
+          "worldHit": [
+            276.6496,
+            9.75,
+            928.83876
+          ],
+          "wall": true,
+          "material": "MeshToonMaterial",
+          "path": "Sakuragaoka/static/static-batched",
+          "distanceFromOldBakedCenter": 0.00004,
+          "normalDotOld": 1
+        }
+      },
+      "obstructingMeshes": 0
+    },
+    {
+      "index": 4,
+      "area": "01-right-shop",
+      "cell": 5,
+      "ninePoint": null,
+      "curved": {
+        "atOldCenter": {
+          "pass": true,
+          "distance": 0.49998,
+          "worldHit": [
+            286.41779,
+            9.5,
+            924.45999
+          ],
+          "wall": true,
+          "material": "MeshToonMaterial",
+          "path": "Sakuragaoka/static/static-batched",
+          "distanceFromOldBakedCenter": 0.00002,
+          "normalDotOld": 1
+        },
+        "atSourceDirective": {
+          "pass": true,
+          "distance": 0.53778,
+          "worldHit": [
+            286.41778,
+            9.5,
+            924.46
+          ],
+          "wall": true,
+          "material": "MeshToonMaterial",
+          "path": "Sakuragaoka/static/static-batched",
+          "distanceFromOldBakedCenter": 0.00002,
+          "normalDotOld": 1
+        }
+      },
+      "obstructingMeshes": 0
+    },
+    {
+      "index": 5,
+      "area": "01-right-shop",
+      "cell": 11,
+      "ninePoint": null,
+      "curved": {
+        "atOldCenter": {
+          "pass": true,
+          "distance": 0.5,
+          "worldHit": [
+            285.546,
+            11.05,
+            928.28
+          ],
+          "wall": true,
+          "material": "MeshToonMaterial",
+          "path": "Sakuragaoka/static/static-batched",
+          "distanceFromOldBakedCenter": 0,
+          "normalDotOld": 1
+        },
+        "atSourceDirective": {
+          "pass": true,
+          "distance": 0.496,
+          "worldHit": [
+            285.546,
+            11.05,
+            928.28
+          ],
+          "wall": true,
+          "material": "MeshToonMaterial",
+          "path": "Sakuragaoka/static/static-batched",
+          "distanceFromOldBakedCenter": 0,
+          "normalDotOld": 1
+        }
+      },
+      "obstructingMeshes": 0
+    },
+    {
+      "index": 6,
+      "area": "01-right-shop",
+      "cell": 8,
+      "ninePoint": true,
+      "curved": null,
+      "obstructingMeshes": 0
+    },
+    {
+      "index": 7,
+      "area": "01-right-pole",
+      "cell": 8,
+      "ninePoint": null,
+      "curved": {
+        "atOldCenter": {
+          "pass": true,
+          "distance": 0.49999,
+          "worldHit": [
+            283.31999,
+            9.9,
+            923.13061
+          ],
+          "wall": true,
+          "material": "MeshToonMaterial",
+          "path": "Sakuragaoka/static/static-batched",
+          "distanceFromOldBakedCenter": 0.00001,
+          "normalDotOld": 1
+        },
+        "atSourceDirective": {
+          "pass": true,
+          "distance": 0.66938,
+          "worldHit": [
+            283.32,
+            9.9,
+            923.13062
+          ],
+          "wall": true,
+          "material": "MeshToonMaterial",
+          "path": "Sakuragaoka/static/static-batched",
+          "distanceFromOldBakedCenter": 0.00002,
+          "normalDotOld": 1
+        }
+      },
+      "obstructingMeshes": 0
+    },
+    {
+      "index": 8,
+      "area": "21-mailboxes",
+      "cell": 7,
+      "ninePoint": true,
+      "curved": null,
+      "obstructingMeshes": 0
+    },
+    {
+      "index": 9,
+      "area": "21-mailboxes",
+      "cell": 9,
+      "ninePoint": true,
+      "curved": null,
+      "obstructingMeshes": 0
+    },
+    {
+      "index": 10,
+      "area": "main",
+      "cell": 10,
+      "ninePoint": true,
+      "curved": null,
+      "obstructingMeshes": 0
+    },
+    {
+      "index": 11,
+      "area": "main",
+      "cell": 9,
+      "ninePoint": true,
+      "curved": null,
+      "obstructingMeshes": 0
+    },
+    {
+      "index": 12,
+      "area": "main",
+      "cell": 9,
+      "ninePoint": true,
+      "curved": null,
+      "obstructingMeshes": 0
+    },
+    {
+      "index": 13,
+      "area": "main",
+      "cell": 9,
+      "ninePoint": true,
+      "curved": null,
+      "obstructingMeshes": 0
+    },
+    {
+      "index": 14,
+      "area": "laundry",
+      "cell": 2,
+      "ninePoint": true,
+      "curved": null,
+      "obstructingMeshes": 0
+    },
+    {
+      "index": 15,
+      "area": "laundry",
+      "cell": 5,
+      "ninePoint": true,
+      "curved": null,
+      "obstructingMeshes": 0
+    },
+    {
+      "index": 16,
+      "area": "laundry",
+      "cell": 9,
+      "ninePoint": true,
+      "curved": null,
+      "obstructingMeshes": 0
+    },
+    {
+      "index": 17,
+      "area": "rear",
+      "cell": 0,
+      "ninePoint": true,
+      "curved": null,
+      "obstructingMeshes": 0
+    },
+    {
+      "index": 18,
+      "area": "rear",
+      "cell": 3,
+      "ninePoint": true,
+      "curved": null,
+      "obstructingMeshes": 0
+    },
+    {
+      "index": 19,
+      "area": "rear",
+      "cell": 3,
+      "ninePoint": true,
+      "curved": null,
+      "obstructingMeshes": 0
+    },
+    {
+      "index": 20,
+      "area": "rear",
+      "cell": 1,
+      "ninePoint": true,
+      "curved": null,
+      "obstructingMeshes": 0
+    },
+    {
+      "index": 21,
+      "area": "rear",
+      "cell": 11,
+      "ninePoint": true,
+      "curved": null,
+      "obstructingMeshes": 0
+    },
+    {
+      "index": 22,
+      "area": "rear",
+      "cell": 10,
+      "ninePoint": true,
+      "curved": null,
+      "obstructingMeshes": 0
+    },
+    {
+      "index": 23,
+      "area": "rear",
+      "cell": 9,
+      "ninePoint": true,
+      "curved": null,
+      "obstructingMeshes": 0
+    },
+    {
+      "index": 24,
+      "area": "rear",
+      "cell": 13,
+      "ninePoint": true,
+      "curved": null,
+      "obstructingMeshes": 0
+    },
+    {
+      "index": 25,
+      "area": "rear",
+      "cell": 14,
+      "ninePoint": true,
+      "curved": null,
+      "obstructingMeshes": 0
+    }
+  ],
+  "originalColliders": 3147,
+  "colliderSHA256": "a0487644f831456ba4802d144d452d9d9709c5b80a26384f0931545fa4d2a541",
+  "allBaselineStairsVerified": 6,
+  "totalStairs": 7,
+  "allBaselineClearAreasVerified": 35,
+  "totalClearAreas": 38,
+  "oldCitySeedPairs": 11,
+  "oldSkylineSeedPairs": 9,
+  "vegetation": {
+    "areas": [
+      {
+        "name": "town-apartment-3f",
+        "minX": -24.7,
+        "maxX": -11.25,
+        "minZ": -134.95000000000002,
+        "maxZ": -123.35
+      },
+      {
+        "name": "town-apartment-4f",
+        "minX": -6.200000000000001,
+        "maxX": 8.25,
+        "minZ": -133.45000000000002,
+        "maxZ": -121.85
+      },
+      {
+        "name": "town-apartment-5f",
+        "minX": 13.799999999999999,
+        "maxX": 28.25,
+        "minZ": -133.45000000000002,
+        "maxZ": -120.85
+      },
+      {
+        "name": "town-house-0",
+        "minX": -42.05023296657734,
+        "maxX": -31.94976703342266,
+        "minZ": -131.4996700184522,
+        "maxZ": -121.50032998154778
+      },
+      {
+        "name": "town-house-1",
+        "minX": -54.16661962163774,
+        "maxX": -45.83338037836226,
+        "minZ": -131.83192623024547,
+        "maxZ": -122.16807376975453
+      },
+      {
+        "name": "town-front-lane",
+        "minX": -56,
+        "maxX": 37,
+        "minZ": -118.5,
+        "maxZ": -115.8
+      },
+      {
+        "name": "town-levee-lane",
+        "minX": 32,
+        "maxX": 37,
+        "minZ": -115.8,
+        "maxZ": -101
+      },
+      {
+        "name": "town-apartment-3f-entry",
+        "minX": -18.1,
+        "maxX": -15.9,
+        "minZ": -123.5,
+        "maxZ": -118.51
+      },
+      {
+        "name": "town-apartment-4f-entry",
+        "minX": 0.8999999999999999,
+        "maxX": 3.1,
+        "minZ": -122,
+        "maxZ": -118.51
+      },
+      {
+        "name": "town-apartment-5f-entry",
+        "minX": 20.9,
+        "maxX": 23.1,
+        "minZ": -121,
+        "maxZ": -118.51
+      },
+      {
+        "name": "town-house-0-entry",
+        "minX": -38.1,
+        "maxX": -35.9,
+        "minZ": -121.50032998154778,
+        "maxZ": -118.51
+      },
+      {
+        "name": "town-house-1-entry",
+        "minX": -51.1,
+        "maxX": -48.9,
+        "minZ": -122.16807376975453,
+        "maxZ": -118.51
+      },
+      {
+        "name": "town-levee-stairs",
+        "minX": 32,
+        "maxX": 37,
+        "minZ": -101,
+        "maxZ": -94.53
+      },
+      {
+        "name": "town-tree--57.5",
+        "minX": -58.4,
+        "maxX": -56.6,
+        "minZ": -123.4,
+        "maxZ": -121.6
+      },
+      {
+        "name": "town-tree-30.5",
+        "minX": 29.6,
+        "maxX": 31.4,
+        "minZ": -127.9,
+        "maxZ": -126.1
+      },
+      {
+        "name": "town-apartment-3f-hedge--24.5",
+        "minX": -24.7,
+        "maxX": -18.3,
+        "minZ": -123.3,
+        "maxZ": -122.3
+      },
+      {
+        "name": "town-apartment-3f-hedge--15.5",
+        "minX": -15.7,
+        "maxX": -11.25,
+        "minZ": -123.3,
+        "maxZ": -122.3
+      },
+      {
+        "name": "town-apartment-3f-bush--24.4",
+        "minX": -25.7,
+        "maxX": -23.099999999999998,
+        "minZ": -136.85000000000002,
+        "maxZ": -134.25
+      },
+      {
+        "name": "town-apartment-3f-bush--11.55",
+        "minX": -12.850000000000001,
+        "maxX": -10.25,
+        "minZ": -136.85000000000002,
+        "maxZ": -134.25
+      },
+      {
+        "name": "town-apartment-4f-hedge--6.000000000000001",
+        "minX": -6.200000000000001,
+        "maxX": 0.7,
+        "minZ": -121.8,
+        "maxZ": -120.8
+      },
+      {
+        "name": "town-apartment-4f-hedge-3.5",
+        "minX": 3.3,
+        "maxX": 8.25,
+        "minZ": -121.8,
+        "maxZ": -120.8
+      },
+      {
+        "name": "town-apartment-4f-bush--5.900000000000001",
+        "minX": -7.200000000000001,
+        "maxX": -4.600000000000001,
+        "minZ": -135.35000000000002,
+        "maxZ": -132.75
+      },
+      {
+        "name": "town-apartment-4f-bush-7.95",
+        "minX": 6.65,
+        "maxX": 9.25,
+        "minZ": -135.35000000000002,
+        "maxZ": -132.75
+      },
+      {
+        "name": "town-apartment-5f-hedge-13.999999999999998",
+        "minX": 13.799999999999999,
+        "maxX": 20.7,
+        "minZ": -120.8,
+        "maxZ": -119.8
+      },
+      {
+        "name": "town-apartment-5f-hedge-23.5",
+        "minX": 23.3,
+        "maxX": 28.25,
+        "minZ": -120.8,
+        "maxZ": -119.8
+      },
+      {
+        "name": "town-apartment-5f-bush-14.1",
+        "minX": 12.799999999999999,
+        "maxX": 15.4,
+        "minZ": -135.35000000000002,
+        "maxZ": -132.75
+      },
+      {
+        "name": "town-apartment-5f-bush-27.95",
+        "minX": 26.65,
+        "maxX": 29.25,
+        "minZ": -135.35000000000002,
+        "maxZ": -132.75
+      },
+      {
+        "name": "town-house-0-hedge--41.85023296657734",
+        "minX": -42.05023296657734,
+        "maxX": -38.3,
+        "minZ": -121.45032998154778,
+        "maxZ": -120.45032998154778
+      },
+      {
+        "name": "town-house-0-hedge--35.5",
+        "minX": -35.7,
+        "maxX": -31.949767033422663,
+        "minZ": -121.45032998154778,
+        "maxZ": -120.45032998154778
+      },
+      {
+        "name": "town-house-0-bush--41.75023296657734",
+        "minX": -43.05023296657734,
+        "maxX": -40.450232966577346,
+        "minZ": -133.3996700184522,
+        "maxZ": -130.7996700184522
+      },
+      {
+        "name": "town-house-0-bush--32.24976703342266",
+        "minX": -33.549767033422654,
+        "maxX": -30.949767033422656,
+        "minZ": -133.3996700184522,
+        "maxZ": -130.7996700184522
+      },
+      {
+        "name": "town-house-1-hedge--53.96661962163774",
+        "minX": -54.16661962163774,
+        "maxX": -51.3,
+        "minZ": -122.11807376975453,
+        "maxZ": -121.11807376975453
+      },
+      {
+        "name": "town-house-1-hedge--48.5",
+        "minX": -48.7,
+        "maxX": -45.83338037836226,
+        "minZ": -122.11807376975453,
+        "maxZ": -121.11807376975453
+      },
+      {
+        "name": "town-house-1-bush--53.866619621637746",
+        "minX": -55.16661962163774,
+        "maxX": -52.56661962163775,
+        "minZ": -133.73192623024548,
+        "maxZ": -131.13192623024545
+      },
+      {
+        "name": "town-house-1-bush--46.133380378362254",
+        "minX": -47.43338037836225,
+        "maxX": -44.83338037836226,
+        "minZ": -133.73192623024548,
+        "maxZ": -131.13192623024545
+      },
+      {
+        "name": "station-exchange",
+        "minX": 31.85,
+        "maxX": 38.15,
+        "minZ": -127.75,
+        "maxZ": -120.65
+      },
+      {
+        "name": "station-exchange-entry",
+        "minX": 33.63,
+        "maxX": 35.27,
+        "minZ": -120.65,
+        "maxZ": -118.51
+      },
+      {
+        "name": "alley-workshop",
+        "minX": -33.95756323594602,
+        "maxX": -26.04243676405398,
+        "minZ": -146.39895327202598,
+        "maxZ": -138.801046727974
+      }
+    ],
+    "changedTexels": 290,
+    "texelSizeM": 3,
+    "feather": {
+      "flowerFadeM": 8,
+      "jitterM": 2.5,
+      "texels": 188
+    },
+    "channels": "R flowers / A grass; G species and B wetness retained"
+  },
+  "assets": {
+    "buildings": [
+      "station-exchange",
+      "alley-workshop"
+    ],
+    "laundry": "Portal_wings"
+  },
+  "terrain": [
+    {
+      "placement": {
+        "name": "station-exchange",
+        "type": "station-art",
+        "center": [
+          35,
+          -124.2
+        ],
+        "baseY": 4.430233103434214,
+        "yaw": 0,
+        "halfWidth": 3.15,
+        "halfDepth": 3.55,
+        "footprint": {
+          "minX": 31.85,
+          "maxX": 38.15,
+          "minZ": -127.75,
+          "maxZ": -120.65
+        },
+        "foundation": {
+          "top": 12.430233103434215,
+          "bottom": 11.52418612798056,
+          "height": 0.9060469754536546
+        },
+        "ground": {
+          "min": 11.60418612798056,
+          "max": 12.390233103434214,
+          "relief": 0.7860469754536545,
+          "samples": 961
+        },
+        "worldOrigin": [
+          315,
+          12.430233103434215,
+          775.8
+        ]
+      },
+      "registeredForClearing": {
+        "name": "station-exchange",
+        "minX": 31.85,
+        "maxX": 38.15,
+        "minZ": -127.75,
+        "maxZ": -120.65
+      },
+      "worldMeshBox": [
+        [
+          311.84999990463257,
+          12.430233103434215,
+          772.2800000190734
+        ],
+        [
+          318.0350000858307,
+          32.97023401896156,
+          779.7100000858306
+        ]
+      ],
+      "hasEntry": {
+        "name": "station-exchange-entry",
+        "x": 34.45,
+        "width": 1.64,
+        "highZ": -120.65,
+        "lowZ": -118.51,
+        "steps": 8,
+        "rise": 0.15835294672647732,
+        "tread": 0.26750000000000007,
+        "top": 4.750233103434215,
+        "bottom": 3.483409529622396,
+        "minClearance": 0.19502497863770074
+      }
+    },
+    {
+      "placement": {
+        "name": "alley-workshop",
+        "type": "station-art",
+        "center": [
+          -30,
+          -142.6
+        ],
+        "baseY": 5.143555140363213,
+        "yaw": 2.03,
+        "halfWidth": 2.72,
+        "halfDepth": 3.07,
+        "footprint": {
+          "minX": -33.95756323594602,
+          "maxX": -26.04243676405398,
+          "minZ": -146.39895327202598,
+          "maxZ": -138.801046727974
+        },
+        "foundation": {
+          "top": 13.143555140363212,
+          "bottom": 12.511274916676518,
+          "height": 0.6322802236866947
+        },
+        "ground": {
+          "min": 12.591274916676518,
+          "max": 13.103555140363213,
+          "relief": 0.5122802236866946,
+          "samples": 961
+        },
+        "worldOrigin": [
+          250,
+          13.143555140363212,
+          757.4
+        ]
+      },
+      "registeredForClearing": {
+        "name": "alley-workshop",
+        "minX": -33.95756323594602,
+        "maxX": -26.04243676405398,
+        "minZ": -146.39895327202598,
+        "maxZ": -138.801046727974
+      },
+      "worldMeshBox": [
+        [
+          245.98875188704156,
+          13.143555140363212,
+          753.3304749411756
+        ],
+        [
+          254.47737929497944,
+          17.883554911481376,
+          761.2390430654569
+        ]
+      ]
+    }
+  ],
+  "portal": {
+    "placed": [
+      282,
+      12.764808464050294,
+      776.75
+    ],
+    "material": "Infill | baked ceramic and metal",
+    "inReceivers": true
+  },
+  "errors": []
+}

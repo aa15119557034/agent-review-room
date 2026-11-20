@@ -1,0 +1,204 @@
+{
+  "schema": "x51-c16-seam-readback-v1",
+  "sourceHead": "50e190b092fb2b30ab9ed19a28302d5638f947f4",
+  "report": "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base/artifacts/gpu-look-c16-v1/look-report.json",
+  "reportSha256": "8c6ef20d18e2d4e94b9e8c966e4accc64d3c74f0f5126d45f92357eb1f2ca335",
+  "audit": "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base/artifacts/gpu-look-c16-v1/town-material-audit.json",
+  "auditSha256": "afc4eeba2a9152e80821ea57a5895eb82c198019a2811ec2fe6dcdb840aac31a",
+  "observation": "Both actual candidate cameras show a narrow bright green strip in strength1, much less discontinuous with strength0. Candidates are not hidden by nearer scene geometry in the saved images. No automatic camera replacement or repeat.",
+  "imagePaths": [
+    "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base/artifacts/gpu-look-c16-v1/north-seam-central-town-A1-capture-2.png",
+    "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base/artifacts/gpu-look-c16-v1/north-seam-central-town-B-capture-2.png",
+    "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base/artifacts/gpu-look-c16-v1/north-seam-central-town-A2-capture-2.png",
+    "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base/artifacts/gpu-look-c16-v1/north-seam-oblique-town-A1-capture-2.png",
+    "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base/artifacts/gpu-look-c16-v1/north-seam-oblique-town-B-capture-2.png",
+    "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base/artifacts/gpu-look-c16-v1/north-seam-oblique-town-A2-capture-2.png"
+  ],
+  "materials": [
+    {
+      "uuid": "1af2a142-0c4e-489f-9162-804a833719a4",
+      "name": "",
+      "roles": [
+        "terrain"
+      ],
+      "sourceSha256": "f706f11886813baa5598cb900dd8dbc8ff2f16e269f2ac85a15d2976718bf18b",
+      "hasTownDefinition": true,
+      "townRectObject": 0,
+      "townGreenObject": 1,
+      "sameRectAsTerrain": true,
+      "sameGreenAsTerrain": true,
+      "uniformRect": [
+        221.6,
+        763.15,
+        317,
+        805.47
+      ],
+      "uniformGreen": [
+        1,
+        12,
+        55
+      ],
+      "compiledPrograms": [
+        85
+      ],
+      "notCompiled": false
+    },
+    {
+      "uuid": "2d5a296f-c72c-45e2-978f-08235d2aca9d",
+      "name": "station-island-ground-transition",
+      "roles": [
+        "transition"
+      ],
+      "sourceSha256": "5f7412fc254e7f5a28b0cbdc1bded382ad76831241bba2adf4d8cb73b0359987",
+      "hasTownDefinition": false,
+      "townRectObject": null,
+      "townGreenObject": null,
+      "sameRectAsTerrain": false,
+      "sameGreenAsTerrain": false,
+      "uniformRect": null,
+      "uniformGreen": null,
+      "compiledPrograms": [
+        20
+      ],
+      "notCompiled": false
+    },
+    {
+      "uuid": "d0b2de19-dfbe-40df-a227-621deb3091cd",
+      "name": "env-terrain-ground-island-blend",
+      "roles": [
+        "station-edge:env-terrain-ground-island-blend"
+      ],
+      "sourceSha256": "2dbe5733f36bd6e99379c7ea735e8865a1d85121870be0eb2b678c81a9d03855",
+      "hasTownDefinition": false,
+      "townRectObject": null,
+      "townGreenObject": null,
+      "sameRectAsTerrain": false,
+      "sameGreenAsTerrain": false,
+      "uniformRect": null,
+      "uniformGreen": null,
+      "compiledPrograms": [
+        92
+      ],
+      "notCompiled": false
+    },
+    {
+      "uuid": "a9aa19e8-e9c3-479e-9884-8b615b004088",
+      "name": "env-terrain-levee-island-blend",
+      "roles": [
+        "station-edge:env-terrain-levee-island-blend"
+      ],
+      "sourceSha256": "2dbe5733f36bd6e99379c7ea735e8865a1d85121870be0eb2b678c81a9d03855",
+      "hasTownDefinition": false,
+      "townRectObject": null,
+      "townGreenObject": null,
+      "sameRectAsTerrain": false,
+      "sameGreenAsTerrain": false,
+      "uniformRect": null,
+      "uniformGreen": null,
+      "compiledPrograms": [
+        92
+      ],
+      "notCompiled": false
+    }
+  ],
+  "shellSummary": {
+    "materialCount": 111,
+    "allTownAndUniformIdentity": true
+  },
+  "compiledPrograms": [
+    {
+      "id": "20",
+      "linked": true,
+      "vertexCompiled": true,
+      "fragmentCompiled": true,
+      "uploaded": {
+        "uTownRect": null,
+        "uTownGreen": null
+      },
+      "vertexShaderSha256": "e2d557d697cc0502ddc81acee23f30a4a69d0f9ff271e9f4755c112cdab8fb66",
+      "fragmentShaderSha256": "94a02eafc9e2dc3599b2cae03973d828142054cc73de2c8e8928ef6567507894"
+    },
+    {
+      "id": "80",
+      "linked": true,
+      "vertexCompiled": true,
+      "fragmentCompiled": true,
+      "uploaded": {
+        "uTownRect": [
+          221.60000610351562,
+          763.1500244140625,
+          317,
+          805.469970703125
+        ],
+        "uTownGreen": [
+          1,
+          12,
+          55
+        ]
+      },
+      "vertexShaderSha256": "df88c8425924e0722d11771036619b82d1530db7651316575a4fa84b0473c86e",
+      "fragmentShaderSha256": "965cfcbe3a82e09c262cbb3e2571878b009450c42a14c2d2af0591bdaa74d614"
+    },
+    {
+      "id": "81",
+      "linked": true,
+      "vertexCompiled": true,
+      "fragmentCompiled": true,
+      "uploaded": {
+        "uTownRect": [
+          221.60000610351562,
+          763.1500244140625,
+          317,
+          805.469970703125
+        ],
+        "uTownGreen": [
+          1,
+          12,
+          55
+        ]
+      },
+      "vertexShaderSha256": "2819f1c2081e7ca03f445c2ef4485b78cb47ca49285484da54ae76f1b2010b9f",
+      "fragmentShaderSha256": "54fd6668e4c27094708464401383268ea2fd34ab4feafa3d6c0310046c5832ad"
+    },
+    {
+      "id": "85",
+      "linked": true,
+      "vertexCompiled": true,
+      "fragmentCompiled": true,
+      "uploaded": {
+        "uTownRect": [
+          221.60000610351562,
+          763.1500244140625,
+          317,
+          805.469970703125
+        ],
+        "uTownGreen": [
+          1,
+          12,
+          55
+        ]
+      },
+      "vertexShaderSha256": "89a41aca39937cd5ff77d11cadb86ca65cfb03a76d3ba883a08fb3ebc6c71ff0",
+      "fragmentShaderSha256": "b7c598f1adc3ffc9555a30d2cab57c78c575e511ffd770893a46596f8b1c1539"
+    },
+    {
+      "id": "92",
+      "linked": true,
+      "vertexCompiled": true,
+      "fragmentCompiled": true,
+      "uploaded": {
+        "uTownRect": null,
+        "uTownGreen": null
+      },
+      "vertexShaderSha256": "e4e1bca1d323af269c294ab70698000e5ea1e4c33a837707d5a39585f926df78",
+      "fragmentShaderSha256": "65d2bfa6bc09d2fb0b6cd6f67d82d3fcdbd33d1d3ddc2697edc162c721de450d"
+    }
+  ],
+  "sourceTextLocation": "town-material-audit.json sources[sha].vertexShader/fragmentShader and programs[id].vertexShaderSource/fragmentShaderSource contain full distinct text; hashes do not overwrite them.",
+  "conclusion": "The actual transition and both station edge-blend materials lack the town definitions/uniforms present in terrain/shells. This matches the toggle-dependent seam contrast and supports missing propagation to the seam materials; not evidence of the external 55m feather band causing this seam.",
+  "limits": [
+    "Geometric rays do not prove exact fragment identity after clipping/alpha; source/uniform/visual evidence are combined, not ray-only attribution.",
+    "No numeric seam ROI or full-frame comparisons recomputed here; root owns offline analysis.",
+    "Do not claim overall leak freedom or all town styling restored with strength0."
+  ]
+}

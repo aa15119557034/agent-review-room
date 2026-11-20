@@ -1,0 +1,72 @@
+{
+  "source": "7bf4e7ee6357d90c350351be3b90ea2b6f9c8d3e",
+  "method": "Production art-r1.js van placement block, real layout.heightAt/streetFrame, Physics.resolve and actual makeKeiVan dimensions. Isolated van collision world. Additional fixed and dynamic obstacles excluded.",
+  "radius": 0.3,
+  "bodyHeight": 1.7,
+  "obb": {
+    "type": "box",
+    "cx": 2.1,
+    "cz": 12.545,
+    "hw": 0.7775000000000001,
+    "hd": 1.7650000000000001,
+    "c": 1,
+    "s": 0,
+    "rotY": 0,
+    "y0": 0.118,
+    "y1": 2.218
+  },
+  "paths": {
+    "hit lateral": {
+      "start": [
+        0,
+        12.545
+      ],
+      "end": [
+        1.0225,
+        12.545
+      ],
+      "pushes": 75,
+      "requestedLength": 4,
+      "displacement": 1.0225
+    },
+    "hit longitudinal": {
+      "start": [
+        2.1,
+        16.5
+      ],
+      "end": [
+        2.1,
+        14.61
+      ],
+      "pushes": 128,
+      "requestedLength": 7,
+      "displacement": 1.89
+    },
+    "pass centerline": {
+      "start": [
+        0,
+        17
+      ],
+      "end": [
+        0,
+        7
+      ],
+      "pushes": 0,
+      "requestedLength": 10,
+      "displacement": 10
+    },
+    "pass sidewalk": {
+      "start": [
+        3.8,
+        17
+      ],
+      "end": [
+        3.8,
+        7
+      ],
+      "pushes": 0,
+      "requestedLength": 10,
+      "displacement": 10
+    }
+  }
+}

@@ -1,0 +1,90 @@
+{
+  "afternoon": [
+    {
+      "face": "px",
+      "pathname": "/src/street-env/px.png",
+      "http": 200,
+      "bytes": 108466,
+      "sha256": "15da45f8aeb8eb13d903ee9ec24011b3133a2128ecae3bf53ba2daa9861570f3"
+    },
+    {
+      "face": "nx",
+      "pathname": "/src/street-env/nx.png",
+      "http": 200,
+      "bytes": 109808,
+      "sha256": "b8cfd1bacfc9b6ffa8c3e078a8e393067bbc196a75f3f5c098880bd465595dd1"
+    },
+    {
+      "face": "py",
+      "pathname": "/src/street-env/py.png",
+      "http": 200,
+      "bytes": 45508,
+      "sha256": "b2547b4cdca92bfb71750694767841a4967f45a41e6d40963ed1c613d1dde947"
+    },
+    {
+      "face": "ny",
+      "pathname": "/src/street-env/ny.png",
+      "http": 200,
+      "bytes": 87047,
+      "sha256": "a05b10f09a7bbd4648347f5ff9521ed3aa46cdfa665d665f981c534e1f7c1775"
+    },
+    {
+      "face": "pz",
+      "pathname": "/src/street-env/pz.png",
+      "http": 200,
+      "bytes": 128910,
+      "sha256": "cb02b0b02263639def756df5a084e25d2e6b1472f57272b196d21f5f0c40426d"
+    },
+    {
+      "face": "nz",
+      "pathname": "/src/street-env/nz.png",
+      "http": 200,
+      "bytes": 125318,
+      "sha256": "bf0dd97d86e9b33d948418b9cfe97767d71640534b84852618a6a7a0e230f75d"
+    }
+  ],
+  "evening": [
+    {
+      "face": "px",
+      "pathname": "/src/street-env-evening/px.png",
+      "http": 200,
+      "bytes": 99628,
+      "sha256": "ab3bdb2513f2c392ae7bef3083e459bdf6f6a8083697004dd025afaa15a8b641"
+    },
+    {
+      "face": "nx",
+      "pathname": "/src/street-env-evening/nx.png",
+      "http": 200,
+      "bytes": 103150,
+      "sha256": "a2744cdac877023f25c3cc62625f6221680113dca2bdb2a137bd6b8223d85fb5"
+    },
+    {
+      "face": "py",
+      "pathname": "/src/street-env-evening/py.png",
+      "http": 200,
+      "bytes": 38667,
+      "sha256": "276293728167c671aa5d4b8e1af0be712c776121b25da5f8f6b96c37a2824c33"
+    },
+    {
+      "face": "ny",
+      "pathname": "/src/street-env-evening/ny.png",
+      "http": 200,
+      "bytes": 81383,
+      "sha256": "f059ee3868316ca6703f67246662fc02e8d24e1d22c7e5bf34b801fd9bed3730"
+    },
+    {
+      "face": "pz",
+      "pathname": "/src/street-env-evening/pz.png",
+      "http": 200,
+      "bytes": 123488,
+      "sha256": "cc46592e883a81bd0d58c04c4c7243ea8409868a6bdbc1688d10f7e429872736"
+    },
+    {
+      "face": "nz",
+      "pathname": "/src/street-env-evening/nz.png",
+      "http": 200,
+      "bytes": 114242,
+      "sha256": "b4d403630b187ffe76218c78ffeef8bb1156adf79d4f8701d617f67251283d60"
+    }
+  ]
+}

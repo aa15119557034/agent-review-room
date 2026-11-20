@@ -1,0 +1,308 @@
+{
+  "createdAt": "2026-11-17T12:58:26.534Z",
+  "head": "7d362bc069b20c8e38fdf776c4eac5e87b0081ec",
+  "checks": [
+    {
+      "artifact": "gpu-town-c14",
+      "head": "7d362bc069b20c8e38fdf776c4eac5e87b0081ec",
+      "sha256": "f3b8f3bba07b8b6f0832e08c8ee63824765f0294134d0f8a89335ac55abbdf89",
+      "trackedFilesVerified": 203,
+      "pinnedIgnoredFilesVerified": 9,
+      "receipt": "embedded"
+    },
+    {
+      "artifact": "gpu-look-c14-v1",
+      "head": "7d362bc069b20c8e38fdf776c4eac5e87b0081ec",
+      "sha256": "9ecc974d866deb25013945483c40dfa3679c64debdf52c5fd57ae92acf8cc8c0",
+      "trackedFilesVerified": 204,
+      "pinnedIgnoredFilesVerified": 9,
+      "receipt": "separate"
+    },
+    {
+      "artifact": "gpu-town-c14-repeat",
+      "head": "7d362bc069b20c8e38fdf776c4eac5e87b0081ec",
+      "sha256": "d5f3375af69eb9ee865b5cbd107b5ccd39c5d6a963d5b2e6457c5d7214c53de9",
+      "trackedFilesVerified": 203,
+      "pinnedIgnoredFilesVerified": 9,
+      "receipt": "embedded"
+    }
+  ],
+  "outcomes": [
+    {
+      "artifact": "gpu-town-c14",
+      "head": "7d362bc069b20c8e38fdf776c4eac5e87b0081ec",
+      "stage": "complete",
+      "ok": false,
+      "renderOk": true,
+      "transportClean": false,
+      "actualExit": 1,
+      "session": 15101,
+      "pid": 11800,
+      "authorizedPerformanceRepeat": false
+    },
+    {
+      "artifact": "gpu-look-c14-v1",
+      "head": "7d362bc069b20c8e38fdf776c4eac5e87b0081ec",
+      "stage": "complete",
+      "ok": true,
+      "renderOk": true,
+      "transportClean": true,
+      "actualExit": 0,
+      "session": 99737,
+      "pid": 30076,
+      "authorizedPerformanceRepeat": false
+    },
+    {
+      "artifact": "gpu-town-c14-repeat",
+      "head": "7d362bc069b20c8e38fdf776c4eac5e87b0081ec",
+      "stage": "complete",
+      "ok": false,
+      "renderOk": true,
+      "transportClean": false,
+      "actualExit": 1,
+      "session": 99575,
+      "pid": 4556,
+      "authorizedPerformanceRepeat": true
+    }
+  ],
+  "ci": {
+    "head": "7d362bc069b20c8e38fdf776c4eac5e87b0081ec",
+    "run": 44085220238,
+    "job": 134045769501,
+    "url": "https://github.com/aa15119557034/agent-review-room/actions/runs/44085220238/job/134045769501",
+    "result": "success",
+    "completedAt": "2026-11-17T12:44:13Z",
+    "tests": 1615,
+    "passed": 1615,
+    "types": 9,
+    "builds": 2,
+    "allExitZero": true,
+    "rows": [
+      {
+        "name": "tests-packages/schemas",
+        "code": 0,
+        "milliseconds": 2580,
+        "log": "D:\\a\\agent-review-room\\agent-review-room\\.verification\\tests-packages-schemas.log",
+        "tests": 236,
+        "pass": 236,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      },
+      {
+        "name": "tests-packages/core",
+        "code": 0,
+        "milliseconds": 6227,
+        "log": "D:\\a\\agent-review-room\\agent-review-room\\.verification\\tests-packages-core.log",
+        "tests": 144,
+        "pass": 144,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      },
+      {
+        "name": "tests-packages/db",
+        "code": 0,
+        "milliseconds": 97944,
+        "log": "D:\\a\\agent-review-room\\agent-review-room\\.verification\\tests-packages-db.log",
+        "tests": 230,
+        "pass": 230,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      },
+      {
+        "name": "tests-packages/reviewer-client",
+        "code": 0,
+        "milliseconds": 392,
+        "log": "D:\\a\\agent-review-room\\agent-review-room\\.verification\\tests-packages-reviewer-client.log",
+        "tests": 15,
+        "pass": 15,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      },
+      {
+        "name": "tests-packages/remote-client",
+        "code": 0,
+        "milliseconds": 9195,
+        "log": "D:\\a\\agent-review-room\\agent-review-room\\.verification\\tests-packages-remote-client.log",
+        "tests": 19,
+        "pass": 19,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      },
+      {
+        "name": "tests-apps/agent-server",
+        "code": 0,
+        "milliseconds": 7936,
+        "log": "D:\\a\\agent-review-room\\agent-review-room\\.verification\\tests-apps-agent-server.log",
+        "tests": 218,
+        "pass": 218,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      },
+      {
+        "name": "tests-apps/desktop",
+        "code": 0,
+        "milliseconds": 48764,
+        "log": "D:\\a\\agent-review-room\\agent-review-room\\.verification\\tests-apps-desktop.log",
+        "tests": 423,
+        "pass": 423,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      },
+      {
+        "name": "tests-renderer",
+        "code": 0,
+        "milliseconds": 8876,
+        "log": "D:\\a\\agent-review-room\\agent-review-room\\.verification\\tests-renderer.log",
+        "tests": 271,
+        "pass": 271,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      },
+      {
+        "name": "tests-e2e",
+        "code": 0,
+        "milliseconds": 12711,
+        "log": "D:\\a\\agent-review-room\\agent-review-room\\.verification\\tests-e2e.log",
+        "tests": 59,
+        "pass": 59,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      },
+      {
+        "name": "types-packages/schemas",
+        "code": 0,
+        "milliseconds": 3028,
+        "log": "D:\\a\\agent-review-room\\agent-review-room\\.verification\\types-packages-schemas.log",
+        "tests": 0,
+        "pass": 0,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      },
+      {
+        "name": "types-packages/core",
+        "code": 0,
+        "milliseconds": 2942,
+        "log": "D:\\a\\agent-review-room\\agent-review-room\\.verification\\types-packages-core.log",
+        "tests": 0,
+        "pass": 0,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      },
+      {
+        "name": "types-packages/db",
+        "code": 0,
+        "milliseconds": 3254,
+        "log": "D:\\a\\agent-review-room\\agent-review-room\\.verification\\types-packages-db.log",
+        "tests": 0,
+        "pass": 0,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      },
+      {
+        "name": "types-packages/reviewer-client",
+        "code": 0,
+        "milliseconds": 2798,
+        "log": "D:\\a\\agent-review-room\\agent-review-room\\.verification\\types-packages-reviewer-client.log",
+        "tests": 0,
+        "pass": 0,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      },
+      {
+        "name": "types-packages/remote-client",
+        "code": 0,
+        "milliseconds": 3163,
+        "log": "D:\\a\\agent-review-room\\agent-review-room\\.verification\\types-packages-remote-client.log",
+        "tests": 0,
+        "pass": 0,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      },
+      {
+        "name": "types-apps/agent-server",
+        "code": 0,
+        "milliseconds": 3255,
+        "log": "D:\\a\\agent-review-room\\agent-review-room\\.verification\\types-apps-agent-server.log",
+        "tests": 0,
+        "pass": 0,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      },
+      {
+        "name": "types-apps/desktop",
+        "code": 0,
+        "milliseconds": 3775,
+        "log": "D:\\a\\agent-review-room\\agent-review-room\\.verification\\types-apps-desktop.log",
+        "tests": 0,
+        "pass": 0,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      },
+      {
+        "name": "types-renderer",
+        "code": 0,
+        "milliseconds": 5417,
+        "log": "D:\\a\\agent-review-room\\agent-review-room\\.verification\\types-renderer.log",
+        "tests": 0,
+        "pass": 0,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      },
+      {
+        "name": "types-e2e",
+        "code": 0,
+        "milliseconds": 3988,
+        "log": "D:\\a\\agent-review-room\\agent-review-room\\.verification\\types-e2e.log",
+        "tests": 0,
+        "pass": 0,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      },
+      {
+        "name": "build-desktop",
+        "code": 0,
+        "milliseconds": 625,
+        "log": "D:\\a\\agent-review-room\\agent-review-room\\.verification\\build-desktop.log",
+        "tests": 0,
+        "pass": 0,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      },
+      {
+        "name": "build-agent-server",
+        "code": 0,
+        "milliseconds": 94,
+        "log": "D:\\a\\agent-review-room\\agent-review-room\\.verification\\build-agent-server.log",
+        "tests": 0,
+        "pass": 0,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    ],
+    "source": "Read-only GitHub REST check-runs, jobs and actual job log; no GitHub write or local test execution.",
+    "logSha256": "5d3237ea348e813984754c517f5bb9800a96254855670f1e7c1eb3e0bb06de7e"
+  },
+  "wallShaderScope": "wall-material-audit contains actual GL shader SHA, compile/link states and containsWallMix readback, plus material hookSource. It does not preserve complete GL shader source text. The 0.93 wash target is a chosen anchor, not the measured texture mean.",
+  "performanceScope": "One explicitly authorized same-source normal repeat checks whether the first aerial slowdown reproduces. Both original runs and all raw frame samples are retained. Faster repeat does not establish root cause or negate the first slow sample.",
+  "scope": "Exact Git source, nine original assets, baseline embedded and diagnostic separate receipts verified independently. Original reports/logs lossless gzip, all 21 frames indexed, selected images unchanged. Actual process exits retained; no retry to select green transport. CPU/image judgments remain explicitly scoped. No GPU, scene or GitHub write performed by curator."
+}

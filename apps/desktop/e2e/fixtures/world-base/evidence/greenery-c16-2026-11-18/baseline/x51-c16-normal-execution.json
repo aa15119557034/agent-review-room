@@ -1,0 +1,133 @@
+{
+  "schema": "x51-c16-normal-execution-v1",
+  "recordedAt": "2026-11-17T16:54:12.932Z",
+  "provenance": "Post-execution agent record of actual exec/write_stdin result; original process.json and redirected stdout/stderr preserved. Not a contemporaneous supervisor receipt.",
+  "command": "node scripts/baseline.cjs --scene=combined --electron=D:/codex/2026-11-16/world-implementation/runtime-path-probe/electron.exe --output=artifacts/gpu-town-c16 --stills",
+  "cwd": "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base/",
+  "sourceHead": "50e190b092fb2b30ab9ed19a28302d5638f947f4",
+  "headAfter": "50e190b092fb2b30ab9ed19a28302d5638f947f4",
+  "directory": "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base/artifacts/gpu-town-c16/",
+  "session": 5028,
+  "pid": 63284,
+  "actualExit": 1,
+  "completionToolChunk": "67ba8c",
+  "startedAt": "2026-11-17T16:51:51.437Z",
+  "completedAt": "2026-11-17T16:53:35.439Z",
+  "renderOk": true,
+  "transportClean": false,
+  "ok": false,
+  "exceptions": 0,
+  "networkFailures": [
+    {
+      "url": "http://127.0.0.1:65400/assets/models/boulders.glb",
+      "type": "Fetch",
+      "canceled": true,
+      "errorText": "net::ERR_ABORTED",
+      "requestId": "65108.121",
+      "timestamp": 1944494.263438,
+      "stage": "waiting-for-ready-frame",
+      "receivedWallTime": 1794934315.209
+    }
+  ],
+  "behavior": true,
+  "look": true,
+  "walking": true,
+  "segments": [
+    {
+      "name": "initial",
+      "fps": 60.83826006539618,
+      "p95FrameMs": 30.700000000004366,
+      "frameCount": 921,
+      "longFramesOver20ms": 62,
+      "maxFrameMs": 46,
+      "samplesFile": "frame-samples.json"
+    },
+    {
+      "name": "station-street",
+      "fps": 64.03893567288915,
+      "p95FrameMs": 15.5,
+      "frameCount": 200,
+      "longFramesOver20ms": 3,
+      "maxFrameMs": 31,
+      "samplesFile": "frame-samples-station-street.json"
+    },
+    {
+      "name": "station-port",
+      "fps": 64.99983910930919,
+      "p95FrameMs": 15.5,
+      "frameCount": 202,
+      "longFramesOver20ms": 0,
+      "maxFrameMs": 15.60000000000582,
+      "samplesFile": "frame-samples-station-port.json"
+    },
+    {
+      "name": "island-aerial",
+      "fps": 64.68139609349984,
+      "p95FrameMs": 15.5,
+      "frameCount": 202,
+      "longFramesOver20ms": 1,
+      "maxFrameMs": 30.89999999999418,
+      "samplesFile": "frame-samples-island-aerial.json"
+    },
+    {
+      "name": "shop-interior",
+      "fps": 64.99951970798233,
+      "p95FrameMs": 15.5,
+      "frameCount": 203,
+      "longFramesOver20ms": 0,
+      "maxFrameMs": 15.599999999991269,
+      "samplesFile": "frame-samples-shop-interior.json"
+    },
+    {
+      "name": "walking-third",
+      "fps": 64.99951970798233,
+      "p95FrameMs": 15.5,
+      "frameCount": 203,
+      "longFramesOver20ms": 0,
+      "maxFrameMs": 15.599999999991269,
+      "samplesFile": "frame-samples-walking-third.json"
+    },
+    {
+      "name": "walking-first",
+      "fps": 64.99983910930919,
+      "p95FrameMs": 15.5,
+      "frameCount": 202,
+      "longFramesOver20ms": 0,
+      "maxFrameMs": 15.599999999991269,
+      "samplesFile": "frame-samples-walking-first.json"
+    }
+  ],
+  "verifiedManifestFiles": 212,
+  "sourceAndAssetsUnchanged": true,
+  "mismatches": [],
+  "propAssetFiles": 9,
+  "stdout": "D:/codex/2026-11-16/world-implementation/handoff/x51-c16-normal-stdout.txt",
+  "stderr": "D:/codex/2026-11-16/world-implementation/handoff/x51-c16-normal-stderr.txt",
+  "gpuReleased": true,
+  "evidenceHashes": [
+    {
+      "path": "D:/codex/2026-11-16/world-implementation/handoff/x51-c16-normal-stdout.txt",
+      "sha256": "393bed4ba2a9b7ec3bc73a75aef62da13e9da130827b28b6869a32cb67a051d3"
+    },
+    {
+      "path": "D:/codex/2026-11-16/world-implementation/handoff/x51-c16-normal-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base/artifacts/gpu-town-c16/render-report.json",
+      "sha256": "e084ae9ff86a2c5b2cc56158a03011edfb00e52988c7b571d3dc9946efe138e4"
+    },
+    {
+      "path": "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base/artifacts/gpu-town-c16/process.json",
+      "sha256": "016d4229ccea7634de15bdc589a0c790dcec388fadd52f1f7e418c783a8ba738"
+    },
+    {
+      "path": "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base/artifacts/gpu-town-c16/source-manifest.json",
+      "sha256": "d005281bb75f65bdb9ee506462661b6b9e77b361164778f2a4340fcc371103ed"
+    },
+    {
+      "path": "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base/artifacts/gpu-town-c16/run-config.json",
+      "sha256": "61ad328f9a79bfa97cfee34eb6c92afe92f8270cddaec9e644ca8e36d5604b57"
+    }
+  ]
+}

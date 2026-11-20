@@ -1,0 +1,266 @@
+{
+  "sourceSha256": "3df4cc67dcf9a54ccf9ac924a6b0771da43e530d0669cc3051f16b0f3d924a9c",
+  "scope": "Actual pinned Three and original 14 module CPU builds, mocked canvas pixels; no GPU, texture image/visibility/draw-call proof.",
+  "stats": {
+    "triangles": 2442,
+    "densityTriangles": 132,
+    "densityObjects": 4,
+    "densityColliders": 6,
+    "serviceDetailTriangles": 18,
+    "serviceDetailObjects": 3,
+    "serviceDetailColliders": 0,
+    "newTexturePixels": 0,
+    "coordinates": "station-local; apply station.toWorld after placement"
+  },
+  "rows": [
+    {
+      "id": "shed-east-vent",
+      "triangles": 12,
+      "bounds": {
+        "min": [
+          25.399999618530273,
+          1.590000033378601,
+          -29.809999465942383
+        ],
+        "max": [
+          25.41200065612793,
+          1.7100000381469727,
+          -29.489999771118164
+        ]
+      },
+      "footprint": {
+        "type": "decorative",
+        "x": 25.406,
+        "z": -29.65,
+        "width": 0.012,
+        "depth": 0.32,
+        "rotationY": 0,
+        "y0": 1.59,
+        "y1": 1.71
+      },
+      "resources": [
+        {
+          "geometryBorrowed": false,
+          "materialBorrowed": true,
+          "textureBorrowed": true,
+          "mapUuid": "5e5ad98f-07f5-4b82-a954-9059a80d180f",
+          "normal": [
+            6.123234262925839e-17,
+            0,
+            -1,
+            6.123234262925839e-17,
+            0,
+            -1,
+            6.123234262925839e-17,
+            0,
+            -1,
+            6.123234262925839e-17,
+            0,
+            -1
+          ]
+        }
+      ]
+    },
+    {
+      "id": "shed-east-staff-sticker",
+      "triangles": 2,
+      "bounds": {
+        "min": [
+          25.402,
+          1.2080952390318824,
+          -29.829999996565636
+        ],
+        "max": [
+          25.402,
+          1.2919047609681176,
+          -29.61000000343436
+        ]
+      },
+      "footprint": {
+        "type": "decorative",
+        "x": 25.402,
+        "z": -29.72,
+        "width": 0,
+        "depth": 0.22,
+        "rotationY": 0,
+        "y0": 1.208095238095238,
+        "y1": 1.291904761904762
+      },
+      "resources": [
+        {
+          "geometryBorrowed": true,
+          "materialBorrowed": true,
+          "textureBorrowed": true,
+          "mapUuid": "029feabd-15ff-43c4-a1ee-1768e7bed1d8",
+          "normal": [
+            0,
+            0,
+            1,
+            0,
+            0,
+            1,
+            0,
+            0,
+            1,
+            0,
+            0,
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "id": "toilet-east-short-covered-drain",
+      "triangles": 4,
+      "bounds": {
+        "min": [
+          21.8700008392334,
+          0.017000000923871994,
+          -28.649999618530273
+        ],
+        "max": [
+          22.09000015258789,
+          0.017000000923871994,
+          -28.049999237060547
+        ]
+      },
+      "footprint": {
+        "type": "decorative",
+        "x": 21.98,
+        "z": -28.35,
+        "width": 0.22,
+        "depth": 0.6,
+        "rotationY": 0,
+        "y0": 0.017,
+        "y1": 0.017
+      },
+      "resources": [
+        {
+          "geometryBorrowed": false,
+          "materialBorrowed": true,
+          "textureBorrowed": true,
+          "mapUuid": "3630d6d0-5fd0-4a04-a4bb-5d6619c3aaef",
+          "normal": [
+            0,
+            1,
+            0,
+            0,
+            1,
+            0,
+            0,
+            1,
+            0,
+            0,
+            1,
+            0
+          ]
+        }
+      ]
+    }
+  ],
+  "newCacheKeys": [],
+  "newTexturePixels": 0,
+  "allInstancesHaveFiniteFootprint": true,
+  "clear": [
+    {
+      "id": "shed-east-vent",
+      "doorApproachClear": true
+    },
+    {
+      "id": "shed-east-staff-sticker",
+      "doorApproachClear": true
+    },
+    {
+      "id": "toilet-east-short-covered-drain",
+      "doorApproachClear": true
+    }
+  ],
+  "attachments": [
+    {
+      "id": "shed-east-vent",
+      "insideShedCollision": true
+    },
+    {
+      "id": "shed-east-staff-sticker",
+      "insideShedCollision": true
+    }
+  ],
+  "supportSamples": [
+    {
+      "x": 21.87,
+      "z": -28.65,
+      "height": 0,
+      "gravelLift": 0.012,
+      "drainY": 0.017000000923871994
+    },
+    {
+      "x": 21.87,
+      "z": -28.35,
+      "height": 0,
+      "gravelLift": 0.012,
+      "drainY": 0.017000000923871994
+    },
+    {
+      "x": 21.87,
+      "z": -28.05,
+      "height": 0,
+      "gravelLift": 0.012,
+      "drainY": 0.017000000923871994
+    },
+    {
+      "x": 21.98,
+      "z": -28.65,
+      "height": 0,
+      "gravelLift": 0.012,
+      "drainY": 0.017000000923871994
+    },
+    {
+      "x": 21.98,
+      "z": -28.35,
+      "height": 0,
+      "gravelLift": 0.012,
+      "drainY": 0.017000000923871994
+    },
+    {
+      "x": 21.98,
+      "z": -28.05,
+      "height": 0,
+      "gravelLift": 0.012,
+      "drainY": 0.017000000923871994
+    },
+    {
+      "x": 22.09,
+      "z": -28.65,
+      "height": 0,
+      "gravelLift": 0.012,
+      "drainY": 0.017000000923871994
+    },
+    {
+      "x": 22.09,
+      "z": -28.35,
+      "height": 0,
+      "gravelLift": 0.012,
+      "drainY": 0.017000000923871994
+    },
+    {
+      "x": 22.09,
+      "z": -28.05,
+      "height": 0,
+      "gravelLift": 0.012,
+      "drainY": 0.017000000923871994
+    }
+  ],
+  "serviceCollisions": [],
+  "checks": {
+    "triangles": true,
+    "allMaterialsBorrowed": true,
+    "stickerGeometryBorrowed": true,
+    "noNewTextures": true,
+    "footprintContract": true,
+    "doorClear": true,
+    "insideShed": true,
+    "noDetailColliders": true,
+    "toiletPlinthClear": true
+  },
+  "ok": true
+}

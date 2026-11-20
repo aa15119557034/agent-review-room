@@ -1,0 +1,311 @@
+{
+  "sourceBefore": "56e4990b0218cfd6ce84d7bda9122a3802df5f92",
+  "sourceAfter": "b0259599bd51178c2d4980243a9c87553eac1a66",
+  "method": "C18 vs final capture-2; verify both original PNG digests, dimensions and frozen camera/light/look state. Publication JPEG from original at native size (FFmpeg mjpeg q2 yuvj444p). Original PNG identities below.",
+  "pairs": [
+    {
+      "id": "01",
+      "view": "station-street",
+      "label": "站前主街",
+      "before": {
+        "file": "images/01-before.jpg",
+        "jpegSha256": "866f866f6cd7f5538ebf49861537f37e392ccb7e67328ef7b8ae637b8b17bfb6",
+        "originalPngSha256": "b6fdd996d4a2333037322f115c989e010748a8273e24bf88f52270692f8b72c0",
+        "run": "gpu-modern-before-c18",
+        "originalFile": "station-street-ao-on-capture-2.png"
+      },
+      "after": {
+        "file": "images/01-after.jpg",
+        "jpegSha256": "2b094de979c6d6660c4b4dfb35103ff6b01354931a9b9c15825fef5f38962447",
+        "originalPngSha256": "225b72fab1cd617af7022f6b70c80d64a4276aaef95d4c3cf4ad860de2cf4077",
+        "run": "gpu-modern-after-b025959",
+        "originalFile": "station-street-ao-on-capture-2.png"
+      },
+      "camera": {
+        "position": [
+          278.8,
+          10.4,
+          936
+        ],
+        "quaternion": [
+          -0.003277842930440423,
+          -0.009834585659995631,
+          -0.000032237959341941705,
+          0.9999462663720154
+        ],
+        "fov": 58
+      },
+      "width": 1440,
+      "height": 900,
+      "sceneTime": 14,
+      "ao": 0.55,
+      "changedRgbPixels": 220215
+    },
+    {
+      "id": "20",
+      "view": "20-rear-eye",
+      "label": "公寓后廊",
+      "before": {
+        "file": "images/20-before.jpg",
+        "jpegSha256": "64404f4ae06c9780093a1d8c20a2572fa2fd0f6514ac4554f3623291036b3bc5",
+        "originalPngSha256": "1510ea43b76895833dad0f2856e63c2426073157a1e3a9527f0bd29c67a48131",
+        "run": "gpu-modern-before-c18",
+        "originalFile": "20-rear-eye-ao-on-capture-2.png"
+      },
+      "after": {
+        "file": "images/20-after.jpg",
+        "jpegSha256": "dac7e27bee88b2565a84f9b6d4c7d848ea176431902454ee93f014dee970a1cf",
+        "originalPngSha256": "9d8b9d7816d2b8f4ae0a4d7d3ceb021e7ad1f7648d98d2874a82e2970d57e5da",
+        "run": "gpu-modern-after-b025959",
+        "originalFile": "20-rear-eye-ao-on-capture-2.png"
+      },
+      "camera": {
+        "position": [
+          273,
+          14.755245542526229,
+          758
+        ],
+        "quaternion": [
+          -0.00013011891877658623,
+          0.9145142483742376,
+          -0.00029414054360230415,
+          -0.40455356390830466
+        ],
+        "fov": 58
+      },
+      "width": 1440,
+      "height": 900,
+      "sceneTime": 14,
+      "ao": 0.55,
+      "changedRgbPixels": 735576
+    },
+    {
+      "id": "21",
+      "view": "21-front-eye",
+      "label": "洗衣店前",
+      "before": {
+        "file": "images/21-before.jpg",
+        "jpegSha256": "94c862c31820d2c7282a740159c89542d318f2322febad407443fd1f930e8b23",
+        "originalPngSha256": "3d8e78036d7f133dec0d5cf46a0adff2c46ef86edcb78dcdd20a24a980c18038",
+        "run": "gpu-modern-before-c18",
+        "originalFile": "21-front-eye-ao-on-capture-2.png"
+      },
+      "after": {
+        "file": "images/21-after.jpg",
+        "jpegSha256": "f9a6821b5a5bdaab98259594c6804698bfd8e86354203512ffa2c0919c4fcb5c",
+        "originalPngSha256": "03579cdaf5473d390678dfdca2ea2c9e4ec01ae22adf940b82f9adf176f86e69",
+        "run": "gpu-modern-after-b025959",
+        "originalFile": "21-front-eye-ao-on-capture-2.png"
+      },
+      "camera": {
+        "position": [
+          274,
+          12.87812709172567,
+          783
+        ],
+        "quaternion": [
+          0.07422133960767584,
+          -0.5103582416049142,
+          0.044271975994965136,
+          0.8556083508909221
+        ],
+        "fov": 58
+      },
+      "width": 1440,
+      "height": 900,
+      "sceneTime": 14,
+      "ao": 0.55,
+      "changedRgbPixels": 845170
+    },
+    {
+      "id": "23",
+      "view": "service-corner",
+      "label": "维修角",
+      "before": {
+        "file": "images/23-before.jpg",
+        "jpegSha256": "258b4641b77e6a446c7fbbb2ac14a189ccac0a3dc47dd2d57b6cee9172c3ef74",
+        "originalPngSha256": "7dfbc00f5e84bc94bcc0a7bbd0fab5cc07ece4d8a9ad95c1e6276408e52d377a",
+        "run": "gpu-modern-before-c18",
+        "originalFile": "service-corner-ao-on-capture-2.png"
+      },
+      "after": {
+        "file": "images/23-after.jpg",
+        "jpegSha256": "fd0383601f15205ef0fd856b60ecc9ce646eccd317dedfd5b0dc97a7f7d82b9f",
+        "originalPngSha256": "2da9a5656e3b284b400edaf5e85b6fa36c6f28968b15dcfd3f6428809fba4580",
+        "run": "gpu-modern-after-b025959",
+        "originalFile": "service-corner-ao-on-capture-2.png"
+      },
+      "camera": {
+        "position": [
+          308.4,
+          9.612,
+          872.9
+        ],
+        "quaternion": [
+          -0.08432325046436126,
+          0.5331397072650681,
+          0.05351200213385738,
+          0.8401119613456697
+        ],
+        "fov": 55
+      },
+      "width": 1440,
+      "height": 900,
+      "sceneTime": 14,
+      "ao": 0.55,
+      "changedRgbPixels": 36176
+    },
+    {
+      "id": "24",
+      "view": "laundry-details",
+      "label": "洗衣店细节",
+      "before": {
+        "file": "images/24-before.jpg",
+        "jpegSha256": "17b56b4092cfb7aa5d2f2adfa5d23caee3766811a0cb8f2ba6e8eea949e98652",
+        "originalPngSha256": "d6b67453f4c56573ab38e197ae851137c352ac76ccfc5ea0228557a2c39f61c2",
+        "run": "gpu-modern-before-c18",
+        "originalFile": "laundry-details-ao-on-capture-2.png"
+      },
+      "after": {
+        "file": "images/24-after.jpg",
+        "jpegSha256": "0cf46a6423a0b13c02e2867807c5c53ed02d9481d5eabe1fd3a2f74089df477f",
+        "originalPngSha256": "156020f9e72b5aca88e1f8abb72476ba2ea8723cd29e08986c7e875c6b612684",
+        "run": "gpu-modern-after-b025959",
+        "originalFile": "laundry-details-ao-on-capture-2.png"
+      },
+      "camera": {
+        "position": [
+          288,
+          14.384808464050293,
+          777.9
+        ],
+        "quaternion": [
+          -0.15522850149956677,
+          0.6173580660361093,
+          0.12595148976979553,
+          0.7608609287163607
+        ],
+        "fov": 55
+      },
+      "width": 1440,
+      "height": 900,
+      "sceneTime": 14,
+      "ao": 0.55,
+      "changedRgbPixels": 938815
+    },
+    {
+      "id": "04",
+      "view": "shop-interior",
+      "label": "便利店内",
+      "before": {
+        "file": "images/04-before.jpg",
+        "jpegSha256": "9421103e0357283c1c29e42fff3996672d8693da246eb33e747fb847815d7f5f",
+        "originalPngSha256": "16f4da4850f84b2008fe32cb69737ee8494514bab9690ea0b94926799bb65a05",
+        "run": "gpu-modern-before-c18",
+        "originalFile": "shop-interior-ao-on-capture-2.png"
+      },
+      "after": {
+        "file": "images/04-after.jpg",
+        "jpegSha256": "9421103e0357283c1c29e42fff3996672d8693da246eb33e747fb847815d7f5f",
+        "originalPngSha256": "16f4da4850f84b2008fe32cb69737ee8494514bab9690ea0b94926799bb65a05",
+        "run": "gpu-modern-after-b025959",
+        "originalFile": "shop-interior-ao-on-capture-2.png"
+      },
+      "camera": {
+        "position": [
+          271.7,
+          9.9134,
+          908
+        ],
+        "quaternion": [
+          -0.015701859235384273,
+          0.7069324236562871,
+          0.015701859235384273,
+          0.7069324236562871
+        ],
+        "fov": 58
+      },
+      "width": 1440,
+      "height": 900,
+      "sceneTime": 14,
+      "ao": 0.55,
+      "changedRgbPixels": 0
+    },
+    {
+      "id": "03",
+      "view": "island-aerial",
+      "label": "全岛鸟瞰",
+      "before": {
+        "file": "images/03-before.jpg",
+        "jpegSha256": "f90bdb1185bc4b784e09e46085dfa389c6d7d55b4caa3f5fb1961f0a93de46ed",
+        "originalPngSha256": "566239e9fa78bf9a8e0cf78ab57264d23afb5d0b613f3f6932bc01425ff0584e",
+        "run": "gpu-modern-before-c18-aerial-v1",
+        "originalFile": "island-aerial-ao-on-capture-2.png"
+      },
+      "after": {
+        "file": "images/03-after.jpg",
+        "jpegSha256": "2708d956d8057170fa39719248381a3a0c7c3b5aee86e3319a11532699795531",
+        "originalPngSha256": "074a8e66e8e9e34dca0e62480c7bc95449dffc288fea9b2f141b6adfb11a17b8",
+        "run": "gpu-modern-after-b025959",
+        "originalFile": "island-aerial-ao-on-capture-2.png"
+      },
+      "camera": {
+        "position": [
+          2100,
+          2350,
+          2450
+        ],
+        "quaternion": [
+          -0.27043683246052963,
+          0.3343071089193487,
+          0.10076912073943207,
+          0.8971890886987558
+        ],
+        "fov": 58
+      },
+      "width": 1440,
+      "height": 900,
+      "sceneTime": 14,
+      "ao": 0.55,
+      "changedRgbPixels": 376
+    },
+    {
+      "id": "detail",
+      "view": "street-detail",
+      "label": "商店橱窗近景",
+      "before": {
+        "file": "images/detail-before.jpg",
+        "jpegSha256": "d3c0401567f6b8a0e55231633f84f0a128e5ffd2ce73d2564c04c9fbb28716dd",
+        "originalPngSha256": "5e36f3acae849ebd13f76e74906a75f8a6d737e9308da00c7cb9db405828e338",
+        "run": "gpu-modern-before-c18",
+        "originalFile": "street-detail-ao-on-capture-2.png"
+      },
+      "after": {
+        "file": "images/detail-after.jpg",
+        "jpegSha256": "755238ac64ac5db7e69189c5c001fb7b17c8654bb7432645f60e0df4f7c60ca3",
+        "originalPngSha256": "c2a4835a7f60e3597e823c9fa2aa2434a9eeab3ffa9b6cde94e031f92c603287",
+        "run": "gpu-modern-after-b025959",
+        "originalFile": "street-detail-ao-on-capture-2.png"
+      },
+      "camera": {
+        "position": [
+          284.4,
+          10.281286274509803,
+          924
+        ],
+        "quaternion": [
+          -0.12465537443110519,
+          -0.38126635888515065,
+          -0.05196769176958736,
+          0.914547079280253
+        ],
+        "fov": 58
+      },
+      "width": 1440,
+      "height": 900,
+      "sceneTime": 14,
+      "ao": 0.55,
+      "changedRgbPixels": 375286
+    }
+  ]
+}

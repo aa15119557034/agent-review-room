@@ -1,0 +1,1176 @@
+{
+  "monitorMethod": "Inclusive host-side UTC window from third-person sampler begin/end. Polling interval approx. 0.5 s. NVIDIA reports Asia/Shanghai (+08:00) and device-wide utilization. OS foreground and window, webContents and document focus are sampled independently. OS samples are classified only as measured window or another window.",
+  "intervalsMs": [
+    "(0,17]",
+    "(17,20]",
+    "(20,25]",
+    "(25,34]",
+    "(34,+inf)"
+  ],
+  "runs": [
+    {
+      "id": "r3-control",
+      "source": "47a5c12eba910682ccbf8bc9138510bc01737bf3",
+      "method": "Electron sendInputEvent holds W for each measured segment; positions come from the live walker, with no per-frame pose overrides.",
+      "route": {
+        "before": [
+          281.6,
+          8.812,
+          934
+        ],
+        "after": [
+          280.93929461490325,
+          8.547441238224131,
+          924.551472793719
+        ],
+        "distanceM": 9.475293626698912,
+        "horizontalDistanceM": 9.47159954673595,
+        "beforeUtc": "2026-11-18T15:01:05.650Z",
+        "afterUtc": "2026-11-18T15:01:08.792Z",
+        "trustedKeyW": [
+          {
+            "type": "keydown",
+            "code": "KeyW",
+            "key": "w",
+            "trusted": true,
+            "timeMs": 108110.70000004768
+          },
+          {
+            "type": "keyup",
+            "code": "KeyW",
+            "key": "w",
+            "trusted": true,
+            "timeMs": 111252.09999990463
+          }
+        ]
+      },
+      "fps": 64.35627634585039,
+      "frames": 200,
+      "sampleMs": 3107.7000000000116,
+      "intervalMs": {
+        "mean": 15.538500000000058,
+        "p50": 15.39999999999418,
+        "p90": 15.5,
+        "p95": 15.5,
+        "p99": 15.5,
+        "max": 30.79999999998836,
+        "counts_by_interval": [
+          198,
+          0,
+          0,
+          2,
+          0
+        ],
+        "indicesOver20": [
+          7,
+          128
+        ]
+      },
+      "draw": {
+        "mean": 1677.015,
+        "min": 907,
+        "max": 1689
+      },
+      "triangles": {
+        "mean": 8492197.205,
+        "min": 8451242,
+        "max": 8559563
+      },
+      "monitor": {
+        "startUtc": "2026-11-18T15:01:05.650Z",
+        "endUtc": "2026-11-18T15:01:08.763Z",
+        "hostFocus": {
+          "filename": "frame-samples-walking-third.json",
+          "start": {
+            "wallMs": 1795014065650,
+            "window": false,
+            "contents": true,
+            "page": {
+              "focused": true,
+              "visibility": "visible",
+              "view": "walking",
+              "walker": "third"
+            }
+          },
+          "end": {
+            "wallMs": 1795014068763,
+            "window": false,
+            "contents": true,
+            "page": {
+              "focused": true,
+              "visibility": "visible",
+              "view": "walking",
+              "walker": "third"
+            }
+          }
+        },
+        "osForegroundSampleCounts": {
+          "measuredWindow": 0,
+          "otherWindow": 6
+        },
+        "osForeground": [
+          {
+            "utc": "2026-11-18T15:01:05.785Z",
+            "benchmarkInForeground": false,
+            "cpuPct": 39.34,
+            "busiestCorePct": 62.5,
+            "foreground": "otherWindow"
+          },
+          {
+            "utc": "2026-11-18T15:01:06.299Z",
+            "benchmarkInForeground": false,
+            "cpuPct": 24.19,
+            "busiestCorePct": 81.8,
+            "foreground": "otherWindow"
+          },
+          {
+            "utc": "2026-11-18T15:01:06.812Z",
+            "benchmarkInForeground": false,
+            "cpuPct": 20.28,
+            "busiestCorePct": 54.5,
+            "foreground": "otherWindow"
+          },
+          {
+            "utc": "2026-11-18T15:01:07.324Z",
+            "benchmarkInForeground": false,
+            "cpuPct": 21.39,
+            "busiestCorePct": 42.4,
+            "foreground": "otherWindow"
+          },
+          {
+            "utc": "2026-11-18T15:01:07.838Z",
+            "benchmarkInForeground": false,
+            "cpuPct": 33.97,
+            "busiestCorePct": 48.5,
+            "foreground": "otherWindow"
+          },
+          {
+            "utc": "2026-11-18T15:01:08.351Z",
+            "benchmarkInForeground": false,
+            "cpuPct": 23.26,
+            "busiestCorePct": 81.8,
+            "foreground": "otherWindow"
+          }
+        ],
+        "gpu": [
+          {
+            "utc": "2026-11-18T15:01:06.023Z",
+            "state": "P0",
+            "graphicsMHz": 1980,
+            "memoryMHz": 7001,
+            "gpuPct": 42,
+            "memoryUtilizationPct": 18,
+            "powerW": 87.14,
+            "temperatureC": 66
+          },
+          {
+            "utc": "2026-11-18T15:01:06.536Z",
+            "state": "P0",
+            "graphicsMHz": 1972,
+            "memoryMHz": 7001,
+            "gpuPct": 46,
+            "memoryUtilizationPct": 19,
+            "powerW": 87.12,
+            "temperatureC": 67
+          },
+          {
+            "utc": "2026-11-18T15:01:07.051Z",
+            "state": "P0",
+            "graphicsMHz": 1972,
+            "memoryMHz": 7001,
+            "gpuPct": 42,
+            "memoryUtilizationPct": 18,
+            "powerW": 87.01,
+            "temperatureC": 67
+          },
+          {
+            "utc": "2026-11-18T15:01:07.561Z",
+            "state": "P0",
+            "graphicsMHz": 1942,
+            "memoryMHz": 7001,
+            "gpuPct": 40,
+            "memoryUtilizationPct": 17,
+            "powerW": 87.54,
+            "temperatureC": 67
+          },
+          {
+            "utc": "2026-11-18T15:01:08.074Z",
+            "state": "P0",
+            "graphicsMHz": 1935,
+            "memoryMHz": 7001,
+            "gpuPct": 41,
+            "memoryUtilizationPct": 17,
+            "powerW": 86.83,
+            "temperatureC": 67
+          },
+          {
+            "utc": "2026-11-18T15:01:08.585Z",
+            "state": "P0",
+            "graphicsMHz": 1980,
+            "memoryMHz": 7001,
+            "gpuPct": 42,
+            "memoryUtilizationPct": 18,
+            "powerW": 86.12,
+            "temperatureC": 67
+          }
+        ],
+        "gpuUtilizationPercentage": {
+          "min": 40,
+          "median": 42,
+          "max": 46,
+          "mean": 42.166666666666664
+        },
+        "gpuGraphicsMHz": {
+          "min": 1935,
+          "median": 1972,
+          "max": 1980,
+          "mean": 1963.5
+        }
+      }
+    },
+    {
+      "id": "v2-candidate",
+      "source": "2a7c6f12bb66f44a04a9dbbc2a4e2e7a22e93758",
+      "method": "Electron sendInputEvent holds W for each measured segment; positions come from the live walker, with no per-frame pose overrides.",
+      "route": {
+        "before": [
+          281.6,
+          8.812,
+          934
+        ],
+        "after": [
+          280.9267551950516,
+          8.542420220590298,
+          924.3721507353678
+        ],
+        "distanceM": 9.655123680582037,
+        "horizontalDistanceM": 9.651359491277352,
+        "beforeUtc": "2026-11-18T15:03:18.497Z",
+        "afterUtc": "2026-11-18T15:03:21.718Z",
+        "trustedKeyW": [
+          {
+            "type": "keydown",
+            "code": "KeyW",
+            "key": "w",
+            "trusted": true,
+            "timeMs": 106583.40000009537
+          },
+          {
+            "type": "keyup",
+            "code": "KeyW",
+            "key": "w",
+            "trusted": true,
+            "timeMs": 109781.5
+          }
+        ]
+      },
+      "fps": 59.23791226384886,
+      "frames": 185,
+      "sampleMs": 3123,
+      "intervalMs": {
+        "mean": 16.88108108108108,
+        "p50": 15.39999999999418,
+        "p90": 15.5,
+        "p95": 30.80000000000291,
+        "p99": 30.90000000000873,
+        "max": 31,
+        "counts_by_interval": [
+          167,
+          0,
+          0,
+          18,
+          0
+        ],
+        "indicesOver20": [
+          15,
+          32,
+          37,
+          45,
+          52,
+          63,
+          86,
+          109,
+          134,
+          171,
+          172,
+          173,
+          176,
+          178,
+          179,
+          181,
+          182,
+          184
+        ]
+      },
+      "draw": {
+        "mean": 1690.6864864864865,
+        "min": 918,
+        "max": 1704
+      },
+      "triangles": {
+        "mean": 8322723.8,
+        "min": 8217145,
+        "max": 8397751
+      },
+      "monitor": {
+        "startUtc": "2026-11-18T15:03:18.496Z",
+        "endUtc": "2026-11-18T15:03:21.644Z",
+        "hostFocus": {
+          "filename": "frame-samples-walking-third.json",
+          "start": {
+            "wallMs": 1795014198496,
+            "window": false,
+            "contents": true,
+            "page": {
+              "focused": true,
+              "visibility": "visible",
+              "view": "walking",
+              "walker": "third"
+            }
+          },
+          "end": {
+            "wallMs": 1795014201644,
+            "window": false,
+            "contents": true,
+            "page": {
+              "focused": true,
+              "visibility": "visible",
+              "view": "walking",
+              "walker": "third"
+            }
+          }
+        },
+        "osForegroundSampleCounts": {
+          "measuredWindow": 0,
+          "otherWindow": 7
+        },
+        "osForeground": [
+          {
+            "utc": "2026-11-18T15:03:18.526Z",
+            "benchmarkInForeground": false,
+            "cpuPct": 28.29,
+            "busiestCorePct": 51.5,
+            "foreground": "otherWindow"
+          },
+          {
+            "utc": "2026-11-18T15:03:19.040Z",
+            "benchmarkInForeground": false,
+            "cpuPct": 30.58,
+            "busiestCorePct": 60.6,
+            "foreground": "otherWindow"
+          },
+          {
+            "utc": "2026-11-18T15:03:19.555Z",
+            "benchmarkInForeground": false,
+            "cpuPct": 27.66,
+            "busiestCorePct": 47.1,
+            "foreground": "otherWindow"
+          },
+          {
+            "utc": "2026-11-18T15:03:20.070Z",
+            "benchmarkInForeground": false,
+            "cpuPct": 27.92,
+            "busiestCorePct": 51.5,
+            "foreground": "otherWindow"
+          },
+          {
+            "utc": "2026-11-18T15:03:20.585Z",
+            "benchmarkInForeground": false,
+            "cpuPct": 28.06,
+            "busiestCorePct": 69.7,
+            "foreground": "otherWindow"
+          },
+          {
+            "utc": "2026-11-18T15:03:21.098Z",
+            "benchmarkInForeground": false,
+            "cpuPct": 30.57,
+            "busiestCorePct": 57.6,
+            "foreground": "otherWindow"
+          },
+          {
+            "utc": "2026-11-18T15:03:21.611Z",
+            "benchmarkInForeground": false,
+            "cpuPct": 58.27,
+            "busiestCorePct": 75,
+            "foreground": "otherWindow"
+          }
+        ],
+        "gpu": [
+          {
+            "utc": "2026-11-18T15:03:18.788Z",
+            "state": "P0",
+            "graphicsMHz": 1980,
+            "memoryMHz": 7001,
+            "gpuPct": 43,
+            "memoryUtilizationPct": 17,
+            "powerW": 85.44,
+            "temperatureC": 67
+          },
+          {
+            "utc": "2026-11-18T15:03:19.288Z",
+            "state": "P0",
+            "graphicsMHz": 1980,
+            "memoryMHz": 7001,
+            "gpuPct": 38,
+            "memoryUtilizationPct": 16,
+            "powerW": 85.46,
+            "temperatureC": 68
+          },
+          {
+            "utc": "2026-11-18T15:03:19.802Z",
+            "state": "P0",
+            "graphicsMHz": 1980,
+            "memoryMHz": 7001,
+            "gpuPct": 42,
+            "memoryUtilizationPct": 18,
+            "powerW": 85.1,
+            "temperatureC": 68
+          },
+          {
+            "utc": "2026-11-18T15:03:20.314Z",
+            "state": "P0",
+            "graphicsMHz": 1980,
+            "memoryMHz": 7001,
+            "gpuPct": 43,
+            "memoryUtilizationPct": 18,
+            "powerW": 85.43,
+            "temperatureC": 68
+          },
+          {
+            "utc": "2026-11-18T15:03:20.828Z",
+            "state": "P0",
+            "graphicsMHz": 1980,
+            "memoryMHz": 7001,
+            "gpuPct": 41,
+            "memoryUtilizationPct": 17,
+            "powerW": 86.67,
+            "temperatureC": 68
+          },
+          {
+            "utc": "2026-11-18T15:03:21.341Z",
+            "state": "P0",
+            "graphicsMHz": 1980,
+            "memoryMHz": 7001,
+            "gpuPct": 42,
+            "memoryUtilizationPct": 18,
+            "powerW": 86.99,
+            "temperatureC": 68
+          }
+        ],
+        "gpuUtilizationPercentage": {
+          "min": 38,
+          "median": 42,
+          "max": 43,
+          "mean": 41.5
+        },
+        "gpuGraphicsMHz": {
+          "min": 1980,
+          "median": 1980,
+          "max": 1980,
+          "mean": 1980
+        }
+      }
+    },
+    {
+      "id": "final-2ae05c5b",
+      "source": "2ae05c5b0715fba94a167fa103babb72ae0ef9cf",
+      "method": "Electron sendInputEvent holds W for each measured segment; positions come from the live walker, with no per-frame pose overrides.",
+      "route": {
+        "before": [
+          281.6,
+          8.812,
+          934
+        ],
+        "after": [
+          280.9334539103402,
+          8.545102511157639,
+          924.4679468270585
+        ],
+        "distanceM": 9.559056211309489,
+        "horizontalDistanceM": 9.555329475294098,
+        "beforeUtc": "2026-11-18T15:21:00.479Z",
+        "afterUtc": "2026-11-18T15:21:03.664Z",
+        "trustedKeyW": [
+          {
+            "type": "keydown",
+            "code": "KeyW",
+            "key": "w",
+            "trusted": true,
+            "timeMs": 106995.29999995232
+          },
+          {
+            "type": "keyup",
+            "code": "KeyW",
+            "key": "w",
+            "trusted": true,
+            "timeMs": 110162.09999990463
+          }
+        ]
+      },
+      "fps": 64.99743852459022,
+      "frames": 203,
+      "sampleMs": 3123.199999999997,
+      "intervalMs": {
+        "mean": 15.385221674876833,
+        "p50": 15.39999999999418,
+        "p90": 15.5,
+        "p95": 15.5,
+        "p99": 15.60000000000582,
+        "max": 15.60000000000582,
+        "counts_by_interval": [
+          203,
+          0,
+          0,
+          0,
+          0
+        ],
+        "indicesOver20": []
+      },
+      "draw": {
+        "mean": 1692.0837438423646,
+        "min": 916,
+        "max": 1704
+      },
+      "triangles": {
+        "mean": 8326580.054187193,
+        "min": 8281885,
+        "max": 8398007
+      },
+      "monitor": {
+        "startUtc": "2026-11-18T15:21:00.479Z",
+        "endUtc": "2026-11-18T15:21:03.613Z",
+        "hostFocus": {
+          "filename": "frame-samples-walking-third.json",
+          "start": {
+            "wallMs": 1795015260479,
+            "window": true,
+            "contents": true,
+            "page": {
+              "focused": true,
+              "visibility": "visible",
+              "view": "walking",
+              "walker": "third"
+            }
+          },
+          "end": {
+            "wallMs": 1795015263613,
+            "window": true,
+            "contents": true,
+            "page": {
+              "focused": true,
+              "visibility": "visible",
+              "view": "walking",
+              "walker": "third"
+            }
+          }
+        },
+        "osForegroundSampleCounts": {
+          "measuredWindow": 6,
+          "otherWindow": 0
+        },
+        "osForeground": [
+          {
+            "utc": "2026-11-18T15:21:00.914Z",
+            "benchmarkInForeground": true,
+            "cpuPct": 19.38,
+            "busiestCorePct": 33.3,
+            "foreground": "measuredWindow"
+          },
+          {
+            "utc": "2026-11-18T15:21:01.425Z",
+            "benchmarkInForeground": true,
+            "cpuPct": 21.55,
+            "busiestCorePct": 90.6,
+            "foreground": "measuredWindow"
+          },
+          {
+            "utc": "2026-11-18T15:21:01.938Z",
+            "benchmarkInForeground": true,
+            "cpuPct": 19.55,
+            "busiestCorePct": 52.8,
+            "foreground": "measuredWindow"
+          },
+          {
+            "utc": "2026-11-18T15:21:02.451Z",
+            "benchmarkInForeground": true,
+            "cpuPct": 22.97,
+            "busiestCorePct": 63.6,
+            "foreground": "measuredWindow"
+          },
+          {
+            "utc": "2026-11-18T15:21:02.963Z",
+            "benchmarkInForeground": true,
+            "cpuPct": 38.85,
+            "busiestCorePct": 63.6,
+            "foreground": "measuredWindow"
+          },
+          {
+            "utc": "2026-11-18T15:21:03.476Z",
+            "benchmarkInForeground": true,
+            "cpuPct": 19.4,
+            "busiestCorePct": 69.7,
+            "foreground": "measuredWindow"
+          }
+        ],
+        "gpu": [
+          {
+            "utc": "2026-11-18T15:21:00.958Z",
+            "state": "P0",
+            "graphicsMHz": 1965,
+            "memoryMHz": 7001,
+            "gpuPct": 44,
+            "memoryUtilizationPct": 19,
+            "powerW": 85.74,
+            "temperatureC": 66
+          },
+          {
+            "utc": "2026-11-18T15:21:01.473Z",
+            "state": "P0",
+            "graphicsMHz": 1972,
+            "memoryMHz": 7001,
+            "gpuPct": 44,
+            "memoryUtilizationPct": 18,
+            "powerW": 88.2,
+            "temperatureC": 67
+          },
+          {
+            "utc": "2026-11-18T15:21:01.986Z",
+            "state": "P0",
+            "graphicsMHz": 1980,
+            "memoryMHz": 7001,
+            "gpuPct": 43,
+            "memoryUtilizationPct": 18,
+            "powerW": 87.88,
+            "temperatureC": 67
+          },
+          {
+            "utc": "2026-11-18T15:21:02.487Z",
+            "state": "P0",
+            "graphicsMHz": 1980,
+            "memoryMHz": 7001,
+            "gpuPct": 46,
+            "memoryUtilizationPct": 19,
+            "powerW": 88.43,
+            "temperatureC": 67
+          },
+          {
+            "utc": "2026-11-18T15:21:03.001Z",
+            "state": "P0",
+            "graphicsMHz": 1972,
+            "memoryMHz": 7001,
+            "gpuPct": 47,
+            "memoryUtilizationPct": 19,
+            "powerW": 88.36,
+            "temperatureC": 67
+          },
+          {
+            "utc": "2026-11-18T15:21:03.515Z",
+            "state": "P0",
+            "graphicsMHz": 1965,
+            "memoryMHz": 7001,
+            "gpuPct": 42,
+            "memoryUtilizationPct": 17,
+            "powerW": 88.17,
+            "temperatureC": 67
+          }
+        ],
+        "gpuUtilizationPercentage": {
+          "min": 42,
+          "median": 44,
+          "max": 47,
+          "mean": 44.333333333333336
+        },
+        "gpuGraphicsMHz": {
+          "min": 1965,
+          "median": 1972,
+          "max": 1980,
+          "mean": 1972.3333333333333
+        }
+      }
+    },
+    {
+      "id": "final-r3-control",
+      "source": "47a5c12eba910682ccbf8bc9138510bc01737bf3",
+      "method": "Electron sendInputEvent holds W for each measured segment; positions come from the live walker, with no per-frame pose overrides.",
+      "route": {
+        "before": [
+          281.6,
+          8.812,
+          934
+        ],
+        "after": [
+          280.9190480606494,
+          8.5393341401976,
+          924.2619335784857
+        ],
+        "distanceM": 9.765653068004799,
+        "horizontalDistanceM": 9.761845787223326,
+        "beforeUtc": "2026-11-18T15:23:35.079Z",
+        "afterUtc": "2026-11-18T15:23:38.318Z",
+        "trustedKeyW": [
+          {
+            "type": "keydown",
+            "code": "KeyW",
+            "key": "w",
+            "trusted": true,
+            "timeMs": 107138.10000014305
+          },
+          {
+            "type": "keyup",
+            "code": "KeyW",
+            "key": "w",
+            "trusted": true,
+            "timeMs": 110342.20000004768
+          }
+        ]
+      },
+      "fps": 62.13159152461367,
+      "frames": 195,
+      "sampleMs": 3138.5,
+      "intervalMs": {
+        "mean": 16.094871794871796,
+        "p50": 15.39999999999418,
+        "p90": 15.5,
+        "p95": 15.60000000000582,
+        "p99": 30.80000000000291,
+        "max": 30.80000000000291,
+        "counts_by_interval": [
+          186,
+          0,
+          0,
+          9,
+          0
+        ],
+        "indicesOver20": [
+          6,
+          16,
+          27,
+          40,
+          60,
+          70,
+          79,
+          86,
+          128
+        ]
+      },
+      "draw": {
+        "mean": 1679.7641025641026,
+        "min": 1662,
+        "max": 1688
+      },
+      "triangles": {
+        "mean": 8489192.856410256,
+        "min": 8445453,
+        "max": 8559563
+      },
+      "monitor": {
+        "startUtc": "2026-11-18T15:23:35.079Z",
+        "endUtc": "2026-11-18T15:23:38.274Z",
+        "hostFocus": {
+          "filename": "frame-samples-walking-third.json",
+          "start": {
+            "wallMs": 1795015415079,
+            "window": false,
+            "contents": true,
+            "page": {
+              "focused": true,
+              "visibility": "visible",
+              "view": "walking",
+              "walker": "third"
+            }
+          },
+          "end": {
+            "wallMs": 1795015418274,
+            "window": false,
+            "contents": true,
+            "page": {
+              "focused": true,
+              "visibility": "visible",
+              "view": "walking",
+              "walker": "third"
+            }
+          }
+        },
+        "osForegroundSampleCounts": {
+          "measuredWindow": 0,
+          "otherWindow": 7
+        },
+        "osForeground": [
+          {
+            "utc": "2026-11-18T15:23:35.123Z",
+            "benchmarkInForeground": false,
+            "cpuPct": 40.94,
+            "busiestCorePct": 66.7,
+            "foreground": "otherWindow"
+          },
+          {
+            "utc": "2026-11-18T15:23:35.637Z",
+            "benchmarkInForeground": false,
+            "cpuPct": 24.51,
+            "busiestCorePct": 61.8,
+            "foreground": "otherWindow"
+          },
+          {
+            "utc": "2026-11-18T15:23:36.150Z",
+            "benchmarkInForeground": false,
+            "cpuPct": 19.62,
+            "busiestCorePct": 45.5,
+            "foreground": "otherWindow"
+          },
+          {
+            "utc": "2026-11-18T15:23:36.664Z",
+            "benchmarkInForeground": false,
+            "cpuPct": 34.75,
+            "busiestCorePct": 51.4,
+            "foreground": "otherWindow"
+          },
+          {
+            "utc": "2026-11-18T15:23:37.176Z",
+            "benchmarkInForeground": false,
+            "cpuPct": 23.34,
+            "busiestCorePct": 71.9,
+            "foreground": "otherWindow"
+          },
+          {
+            "utc": "2026-11-18T15:23:37.689Z",
+            "benchmarkInForeground": false,
+            "cpuPct": 28.53,
+            "busiestCorePct": 63.6,
+            "foreground": "otherWindow"
+          },
+          {
+            "utc": "2026-11-18T15:23:38.203Z",
+            "benchmarkInForeground": false,
+            "cpuPct": 19.22,
+            "busiestCorePct": 42.4,
+            "foreground": "otherWindow"
+          }
+        ],
+        "gpu": [
+          {
+            "utc": "2026-11-18T15:23:35.582Z",
+            "state": "P0",
+            "graphicsMHz": 1935,
+            "memoryMHz": 7001,
+            "gpuPct": 42,
+            "memoryUtilizationPct": 17,
+            "powerW": 83.3,
+            "temperatureC": 68
+          },
+          {
+            "utc": "2026-11-18T15:23:36.093Z",
+            "state": "P0",
+            "graphicsMHz": 1965,
+            "memoryMHz": 7001,
+            "gpuPct": 43,
+            "memoryUtilizationPct": 17,
+            "powerW": 83.87,
+            "temperatureC": 69
+          },
+          {
+            "utc": "2026-11-18T15:23:36.606Z",
+            "state": "P0",
+            "graphicsMHz": 1972,
+            "memoryMHz": 7001,
+            "gpuPct": 41,
+            "memoryUtilizationPct": 17,
+            "powerW": 86.36,
+            "temperatureC": 69
+          },
+          {
+            "utc": "2026-11-18T15:23:37.120Z",
+            "state": "P0",
+            "graphicsMHz": 1935,
+            "memoryMHz": 7001,
+            "gpuPct": 46,
+            "memoryUtilizationPct": 19,
+            "powerW": 87.17,
+            "temperatureC": 69
+          },
+          {
+            "utc": "2026-11-18T15:23:37.628Z",
+            "state": "P0",
+            "graphicsMHz": 1965,
+            "memoryMHz": 7001,
+            "gpuPct": 45,
+            "memoryUtilizationPct": 19,
+            "powerW": 87.39,
+            "temperatureC": 69
+          },
+          {
+            "utc": "2026-11-18T15:23:38.140Z",
+            "state": "P0",
+            "graphicsMHz": 1935,
+            "memoryMHz": 7001,
+            "gpuPct": 42,
+            "memoryUtilizationPct": 17,
+            "powerW": 87.86,
+            "temperatureC": 69
+          }
+        ],
+        "gpuUtilizationPercentage": {
+          "min": 41,
+          "median": 42,
+          "max": 46,
+          "mean": 43.166666666666664
+        },
+        "gpuGraphicsMHz": {
+          "min": 1935,
+          "median": 1935,
+          "max": 1972,
+          "mean": 1951.1666666666667
+        }
+      }
+    },
+    {
+      "id": "final-repeat",
+      "source": "2ae05c5b0715fba94a167fa103babb72ae0ef9cf",
+      "method": "Electron sendInputEvent holds W for each measured segment; positions come from the live walker, with no per-frame pose overrides.",
+      "route": {
+        "before": [
+          281.6,
+          8.812,
+          934
+        ],
+        "after": [
+          281.0916686174971,
+          8.608454631428344,
+          926.7305225510123
+        ],
+        "distanceM": 7.290070911372869,
+        "horizontalDistanceM": 7.287228772021493,
+        "beforeUtc": "2026-11-18T15:25:54.284Z",
+        "afterUtc": "2026-11-18T15:25:57.467Z",
+        "trustedKeyW": [
+          {
+            "type": "keydown",
+            "code": "KeyW",
+            "key": "w",
+            "trusted": true,
+            "timeMs": 106395.70000004768
+          },
+          {
+            "type": "keyup",
+            "code": "KeyW",
+            "key": "w",
+            "trusted": true,
+            "timeMs": 109562.70000004768
+          }
+        ]
+      },
+      "fps": 54.43309532195565,
+      "frames": 170,
+      "sampleMs": 3123.100000000006,
+      "intervalMs": {
+        "mean": 18.37117647058827,
+        "p50": 15.400000000008731,
+        "p90": 30.70000000001164,
+        "p95": 30.80000000000291,
+        "p99": 30.89999999999418,
+        "max": 46.19999999999709,
+        "counts_by_interval": [
+          138,
+          0,
+          0,
+          31,
+          1
+        ],
+        "indicesOver20": [
+          4,
+          8,
+          11,
+          13,
+          15,
+          18,
+          20,
+          21,
+          23,
+          27,
+          35,
+          42,
+          52,
+          58,
+          65,
+          68,
+          71,
+          74,
+          79,
+          81,
+          85,
+          88,
+          91,
+          97,
+          104,
+          108,
+          120,
+          141,
+          143,
+          160,
+          163,
+          166
+        ]
+      },
+      "draw": {
+        "mean": 1690.6235294117646,
+        "min": 918,
+        "max": 1704
+      },
+      "triangles": {
+        "mean": 8328206.388235294,
+        "min": 8216633,
+        "max": 8398007
+      },
+      "monitor": {
+        "startUtc": "2026-11-18T15:25:54.283Z",
+        "endUtc": "2026-11-18T15:25:57.419Z",
+        "hostFocus": {
+          "filename": "frame-samples-walking-third.json",
+          "start": {
+            "wallMs": 1795015554283,
+            "window": true,
+            "contents": true,
+            "page": {
+              "focused": true,
+              "visibility": "visible",
+              "view": "walking",
+              "walker": "third"
+            }
+          },
+          "end": {
+            "wallMs": 1795015557419,
+            "window": false,
+            "contents": false,
+            "page": {
+              "focused": false,
+              "visibility": "visible",
+              "view": "walking",
+              "walker": "third"
+            }
+          }
+        },
+        "osForegroundSampleCounts": {
+          "measuredWindow": 5,
+          "otherWindow": 1
+        },
+        "osForeground": [
+          {
+            "utc": "2026-11-18T15:25:54.486Z",
+            "benchmarkInForeground": true,
+            "cpuPct": 61.88,
+            "busiestCorePct": 75.8,
+            "foreground": "measuredWindow"
+          },
+          {
+            "utc": "2026-11-18T15:25:55.001Z",
+            "benchmarkInForeground": true,
+            "cpuPct": 62.22,
+            "busiestCorePct": 84.8,
+            "foreground": "measuredWindow"
+          },
+          {
+            "utc": "2026-11-18T15:25:55.514Z",
+            "benchmarkInForeground": true,
+            "cpuPct": 32.88,
+            "busiestCorePct": 45.7,
+            "foreground": "measuredWindow"
+          },
+          {
+            "utc": "2026-11-18T15:25:56.028Z",
+            "benchmarkInForeground": true,
+            "cpuPct": 59.5,
+            "busiestCorePct": 69.7,
+            "foreground": "measuredWindow"
+          },
+          {
+            "utc": "2026-11-18T15:25:56.544Z",
+            "benchmarkInForeground": true,
+            "cpuPct": 35.04,
+            "busiestCorePct": 63.6,
+            "foreground": "measuredWindow"
+          },
+          {
+            "utc": "2026-11-18T15:25:57.059Z",
+            "benchmarkInForeground": false,
+            "cpuPct": 33.36,
+            "busiestCorePct": 57.6,
+            "foreground": "otherWindow"
+          }
+        ],
+        "gpu": [
+          {
+            "utc": "2026-11-18T15:25:54.352Z",
+            "state": "P0",
+            "graphicsMHz": 1980,
+            "memoryMHz": 7001,
+            "gpuPct": 32,
+            "memoryUtilizationPct": 13,
+            "powerW": 84.2,
+            "temperatureC": 68
+          },
+          {
+            "utc": "2026-11-18T15:25:54.865Z",
+            "state": "P0",
+            "graphicsMHz": 1980,
+            "memoryMHz": 7001,
+            "gpuPct": 38,
+            "memoryUtilizationPct": 14,
+            "powerW": 78.37,
+            "temperatureC": 68
+          },
+          {
+            "utc": "2026-11-18T15:25:55.375Z",
+            "state": "P0",
+            "graphicsMHz": 1980,
+            "memoryMHz": 7001,
+            "gpuPct": 36,
+            "memoryUtilizationPct": 15,
+            "powerW": 74.46,
+            "temperatureC": 67
+          },
+          {
+            "utc": "2026-11-18T15:25:55.887Z",
+            "state": "P0",
+            "graphicsMHz": 1965,
+            "memoryMHz": 7001,
+            "gpuPct": 36,
+            "memoryUtilizationPct": 14,
+            "powerW": 81.49,
+            "temperatureC": 68
+          },
+          {
+            "utc": "2026-11-18T15:25:56.399Z",
+            "state": "P0",
+            "graphicsMHz": 1965,
+            "memoryMHz": 7001,
+            "gpuPct": 37,
+            "memoryUtilizationPct": 15,
+            "powerW": 79.03,
+            "temperatureC": 68
+          },
+          {
+            "utc": "2026-11-18T15:25:56.912Z",
+            "state": "P0",
+            "graphicsMHz": 1980,
+            "memoryMHz": 7001,
+            "gpuPct": 46,
+            "memoryUtilizationPct": 19,
+            "powerW": 82.32,
+            "temperatureC": 69
+          }
+        ],
+        "gpuUtilizationPercentage": {
+          "min": 32,
+          "median": 36,
+          "max": 46,
+          "mean": 37.5
+        },
+        "gpuGraphicsMHz": {
+          "min": 1965,
+          "median": 1980,
+          "max": 1980,
+          "mean": 1975
+        }
+      }
+    }
+  ]
+}

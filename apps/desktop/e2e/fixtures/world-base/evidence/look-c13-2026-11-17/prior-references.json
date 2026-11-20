@@ -1,0 +1,26 @@
+[
+  {
+    "file": "../density-2026-11-17/README.md",
+    "presentInCommit": "1677ea3167905a180d8b26c48a4b0c0ffece4325",
+    "sha256": "9e95d8fa7b461159ee8809464f4d183ea3ea340a4bf7194d457fd93c7b2edac3",
+    "copied": false
+  },
+  {
+    "file": "../density-2026-11-17/diagnostic/look-report.json.gz",
+    "presentInCommit": "1677ea3167905a180d8b26c48a4b0c0ffece4325",
+    "sha256": "dba9a2166c453926934371860e01e36124e6253646147f9f3731b43b7495d984",
+    "copied": false
+  },
+  {
+    "file": "../look-c12-2026-11-17/README.md",
+    "presentInCommit": "1677ea3167905a180d8b26c48a4b0c0ffece4325",
+    "sha256": "779e86d43f712106ed2df20bc95688a3becb208a9f15dac5725ca1419a7a4a2e",
+    "copied": false
+  },
+  {
+    "file": "../look-c12-2026-11-17/diagnostic/look-report.json.gz",
+    "presentInCommit": "1677ea3167905a180d8b26c48a4b0c0ffece4325",
+    "sha256": "731023453ee71365e9d9437976f4068bba035203cca4fdbc072f6a5effdac1c3",
+    "copied": false
+  }
+]

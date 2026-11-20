@@ -1,0 +1,158 @@
+{
+  "profiledRun": {
+    "query": "time=afternoon",
+    "phase": "navigation to worldBase.ready, before frozen photos",
+    "intervalUs": 2000,
+    "n": 42757,
+    "totalSampledSeconds": 103.894387,
+    "weatheringOrDecalInclusiveSeconds": 65.693929,
+    "groups": {
+      "weatheringMaterials": 0.114449,
+      "bakeGround": 0.026469,
+      "decalPlacement": 65.57948,
+      "decalHitAt": 65.568501,
+      "decalFlat": 22.82888
+    },
+    "inclusiveFunctions": [
+      {
+        "functionAndSource": "addWeatheringDecals @ /src/weathering-decals.js:104",
+        "seconds": 65.57948
+      },
+      {
+        "functionAndSource": "hitAt @ /src/weathering-decals.js:117",
+        "seconds": 65.568501
+      },
+      {
+        "functionAndSource": "flat @ /src/weathering-decals.js:127",
+        "seconds": 22.82888
+      },
+      {
+        "functionAndSource": "applyWeathering @ /src/weathering.js:169",
+        "seconds": 0.114449
+      },
+      {
+        "functionAndSource": "(anonymous) @ /src/weathering.js:211",
+        "seconds": 0.085328
+      },
+      {
+        "functionAndSource": "addMask @ /src/weathering.js:127",
+        "seconds": 0.079996
+      },
+      {
+        "functionAndSource": "bakeGround @ /src/weathering.js:145",
+        "seconds": 0.026469
+      },
+      {
+        "functionAndSource": "ss @ /src/weathering.js:131",
+        "seconds": 0.010559
+      },
+      {
+        "functionAndSource": "(anonymous) @ /src/weathering-decals.js:111",
+        "seconds": 0.002633
+      },
+      {
+        "functionAndSource": "cloneOwned @ /src/weathering.js:117",
+        "seconds": 0.002503
+      },
+      {
+        "functionAndSource": "(anonymous) @ /src/weathering.js:213",
+        "seconds": 0.002503
+      },
+      {
+        "functionAndSource": "pushQuad @ /src/weathering-decals.js:138",
+        "seconds": 0.000253
+      }
+    ],
+    "topSelfFunctions": [
+      {
+        "functionAndSource": "onFirstUse @ /upstream/petalwake/vendor/three/build/three.module.js:6799",
+        "seconds": 14.874881
+      },
+      {
+        "functionAndSource": "getX @ /upstream/petalwake/vendor/three/build/three.core.js:17348",
+        "seconds": 14.290029
+      },
+      {
+        "functionAndSource": "getVertexPosition @ /upstream/petalwake/vendor/three/build/three.core.js:24249",
+        "seconds": 11.232233
+      },
+      {
+        "functionAndSource": "getDataURL @ /upstream/petalwake/vendor/three/build/three.core.js:6870",
+        "seconds": 11.227374
+      },
+      {
+        "functionAndSource": "intersectTriangle @ /upstream/petalwake/vendor/three/build/three.core.js:23642",
+        "seconds": 10.404532
+      },
+      {
+        "functionAndSource": "getZ @ /upstream/petalwake/vendor/three/build/three.core.js:17414",
+        "seconds": 8.222233
+      },
+      {
+        "functionAndSource": "_computeIntersections @ /upstream/petalwake/vendor/three/build/three.core.js:24357",
+        "seconds": 6.736772
+      },
+      {
+        "functionAndSource": "fromBufferAttribute @ /upstream/petalwake/vendor/three/build/three.core.js:5975",
+        "seconds": 6.208358
+      },
+      {
+        "functionAndSource": "checkIntersection$1 @ /upstream/petalwake/vendor/three/build/three.core.js:24494",
+        "seconds": 4.592131
+      },
+      {
+        "functionAndSource": "checkGeometryIntersection @ /upstream/petalwake/vendor/three/build/three.core.js:24525",
+        "seconds": 2.522352
+      },
+      {
+        "functionAndSource": "fitText @ /upstream/sakuragaoka/src/core/textures.js:47",
+        "seconds": 1.413116
+      },
+      {
+        "functionAndSource": "getY @ /upstream/petalwake/vendor/three/build/three.core.js:17381",
+        "seconds": 1.412568
+      },
+      {
+        "functionAndSource": "(idle) @ :0",
+        "seconds": 0.869753
+      },
+      {
+        "functionAndSource": "(program) @ :0",
+        "seconds": 0.54607
+      }
+    ],
+    "rawProfileSha256": "deec9eb22135c330005ff37dde2debef90297fc26c6a2e048e92f13ad1c676bf"
+  },
+  "unprofiled": {
+    "C21-first": {
+      "firstReadyFrameMs": 39668.10000014305,
+      "scenePlacementStageMs": 24783.799999952316,
+      "worldReadyStageMs": 25041.799999952316,
+      "placementToReadyMs": 258
+    },
+    "C21-repeat": {
+      "firstReadyFrameMs": 39993.300000190735,
+      "scenePlacementStageMs": 24902.400000095367,
+      "worldReadyStageMs": 25127,
+      "placementToReadyMs": 224.59999990463257
+    },
+    "ground-on": {
+      "firstReadyFrameMs": 103020.5,
+      "scenePlacementStageMs": 22447.5,
+      "worldReadyStageMs": 87946.20000004768,
+      "placementToReadyMs": 65498.700000047684
+    },
+    "ground-off": {
+      "firstReadyFrameMs": 105835.10000014305,
+      "scenePlacementStageMs": 22229.300000190735,
+      "worldReadyStageMs": 90919.60000014305,
+      "placementToReadyMs": 68690.29999995232
+    },
+    "ground-on-repeat": {
+      "firstReadyFrameMs": 102425.70000004768,
+      "scenePlacementStageMs": 22406.5,
+      "worldReadyStageMs": 87458.90000009537,
+      "placementToReadyMs": 65052.40000009537
+    }
+  }
+}

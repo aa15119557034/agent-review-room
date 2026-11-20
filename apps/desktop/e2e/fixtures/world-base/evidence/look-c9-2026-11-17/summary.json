@@ -1,0 +1,56 @@
+{
+  "createdAt": "2026-11-17T08:35:36.753Z",
+  "head": "1b63536ef0dae7c9f28d92efda01b0740e9a005a",
+  "checks": [
+    {
+      "artifact": "gpu-town-c9",
+      "head": "1b63536ef0dae7c9f28d92efda01b0740e9a005a",
+      "sha256": "b134d9bfcdeb3f81e92671563eaf99bc3558269a57236d189b79d95fcb65947c",
+      "trackedFilesVerified": 203,
+      "pinnedIgnoredFilesVerified": 9,
+      "receipt": "embedded"
+    },
+    {
+      "artifact": "gpu-look-c9-v1",
+      "head": "1b63536ef0dae7c9f28d92efda01b0740e9a005a",
+      "sha256": "c8a8801f2c77f3a31a817ae7158d42908ae32b6784c7ef5d6be78804ec048ffd",
+      "trackedFilesVerified": 204,
+      "pinnedIgnoredFilesVerified": 9,
+      "receipt": "separate prop-assets-manifest.json"
+    }
+  ],
+  "outcomes": [
+    {
+      "artifact": "gpu-town-c9",
+      "ok": false,
+      "renderOk": true,
+      "transportClean": false,
+      "strictExpectedExitFromReport": 1
+    },
+    {
+      "artifact": "gpu-look-c9-v1",
+      "ok": false,
+      "renderOk": true,
+      "transportClean": false,
+      "sourceUnchanged": true,
+      "driverUnchanged": true,
+      "assetsUnchanged": true,
+      "strictExpectedExitFromReport": 1
+    }
+  ],
+  "ci": {
+    "head": "1b63536ef0dae7c9f28d92efda01b0740e9a005a",
+    "run": 44045578472,
+    "job": 133910311870,
+    "url": "https://github.com/aa15119557034/agent-review-room/actions/runs/44045578472/job/133910311870",
+    "result": "success",
+    "completedAt": "2026-11-17T08:22:15Z",
+    "tests": 1615,
+    "passed": 1615,
+    "types": 9,
+    "builds": 2,
+    "allExitZero": true
+  },
+  "method": "Tracked source checked against exact commit via read-only review_git show. Nine ignored assets checked against that commit prop-assets.json and actual size/MD5/SHA. Baseline embedded receipt and diagnostic separate receipt verified independently. All original report records retained, selected predetermined capture-2 images copied unchanged. Warmup/first-capture pixels remain in original artifact directories. Logs gzip prevents *.log ignore and newline conversion.",
+  "limitations": "No whole-world or style acceptance is inferred, no assets/cache/user profiles copied, no GPU or scene execution in this script. Absolute original paths in reports are forensic metadata; replay drivers still require the original workspace layout and local assets."
+}

@@ -1,0 +1,1035 @@
+{
+  "source": {
+    "source": "b4f1350397fc00b1ff7320f1844788dd1d16b86e",
+    "checkout": "097796feb1d42afd16da554bae58f0099425ca6d",
+    "verifiedFiles": 251
+  },
+  "manifestSHA256": "075e3ccfeb538bb3a38bba6c5b1ba081709c2c961056ce1ac709df128b0f6f28",
+  "officialDriverSHA256": "019060c6f509eb1eea493752e201a9396b12f689ca3fa675f9313d5cbe53dc41",
+  "officialResults": {
+    "on": {
+      "fileSHA256": "578ec7c853d3a88cb8b5c13c414efcec610adbde0510678e79ce5259b102c95b",
+      "view": "station-street",
+      "enabled": {
+        "pairs": 70,
+        "enabled": 70,
+        "disabled": 0,
+        "mixed": 0,
+        "onlyBand": 0,
+        "onlyRim": 0
+      },
+      "disabled": {
+        "pairs": 70,
+        "enabled": 1,
+        "disabled": 69,
+        "mixed": 0,
+        "onlyBand": 0,
+        "onlyRim": 0
+      }
+    },
+    "on-repeat": {
+      "fileSHA256": "36e8d50d5b5851d2c8584ff75f34bef67865db12224013676d3fefd31945f389",
+      "view": "station-street",
+      "enabled": {
+        "pairs": 70,
+        "enabled": 70,
+        "disabled": 0,
+        "mixed": 0,
+        "onlyBand": 0,
+        "onlyRim": 0
+      },
+      "disabled": {
+        "pairs": 70,
+        "enabled": 1,
+        "disabled": 69,
+        "mixed": 0,
+        "onlyBand": 0,
+        "onlyRim": 0
+      }
+    },
+    "off": {
+      "fileSHA256": "d7d07b8fd961f04fc488328762566bf4e6a79430ac06618e23c69dbcdc0aeb88",
+      "view": "station-street",
+      "enabled": {
+        "pairs": 0,
+        "enabled": 0,
+        "disabled": 0,
+        "mixed": 0,
+        "onlyBand": 0,
+        "onlyRim": 0
+      },
+      "disabled": {
+        "pairs": 0,
+        "enabled": 0,
+        "disabled": 0,
+        "mixed": 0,
+        "onlyBand": 0,
+        "onlyRim": 0
+      }
+    }
+  },
+  "attempts": [
+    {
+      "kind": "initial script before ready-frame navigation",
+      "exit": 1,
+      "stage": "timeout before first scene frame",
+      "sampled": false
+    },
+    {
+      "kind": "short independent native replay, default first camera before warming",
+      "exit": 0,
+      "glError": 0,
+      "sceneErrors": [],
+      "targetProgramIds": [],
+      "frames": [
+        {
+          "label": "01-on-first",
+          "view": "station-street",
+          "position": [
+            278.8,
+            10.4,
+            936
+          ],
+          "quaternion": [
+            -0.003277842930440423,
+            -0.009834585659995631,
+            -0.000032237959341941705,
+            0.9999462663720154
+          ],
+          "uiChecked": true,
+          "drawCalls": 1613,
+          "multiDraw": 0,
+          "submittedProgramUniforms": {
+            "1,1": 70
+          },
+          "cache": {
+            "1,1": 70
+          },
+          "targetPrograms": []
+        },
+        {
+          "label": "04-on",
+          "view": "shop-interior",
+          "position": [
+            271.7,
+            9.9134,
+            908
+          ],
+          "quaternion": [
+            -0.015701859235384273,
+            0.7069324236562871,
+            0.015701859235384273,
+            0.7069324236562871
+          ],
+          "uiChecked": true,
+          "drawCalls": 932,
+          "multiDraw": 0,
+          "submittedProgramUniforms": {
+            "1,1": 31
+          },
+          "cache": {
+            "1,1": 70
+          },
+          "targetPrograms": []
+        },
+        {
+          "label": "01-on-back",
+          "view": "station-street",
+          "position": [
+            278.8,
+            10.4,
+            936
+          ],
+          "quaternion": [
+            -0.003277842930440423,
+            -0.009834585659995631,
+            -0.000032237959341941705,
+            0.9999462663720154
+          ],
+          "uiChecked": true,
+          "drawCalls": 1608,
+          "multiDraw": 0,
+          "submittedProgramUniforms": {
+            "1,1": 70
+          },
+          "cache": {
+            "1,1": 70
+          },
+          "targetPrograms": []
+        },
+        {
+          "label": "01-off",
+          "view": "station-street",
+          "position": [
+            278.8,
+            10.4,
+            936
+          ],
+          "quaternion": [
+            -0.003277842930440423,
+            -0.009834585659995631,
+            -0.000032237959341941705,
+            0.9999462663720154
+          ],
+          "uiChecked": false,
+          "drawCalls": 1608,
+          "multiDraw": 0,
+          "submittedProgramUniforms": {
+            "0,0": 70
+          },
+          "cache": {
+            "0,0": 70
+          },
+          "targetPrograms": []
+        },
+        {
+          "label": "04-off-first-frame",
+          "view": "shop-interior",
+          "position": [
+            271.7,
+            9.9134,
+            908
+          ],
+          "quaternion": [
+            -0.015701859235384273,
+            0.7069324236562871,
+            0.015701859235384273,
+            0.7069324236562871
+          ],
+          "uiChecked": false,
+          "drawCalls": 918,
+          "multiDraw": 0,
+          "submittedProgramUniforms": {
+            "0,0": 31
+          },
+          "cache": {
+            "0,0": 70
+          },
+          "targetPrograms": []
+        },
+        {
+          "label": "04-off-animated",
+          "view": "shop-interior",
+          "position": [
+            271.7,
+            9.9134,
+            908
+          ],
+          "quaternion": [
+            -0.015701859235384273,
+            0.7069324236562871,
+            0.015701859235384273,
+            0.7069324236562871
+          ],
+          "uiChecked": false,
+          "drawCalls": 918,
+          "multiDraw": 0,
+          "submittedProgramUniforms": {
+            "0,0": 31
+          },
+          "cache": {
+            "0,0": 70
+          },
+          "targetPrograms": []
+        },
+        {
+          "label": "01-off-return",
+          "view": "station-street",
+          "position": [
+            278.8,
+            10.4,
+            936
+          ],
+          "quaternion": [
+            -0.003277842930440423,
+            -0.009834585659995631,
+            -0.000032237959341941705,
+            0.9999462663720154
+          ],
+          "uiChecked": false,
+          "drawCalls": 1608,
+          "multiDraw": 0,
+          "submittedProgramUniforms": {
+            "0,0": 70
+          },
+          "cache": {
+            "0,0": 70
+          },
+          "targetPrograms": []
+        },
+        {
+          "label": "01-on-restored",
+          "view": "station-street",
+          "position": [
+            278.8,
+            10.4,
+            936
+          ],
+          "quaternion": [
+            -0.003277842930440423,
+            -0.009834585659995631,
+            -0.000032237959341941705,
+            0.9999462663720154
+          ],
+          "uiChecked": true,
+          "drawCalls": 1608,
+          "multiDraw": 0,
+          "submittedProgramUniforms": {
+            "1,1": 70
+          },
+          "cache": {
+            "1,1": 70
+          },
+          "targetPrograms": []
+        }
+      ]
+    },
+    {
+      "kind": "official ground warmup and camera order, isolated source",
+      "drawTraceDriverSHA256": "371df94ae1c5c20c876c422b8e5d408454206f1db295103123f9e1af1cbf8577",
+      "rawTraceSHA256": "fd3ab5cd4f15cea53c7a2b65db0971f9da37fcc0ddf58aa21f8a4c1056fd0e32",
+      "exit": 1,
+      "glError": 0,
+      "sceneErrors": [],
+      "teardown": "early close before official finally restored controls",
+      "controlsValidationSecondsAfterSceneReady": 30.913,
+      "cacheImmediatelyAfter750ms": {
+        "pairs": 70,
+        "enabled": 1,
+        "disabled": 69,
+        "mixed": 0,
+        "onlyBand": 0,
+        "onlyRim": 0
+      },
+      "cacheAtTracing": {
+        "0,0": 69,
+        "1,1": 1
+      },
+      "targetProgramIds": [
+        55
+      ],
+      "targetOwners": {
+        "55": [
+          {
+            "mat": "trains.paint",
+            "type": "MeshToonMaterial",
+            "uuid": "c0d3bb02-eb50-4cee-b49f-a54bc023b1e7",
+            "obj": "trainA-paint",
+            "kind": "Mesh",
+            "path": "Sakuragaoka/dynamic/train-A/trainA-paint"
+          },
+          {
+            "mat": "trains.metal",
+            "type": "MeshToonMaterial",
+            "uuid": "e4433452-5d36-4c4a-906e-86e9056d1d51",
+            "obj": "trainA-metal",
+            "kind": "Mesh",
+            "path": "Sakuragaoka/dynamic/train-A/trainA-metal"
+          },
+          {
+            "mat": "trains.paint",
+            "type": "MeshToonMaterial",
+            "uuid": "c0d3bb02-eb50-4cee-b49f-a54bc023b1e7",
+            "obj": "trainA-paint",
+            "kind": "Mesh",
+            "path": "Sakuragaoka/dynamic/train-A/doorsNeg/trainA-paint"
+          },
+          {
+            "mat": "trains.paint",
+            "type": "MeshToonMaterial",
+            "uuid": "c0d3bb02-eb50-4cee-b49f-a54bc023b1e7",
+            "obj": "trainA-paint",
+            "kind": "Mesh",
+            "path": "Sakuragaoka/dynamic/train-A/doorsPos/trainA-paint"
+          },
+          {
+            "mat": "trains.metal",
+            "type": "MeshToonMaterial",
+            "uuid": "e4433452-5d36-4c4a-906e-86e9056d1d51",
+            "obj": "train-wheelsets",
+            "kind": "Mesh",
+            "path": "Sakuragaoka/dynamic/train-wheelsets"
+          }
+        ]
+      },
+      "frames": [
+        {
+          "label": "01-off",
+          "view": "station-street",
+          "position": [
+            278.8,
+            10.4,
+            936
+          ],
+          "quaternion": [
+            -0.003277842930440423,
+            -0.009834585659995631,
+            -0.000032237959341941705,
+            0.9999462663720154
+          ],
+          "uiChecked": false,
+          "drawCalls": 1590,
+          "multiDraw": 0,
+          "submittedProgramUniforms": {
+            "0,0": 69
+          },
+          "cache": {
+            "0,0": 69,
+            "1,1": 1
+          },
+          "targetPrograms": []
+        },
+        {
+          "label": "shop-interior-off-first",
+          "view": "shop-interior",
+          "position": [
+            271.7,
+            9.9134,
+            908
+          ],
+          "quaternion": [
+            -0.015701859235384273,
+            0.7069324236562871,
+            0.015701859235384273,
+            0.7069324236562871
+          ],
+          "uiChecked": false,
+          "drawCalls": 930,
+          "multiDraw": 0,
+          "submittedProgramUniforms": {
+            "0,0": 33
+          },
+          "cache": {
+            "0,0": 70
+          },
+          "targetPrograms": [
+            {
+              "id": 55,
+              "name": "trains.paint",
+              "pairsBeforeDraw": {
+                "0,0": 4
+              },
+              "objectAtFirstDraw": {
+                "mat": "trains.paint",
+                "type": "MeshToonMaterial",
+                "uuid": "c0d3bb02-eb50-4cee-b49f-a54bc023b1e7",
+                "obj": "trainA-paint",
+                "kind": "Mesh",
+                "path": "Sakuragaoka/dynamic/train-A/doorsNeg/trainA-paint"
+              },
+              "examples": [
+                {
+                  "mat": "trains.paint",
+                  "type": "MeshToonMaterial",
+                  "uuid": "c0d3bb02-eb50-4cee-b49f-a54bc023b1e7",
+                  "obj": "trainA-paint",
+                  "kind": "Mesh",
+                  "path": "Sakuragaoka/dynamic/train-A/doorsNeg/trainA-paint"
+                },
+                {
+                  "mat": "trains.paint",
+                  "type": "MeshToonMaterial",
+                  "uuid": "c0d3bb02-eb50-4cee-b49f-a54bc023b1e7",
+                  "obj": "trainA-paint",
+                  "kind": "Mesh",
+                  "path": "Sakuragaoka/dynamic/train-A/trainA-paint"
+                },
+                {
+                  "mat": "trains.paint",
+                  "type": "MeshToonMaterial",
+                  "uuid": "c0d3bb02-eb50-4cee-b49f-a54bc023b1e7",
+                  "obj": "trainA-paint",
+                  "kind": "Mesh",
+                  "path": "Sakuragaoka/dynamic/train-A/doorsPos/trainA-paint"
+                },
+                {
+                  "mat": "trains.metal",
+                  "type": "MeshToonMaterial",
+                  "uuid": "e4433452-5d36-4c4a-906e-86e9056d1d51",
+                  "obj": "trainA-metal",
+                  "kind": "Mesh",
+                  "path": "Sakuragaoka/dynamic/train-A/trainA-metal"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "label": "service-corner-off-first",
+          "view": "service-corner",
+          "position": [
+            308.4,
+            9.612,
+            872.9
+          ],
+          "quaternion": [
+            -0.08432325046436126,
+            0.5331397072650681,
+            0.05351200213385738,
+            0.8401119613456697
+          ],
+          "uiChecked": false,
+          "drawCalls": 1149,
+          "multiDraw": 0,
+          "submittedProgramUniforms": {
+            "0,0": 56
+          },
+          "cache": {
+            "0,0": 70
+          },
+          "targetPrograms": [
+            {
+              "id": 55,
+              "name": "trains.paint",
+              "pairsBeforeDraw": {
+                "0,0": 4
+              },
+              "objectAtFirstDraw": {
+                "mat": "trains.paint",
+                "type": "MeshToonMaterial",
+                "uuid": "c0d3bb02-eb50-4cee-b49f-a54bc023b1e7",
+                "obj": "trainA-paint",
+                "kind": "Mesh",
+                "path": "Sakuragaoka/dynamic/train-A/doorsNeg/trainA-paint"
+              },
+              "examples": [
+                {
+                  "mat": "trains.paint",
+                  "type": "MeshToonMaterial",
+                  "uuid": "c0d3bb02-eb50-4cee-b49f-a54bc023b1e7",
+                  "obj": "trainA-paint",
+                  "kind": "Mesh",
+                  "path": "Sakuragaoka/dynamic/train-A/doorsNeg/trainA-paint"
+                },
+                {
+                  "mat": "trains.paint",
+                  "type": "MeshToonMaterial",
+                  "uuid": "c0d3bb02-eb50-4cee-b49f-a54bc023b1e7",
+                  "obj": "trainA-paint",
+                  "kind": "Mesh",
+                  "path": "Sakuragaoka/dynamic/train-A/doorsPos/trainA-paint"
+                },
+                {
+                  "mat": "trains.paint",
+                  "type": "MeshToonMaterial",
+                  "uuid": "c0d3bb02-eb50-4cee-b49f-a54bc023b1e7",
+                  "obj": "trainA-paint",
+                  "kind": "Mesh",
+                  "path": "Sakuragaoka/dynamic/train-A/trainA-paint"
+                },
+                {
+                  "mat": "trains.metal",
+                  "type": "MeshToonMaterial",
+                  "uuid": "e4433452-5d36-4c4a-906e-86e9056d1d51",
+                  "obj": "trainA-metal",
+                  "kind": "Mesh",
+                  "path": "Sakuragaoka/dynamic/train-A/trainA-metal"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "label": "laundry-details-off-first",
+          "view": "laundry-details",
+          "position": [
+            288,
+            14.384808464050293,
+            777.9
+          ],
+          "quaternion": [
+            -0.15522850149956677,
+            0.6173580660361093,
+            0.12595148976979553,
+            0.7608609287163607
+          ],
+          "uiChecked": false,
+          "drawCalls": 854,
+          "multiDraw": 0,
+          "submittedProgramUniforms": {
+            "0,0": 46
+          },
+          "cache": {
+            "0,0": 70
+          },
+          "targetPrograms": [
+            {
+              "id": 55,
+              "name": "trains.paint",
+              "pairsBeforeDraw": {
+                "0,0": 4
+              },
+              "objectAtFirstDraw": {
+                "mat": "trains.paint",
+                "type": "MeshToonMaterial",
+                "uuid": "c0d3bb02-eb50-4cee-b49f-a54bc023b1e7",
+                "obj": "trainA-paint",
+                "kind": "Mesh",
+                "path": "Sakuragaoka/dynamic/train-A/doorsNeg/trainA-paint"
+              },
+              "examples": [
+                {
+                  "mat": "trains.paint",
+                  "type": "MeshToonMaterial",
+                  "uuid": "c0d3bb02-eb50-4cee-b49f-a54bc023b1e7",
+                  "obj": "trainA-paint",
+                  "kind": "Mesh",
+                  "path": "Sakuragaoka/dynamic/train-A/doorsNeg/trainA-paint"
+                },
+                {
+                  "mat": "trains.paint",
+                  "type": "MeshToonMaterial",
+                  "uuid": "c0d3bb02-eb50-4cee-b49f-a54bc023b1e7",
+                  "obj": "trainA-paint",
+                  "kind": "Mesh",
+                  "path": "Sakuragaoka/dynamic/train-A/trainA-paint"
+                },
+                {
+                  "mat": "trains.paint",
+                  "type": "MeshToonMaterial",
+                  "uuid": "c0d3bb02-eb50-4cee-b49f-a54bc023b1e7",
+                  "obj": "trainA-paint",
+                  "kind": "Mesh",
+                  "path": "Sakuragaoka/dynamic/train-A/doorsPos/trainA-paint"
+                },
+                {
+                  "mat": "trains.metal",
+                  "type": "MeshToonMaterial",
+                  "uuid": "e4433452-5d36-4c4a-906e-86e9056d1d51",
+                  "obj": "trainA-metal",
+                  "kind": "Mesh",
+                  "path": "Sakuragaoka/dynamic/train-A/trainA-metal"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "label": "station-street-off-first",
+          "view": "station-street",
+          "position": [
+            278.8,
+            10.4,
+            936
+          ],
+          "quaternion": [
+            -0.003277842930440423,
+            -0.009834585659995631,
+            -0.000032237959341941705,
+            0.9999462663720154
+          ],
+          "uiChecked": false,
+          "drawCalls": 1590,
+          "multiDraw": 0,
+          "submittedProgramUniforms": {
+            "0,0": 69
+          },
+          "cache": {
+            "0,0": 70
+          },
+          "targetPrograms": []
+        },
+        {
+          "label": "01-on-restored",
+          "view": "station-street",
+          "position": [
+            278.8,
+            10.4,
+            936
+          ],
+          "quaternion": [
+            -0.003277842930440423,
+            -0.009834585659995631,
+            -0.000032237959341941705,
+            0.9999462663720154
+          ],
+          "uiChecked": true,
+          "drawCalls": 1590,
+          "multiDraw": 0,
+          "submittedProgramUniforms": {
+            "1,1": 69
+          },
+          "cache": {
+            "1,1": 69,
+            "0,0": 1
+          },
+          "targetPrograms": []
+        }
+      ]
+    },
+    {
+      "kind": "official ground warmup and camera order, isolated source",
+      "drawTraceDriverSHA256": "41abd660a0af65df9ef41f3aa2a97f29d7e2b3a690b42e0d283ac46685e33825",
+      "rawTraceSHA256": "80f4cc10cabc107af805d2e5819aa20506fb798d9e5e63e87e203e7c194d32e0",
+      "exit": 0,
+      "glError": 0,
+      "sceneErrors": [],
+      "teardown": "after restoring the official controls",
+      "controlsValidationSecondsAfterSceneReady": 30.796,
+      "cacheImmediatelyAfter750ms": {
+        "pairs": 70,
+        "enabled": 1,
+        "disabled": 69,
+        "mixed": 0,
+        "onlyBand": 0,
+        "onlyRim": 0
+      },
+      "cacheAtTracing": {
+        "0,0": 69,
+        "1,1": 1
+      },
+      "targetProgramIds": [
+        55
+      ],
+      "targetOwners": {
+        "55": [
+          {
+            "mat": "trains.paint",
+            "type": "MeshToonMaterial",
+            "uuid": "ce2e4a6d-a828-458d-ae68-5d9739e24c54",
+            "obj": "trainA-paint",
+            "kind": "Mesh",
+            "path": "Sakuragaoka/dynamic/train-A/trainA-paint"
+          },
+          {
+            "mat": "trains.metal",
+            "type": "MeshToonMaterial",
+            "uuid": "ab9f6a74-2d1c-43fd-a0aa-b9ac5251fbd6",
+            "obj": "trainA-metal",
+            "kind": "Mesh",
+            "path": "Sakuragaoka/dynamic/train-A/trainA-metal"
+          },
+          {
+            "mat": "trains.paint",
+            "type": "MeshToonMaterial",
+            "uuid": "ce2e4a6d-a828-458d-ae68-5d9739e24c54",
+            "obj": "trainA-paint",
+            "kind": "Mesh",
+            "path": "Sakuragaoka/dynamic/train-A/doorsNeg/trainA-paint"
+          },
+          {
+            "mat": "trains.paint",
+            "type": "MeshToonMaterial",
+            "uuid": "ce2e4a6d-a828-458d-ae68-5d9739e24c54",
+            "obj": "trainA-paint",
+            "kind": "Mesh",
+            "path": "Sakuragaoka/dynamic/train-A/doorsPos/trainA-paint"
+          },
+          {
+            "mat": "trains.metal",
+            "type": "MeshToonMaterial",
+            "uuid": "ab9f6a74-2d1c-43fd-a0aa-b9ac5251fbd6",
+            "obj": "train-wheelsets",
+            "kind": "Mesh",
+            "path": "Sakuragaoka/dynamic/train-wheelsets"
+          }
+        ]
+      },
+      "frames": [
+        {
+          "label": "01-off",
+          "view": "station-street",
+          "position": [
+            278.8,
+            10.4,
+            936
+          ],
+          "quaternion": [
+            -0.003277842930440423,
+            -0.009834585659995631,
+            -0.000032237959341941705,
+            0.9999462663720154
+          ],
+          "uiChecked": false,
+          "drawCalls": 1590,
+          "multiDraw": 0,
+          "submittedProgramUniforms": {
+            "0,0": 69
+          },
+          "cache": {
+            "0,0": 69,
+            "1,1": 1
+          },
+          "targetPrograms": []
+        },
+        {
+          "label": "shop-interior-off-first",
+          "view": "shop-interior",
+          "position": [
+            271.7,
+            9.9134,
+            908
+          ],
+          "quaternion": [
+            -0.015701859235384273,
+            0.7069324236562871,
+            0.015701859235384273,
+            0.7069324236562871
+          ],
+          "uiChecked": false,
+          "drawCalls": 930,
+          "multiDraw": 0,
+          "submittedProgramUniforms": {
+            "0,0": 33
+          },
+          "cache": {
+            "0,0": 70
+          },
+          "targetPrograms": [
+            {
+              "id": 55,
+              "name": "trains.paint",
+              "pairsBeforeDraw": {
+                "0,0": 4
+              },
+              "objectAtFirstDraw": {
+                "mat": "trains.paint",
+                "type": "MeshToonMaterial",
+                "uuid": "ce2e4a6d-a828-458d-ae68-5d9739e24c54",
+                "obj": "trainA-paint",
+                "kind": "Mesh",
+                "path": "Sakuragaoka/dynamic/train-A/doorsNeg/trainA-paint"
+              },
+              "examples": [
+                {
+                  "mat": "trains.paint",
+                  "type": "MeshToonMaterial",
+                  "uuid": "ce2e4a6d-a828-458d-ae68-5d9739e24c54",
+                  "obj": "trainA-paint",
+                  "kind": "Mesh",
+                  "path": "Sakuragaoka/dynamic/train-A/doorsNeg/trainA-paint"
+                },
+                {
+                  "mat": "trains.paint",
+                  "type": "MeshToonMaterial",
+                  "uuid": "ce2e4a6d-a828-458d-ae68-5d9739e24c54",
+                  "obj": "trainA-paint",
+                  "kind": "Mesh",
+                  "path": "Sakuragaoka/dynamic/train-A/trainA-paint"
+                },
+                {
+                  "mat": "trains.paint",
+                  "type": "MeshToonMaterial",
+                  "uuid": "ce2e4a6d-a828-458d-ae68-5d9739e24c54",
+                  "obj": "trainA-paint",
+                  "kind": "Mesh",
+                  "path": "Sakuragaoka/dynamic/train-A/doorsPos/trainA-paint"
+                },
+                {
+                  "mat": "trains.metal",
+                  "type": "MeshToonMaterial",
+                  "uuid": "ab9f6a74-2d1c-43fd-a0aa-b9ac5251fbd6",
+                  "obj": "trainA-metal",
+                  "kind": "Mesh",
+                  "path": "Sakuragaoka/dynamic/train-A/trainA-metal"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "label": "service-corner-off-first",
+          "view": "service-corner",
+          "position": [
+            308.4,
+            9.612,
+            872.9
+          ],
+          "quaternion": [
+            -0.08432325046436126,
+            0.5331397072650681,
+            0.05351200213385738,
+            0.8401119613456697
+          ],
+          "uiChecked": false,
+          "drawCalls": 1149,
+          "multiDraw": 0,
+          "submittedProgramUniforms": {
+            "0,0": 56
+          },
+          "cache": {
+            "0,0": 70
+          },
+          "targetPrograms": [
+            {
+              "id": 55,
+              "name": "trains.paint",
+              "pairsBeforeDraw": {
+                "0,0": 4
+              },
+              "objectAtFirstDraw": {
+                "mat": "trains.paint",
+                "type": "MeshToonMaterial",
+                "uuid": "ce2e4a6d-a828-458d-ae68-5d9739e24c54",
+                "obj": "trainA-paint",
+                "kind": "Mesh",
+                "path": "Sakuragaoka/dynamic/train-A/doorsNeg/trainA-paint"
+              },
+              "examples": [
+                {
+                  "mat": "trains.paint",
+                  "type": "MeshToonMaterial",
+                  "uuid": "ce2e4a6d-a828-458d-ae68-5d9739e24c54",
+                  "obj": "trainA-paint",
+                  "kind": "Mesh",
+                  "path": "Sakuragaoka/dynamic/train-A/doorsNeg/trainA-paint"
+                },
+                {
+                  "mat": "trains.paint",
+                  "type": "MeshToonMaterial",
+                  "uuid": "ce2e4a6d-a828-458d-ae68-5d9739e24c54",
+                  "obj": "trainA-paint",
+                  "kind": "Mesh",
+                  "path": "Sakuragaoka/dynamic/train-A/doorsPos/trainA-paint"
+                },
+                {
+                  "mat": "trains.paint",
+                  "type": "MeshToonMaterial",
+                  "uuid": "ce2e4a6d-a828-458d-ae68-5d9739e24c54",
+                  "obj": "trainA-paint",
+                  "kind": "Mesh",
+                  "path": "Sakuragaoka/dynamic/train-A/trainA-paint"
+                },
+                {
+                  "mat": "trains.metal",
+                  "type": "MeshToonMaterial",
+                  "uuid": "ab9f6a74-2d1c-43fd-a0aa-b9ac5251fbd6",
+                  "obj": "trainA-metal",
+                  "kind": "Mesh",
+                  "path": "Sakuragaoka/dynamic/train-A/trainA-metal"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "label": "laundry-details-off-first",
+          "view": "laundry-details",
+          "position": [
+            288,
+            14.384808464050293,
+            777.9
+          ],
+          "quaternion": [
+            -0.15522850149956677,
+            0.6173580660361093,
+            0.12595148976979553,
+            0.7608609287163607
+          ],
+          "uiChecked": false,
+          "drawCalls": 854,
+          "multiDraw": 0,
+          "submittedProgramUniforms": {
+            "0,0": 46
+          },
+          "cache": {
+            "0,0": 70
+          },
+          "targetPrograms": [
+            {
+              "id": 55,
+              "name": "trains.paint",
+              "pairsBeforeDraw": {
+                "0,0": 4
+              },
+              "objectAtFirstDraw": {
+                "mat": "trains.paint",
+                "type": "MeshToonMaterial",
+                "uuid": "ce2e4a6d-a828-458d-ae68-5d9739e24c54",
+                "obj": "trainA-paint",
+                "kind": "Mesh",
+                "path": "Sakuragaoka/dynamic/train-A/doorsNeg/trainA-paint"
+              },
+              "examples": [
+                {
+                  "mat": "trains.paint",
+                  "type": "MeshToonMaterial",
+                  "uuid": "ce2e4a6d-a828-458d-ae68-5d9739e24c54",
+                  "obj": "trainA-paint",
+                  "kind": "Mesh",
+                  "path": "Sakuragaoka/dynamic/train-A/doorsNeg/trainA-paint"
+                },
+                {
+                  "mat": "trains.paint",
+                  "type": "MeshToonMaterial",
+                  "uuid": "ce2e4a6d-a828-458d-ae68-5d9739e24c54",
+                  "obj": "trainA-paint",
+                  "kind": "Mesh",
+                  "path": "Sakuragaoka/dynamic/train-A/trainA-paint"
+                },
+                {
+                  "mat": "trains.paint",
+                  "type": "MeshToonMaterial",
+                  "uuid": "ce2e4a6d-a828-458d-ae68-5d9739e24c54",
+                  "obj": "trainA-paint",
+                  "kind": "Mesh",
+                  "path": "Sakuragaoka/dynamic/train-A/doorsPos/trainA-paint"
+                },
+                {
+                  "mat": "trains.metal",
+                  "type": "MeshToonMaterial",
+                  "uuid": "ab9f6a74-2d1c-43fd-a0aa-b9ac5251fbd6",
+                  "obj": "trainA-metal",
+                  "kind": "Mesh",
+                  "path": "Sakuragaoka/dynamic/train-A/trainA-metal"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "label": "station-street-off-first",
+          "view": "station-street",
+          "position": [
+            278.8,
+            10.4,
+            936
+          ],
+          "quaternion": [
+            -0.003277842930440423,
+            -0.009834585659995631,
+            -0.000032237959341941705,
+            0.9999462663720154
+          ],
+          "uiChecked": false,
+          "drawCalls": 1590,
+          "multiDraw": 0,
+          "submittedProgramUniforms": {
+            "0,0": 69
+          },
+          "cache": {
+            "0,0": 70
+          },
+          "targetPrograms": []
+        },
+        {
+          "label": "01-on-restored",
+          "view": "station-street",
+          "position": [
+            278.8,
+            10.4,
+            936
+          ],
+          "quaternion": [
+            -0.003277842930440423,
+            -0.009834585659995631,
+            -0.000032237959341941705,
+            0.9999462663720154
+          ],
+          "uiChecked": true,
+          "drawCalls": 1590,
+          "multiDraw": 0,
+          "submittedProgramUniforms": {
+            "1,1": 69
+          },
+          "cache": {
+            "1,1": 69,
+            "0,0": 1
+          },
+          "targetPrograms": []
+        }
+      ]
+    }
+  ],
+  "functionSHA256": "87a158937769c7fd9386e573b74a5985aa0fe38f65049450dafdcb0bc60428dd"
+}

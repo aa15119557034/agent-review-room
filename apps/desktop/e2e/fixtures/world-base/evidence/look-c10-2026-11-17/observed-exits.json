@@ -1,0 +1,22 @@
+{
+  "source": "Root runner observations supplied in the curation handoff; not inferred from report.ok.",
+  "runs": [
+    {
+      "artifact": "gpu-town-c10",
+      "exitCode": 1,
+      "rootExecSession": 44058
+    },
+    {
+      "artifact": "gpu-look-c10-v1",
+      "exitCode": 1,
+      "rootExecSession": 2423
+    },
+    {
+      "artifact": "gpu-ao-c10-samples-v1",
+      "exitCode": 1,
+      "rootExecSession": 89186,
+      "processId": 65104
+    }
+  ],
+  "note": "Baseline retained menhir, boulders and crate glTF ERR_ABORTED; full diagnostic retained menhir, crate glTF and crate BIN; sampling probe retained boulders, menhir and crate glTF. All rendered successfully. No retry to obtain green evidence."
+}

@@ -1,0 +1,163 @@
+{
+  "schema": "x51-c17-normal-execution-v1",
+  "recordedAt": "2026-11-17T17:47:04.499Z",
+  "provenance": "Post-execution agent record of actual exec/write_stdin return; original process.json and redirected stdout/stderr preserved. Not a contemporaneous supervisor receipt.",
+  "command": "node scripts/baseline.cjs --scene=combined --electron=D:/codex/2026-11-16/world-implementation/runtime-path-probe/electron.exe --output=artifacts/gpu-town-c17 --stills",
+  "cwd": "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base/",
+  "sourceHead": "0184c79d94094c7d76378302592572bf367be6c7",
+  "headAfter": "0184c79d94094c7d76378302592572bf367be6c7",
+  "directory": "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base/artifacts/gpu-town-c17/",
+  "session": 97830,
+  "pid": 57788,
+  "actualExit": 1,
+  "completionToolChunk": "ac6fd6",
+  "startedAt": "2026-11-17T17:44:17.272Z",
+  "completedAt": "2026-11-17T17:45:59.611Z",
+  "renderOk": true,
+  "transportClean": false,
+  "ok": false,
+  "exceptions": 0,
+  "networkFailures": [
+    {
+      "url": "http://127.0.0.1:55786/assets/models/boulders.glb",
+      "type": "Fetch",
+      "canceled": true,
+      "errorText": "net::ERR_ABORTED",
+      "requestId": "60460.121",
+      "timestamp": 1947639.407067,
+      "stage": "waiting-for-ready-frame",
+      "receivedWallTime": 1794937460.353
+    },
+    {
+      "url": "http://127.0.0.1:55786/assets/models/menhir.glb",
+      "type": "Fetch",
+      "canceled": true,
+      "errorText": "net::ERR_ABORTED",
+      "requestId": "60460.119",
+      "timestamp": 1947639.408064,
+      "stage": "waiting-for-ready-frame",
+      "receivedWallTime": 1794937460.354
+    },
+    {
+      "url": "http://127.0.0.1:55786/prop-assets/plastic_crate_02/plastic_crate_02_1k.gltf",
+      "type": "Fetch",
+      "canceled": true,
+      "errorText": "net::ERR_ABORTED",
+      "requestId": "60460.235",
+      "timestamp": 1947650.805576,
+      "stage": "waiting-for-ready-frame",
+      "receivedWallTime": 1794937471.751
+    },
+    {
+      "url": "http://127.0.0.1:55786/prop-assets/plastic_crate_02/plastic_crate_02.bin",
+      "type": "Fetch",
+      "canceled": true,
+      "errorText": "net::ERR_ABORTED",
+      "requestId": "60460.240",
+      "timestamp": 1947650.820722,
+      "stage": "waiting-for-ready-frame",
+      "receivedWallTime": 1794937471.766
+    }
+  ],
+  "behavior": true,
+  "look": true,
+  "walking": true,
+  "segments": [
+    {
+      "name": "initial",
+      "fps": 64.47133505256893,
+      "p95FrameMs": 15.5,
+      "frameCount": 975,
+      "longFramesOver20ms": 8,
+      "maxFrameMs": 30.80000000000291,
+      "samplesFile": "frame-samples.json"
+    },
+    {
+      "name": "station-street",
+      "fps": 65.0033457604435,
+      "p95FrameMs": 15.5,
+      "frameCount": 204,
+      "longFramesOver20ms": 0,
+      "maxFrameMs": 15.700000000004366,
+      "samplesFile": "frame-samples-station-street.json"
+    },
+    {
+      "name": "station-port",
+      "fps": 65.00160102465578,
+      "p95FrameMs": 15.5,
+      "frameCount": 203,
+      "longFramesOver20ms": 0,
+      "maxFrameMs": 15.60000000000582,
+      "samplesFile": "frame-samples-station-port.json"
+    },
+    {
+      "name": "island-aerial",
+      "fps": 65.00160102465578,
+      "p95FrameMs": 15.5,
+      "frameCount": 203,
+      "longFramesOver20ms": 0,
+      "maxFrameMs": 15.60000000000582,
+      "samplesFile": "frame-samples-island-aerial.json"
+    },
+    {
+      "name": "shop-interior",
+      "fps": 64.99983910930919,
+      "p95FrameMs": 15.5,
+      "frameCount": 202,
+      "longFramesOver20ms": 0,
+      "maxFrameMs": 15.69999999999709,
+      "samplesFile": "frame-samples-shop-interior.json"
+    },
+    {
+      "name": "walking-third",
+      "fps": 65.00193075041821,
+      "p95FrameMs": 15.5,
+      "frameCount": 202,
+      "longFramesOver20ms": 0,
+      "maxFrameMs": 15.60000000000582,
+      "samplesFile": "frame-samples-walking-third.json"
+    },
+    {
+      "name": "walking-first",
+      "fps": 64.99983910930919,
+      "p95FrameMs": 15.5,
+      "frameCount": 202,
+      "longFramesOver20ms": 0,
+      "maxFrameMs": 15.60000000000582,
+      "samplesFile": "frame-samples-walking-first.json"
+    }
+  ],
+  "verifiedManifestFiles": 212,
+  "sourceAndAssetsUnchanged": true,
+  "mismatches": [],
+  "propAssetFiles": 9,
+  "stdout": "D:/codex/2026-11-16/world-implementation/handoff/x51-c17-normal-stdout.txt",
+  "stderr": "D:/codex/2026-11-16/world-implementation/handoff/x51-c17-normal-stderr.txt",
+  "gpuReleased": true,
+  "evidenceHashes": [
+    {
+      "path": "D:/codex/2026-11-16/world-implementation/handoff/x51-c17-normal-stdout.txt",
+      "sha256": "46b3eb6849fbbabe355083cd7516f9a7fdc9c4d7f652ea7f32aad9fc155546e4"
+    },
+    {
+      "path": "D:/codex/2026-11-16/world-implementation/handoff/x51-c17-normal-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base/artifacts/gpu-town-c17/render-report.json",
+      "sha256": "155a9f72ce33c1258180a3c9fa1a9cde70131e8b19a2fd940871691365069a47"
+    },
+    {
+      "path": "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base/artifacts/gpu-town-c17/process.json",
+      "sha256": "f32808250b98d40d80104bef99d2204337e839fc8d8a9e4c7a3fa028621bcc21"
+    },
+    {
+      "path": "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base/artifacts/gpu-town-c17/source-manifest.json",
+      "sha256": "5cb72a83bdb041244260d84ae3e2613c3cc9791542bb93c023749eedf60858ef"
+    },
+    {
+      "path": "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base/artifacts/gpu-town-c17/run-config.json",
+      "sha256": "5385ed36b3d5bce734b54e5f04c2cf5dc8fcacf112e4fa7a0e001dddb33e30d5"
+    }
+  ]
+}

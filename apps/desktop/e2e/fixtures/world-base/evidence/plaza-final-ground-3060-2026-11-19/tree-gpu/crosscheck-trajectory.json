@@ -1,0 +1,977 @@
+{
+  "interval": "[0.25,9.00] m from spawn, 0.08 m maximum Euclidean paired distance, no reused samples, greedy shortest-distance matching by observed pass or by RAF",
+  "runs": [
+    {
+      "tag": "01-v2",
+      "states": [
+        {
+          "mode": "control",
+          "Aeye": [
+            278.8,
+            10.488,
+            936
+          ],
+          "Aorientation": [
+            -0.0032778,
+            -0.0098346,
+            -0.0000322,
+            0.9999463
+          ],
+          "Afeet": [
+            281.6,
+            8.812,
+            934
+          ],
+          "Aclock": "evening",
+          "AtEnd": [
+            278.8,
+            10.488,
+            936
+          ],
+          "Afocus": [
+            false,
+            false
+          ],
+          "spawn": [
+            281.6,
+            8.812,
+            934
+          ],
+          "endFeet": [
+            280.9429438,
+            8.5489024,
+            924.6036579
+          ],
+          "Tfocus": [
+            false,
+            true
+          ],
+          "Tclock": "evening"
+        },
+        {
+          "mode": "sparse",
+          "Aeye": [
+            278.8,
+            10.488,
+            936
+          ],
+          "Aorientation": [
+            -0.0032778,
+            -0.0098346,
+            -0.0000322,
+            0.9999463
+          ],
+          "Afeet": [
+            280.9246557,
+            8.5415796,
+            924.3421271
+          ],
+          "Aclock": "evening",
+          "AtEnd": [
+            278.8,
+            10.488,
+            936
+          ],
+          "Afocus": [
+            true,
+            true
+          ],
+          "spawn": [
+            281.6,
+            8.812,
+            934
+          ],
+          "endFeet": [
+            280.94007,
+            8.5477517,
+            924.5625609
+          ],
+          "Tfocus": [
+            true,
+            true
+          ],
+          "Tclock": "evening"
+        }
+      ],
+      "timers": [
+        {
+          "label": "A",
+          "samples": 185,
+          "submissionMismatches": 0,
+          "unexpectedPasses": [],
+          "singleDrawQueries": 158,
+          "distinctNonzero": 16,
+          "zeroCount": 22,
+          "observedGcdNanoseconds": 1024,
+          "earliestTimestamp": 67880
+        },
+        {
+          "label": "third",
+          "samples": 65,
+          "submissionMismatches": 0,
+          "unexpectedPasses": [],
+          "singleDrawQueries": 55,
+          "distinctNonzero": 10,
+          "zeroCount": 9,
+          "observedGcdNanoseconds": 1024,
+          "earliestTimestamp": 78956.9
+        }
+      ]
+    },
+    {
+      "tag": "02-final",
+      "states": [
+        {
+          "mode": "control",
+          "Aeye": [
+            278.8,
+            10.488,
+            936
+          ],
+          "Aorientation": [
+            -0.0032778,
+            -0.0098346,
+            -0.0000322,
+            0.9999463
+          ],
+          "Afeet": [
+            281.6,
+            8.812,
+            934
+          ],
+          "Aclock": "evening",
+          "AtEnd": [
+            278.8,
+            10.488,
+            936
+          ],
+          "Afocus": [
+            false,
+            false
+          ],
+          "spawn": [
+            281.6,
+            8.812,
+            934
+          ],
+          "endFeet": [
+            280.9429633,
+            8.5489103,
+            924.603938
+          ],
+          "Tfocus": [
+            false,
+            true
+          ],
+          "Tclock": "evening"
+        },
+        {
+          "mode": "sparse",
+          "Aeye": [
+            278.8,
+            10.488,
+            936
+          ],
+          "Aorientation": [
+            -0.0032778,
+            -0.0098346,
+            -0.0000322,
+            0.9999463
+          ],
+          "Afeet": [
+            280.9246814,
+            8.5415898,
+            924.3424939
+          ],
+          "Aclock": "evening",
+          "AtEnd": [
+            278.8,
+            10.488,
+            936
+          ],
+          "Afocus": [
+            true,
+            true
+          ],
+          "spawn": [
+            281.6,
+            8.812,
+            934
+          ],
+          "endFeet": [
+            280.9434517,
+            8.5491058,
+            924.6109214
+          ],
+          "Tfocus": [
+            true,
+            true
+          ],
+          "Tclock": "evening"
+        }
+      ],
+      "timers": [
+        {
+          "label": "A",
+          "samples": 216,
+          "submissionMismatches": 0,
+          "unexpectedPasses": [],
+          "singleDrawQueries": 185,
+          "distinctNonzero": 25,
+          "zeroCount": 32,
+          "observedGcdNanoseconds": 1024,
+          "earliestTimestamp": 69018.6
+        },
+        {
+          "label": "third",
+          "samples": 64,
+          "submissionMismatches": 0,
+          "unexpectedPasses": [],
+          "singleDrawQueries": 54,
+          "distinctNonzero": 17,
+          "zeroCount": 9,
+          "observedGcdNanoseconds": 1024,
+          "earliestTimestamp": 80064.6
+        }
+      ]
+    },
+    {
+      "tag": "03-final",
+      "states": [
+        {
+          "mode": "control",
+          "Aeye": [
+            278.8,
+            10.488,
+            936
+          ],
+          "Aorientation": [
+            -0.0032778,
+            -0.0098346,
+            -0.0000322,
+            0.9999463
+          ],
+          "Afeet": [
+            281.6,
+            8.812,
+            934
+          ],
+          "Aclock": "evening",
+          "AtEnd": [
+            278.8,
+            10.488,
+            936
+          ],
+          "Afocus": [
+            false,
+            false
+          ],
+          "spawn": [
+            281.6,
+            8.812,
+            934
+          ],
+          "endFeet": [
+            280.9462728,
+            8.5502354,
+            924.6512659
+          ],
+          "Tfocus": [
+            false,
+            true
+          ],
+          "Tclock": "evening"
+        },
+        {
+          "mode": "sparse",
+          "Aeye": [
+            278.8,
+            10.488,
+            936
+          ],
+          "Aorientation": [
+            -0.0032778,
+            -0.0098346,
+            -0.0000322,
+            0.9999463
+          ],
+          "Afeet": [
+            280.9279876,
+            8.5429137,
+            924.3897751
+          ],
+          "Aclock": "evening",
+          "AtEnd": [
+            278.8,
+            10.488,
+            936
+          ],
+          "Afocus": [
+            true,
+            true
+          ],
+          "spawn": [
+            281.6,
+            8.812,
+            934
+          ],
+          "endFeet": [
+            280.942345,
+            8.5486627,
+            924.5950959
+          ],
+          "Tfocus": [
+            true,
+            true
+          ],
+          "Tclock": "evening"
+        }
+      ],
+      "timers": [
+        {
+          "label": "A",
+          "samples": 215,
+          "submissionMismatches": 0,
+          "unexpectedPasses": [],
+          "singleDrawQueries": 184,
+          "distinctNonzero": 25,
+          "zeroCount": 26,
+          "observedGcdNanoseconds": 1024,
+          "earliestTimestamp": 69076.8
+        },
+        {
+          "label": "third",
+          "samples": 67,
+          "submissionMismatches": 0,
+          "unexpectedPasses": [],
+          "singleDrawQueries": 57,
+          "distinctNonzero": 13,
+          "zeroCount": 13,
+          "observedGcdNanoseconds": 1024,
+          "earliestTimestamp": 80107.5
+        }
+      ]
+    },
+    {
+      "tag": "04-v2",
+      "states": [
+        {
+          "mode": "control",
+          "Aeye": [
+            278.8,
+            10.488,
+            936
+          ],
+          "Aorientation": [
+            -0.0032778,
+            -0.0098346,
+            -0.0000322,
+            0.9999463
+          ],
+          "Afeet": [
+            281.6,
+            8.812,
+            934
+          ],
+          "Aclock": "evening",
+          "AtEnd": [
+            278.8,
+            10.488,
+            936
+          ],
+          "Afocus": [
+            false,
+            false
+          ],
+          "spawn": [
+            281.6,
+            8.812,
+            934
+          ],
+          "endFeet": [
+            280.9394098,
+            8.5474874,
+            924.5531203
+          ],
+          "Tfocus": [
+            false,
+            true
+          ],
+          "Tclock": "evening"
+        },
+        {
+          "mode": "sparse",
+          "Aeye": [
+            278.8,
+            10.488,
+            936
+          ],
+          "Aorientation": [
+            -0.0032778,
+            -0.0098346,
+            -0.0000322,
+            0.9999463
+          ],
+          "Afeet": [
+            280.9242578,
+            8.5414202,
+            924.3364358
+          ],
+          "Aclock": "evening",
+          "AtEnd": [
+            278.8,
+            10.488,
+            936
+          ],
+          "Afocus": [
+            true,
+            true
+          ],
+          "spawn": [
+            281.6,
+            8.812,
+            934
+          ],
+          "endFeet": [
+            280.9449804,
+            8.5497179,
+            924.6327829
+          ],
+          "Tfocus": [
+            true,
+            true
+          ],
+          "Tclock": "evening"
+        }
+      ],
+      "timers": [
+        {
+          "label": "A",
+          "samples": 215,
+          "submissionMismatches": 0,
+          "unexpectedPasses": [],
+          "singleDrawQueries": 184,
+          "distinctNonzero": 16,
+          "zeroCount": 28,
+          "observedGcdNanoseconds": 1024,
+          "earliestTimestamp": 71547.3
+        },
+        {
+          "label": "third",
+          "samples": 62,
+          "submissionMismatches": 0,
+          "unexpectedPasses": [],
+          "singleDrawQueries": 53,
+          "distinctNonzero": 11,
+          "zeroCount": 6,
+          "observedGcdNanoseconds": 1024,
+          "earliestTimestamp": 82562.8
+        }
+      ]
+    }
+  ],
+  "pairs": [
+    {
+      "v2Tag": "01-v2",
+      "newTag": "02-final",
+      "mode": "control",
+      "sameStartM": 0,
+      "endDifferenceM": 0.0002809693489718169,
+      "raf": {
+        "v2": {
+          "n": 184,
+          "median": 15.400000000001455,
+          "p95": 15.599999999998545,
+          "max": 15.700000000004366
+        },
+        "final": {
+          "n": 184,
+          "median": 15.39999999999418,
+          "p95": 15.5,
+          "max": 30.80000000000291
+        },
+        "pairedDelta": {
+          "n": 184,
+          "median": 0,
+          "p95": 0.20000000000436557,
+          "max": 15.400000000001455
+        },
+        "distance": {
+          "n": 184,
+          "median": 0.0003382899736519944,
+          "p95": 0.0006493933411596931,
+          "max": 0.0009595142691491514
+        }
+      },
+      "byKey": {}
+    },
+    {
+      "v2Tag": "01-v2",
+      "newTag": "02-final",
+      "mode": "sparse",
+      "sameStartM": 0,
+      "endDifferenceM": 0.04849751264593954,
+      "raf": {
+        "v2": {
+          "n": 168,
+          "median": 15.39999999999418,
+          "p95": 16.80000000000291,
+          "max": 30.80000000000291
+        },
+        "final": {
+          "n": 168,
+          "median": 15.39999999999418,
+          "p95": 30.69999999999709,
+          "max": 30.80000000000291
+        },
+        "pairedDelta": {
+          "n": 168,
+          "median": 0,
+          "p95": 15.30000000000291,
+          "max": 15.400000000008731
+        },
+        "distance": {
+          "n": 168,
+          "median": 0.0009538070461115028,
+          "p95": 0.0012639279617845257,
+          "max": 0.04680481234018478
+        }
+      },
+      "byKey": {
+        "full": {
+          "v2": {
+            "n": 4,
+            "median": 13.32224,
+            "p95": 16.137216,
+            "max": 16.137216
+          },
+          "final": {
+            "n": 4,
+            "median": 13.856768,
+            "p95": 15.399936,
+            "max": 15.399936
+          },
+          "pairedDelta": {
+            "n": 4,
+            "median": -0.11468800000000101,
+            "p95": 2.2661119999999997,
+            "max": 2.2661119999999997
+          },
+          "distance": {
+            "n": 4,
+            "median": 0.0009536503561595133,
+            "p95": 0.04677712204866446,
+            "max": 0.04677712204866446
+          }
+        },
+        "shadow0/map|plaza/blob#0": {
+          "v2": {
+            "n": 4,
+            "median": 0.003072,
+            "p95": 0.004096,
+            "max": 0.004096
+          },
+          "final": {
+            "n": 4,
+            "median": 0.001024,
+            "p95": 0.001024,
+            "max": 0.001024
+          },
+          "pairedDelta": {
+            "n": 4,
+            "median": -0.003072,
+            "p95": -0.0020480000000000003,
+            "max": -0.0020480000000000003
+          },
+          "distance": {
+            "n": 4,
+            "median": 0.0009537136480824736,
+            "p95": 0.0467888470797217,
+            "max": 0.0467888470797217
+          }
+        },
+        "shadow0/map|plaza/cards#0": {
+          "v2": {
+            "n": 4,
+            "median": 0.001024,
+            "p95": 0.002048,
+            "max": 0.002048
+          },
+          "final": {
+            "n": 4,
+            "median": 0.003072,
+            "p95": 0.00512,
+            "max": 0.00512
+          },
+          "pairedDelta": {
+            "n": 4,
+            "median": 0.003072,
+            "p95": 0.0030720000000000005,
+            "max": 0.0030720000000000005
+          },
+          "distance": {
+            "n": 4,
+            "median": 0.0012219179629291998,
+            "p95": 0.04648588116350289,
+            "max": 0.04648588116350289
+          }
+        },
+        "shadow0/map|plaza/bark#0": {
+          "v2": {
+            "n": 4,
+            "median": 0,
+            "p95": 0.001024,
+            "max": 0.001024
+          },
+          "final": {
+            "n": 4,
+            "median": 0,
+            "p95": 0.001024,
+            "max": 0.001024
+          },
+          "pairedDelta": {
+            "n": 4,
+            "median": -0.001024,
+            "p95": 0.001024,
+            "max": 0.001024
+          },
+          "distance": {
+            "n": 4,
+            "median": 0.0006370740537721002,
+            "p95": 0.04711032083837012,
+            "max": 0.04711032083837012
+          }
+        },
+        "world|plaza/blob#0": {
+          "v2": {
+            "n": 4,
+            "median": 0.018432,
+            "p95": 0.019456,
+            "max": 0.019456
+          },
+          "final": {
+            "n": 4,
+            "median": 0.007168,
+            "p95": 0.009216,
+            "max": 0.009216
+          },
+          "pairedDelta": {
+            "n": 4,
+            "median": -0.011264000000000001,
+            "p95": -0.009216,
+            "max": -0.009216
+          },
+          "distance": {
+            "n": 4,
+            "median": 0.0009648199623203393,
+            "p95": 0.04232924266157853,
+            "max": 0.04232924266157853
+          }
+        },
+        "world|plaza/cards#0": {
+          "v2": {
+            "n": 4,
+            "median": 0.002048,
+            "p95": 0.003072,
+            "max": 0.003072
+          },
+          "final": {
+            "n": 4,
+            "median": 0.029696,
+            "p95": 0.032768,
+            "max": 0.032768
+          },
+          "pairedDelta": {
+            "n": 4,
+            "median": 0.026624000000000002,
+            "p95": 0.031744,
+            "max": 0.031744
+          },
+          "distance": {
+            "n": 4,
+            "median": 0.0009537977409357075,
+            "p95": 0.04641627190352679,
+            "max": 0.04641627190352679
+          }
+        },
+        "world|plaza/bark#0": {
+          "v2": {
+            "n": 4,
+            "median": 0.002048,
+            "p95": 0.002048,
+            "max": 0.002048
+          },
+          "final": {
+            "n": 4,
+            "median": 0.002048,
+            "p95": 0.002048,
+            "max": 0.002048
+          },
+          "pairedDelta": {
+            "n": 4,
+            "median": 0,
+            "p95": 0,
+            "max": 0
+          },
+          "distance": {
+            "n": 4,
+            "median": 0.0009535456010227641,
+            "p95": 0.046757809305358014,
+            "max": 0.046757809305358014
+          }
+        }
+      }
+    },
+    {
+      "v2Tag": "04-v2",
+      "newTag": "03-final",
+      "mode": "control",
+      "sameStartM": 0,
+      "endDifferenceM": 0.09842367874617701,
+      "raf": {
+        "v2": {
+          "n": 155,
+          "median": 15.39999999999418,
+          "p95": 30.80000000000291,
+          "max": 30.90000000000873
+        },
+        "final": {
+          "n": 155,
+          "median": 15.400000000001455,
+          "p95": 15.5,
+          "max": 30.80000000000291
+        },
+        "pairedDelta": {
+          "n": 155,
+          "median": 0,
+          "p95": 0.19999999999708962,
+          "max": 15.400000000008731
+        },
+        "distance": {
+          "n": 155,
+          "median": 0.010476172817739675,
+          "p95": 0.010786302049679678,
+          "max": 0.011096422738593601
+        }
+      },
+      "byKey": {}
+    },
+    {
+      "v2Tag": "04-v2",
+      "newTag": "03-final",
+      "mode": "sparse",
+      "sameStartM": 0,
+      "endDifferenceM": 0.03779378334895417,
+      "raf": {
+        "v2": {
+          "n": 169,
+          "median": 15.39999999999418,
+          "p95": 30.69999999999709,
+          "max": 30.89999999999418
+        },
+        "final": {
+          "n": 169,
+          "median": 15.39999999999418,
+          "p95": 15.5,
+          "max": 30.90000000000873
+        },
+        "pairedDelta": {
+          "n": 169,
+          "median": 0,
+          "p95": 0.20000000001164153,
+          "max": 15.5
+        },
+        "distance": {
+          "n": 169,
+          "median": 0.0085651981619763,
+          "p95": 0.009184347485168654,
+          "max": 0.03919342122374478
+        }
+      },
+      "byKey": {
+        "full": {
+          "v2": {
+            "n": 7,
+            "median": 14.203904,
+            "p95": 21.833728,
+            "max": 21.833728
+          },
+          "final": {
+            "n": 7,
+            "median": 14.989312,
+            "p95": 15.649792,
+            "max": 15.649792
+          },
+          "pairedDelta": {
+            "n": 7,
+            "median": 1.0024960000000007,
+            "p95": 1.445888,
+            "max": 1.445888
+          },
+          "distance": {
+            "n": 7,
+            "median": 0.008874924135785065,
+            "p95": 0.05663393845539685,
+            "max": 0.05663393845539685
+          }
+        },
+        "shadow0/map|plaza/blob#0": {
+          "v2": {
+            "n": 7,
+            "median": 0.004096,
+            "p95": 0.004096,
+            "max": 0.004096
+          },
+          "final": {
+            "n": 7,
+            "median": 0.001024,
+            "p95": 0.001024,
+            "max": 0.001024
+          },
+          "pairedDelta": {
+            "n": 7,
+            "median": -0.003072,
+            "p95": -0.003072,
+            "max": -0.003072
+          },
+          "distance": {
+            "n": 7,
+            "median": 0.008867331360290961,
+            "p95": 0.056633938431569913,
+            "max": 0.056633938431569913
+          }
+        },
+        "shadow0/map|plaza/cards#0": {
+          "v2": {
+            "n": 6,
+            "median": 0.001024,
+            "p95": 0.002048,
+            "max": 0.002048
+          },
+          "final": {
+            "n": 6,
+            "median": 0.004096,
+            "p95": 0.004096,
+            "max": 0.004096
+          },
+          "pairedDelta": {
+            "n": 6,
+            "median": 0.003072,
+            "p95": 0.003072,
+            "max": 0.003072
+          },
+          "distance": {
+            "n": 6,
+            "median": 0.00856519800213614,
+            "p95": 0.056323817535502335,
+            "max": 0.056323817535502335
+          }
+        },
+        "shadow0/map|plaza/bark#0": {
+          "v2": {
+            "n": 6,
+            "median": 0,
+            "p95": 0.003072,
+            "max": 0.003072
+          },
+          "final": {
+            "n": 6,
+            "median": 0,
+            "p95": 0.001024,
+            "max": 0.001024
+          },
+          "pairedDelta": {
+            "n": 6,
+            "median": 0,
+            "p95": 0,
+            "max": 0
+          },
+          "distance": {
+            "n": 6,
+            "median": 0.008875231147833814,
+            "p95": 0.05663393844604605,
+            "max": 0.05663393844604605
+          }
+        },
+        "world|plaza/blob#0": {
+          "v2": {
+            "n": 7,
+            "median": 0.019456,
+            "p95": 0.024576,
+            "max": 0.024576
+          },
+          "final": {
+            "n": 7,
+            "median": 0.007168,
+            "p95": 0.009216,
+            "max": 0.009216
+          },
+          "pairedDelta": {
+            "n": 7,
+            "median": -0.013312000000000001,
+            "p95": -0.009216,
+            "max": -0.009216
+          },
+          "distance": {
+            "n": 7,
+            "median": 0.008563447661155339,
+            "p95": 0.056323817544277927,
+            "max": 0.056323817544277927
+          }
+        },
+        "world|plaza/cards#0": {
+          "v2": {
+            "n": 6,
+            "median": 0.002048,
+            "p95": 0.003072,
+            "max": 0.003072
+          },
+          "final": {
+            "n": 6,
+            "median": 0.029696,
+            "p95": 0.036864,
+            "max": 0.036864
+          },
+          "pairedDelta": {
+            "n": 6,
+            "median": 0.027648,
+            "p95": 0.033792,
+            "max": 0.033792
+          },
+          "distance": {
+            "n": 6,
+            "median": 0.00883940594206384,
+            "p95": 0.05632381744645829,
+            "max": 0.05632381744645829
+          }
+        },
+        "world|plaza/bark#0": {
+          "v2": {
+            "n": 6,
+            "median": 0.001024,
+            "p95": 0.002048,
+            "max": 0.002048
+          },
+          "final": {
+            "n": 6,
+            "median": 0.002048,
+            "p95": 0.003072,
+            "max": 0.003072
+          },
+          "pairedDelta": {
+            "n": 6,
+            "median": 0.001024,
+            "p95": 0.0010240000000000002,
+            "max": 0.0010240000000000002
+          },
+          "distance": {
+            "n": 6,
+            "median": 0.00856455574703647,
+            "p95": 0.05663393839189354,
+            "max": 0.05663393839189354
+          }
+        }
+      }
+    }
+  ]
+}

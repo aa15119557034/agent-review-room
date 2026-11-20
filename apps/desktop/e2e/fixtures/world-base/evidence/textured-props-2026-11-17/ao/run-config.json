@@ -1,0 +1,8 @@
+{
+  "fixture": "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base",
+  "output": "D:\\codex\\2026-11-16\\world-implementation\\world-base\\apps\\desktop\\e2e\\fixtures\\world-base\\artifacts\\gpu-ao-c8-v1",
+  "runtime": "D:\\codex\\2026-11-16\\world-implementation\\world-base\\apps\\desktop\\e2e\\fixtures\\world-base\\artifacts\\gpu-ao-c8-v1\\runtime-RbQprN",
+  "startedAt": "2026-11-17T06:16:31.430Z",
+  "timeoutMs": 180000,
+  "driverSha256": "81d9760b27fee68d3a43c01d0228967efc60ed763b1ad70de306b16a2d24c783"
+}

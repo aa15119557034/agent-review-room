@@ -1,0 +1,299 @@
+{
+  "schema": "x51-modern-final-normal-execution-v1",
+  "recordedAt": "2026-11-17T19:30:11.450Z",
+  "provenance": "Post-execution agent receipt based on actual exec/write_stdin completion; original process.json, stdout/stderr, frame arrays, GPU identity and render report preserved. No rerun.",
+  "sourceHead": "b0259599bd51178c2d4980243a9c87553eac1a66",
+  "headAfter": "b0259599bd51178c2d4980243a9c87553eac1a66",
+  "fixture": "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base/",
+  "output": "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base/artifacts/gpu-modern-final-b025959/",
+  "command": "node scripts/baseline.cjs --scene=combined --electron=D:/codex/2026-11-16/world-implementation/runtime-path-probe/electron.exe --output=artifacts/gpu-modern-final-b025959 --stills",
+  "session": 45133,
+  "pid": 62084,
+  "actualExit": 1,
+  "completionToolChunk": "a0b253",
+  "stdout": "D:/codex/2026-11-16/world-implementation/handoff/x51-modern-final-b025959-normal-stdout.txt",
+  "stderr": "D:/codex/2026-11-16/world-implementation/handoff/x51-modern-final-b025959-normal-stderr.txt",
+  "startedAt": "2026-11-17T19:27:43.409Z",
+  "completedAt": "2026-11-17T19:29:25.770Z",
+  "gpuReleased": true,
+  "renderOk": true,
+  "transportClean": false,
+  "ok": false,
+  "behavior": {
+    "ok": true,
+    "passed": 14,
+    "total": 14
+  },
+  "look": true,
+  "walking": true,
+  "networkFailures": [
+    {
+      "url": "http://127.0.0.1:49923/prop-assets/plastic_crate_02/plastic_crate_02_1k.gltf",
+      "type": "Fetch",
+      "canceled": true,
+      "errorText": "net::ERR_ABORTED",
+      "requestId": "14420.241",
+      "timestamp": 1953857.001346,
+      "stage": "waiting-for-ready-frame",
+      "receivedWallTime": 1794943677.947
+    }
+  ],
+  "exceptions": [],
+  "failure": null,
+  "segments": [
+    {
+      "name": "initial",
+      "fps": 64.99996690429386,
+      "p95FrameMs": 15.5,
+      "frameCount": 982,
+      "sampleMs": 15107.699999999997,
+      "maxFrameMs": 15.69999999999709,
+      "longFramesOver20ms": [],
+      "drawCalls": {
+        "mean": 1604.0763747454175,
+        "min": 1602,
+        "max": 1607
+      },
+      "triangles": {
+        "mean": 8386247.299389002,
+        "min": 8386120,
+        "max": 8386440
+      },
+      "samplesFile": "frame-samples.json",
+      "samplesSha256": "64f616e2ded56bfde08066e36333d3a8e268386a73e768f669dabf4580a840bd",
+      "performanceGate": true
+    },
+    {
+      "name": "station-street",
+      "fps": 64.6780577275798,
+      "p95FrameMs": 15.5,
+      "frameCount": 201,
+      "sampleMs": 3107.7000000000044,
+      "maxFrameMs": 30.80000000000291,
+      "longFramesOver20ms": [
+        {
+          "ms": 30.80000000000291,
+          "calls": 1602,
+          "triangles": 8386120,
+          "index": 110
+        }
+      ],
+      "drawCalls": {
+        "mean": 1602,
+        "min": 1602,
+        "max": 1602
+      },
+      "triangles": {
+        "mean": 8386120,
+        "min": 8386120,
+        "max": 8386120
+      },
+      "samplesFile": "frame-samples-station-street.json",
+      "samplesSha256": "d2ed7bdd8f2a3737ec9e02952fb7f4106f03e1cc408ceb8fa55d743de38441a8",
+      "performanceGate": true
+    },
+    {
+      "name": "station-port",
+      "fps": 64.99983910930905,
+      "p95FrameMs": 15.5,
+      "frameCount": 202,
+      "sampleMs": 3107.7000000000044,
+      "maxFrameMs": 16.299999999995634,
+      "longFramesOver20ms": [],
+      "drawCalls": {
+        "mean": 868,
+        "min": 868,
+        "max": 868
+      },
+      "triangles": {
+        "mean": 7992760,
+        "min": 7992760,
+        "max": 7992760
+      },
+      "samplesFile": "frame-samples-station-port.json",
+      "samplesSha256": "2866724ed701d6e5902cb31b49c6d480493b44b6ef0afcbb2fdfd29e58ac8d02",
+      "performanceGate": true
+    },
+    {
+      "name": "island-aerial",
+      "fps": 64.99951970798263,
+      "p95FrameMs": 15.5,
+      "frameCount": 203,
+      "sampleMs": 3123.0999999999913,
+      "maxFrameMs": 15.60000000000582,
+      "longFramesOver20ms": [],
+      "drawCalls": {
+        "mean": 1774,
+        "min": 1774,
+        "max": 1774
+      },
+      "triangles": {
+        "mean": 7410334,
+        "min": 7410334,
+        "max": 7410334
+      },
+      "samplesFile": "frame-samples-island-aerial.json",
+      "samplesSha256": "c73f11720fcade4d14d9f8aad11e6ac395f0cd9f18d15c4b718ece7d9a4341fb",
+      "performanceGate": true
+    },
+    {
+      "name": "shop-interior",
+      "fps": 64.99951970798233,
+      "p95FrameMs": 15.5,
+      "frameCount": 203,
+      "sampleMs": 3123.100000000006,
+      "maxFrameMs": 15.5,
+      "longFramesOver20ms": [],
+      "drawCalls": {
+        "mean": 940.320197044335,
+        "min": 939,
+        "max": 944
+      },
+      "triangles": {
+        "mean": 7632439.719211822,
+        "min": 7613925,
+        "max": 7677597
+      },
+      "samplesFile": "frame-samples-shop-interior.json",
+      "samplesSha256": "4da30a76426251f4e9fb59a0ee4cd0fd3201518d4fcbaceef5e455cbc9e9abc3",
+      "performanceGate": true
+    },
+    {
+      "name": "walking-third",
+      "fps": 65.00160102465578,
+      "p95FrameMs": 15.5,
+      "frameCount": 203,
+      "sampleMs": 3123,
+      "maxFrameMs": 15.69999999999709,
+      "longFramesOver20ms": [],
+      "drawCalls": {
+        "mean": 1580.8177339901479,
+        "min": 924,
+        "max": 1595
+      },
+      "triangles": {
+        "mean": 8330375.886699507,
+        "min": 7546585,
+        "max": 8399113
+      },
+      "samplesFile": "frame-samples-walking-third.json",
+      "samplesSha256": "806927e1f35849e41c39d4f1ec8646b03a2c35962f049efda340f1cd43073948",
+      "performanceGate": true
+    },
+    {
+      "name": "walking-first",
+      "fps": 64.3583472776421,
+      "p95FrameMs": 15.5,
+      "frameCount": 200,
+      "sampleMs": 3107.5999999999913,
+      "maxFrameMs": 30.80000000000291,
+      "longFramesOver20ms": [
+        {
+          "ms": 30.69999999999709,
+          "calls": 1497,
+          "triangles": 8345733,
+          "index": 15
+        },
+        {
+          "ms": 30.80000000000291,
+          "calls": 1473,
+          "triangles": 8320085,
+          "index": 36
+        }
+      ],
+      "drawCalls": {
+        "mean": 1438.44,
+        "min": 1366,
+        "max": 1507
+      },
+      "triangles": {
+        "mean": 8267270.98,
+        "min": 8121389,
+        "max": 8365229
+      },
+      "samplesFile": "frame-samples-walking-first.json",
+      "samplesSha256": "acdf6ad7904ffe0177edbb1a6d793b289b718c5d7f3207f6378b89eb8ca49be4",
+      "performanceGate": true
+    }
+  ],
+  "performanceRequirement": {
+    "minimumFPS": 60,
+    "maximumP95Ms": 16.7,
+    "scope": "four fixed views and two real-W walking segments",
+    "passed": true,
+    "doesNotMeanTransportClean": true
+  },
+  "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11-32.0.16.1714)",
+  "activeDevice": {
+    "active": true,
+    "deviceId": 9504,
+    "deviceString": "NVIDIA GeForce RTX 3060 Laptop GPU",
+    "driverVendor": "NVIDIA",
+    "driverVersion": "32.0.16.1714",
+    "gpuPreference": 3,
+    "revision": 161,
+    "subSysId": 356126757,
+    "vendorId": 4318
+  },
+  "dimensions": {
+    "viewport": [
+      1440,
+      900
+    ],
+    "canvas": [
+      1440,
+      900
+    ],
+    "pixelRatio": 1
+  },
+  "sourceManifest": {
+    "path": "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base/artifacts/gpu-modern-final-b025959/source-manifest.json",
+    "sha256": "f8b3621642f1f08de8b009afcec7d90ff2df458806b94aded9532970ad66c017",
+    "files": 235,
+    "changedPaths": [],
+    "unchanged": true,
+    "propAssetCount": 9,
+    "apartmentAssetCount": 9
+  },
+  "installedReflectionInputs": [
+    {
+      "path": "src/street-env/px.png",
+      "sha256": "d15de12913e8dff806b64befdd0ac2fd6b6231d00b032f6e65dcb7166ce2b089",
+      "afterSha256": "d15de12913e8dff806b64befdd0ac2fd6b6231d00b032f6e65dcb7166ce2b089"
+    },
+    {
+      "path": "src/street-env/nx.png",
+      "sha256": "68b524cbe4227b142373e4237fde4d900eeb558c270bbac09ecc682416514934",
+      "afterSha256": "68b524cbe4227b142373e4237fde4d900eeb558c270bbac09ecc682416514934"
+    },
+    {
+      "path": "src/street-env/py.png",
+      "sha256": "5423e68955eb3d3bcde767d97b121540ee94904426e797875de959176e981c1a",
+      "afterSha256": "5423e68955eb3d3bcde767d97b121540ee94904426e797875de959176e981c1a"
+    },
+    {
+      "path": "src/street-env/ny.png",
+      "sha256": "7b824f864fb448646ec6bce33dde28fcf4edffeaf408d6ce63473518c06c7090",
+      "afterSha256": "7b824f864fb448646ec6bce33dde28fcf4edffeaf408d6ce63473518c06c7090"
+    },
+    {
+      "path": "src/street-env/pz.png",
+      "sha256": "20ac46fa7e4f3787f91e98cfe7d1ff1bfa86fa5e9307dd852e77181988b903c9",
+      "afterSha256": "20ac46fa7e4f3787f91e98cfe7d1ff1bfa86fa5e9307dd852e77181988b903c9"
+    },
+    {
+      "path": "src/street-env/nz.png",
+      "sha256": "9e696e3934cd740e903dd57dfb18a90bb29247f8a5ffd8d964b3c652c092402e",
+      "afterSha256": "9e696e3934cd740e903dd57dfb18a90bb29247f8a5ffd8d964b3c652c092402e"
+    }
+  ],
+  "report": {
+    "path": "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base/artifacts/gpu-modern-final-b025959/render-report.json",
+    "sha256": "6427f1f46e44fbc156305659d087a630971f5a96f22337327c31690ff8021682"
+  },
+  "limits": [
+    "One actual normal baseline; do not treat a single pass as long-run stability or a controlled proof of LOD performance causality.",
+    "All-pass WebGL2 instrumentation overhead included; near65FPS may reflect vsync.",
+    "Final-head eight-camera fixed-time comparison and reflection-specific A/B/A remain unexecuted in this window. Earlier d379 preview and C18 before remain separate source evidence."
+  ]
+}

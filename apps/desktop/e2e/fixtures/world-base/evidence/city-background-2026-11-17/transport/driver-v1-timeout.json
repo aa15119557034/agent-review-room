@@ -1,0 +1,68 @@
+{
+  "config": {
+    "output": "D:\\codex\\2026-11-16\\world-implementation\\world-base\\apps\\desktop\\e2e\\fixtures\\world-base\\artifacts\\asset-transport-v1",
+    "runtime": "D:\\codex\\2026-11-16\\world-implementation\\world-base\\apps\\desktop\\e2e\\fixtures\\world-base\\artifacts\\asset-transport-v1\\runtime-S1t0AJ",
+    "startedAt": "2026-11-17T00:58:58.850Z",
+    "timeoutMs": 180000,
+    "terminalWaitMs": 3000,
+    "head": "7ef9545ee81ee072b811f007dfba6ab2898ca7a6",
+    "targets": [
+      {
+        "name": "menhir",
+        "url": "/assets/models/menhir.glb",
+        "file": ".local/petalwake-25443cef0eba802052d9ef24c94ba3c4157b6f2e/assets/models/menhir.glb",
+        "bytes": 620588,
+        "sha256": "82d68e3300134f1eb851707528d09cca01d6fb5db91e597b14de15b9e7bacb6c"
+      },
+      {
+        "name": "highrise",
+        "url": "/city-assets/highrise/high_rise_building.glb",
+        "file": ".local/city/highrise/high_rise_building.glb",
+        "bytes": 31791824,
+        "sha256": "9102f1255aa4303e3424b6985decca0d74fa31152186f08a9ffd4ee078225b40"
+      },
+      {
+        "name": "medium-bin",
+        "url": "/city-assets/downtown/Building_Medium_2_001.bin",
+        "file": ".local/city/downtown/Building_Medium_2_001.bin",
+        "bytes": 2443288,
+        "sha256": "8a8bd4462ff5f784e0ea7fbe753b009713f4017192c9d82b467f445eae88a35d"
+      }
+    ],
+    "scripts": {
+      "diagnose-asset-transport.cjs": "60d66b86a0bf4dc1fdad6cdd4b1a24acadb9e5de66182a866b8cfc9d8886dad4",
+      "baseline.cjs": "39bd75c2984b8fed1b655130789bcd4cb524aab257c2fbd5f55bc8916e0c5cdf",
+      "../upstream/petalwake/vendor/three/build/three.core.js": "613e370f76638fdef83926642bf256dc9615684922de1ce1f63a8583e5d78578"
+    }
+  },
+  "ok": false,
+  "bytesIntegrity": false,
+  "transportClean": false,
+  "cases": [],
+  "networkRequests": [],
+  "networkFailures": [],
+  "httpErrors": [],
+  "exceptions": [],
+  "consoleErrors": [],
+  "documentAnchors": [],
+  "stageHistory": [
+    {
+      "name": "bootstrap",
+      "wallTime": 1794877139.064
+    },
+    {
+      "name": "complete",
+      "wallTime": 1794877319.116
+    }
+  ],
+  "method": "No scene, canvas or WebGL. Per target: native fetch arrayBuffer x3 then unchanged Three FileLoader arraybuffer x3, sequential, unique query per case, no retries. SHA-256 compares transmitted bytes with local files at launch, not an author-provided asset audit. Original reader/fetch promises are observed without replacement. All CDP terminal evidence is collected for 3 seconds after the final case.",
+  "stage": "complete",
+  "runtime": {
+    "electron": "44.9.0",
+    "chrome": "152.0.7977.167"
+  },
+  "failure": "Error: Timeout at bootstrap\n    at Timeout._onTimeout (D:\\codex\\2026-11-16\\world-implementation\\world-base\\apps\\desktop\\e2e\\fixtures\\world-base\\scripts\\diagnose-asset-transport.cjs:139:101)\n    at listOnTimeout (node:internal/timers:685:17)\n    at process.processTimers (node:internal/timers:618:7)",
+  "missingTerminal": [],
+  "inputsUnchanged": true,
+  "evidenceCutoffWallTime": 1794877319.116
+}

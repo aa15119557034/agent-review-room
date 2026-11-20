@@ -1,0 +1,335 @@
+{
+  "head": "50e190b092fb2b30ab9ed19a28302d5638f947f4",
+  "outcomes": [
+    {
+      "artifact": "gpu-town-c16",
+      "head": "50e190b092fb2b30ab9ed19a28302d5638f947f4",
+      "session": 5028,
+      "pid": 63284,
+      "actualExit": 1,
+      "stage": "complete",
+      "renderOk": true,
+      "transportClean": false,
+      "source": {
+        "head": "50e190b092fb2b30ab9ed19a28302d5638f947f4",
+        "sha256": "d005281bb75f65bdb9ee506462661b6b9e77b361164778f2a4340fcc371103ed",
+        "trackedFilesVerified": 203,
+        "pinnedIgnoredFilesVerified": 9,
+        "receipt": "embedded"
+      }
+    },
+    {
+      "artifact": "gpu-look-c16-v1",
+      "head": "50e190b092fb2b30ab9ed19a28302d5638f947f4",
+      "session": 67606,
+      "pid": 61484,
+      "actualExit": 1,
+      "stage": "complete",
+      "renderOk": true,
+      "transportClean": false,
+      "source": {
+        "head": "50e190b092fb2b30ab9ed19a28302d5638f947f4",
+        "sha256": "d522da42f5c7fa0b59197a3a605e0fb9828f2d2beca2cc408d2303c9eb3ec626",
+        "trackedFilesVerified": 204,
+        "pinnedIgnoredFilesVerified": 9,
+        "receipt": "separate"
+      }
+    }
+  ],
+  "ci": {
+    "head": "50e190b092fb2b30ab9ed19a28302d5638f947f4",
+    "actualCheckout": {
+      "ref": "refs/remotes/pull/254/merge",
+      "sha": "45a651b64a491691408c85e9615df203ca45f65f",
+      "sourceHead": "50e190b092fb2b30ab9ed19a28302d5638f947f4",
+      "baseHead": "e8c37d659ae3e73934efb6e2a21fc822da9610e8",
+      "scope": "CI is associated with exact API head_sha; actual tested checkout is GitHub PR synthetic merge, not direct source-head checkout."
+    },
+    "run": 44109955261,
+    "job": 134132528102,
+    "url": "https://github.com/aa15119557034/agent-review-room/actions/runs/44109955261/job/134132528102",
+    "result": "success",
+    "completedAt": "2026-11-17T15:09:09Z",
+    "tests": 1615,
+    "passed": 1615,
+    "types": 9,
+    "builds": 2,
+    "allExitZero": true,
+    "rows": [
+      {
+        "name": "tests-packages/schemas",
+        "code": 0,
+        "milliseconds": 4024,
+        "log": "D:\\a\\agent-review-room\\agent-review-room\\.verification\\tests-packages-schemas.log",
+        "tests": 236,
+        "pass": 236,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      },
+      {
+        "name": "tests-packages/core",
+        "code": 0,
+        "milliseconds": 8876,
+        "log": "D:\\a\\agent-review-room\\agent-review-room\\.verification\\tests-packages-core.log",
+        "tests": 144,
+        "pass": 144,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      },
+      {
+        "name": "tests-packages/db",
+        "code": 0,
+        "milliseconds": 101969,
+        "log": "D:\\a\\agent-review-room\\agent-review-room\\.verification\\tests-packages-db.log",
+        "tests": 230,
+        "pass": 230,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      },
+      {
+        "name": "tests-packages/reviewer-client",
+        "code": 0,
+        "milliseconds": 548,
+        "log": "D:\\a\\agent-review-room\\agent-review-room\\.verification\\tests-packages-reviewer-client.log",
+        "tests": 15,
+        "pass": 15,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      },
+      {
+        "name": "tests-packages/remote-client",
+        "code": 0,
+        "milliseconds": 9652,
+        "log": "D:\\a\\agent-review-room\\agent-review-room\\.verification\\tests-packages-remote-client.log",
+        "tests": 19,
+        "pass": 19,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      },
+      {
+        "name": "tests-apps/agent-server",
+        "code": 0,
+        "milliseconds": 9941,
+        "log": "D:\\a\\agent-review-room\\agent-review-room\\.verification\\tests-apps-agent-server.log",
+        "tests": 218,
+        "pass": 218,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      },
+      {
+        "name": "tests-apps/desktop",
+        "code": 0,
+        "milliseconds": 60503,
+        "log": "D:\\a\\agent-review-room\\agent-review-room\\.verification\\tests-apps-desktop.log",
+        "tests": 423,
+        "pass": 423,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      },
+      {
+        "name": "tests-renderer",
+        "code": 0,
+        "milliseconds": 10069,
+        "log": "D:\\a\\agent-review-room\\agent-review-room\\.verification\\tests-renderer.log",
+        "tests": 271,
+        "pass": 271,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      },
+      {
+        "name": "tests-e2e",
+        "code": 0,
+        "milliseconds": 15183,
+        "log": "D:\\a\\agent-review-room\\agent-review-room\\.verification\\tests-e2e.log",
+        "tests": 59,
+        "pass": 59,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      },
+      {
+        "name": "types-packages/schemas",
+        "code": 0,
+        "milliseconds": 4827,
+        "log": "D:\\a\\agent-review-room\\agent-review-room\\.verification\\types-packages-schemas.log",
+        "tests": 0,
+        "pass": 0,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      },
+      {
+        "name": "types-packages/core",
+        "code": 0,
+        "milliseconds": 4972,
+        "log": "D:\\a\\agent-review-room\\agent-review-room\\.verification\\types-packages-core.log",
+        "tests": 0,
+        "pass": 0,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      },
+      {
+        "name": "types-packages/db",
+        "code": 0,
+        "milliseconds": 5387,
+        "log": "D:\\a\\agent-review-room\\agent-review-room\\.verification\\types-packages-db.log",
+        "tests": 0,
+        "pass": 0,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      },
+      {
+        "name": "types-packages/reviewer-client",
+        "code": 0,
+        "milliseconds": 4678,
+        "log": "D:\\a\\agent-review-room\\agent-review-room\\.verification\\types-packages-reviewer-client.log",
+        "tests": 0,
+        "pass": 0,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      },
+      {
+        "name": "types-packages/remote-client",
+        "code": 0,
+        "milliseconds": 5154,
+        "log": "D:\\a\\agent-review-room\\agent-review-room\\.verification\\types-packages-remote-client.log",
+        "tests": 0,
+        "pass": 0,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      },
+      {
+        "name": "types-apps/agent-server",
+        "code": 0,
+        "milliseconds": 5425,
+        "log": "D:\\a\\agent-review-room\\agent-review-room\\.verification\\types-apps-agent-server.log",
+        "tests": 0,
+        "pass": 0,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      },
+      {
+        "name": "types-apps/desktop",
+        "code": 0,
+        "milliseconds": 6394,
+        "log": "D:\\a\\agent-review-room\\agent-review-room\\.verification\\types-apps-desktop.log",
+        "tests": 0,
+        "pass": 0,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      },
+      {
+        "name": "types-renderer",
+        "code": 0,
+        "milliseconds": 9187,
+        "log": "D:\\a\\agent-review-room\\agent-review-room\\.verification\\types-renderer.log",
+        "tests": 0,
+        "pass": 0,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      },
+      {
+        "name": "types-e2e",
+        "code": 0,
+        "milliseconds": 6643,
+        "log": "D:\\a\\agent-review-room\\agent-review-room\\.verification\\types-e2e.log",
+        "tests": 0,
+        "pass": 0,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      },
+      {
+        "name": "build-desktop",
+        "code": 0,
+        "milliseconds": 1610,
+        "log": "D:\\a\\agent-review-room\\agent-review-room\\.verification\\build-desktop.log",
+        "tests": 0,
+        "pass": 0,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      },
+      {
+        "name": "build-agent-server",
+        "code": 0,
+        "milliseconds": 149,
+        "log": "D:\\a\\agent-review-room\\agent-review-room\\.verification\\build-agent-server.log",
+        "tests": 0,
+        "pass": 0,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    ],
+    "source": "Read-only GitHub REST check-runs, jobs and actual job log; no GitHub write or local test execution.",
+    "logSha256": "e69258dab309cb7186734828fd61236b1e25cd0919ed5fecb66f9fdb7f33e32c"
+  },
+  "analysisSummary": {
+    "comparisons": 7,
+    "repeats": 17,
+    "abaGroups": 4,
+    "normalSegments": [
+      {
+        "name": "initial",
+        "frames": 921,
+        "longFramesOver20ms": 62,
+        "maxFrameMs": 46
+      },
+      {
+        "name": "station-street",
+        "frames": 200,
+        "longFramesOver20ms": 3,
+        "maxFrameMs": 31
+      },
+      {
+        "name": "station-port",
+        "frames": 202,
+        "longFramesOver20ms": 0,
+        "maxFrameMs": 15.60000000000582
+      },
+      {
+        "name": "island-aerial",
+        "frames": 202,
+        "longFramesOver20ms": 1,
+        "maxFrameMs": 30.89999999999418
+      },
+      {
+        "name": "shop-interior",
+        "frames": 203,
+        "longFramesOver20ms": 0,
+        "maxFrameMs": 15.599999999991269
+      },
+      {
+        "name": "walking-third",
+        "frames": 203,
+        "longFramesOver20ms": 0,
+        "maxFrameMs": 15.599999999991269
+      },
+      {
+        "name": "walking-first",
+        "frames": 202,
+        "longFramesOver20ms": 0,
+        "maxFrameMs": 15.599999999991269
+      }
+    ],
+    "visualFinding": "The actual transition and both station edge-blend materials lack the town definitions/uniforms present in terrain/shells. This matches the toggle-dependent seam contrast and supports missing propagation to the seam materials; not evidence of the external 55m feather band causing this seam.",
+    "scope": "Frozen root offline RGB measurements copied without recomputing pixels; PNG identities and camera/time/params comparisons independently checked against raw reports. Seam is a visible regression. CPU second-look bug is separate; no causal attribution of initial long frames."
+  },
+  "scope": "Original failures and actual exits retained. Initial long frames recorded without causal assignment to meadow wrapper. Source manifests exact Git bytes; nine ignored assets fixed size/MD5/SHA. No original assets/cache/user profile copied."
+}

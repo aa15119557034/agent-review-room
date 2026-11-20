@@ -1,0 +1,833 @@
+{
+  "sceneRevision": "b949ffeb135f5b0798155aa5579740a841d94d0d",
+  "checkout": "bc72e43070e45e94c9dfb4b82ebe203bc0c11f4f",
+  "threshold": {
+    "minimumMeanFps": 60,
+    "maximumP95Ms": 16.7
+  },
+  "cameras": {
+    "20-rear-eye": {
+      "position": [
+        273,
+        14.755245542526229,
+        758
+      ],
+      "quaternion": [
+        -0.00013011891877658623,
+        0.9145142483742376,
+        -0.00029414054360230415,
+        -0.40455356390830466
+      ],
+      "fov": 58
+    },
+    "21-front-eye": {
+      "position": [
+        274,
+        12.87812709172567,
+        783
+      ],
+      "quaternion": [
+        0.07422133960767584,
+        -0.5103582416049142,
+        0.044271975994965136,
+        0.8556083508909221
+      ],
+      "fov": 58
+    },
+    "service-corner": {
+      "position": [
+        308.4,
+        9.612,
+        872.9
+      ],
+      "quaternion": [
+        -0.08432325046436126,
+        0.5331397072650681,
+        0.05351200213385738,
+        0.8401119613456697
+      ],
+      "fov": 55
+    },
+    "laundry-details": {
+      "position": [
+        288,
+        14.384808464050293,
+        777.9
+      ],
+      "quaternion": [
+        -0.15522850149956677,
+        0.6173580660361093,
+        0.12595148976979553,
+        0.7608609287163607
+      ],
+      "fov": 55
+    }
+  },
+  "segments": [
+    "station-street",
+    "shop-interior",
+    "20",
+    "21",
+    "23",
+    "24",
+    "walking-third",
+    "walking-first"
+  ],
+  "comparison": {
+    "20": {
+      "first": {
+        "fps": 61.14150598058903,
+        "p95Ms": 30.700000000004366
+      },
+      "repeat": {
+        "fps": 63.318064445917486,
+        "p95Ms": 15.5
+      }
+    },
+    "21": {
+      "first": {
+        "fps": 65.00059361272707,
+        "p95Ms": 15.5
+      },
+      "repeat": {
+        "fps": 64.99995053276217,
+        "p95Ms": 15.5
+      }
+    },
+    "23": {
+      "first": {
+        "fps": 64.99995053276217,
+        "p95Ms": 15.5
+      },
+      "repeat": {
+        "fps": 64.90170897955151,
+        "p95Ms": 15.5
+      }
+    },
+    "24": {
+      "first": {
+        "fps": 65.00049392472587,
+        "p95Ms": 15.5
+      },
+      "repeat": {
+        "fps": 64.99995053276217,
+        "p95Ms": 15.5
+      }
+    },
+    "station-street": {
+      "first": {
+        "fps": 63.39854631616026,
+        "p95Ms": 15.5
+      },
+      "repeat": {
+        "fps": 64.67597657506911,
+        "p95Ms": 15.5
+      }
+    },
+    "shop-interior": {
+      "first": {
+        "fps": 63.39501206757844,
+        "p95Ms": 15.5
+      },
+      "repeat": {
+        "fps": 64.99983910930919,
+        "p95Ms": 15.5
+      }
+    },
+    "walking-third": {
+      "first": {
+        "fps": 63.089472342594775,
+        "p95Ms": 15.5
+      },
+      "repeat": {
+        "fps": 64.35913035125344,
+        "p95Ms": 15.5
+      }
+    },
+    "walking-first": {
+      "first": {
+        "fps": 55.12011724972933,
+        "p95Ms": 30.80000000000291
+      },
+      "repeat": {
+        "fps": 64.99951970798233,
+        "p95Ms": 15.5
+      }
+    }
+  },
+  "runs": {
+    "first": {
+      "startedAt": "2026-11-18T00:21:59.376Z",
+      "finishedAt": "2026-11-18T00:24:58.764Z",
+      "checkout": "bc72e43070e45e94c9dfb4b82ebe203bc0c11f4f",
+      "sceneRevision": "b949ffeb135f5b0798155aa5579740a841d94d0d",
+      "sceneFilesVerified": 243,
+      "groundPreviewSha256": "23f8869a9d0c8ce0fcfacf12532450c441df86b28994e8255044cb7e3e53f403",
+      "canonicalPreviewSha256": "b225b1006b69f1dea71ec5aa54629dae614e00c1a0ed60c9a617f8293fa0a7e0",
+      "cameraInputSha256": "f93a30504e996911f00e1f97fb18c3d620b0797411c313f7bc620c28916739d0",
+      "townDriverSha256": "3d519cffcff439e98e3487a54c51926bc9956afe66d303166043f27144294747",
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "viewsAndWalk": {
+        "stage": "complete",
+        "renderOk": true,
+        "exit": 1,
+        "jsExceptions": 0,
+        "requestFailures": [
+          {
+            "file": "boulders.glb",
+            "canceled": true,
+            "error": "net::ERR_ABORTED"
+          },
+          {
+            "file": "plastic_crate_02_1k.gltf",
+            "canceled": true,
+            "error": "net::ERR_ABORTED"
+          }
+        ],
+        "transportClean": false
+      },
+      "town": {
+        "stage": "complete",
+        "renderOk": true,
+        "exit": 1,
+        "jsExceptions": 0,
+        "requestFailures": [
+          {
+            "file": "menhir.glb",
+            "canceled": true,
+            "error": "net::ERR_ABORTED"
+          }
+        ],
+        "transportClean": false
+      },
+      "recordedViews": [
+        "capturing-view:station-street",
+        "capturing-view:shop-interior"
+      ],
+      "walkingInput": [
+        {
+          "type": "keydown",
+          "code": "KeyW",
+          "trusted": true
+        },
+        {
+          "type": "keyup",
+          "code": "KeyW",
+          "trusted": true
+        },
+        {
+          "type": "keydown",
+          "code": "KeyW",
+          "trusted": true
+        },
+        {
+          "type": "keyup",
+          "code": "KeyW",
+          "trusted": true
+        }
+      ],
+      "walkingViewSwitch": {
+        "before": [
+          280.91029104353976,
+          8.535827667183113,
+          924.1367023993969
+        ],
+        "after": [
+          280.91029104353976,
+          8.535827667183113,
+          924.1367023993969
+        ],
+        "distance": 0,
+        "mode": "first"
+      },
+      "segments": {
+        "20": {
+          "frames": 629,
+          "measuredMs": 10107.700000000004,
+          "fps": 62.22978521325324,
+          "p95Ms": 15.599999999998545,
+          "p99Ms": 30.80000000000291,
+          "maxMs": 31,
+          "over20ms": 28,
+          "meanDrawCalls": 1278.7965023847378,
+          "meanTriangles": 9673005.292527823,
+          "passed": true,
+          "rawSampleSha256": "41ec451e85706fac85b8f39e544b9aad13a00c331239075fa142c794b9231807"
+        },
+        "21": {
+          "frames": 657,
+          "measuredMs": 10107.600000000006,
+          "fps": 65.00059361272702,
+          "p95Ms": 15.5,
+          "p99Ms": 15.5,
+          "maxMs": 15.60000000000582,
+          "over20ms": 0,
+          "meanDrawCalls": 851,
+          "meanTriangles": 8796386,
+          "passed": true,
+          "rawSampleSha256": "abf26a226de8586ddb4432bfb09e3276581a535ccffa86de58112f06fcdfeee5"
+        },
+        "23": {
+          "frames": 631,
+          "measuredMs": 10123.100000000006,
+          "fps": 62.33268465193465,
+          "p95Ms": 15.60000000000582,
+          "p99Ms": 30.89999999999418,
+          "maxMs": 31.60000000000582,
+          "over20ms": 27,
+          "meanDrawCalls": 1155.053882725832,
+          "meanTriangles": 7588051.825673535,
+          "passed": true,
+          "rawSampleSha256": "7de7de898b071ca2e788a87fe7103416b14056eccc67a64b5de8afa6ba746deb"
+        },
+        "24": {
+          "frames": 658,
+          "measuredMs": 10123,
+          "fps": 65.00049392472587,
+          "p95Ms": 15.5,
+          "p99Ms": 15.60000000000582,
+          "maxMs": 15.69999999999709,
+          "over20ms": 0,
+          "meanDrawCalls": 906.8905775075988,
+          "meanTriangles": 8861171.996960487,
+          "passed": true,
+          "rawSampleSha256": "17ea57de1920dc17322c264e09d143c6bcca4f81aeca1941865ed8ee306077a8"
+        },
+        "station-street": {
+          "frames": 156,
+          "measuredMs": 3138.5999999999985,
+          "fps": 49.70368954310842,
+          "p95Ms": 30.80000000000291,
+          "p99Ms": 30.900000000001455,
+          "maxMs": 30.900000000001455,
+          "over20ms": 48,
+          "meanDrawCalls": 1599.5897435897436,
+          "meanTriangles": 8381460.666666667,
+          "passed": false,
+          "rawSampleSha256": "66f997a856ad1a7f0f8f13e1babd8aaec759235fb6307aed5c02730249612d85"
+        },
+        "shop-interior": {
+          "frames": 203,
+          "measuredMs": 3123.100000000006,
+          "fps": 64.99951970798233,
+          "p95Ms": 15.5,
+          "p99Ms": 15.60000000000582,
+          "maxMs": 15.80000000000291,
+          "over20ms": 0,
+          "meanDrawCalls": 946,
+          "meanTriangles": 7691249,
+          "passed": true,
+          "rawSampleSha256": "f52a0e6d00e9776770a5087c314bb5225caaf9f125a60476c309f0f206db50c2"
+        },
+        "walking-third": {
+          "frames": 178,
+          "measuredMs": 3154,
+          "fps": 56.436271401395054,
+          "p95Ms": 30.80000000000291,
+          "p99Ms": 30.89999999999418,
+          "maxMs": 30.89999999999418,
+          "over20ms": 27,
+          "meanDrawCalls": 1589.7303370786517,
+          "meanTriangles": 8362485.0337078655,
+          "passed": false,
+          "walk": {
+            "mode": "third",
+            "from": [
+              281.6,
+              8.812,
+              934
+            ],
+            "to": [
+              280.9254686144836,
+              8.541905049729456,
+              924.353751776052
+            ],
+            "horizontalMeters": 9.669803378976534
+          },
+          "rawSampleSha256": "e6986ede35d6faff8906f0c46bded13c1051e5a29f05e1641ed8dcb3c4803e55"
+        },
+        "walking-first": {
+          "frames": 183,
+          "measuredMs": 3123.100000000006,
+          "fps": 58.59562614069343,
+          "p95Ms": 30.70000000001164,
+          "p99Ms": 30.80000000000291,
+          "maxMs": 30.90000000000873,
+          "over20ms": 20,
+          "meanDrawCalls": 1440.2185792349726,
+          "meanTriangles": 8287784.617486339,
+          "passed": false,
+          "walk": {
+            "mode": "first",
+            "from": [
+              280.9102907815078,
+              8.53582756226062,
+              924.136698652165
+            ],
+            "to": [
+              280.24222905975665,
+              8.26832318605448,
+              914.5829709305171
+            ],
+            "horizontalMeters": 9.577056951039404
+          },
+          "rawSampleSha256": "85395e78cdac86ef33dd73c9efcd4b7b199b54a59dc1af581cc7c406932e3262"
+        }
+      },
+      "total": {
+        "segments": 8,
+        "passed": 5,
+        "frames": 3295,
+        "over20ms": 150,
+        "maxMs": 31.60000000000582
+      }
+    },
+    "repeat": {
+      "startedAt": "2026-11-18T00:25:22.529Z",
+      "finishedAt": "2026-11-18T00:28:23.102Z",
+      "checkout": "bc72e43070e45e94c9dfb4b82ebe203bc0c11f4f",
+      "sceneRevision": "b949ffeb135f5b0798155aa5579740a841d94d0d",
+      "sceneFilesVerified": 243,
+      "groundPreviewSha256": "23f8869a9d0c8ce0fcfacf12532450c441df86b28994e8255044cb7e3e53f403",
+      "canonicalPreviewSha256": "b225b1006b69f1dea71ec5aa54629dae614e00c1a0ed60c9a617f8293fa0a7e0",
+      "cameraInputSha256": "f93a30504e996911f00e1f97fb18c3d620b0797411c313f7bc620c28916739d0",
+      "townDriverSha256": "3d519cffcff439e98e3487a54c51926bc9956afe66d303166043f27144294747",
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "viewsAndWalk": {
+        "stage": "complete",
+        "renderOk": true,
+        "exit": 1,
+        "jsExceptions": 0,
+        "requestFailures": [
+          {
+            "file": "menhir.glb",
+            "canceled": true,
+            "error": "net::ERR_ABORTED"
+          },
+          {
+            "file": "boulders.glb",
+            "canceled": true,
+            "error": "net::ERR_ABORTED"
+          },
+          {
+            "file": "plastic_crate_02_1k.gltf",
+            "canceled": true,
+            "error": "net::ERR_ABORTED"
+          }
+        ],
+        "transportClean": false
+      },
+      "town": {
+        "stage": "complete",
+        "renderOk": true,
+        "exit": 1,
+        "jsExceptions": 0,
+        "requestFailures": [
+          {
+            "file": "plastic_crate_02.bin",
+            "canceled": true,
+            "error": "net::ERR_ABORTED"
+          }
+        ],
+        "transportClean": false
+      },
+      "recordedViews": [
+        "capturing-view:station-street",
+        "capturing-view:shop-interior"
+      ],
+      "walkingInput": [
+        {
+          "type": "keydown",
+          "code": "KeyW",
+          "trusted": true
+        },
+        {
+          "type": "keyup",
+          "code": "KeyW",
+          "trusted": true
+        },
+        {
+          "type": "keydown",
+          "code": "KeyW",
+          "trusted": true
+        },
+        {
+          "type": "keyup",
+          "code": "KeyW",
+          "trusted": true
+        }
+      ],
+      "walkingViewSwitch": {
+        "before": [
+          280.91017614749796,
+          8.535781660664563,
+          924.1350593094487
+        ],
+        "after": [
+          280.91017614749796,
+          8.535781660664563,
+          924.1350593094487
+        ],
+        "distance": 0,
+        "mode": "first"
+      },
+      "segments": {
+        "20": {
+          "frames": 633,
+          "measuredMs": 10107.700000000004,
+          "fps": 62.62552311604022,
+          "p95Ms": 15.599999999998545,
+          "p99Ms": 30.80000000000291,
+          "maxMs": 30.900000000001455,
+          "over20ms": 24,
+          "meanDrawCalls": 1278.0552922590837,
+          "meanTriangles": 9669444.620853081,
+          "passed": true,
+          "rawSampleSha256": "1e12da170388fc99c92333f104b43228ac5fae715bcd2fe9f81a185def199559"
+        },
+        "21": {
+          "frames": 657,
+          "measuredMs": 10107.799999999996,
+          "fps": 64.99930746552171,
+          "p95Ms": 15.5,
+          "p99Ms": 15.60000000000582,
+          "maxMs": 15.799999999995634,
+          "over20ms": 0,
+          "meanDrawCalls": 851,
+          "meanTriangles": 8796386,
+          "passed": true,
+          "rawSampleSha256": "498ce6f882f963d20cd4f5ce0b9c8c2aa638428646251dc684cb2316f076d646"
+        },
+        "23": {
+          "frames": 606,
+          "measuredMs": 10122.899999999994,
+          "fps": 59.86426814450408,
+          "p95Ms": 30.70000000001164,
+          "p99Ms": 30.89999999999418,
+          "maxMs": 31,
+          "over20ms": 52,
+          "meanDrawCalls": 1154.2640264026402,
+          "meanTriangles": 7583378,
+          "passed": false,
+          "rawSampleSha256": "ac740712aa3f73446459bdf486d4992a5e9146b871d054f04a0efe37c3f76ff8"
+        },
+        "24": {
+          "frames": 649,
+          "measuredMs": 10107.600000000006,
+          "fps": 64.20910997665119,
+          "p95Ms": 15.5,
+          "p99Ms": 30.79999999998836,
+          "maxMs": 30.89999999999418,
+          "over20ms": 8,
+          "meanDrawCalls": 906.8628659476117,
+          "meanTriangles": 8861170.223420648,
+          "passed": true,
+          "rawSampleSha256": "6be7f78f99cd05b59caf42f56767f0585ae9ad46fc1ac03c463d6e6ae5b696be"
+        },
+        "station-street": {
+          "frames": 168,
+          "measuredMs": 3138.4000000000015,
+          "fps": 53.53046138159569,
+          "p95Ms": 30.80000000000291,
+          "p99Ms": 30.900000000001455,
+          "maxMs": 30.900000000001455,
+          "over20ms": 36,
+          "meanDrawCalls": 1598.4940476190477,
+          "meanTriangles": 8375123.571428572,
+          "passed": false,
+          "rawSampleSha256": "2ada16244c301f7a6f6de5121e27d8b6cd89d4a719e912692d4edcaa9da39e44"
+        },
+        "shop-interior": {
+          "frames": 201,
+          "measuredMs": 3138.5,
+          "fps": 64.04333280229409,
+          "p95Ms": 15.5,
+          "p99Ms": 30.69999999999709,
+          "maxMs": 30.80000000000291,
+          "over20ms": 3,
+          "meanDrawCalls": 945.9402985074627,
+          "meanTriangles": 7691188.820895523,
+          "passed": true,
+          "rawSampleSha256": "eec68689d1dbd999908b708673e1276b936f9bc6bb00508b24c925cc99d704b3"
+        },
+        "walking-third": {
+          "frames": 168,
+          "measuredMs": 3153.9000000000087,
+          "fps": 53.2673832397982,
+          "p95Ms": 30.80000000000291,
+          "p99Ms": 30.90000000000873,
+          "maxMs": 30.90000000000873,
+          "over20ms": 37,
+          "meanDrawCalls": 1589.8809523809523,
+          "meanTriangles": 8362944.333333333,
+          "passed": false,
+          "walk": {
+            "mode": "third",
+            "from": [
+              281.6,
+              8.812,
+              934
+            ],
+            "to": [
+              280.92453119320055,
+              8.54152968875995,
+              924.3403460271411
+            ],
+            "horizontalMeters": 9.683241863360015
+          },
+          "rawSampleSha256": "b6f5549016c87e37cbfa4afc7849bdfd936dc2eeec72a5e84cc0715a7cbf3eab"
+        },
+        "walking-first": {
+          "frames": 188,
+          "measuredMs": 3123.199999999997,
+          "fps": 60.1946721311476,
+          "p95Ms": 30.69999999999709,
+          "p99Ms": 30.89999999999418,
+          "maxMs": 30.89999999999418,
+          "over20ms": 15,
+          "meanDrawCalls": 1440.1489361702127,
+          "meanTriangles": 8287836.55319149,
+          "passed": false,
+          "walk": {
+            "mode": "first",
+            "from": [
+              280.910176027087,
+              8.535781612449767,
+              924.1350575874917
+            ],
+            "to": [
+              280.24619942519263,
+              8.26991299444298,
+              914.639749801535
+            ],
+            "horizontalMeters": 9.518494359819364
+          },
+          "rawSampleSha256": "aebcc92489141eea73c12486790a616aa8b48f967c4263fcedaf8bf935c19500"
+        }
+      },
+      "total": {
+        "segments": 8,
+        "passed": 4,
+        "frames": 3270,
+        "over20ms": 175,
+        "maxMs": 31
+      }
+    }
+  },
+  "photos": {
+    "width": 1440,
+    "height": 900,
+    "dpr": 1,
+    "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "diagnostics": {
+      "stage": "complete",
+      "renderOk": true,
+      "exit": 0,
+      "jsExceptions": 0,
+      "requestFailures": [],
+      "transportClean": true
+    },
+    "capturePass": "capture-2",
+    "groundDriverSha256": "4f4077e9dec4a5a20743498b28b00a2dd4090876c74684689116c7b3657fd065",
+    "pairs": [
+      {
+        "id": "01",
+        "view": "station-street",
+        "label": "站前主街",
+        "camera": {
+          "position": [
+            278.8,
+            10.4,
+            936
+          ],
+          "quaternion": [
+            -0.003277842930440423,
+            -0.009834585659995631,
+            -0.000032237959341941705,
+            0.9999462663720154
+          ],
+          "fov": 58
+        },
+        "time": 14,
+        "stationTime": 14,
+        "ao": 0.55,
+        "image": "../images/01-evening.jpg",
+        "previousC21PngSha256": "315c4e9834d677bd5394a8fbf64b79ae5674f1765ccee9af916a73ad8bda9216",
+        "groundPngSha256": "315c4e9834d677bd5394a8fbf64b79ae5674f1765ccee9af916a73ad8bda9216",
+        "changed": 0,
+        "deltaOver8": 0,
+        "maxDelta": 0
+      },
+      {
+        "id": "20",
+        "view": "20-rear-eye",
+        "label": "公寓后廊",
+        "camera": {
+          "position": [
+            273,
+            14.755245542526229,
+            758
+          ],
+          "quaternion": [
+            -0.00013011891877658623,
+            0.9145142483742376,
+            -0.00029414054360230415,
+            -0.40455356390830466
+          ],
+          "fov": 58
+        },
+        "time": 14,
+        "stationTime": 14,
+        "ao": 0.55,
+        "image": "../images/20-evening.jpg",
+        "previousC21PngSha256": "2d6e47e67a320c72fd240be1f0ade742019314f8e069b4bf3c88a55036b2b26f",
+        "groundPngSha256": "2d6e47e67a320c72fd240be1f0ade742019314f8e069b4bf3c88a55036b2b26f",
+        "changed": 0,
+        "deltaOver8": 0,
+        "maxDelta": 0
+      },
+      {
+        "id": "21",
+        "view": "21-front-eye",
+        "label": "洗衣店前",
+        "camera": {
+          "position": [
+            274,
+            12.87812709172567,
+            783
+          ],
+          "quaternion": [
+            0.07422133960767584,
+            -0.5103582416049142,
+            0.044271975994965136,
+            0.8556083508909221
+          ],
+          "fov": 58
+        },
+        "time": 14,
+        "stationTime": 14,
+        "ao": 0.55,
+        "image": "../images/21-evening.jpg",
+        "previousC21PngSha256": "a086375211fa53161a4821bcd99454cf4035bd4a25c1dcf5750b7ab4517ffadf",
+        "groundPngSha256": "a086375211fa53161a4821bcd99454cf4035bd4a25c1dcf5750b7ab4517ffadf",
+        "changed": 0,
+        "deltaOver8": 0,
+        "maxDelta": 0
+      },
+      {
+        "id": "23",
+        "view": "service-corner",
+        "label": "维修角",
+        "camera": {
+          "position": [
+            308.4,
+            9.612,
+            872.9
+          ],
+          "quaternion": [
+            -0.08432325046436126,
+            0.5331397072650681,
+            0.05351200213385738,
+            0.8401119613456697
+          ],
+          "fov": 55
+        },
+        "time": 14,
+        "stationTime": 14,
+        "ao": 0.55,
+        "image": "../images/23-evening.jpg",
+        "previousC21PngSha256": "d6107b9d418110fee0701b2e1422f26c27c8d6cf135ea9e8b19d4505b71871c5",
+        "groundPngSha256": "d6107b9d418110fee0701b2e1422f26c27c8d6cf135ea9e8b19d4505b71871c5",
+        "changed": 0,
+        "deltaOver8": 0,
+        "maxDelta": 0
+      },
+      {
+        "id": "24",
+        "view": "laundry-details",
+        "label": "洗衣店细节",
+        "camera": {
+          "position": [
+            288,
+            14.384808464050293,
+            777.9
+          ],
+          "quaternion": [
+            -0.15522850149956677,
+            0.6173580660361093,
+            0.12595148976979553,
+            0.7608609287163607
+          ],
+          "fov": 55
+        },
+        "time": 14,
+        "stationTime": 14,
+        "ao": 0.55,
+        "image": "../images/24-evening.jpg",
+        "previousC21PngSha256": "3157807f8872a7a93abfd91f9eb1f888a826ccba217fbd3a90c718695440b651",
+        "groundPngSha256": "3157807f8872a7a93abfd91f9eb1f888a826ccba217fbd3a90c718695440b651",
+        "changed": 0,
+        "deltaOver8": 0,
+        "maxDelta": 0
+      },
+      {
+        "id": "04",
+        "view": "shop-interior",
+        "label": "便利店内",
+        "camera": {
+          "position": [
+            271.7,
+            9.9134,
+            908
+          ],
+          "quaternion": [
+            -0.015701859235384273,
+            0.7069324236562871,
+            0.015701859235384273,
+            0.7069324236562871
+          ],
+          "fov": 58
+        },
+        "time": 14,
+        "stationTime": 14,
+        "ao": 0.55,
+        "image": "../images/04-evening.jpg",
+        "previousC21PngSha256": "c213a0c5cf4b178a6c6e0c5c5850bd5a0ea37285181a6c0631eb6d0c85963dd0",
+        "groundPngSha256": "c213a0c5cf4b178a6c6e0c5c5850bd5a0ea37285181a6c0631eb6d0c85963dd0",
+        "changed": 0,
+        "deltaOver8": 0,
+        "maxDelta": 0
+      },
+      {
+        "id": "detail",
+        "view": "street-detail",
+        "label": "商店橱窗近景",
+        "camera": {
+          "position": [
+            284.4,
+            10.281286274509803,
+            924
+          ],
+          "quaternion": [
+            -0.12465537443110519,
+            -0.38126635888515065,
+            -0.05196769176958736,
+            0.914547079280253
+          ],
+          "fov": 58
+        },
+        "time": 14,
+        "stationTime": 14,
+        "ao": 0.55,
+        "image": "../images/detail-evening.jpg",
+        "previousC21PngSha256": "c23993afcf80fe5f2432c8b4f444776674535859ff487b6b35478bbfef9a7465",
+        "groundPngSha256": "c23993afcf80fe5f2432c8b4f444776674535859ff487b6b35478bbfef9a7465",
+        "changed": 0,
+        "deltaOver8": 0,
+        "maxDelta": 0
+      }
+    ]
+  },
+  "framesSha256": "1393644b7f0ffdc3663ec5c0d5a1825cd026e98f589d813ffe5c88ff8765f8a3",
+  "groundDriverSha256": "1a109fc1d51370fb72b2b0514d0cd46b30b3d103033ea97292ca24ac3e1016af"
+}

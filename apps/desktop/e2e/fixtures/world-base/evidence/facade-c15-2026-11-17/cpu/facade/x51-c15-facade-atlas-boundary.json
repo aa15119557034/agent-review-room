@@ -1,0 +1,20 @@
+{
+  "scope": "CPU expected capacity rejection before mutation",
+  "error": "Existing shop atlas has no room for the laundry labels",
+  "before": {
+    "pages": 5,
+    "x": 1020,
+    "y": 1020,
+    "rowH": 20,
+    "version": 3,
+    "pixels": 16044032
+  },
+  "after": {
+    "pages": 5,
+    "x": 1020,
+    "y": 1020,
+    "rowH": 20,
+    "version": 3,
+    "pixels": 16044032
+  }
+}

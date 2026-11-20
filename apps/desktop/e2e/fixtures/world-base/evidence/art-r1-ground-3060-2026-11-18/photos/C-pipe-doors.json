@@ -1,0 +1,72 @@
+{
+  "pipe": {
+    "xs": [
+      -3.9,
+      2.3
+    ],
+    "stationY": [
+      5.24,
+      5.42
+    ],
+    "stationZ": -131.1
+  },
+  "doors": [
+    {
+      "stationCenterX": -2,
+      "openingWidth": 1.03,
+      "overlapWidth": 1.03,
+      "screenOverlapAtLowerPipe": [
+        [
+          866.52,
+          590.86
+        ],
+        [
+          847.67,
+          604.01
+        ]
+      ],
+      "screenOverlapAtUpperPipe": [
+        [
+          866.47,
+          571.61
+        ],
+        [
+          847.63,
+          582.68
+        ]
+      ]
+    },
+    {
+      "stationCenterX": 2,
+      "openingWidth": 1.03,
+      "overlapWidth": 0.815,
+      "screenOverlapAtLowerPipe": [
+        [
+          760.45,
+          664.82
+        ],
+        [
+          720.89,
+          692.41
+        ]
+      ],
+      "screenOverlapAtUpperPipe": [
+        [
+          760.43,
+          633.89
+        ],
+        [
+          720.89,
+          657.11
+        ]
+      ]
+    },
+    {
+      "stationCenterX": 6,
+      "openingWidth": 1.03,
+      "overlapWidth": 0,
+      "screenOverlapAtLowerPipe": [],
+      "screenOverlapAtUpperPipe": []
+    }
+  ]
+}

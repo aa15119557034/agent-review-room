@@ -1,0 +1,202 @@
+{
+  "output": "D:\\codex\\2026-11-16\\world-implementation\\world-base\\apps\\desktop\\e2e\\fixtures\\world-base\\artifacts\\asset-transport-props-c8-entry-fixed",
+  "runtime": "D:\\codex\\2026-11-16\\world-implementation\\world-base\\apps\\desktop\\e2e\\fixtures\\world-base\\artifacts\\asset-transport-props-c8-entry-fixed\\runtime-W91me1",
+  "startedAt": "2026-11-17T06:41:10.404Z",
+  "timeoutMs": 180000,
+  "terminalWaitMs": 3000,
+  "targetScope": "Current Petalwake props referenced by assets/terrain/props.json and src/island.js loadProps: menhir, boulders, lighthouse; plus every pinned prop-assets.json file (crate original glTF/BIN/maps, official supplemental opacity and shutter maps). This run does not retest retired city BIN/GLB assets.",
+  "head": "5463714131eba64f83a828ba509c023072f4d4ea",
+  "targets": [
+    {
+      "name": "menhir",
+      "url": "/assets/models/menhir.glb",
+      "file": ".local/petalwake-25443cef0eba802052d9ef24c94ba3c4157b6f2e/assets/models/menhir.glb",
+      "bytes": 620588,
+      "sha256": "82d68e3300134f1eb851707528d09cca01d6fb5db91e597b14de15b9e7bacb6c"
+    },
+    {
+      "name": "boulders",
+      "url": "/assets/models/boulders.glb",
+      "file": ".local/petalwake-25443cef0eba802052d9ef24c94ba3c4157b6f2e/assets/models/boulders.glb",
+      "bytes": 669820,
+      "sha256": "05123f357a9b8029fff53fe962c8304df64824d73053bf4de574b65cde41bd1a"
+    },
+    {
+      "name": "lighthouse",
+      "url": "/assets/models/lighthouse.glb",
+      "file": ".local/petalwake-25443cef0eba802052d9ef24c94ba3c4157b6f2e/assets/models/lighthouse.glb",
+      "bytes": 4857788,
+      "sha256": "53f9ba81d89a1c4485590581a481679081eba129dd74047251b7d1e3a58d47fa"
+    },
+    {
+      "name": "prop-plastic_crate_02-plastic_crate_02_1k.gltf",
+      "url": "/prop-assets/plastic_crate_02/plastic_crate_02_1k.gltf",
+      "file": ".local/textured-props/plastic_crate_02/plastic_crate_02_1k.gltf",
+      "bytes": 2947,
+      "md5": "ab133a1d655e004fa2f22f039e24efbe",
+      "sha256": "531f7ba7d4b501759b04fb704db1948bcaab34d8342e71e3f5877d9f0340dba7"
+    },
+    {
+      "name": "prop-plastic_crate_02-textures-plastic_crate_02_nor_gl_1k.jpg",
+      "url": "/prop-assets/plastic_crate_02/textures/plastic_crate_02_nor_gl_1k.jpg",
+      "file": ".local/textured-props/plastic_crate_02/textures/plastic_crate_02_nor_gl_1k.jpg",
+      "bytes": 558561,
+      "md5": "3fd1bb590ead064e6b7cf6eb3cd46fa6",
+      "sha256": "492b4cb03b043fb30a21b5de1cdf91dfbcd9bb7d080957af69a333d622050f30"
+    },
+    {
+      "name": "prop-plastic_crate_02-textures-plastic_crate_02_diff_1k.jpg",
+      "url": "/prop-assets/plastic_crate_02/textures/plastic_crate_02_diff_1k.jpg",
+      "file": ".local/textured-props/plastic_crate_02/textures/plastic_crate_02_diff_1k.jpg",
+      "bytes": 492862,
+      "md5": "55ddafcf50ffebdb2806e6b863e9b254",
+      "sha256": "f153478d5f44f39ab27a967850caac27b35ee8f04185d0d4eaf7ad501742fb15"
+    },
+    {
+      "name": "prop-plastic_crate_02-textures-plastic_crate_02_arm_1k.jpg",
+      "url": "/prop-assets/plastic_crate_02/textures/plastic_crate_02_arm_1k.jpg",
+      "file": ".local/textured-props/plastic_crate_02/textures/plastic_crate_02_arm_1k.jpg",
+      "bytes": 597561,
+      "md5": "032b8738359d2423f7bf8dd0aa6f3e5b",
+      "sha256": "f0c667358c7afd46be37b40c30435b63ae3dba8432b45c507f3298fc6f163418"
+    },
+    {
+      "name": "prop-plastic_crate_02-plastic_crate_02.bin",
+      "url": "/prop-assets/plastic_crate_02/plastic_crate_02.bin",
+      "file": ".local/textured-props/plastic_crate_02/plastic_crate_02.bin",
+      "bytes": 186848,
+      "md5": "a91c131589eae7242c162782cff0290a",
+      "sha256": "f51696aa04643b5c1948da88be8ce1d4e92596ae4908b0132cd690f8fb8e0b63"
+    },
+    {
+      "name": "prop-worn_shutter-textures-worn_shutter_nor_gl_1k.jpg",
+      "url": "/prop-assets/worn_shutter/textures/worn_shutter_nor_gl_1k.jpg",
+      "file": ".local/textured-props/worn_shutter/textures/worn_shutter_nor_gl_1k.jpg",
+      "bytes": 717669,
+      "md5": "77ea82308a69cfefeb9b42ef55d34179",
+      "sha256": "924e3948a4f654322ddb595b9abca4b0b491d70fd69453f479c108d5ac815c93"
+    },
+    {
+      "name": "prop-worn_shutter-textures-worn_shutter_diff_1k.jpg",
+      "url": "/prop-assets/worn_shutter/textures/worn_shutter_diff_1k.jpg",
+      "file": ".local/textured-props/worn_shutter/textures/worn_shutter_diff_1k.jpg",
+      "bytes": 560285,
+      "md5": "c6acc47a7bf04379cbf779d64aac8c3b",
+      "sha256": "1e1a84c4f2ce5d005c9c3e8860d23370e2ad6dcc4040cd972803ad700e516a08"
+    },
+    {
+      "name": "prop-worn_shutter-textures-worn_shutter_arm_1k.jpg",
+      "url": "/prop-assets/worn_shutter/textures/worn_shutter_arm_1k.jpg",
+      "file": ".local/textured-props/worn_shutter/textures/worn_shutter_arm_1k.jpg",
+      "bytes": 445738,
+      "md5": "0deea2efe48ac347e345ab094650f612",
+      "sha256": "daeb8be23cd97a39d3b2bf11e6b57ccab7b5e1fbd65672472a8b93c8fe3e3fdd"
+    },
+    {
+      "name": "prop-plastic_crate_02-textures-plastic_crate_02_opacity_1k.png",
+      "url": "/prop-assets/plastic_crate_02/textures/plastic_crate_02_opacity_1k.png",
+      "file": ".local/textured-props/plastic_crate_02/textures/plastic_crate_02_opacity_1k.png",
+      "bytes": 16785,
+      "md5": "1b087615419b81cc55241fa7cdbe36f7",
+      "sha256": "2f755d95d8c28792c54b31427523bdd5ada6ddc003762ac6d057530d224fa170"
+    }
+  ],
+  "propAssets": {
+    "manifest": "prop-assets.json",
+    "preparedRoot": ".local/textured-props",
+    "route": "/prop-assets/",
+    "files": [
+      {
+        "path": ".local/textured-props/plastic_crate_02/plastic_crate_02_1k.gltf",
+        "sourceUrl": "https://dl.polyhaven.org/file/ph-assets/Models/gltf/1k/plastic_crate_02/plastic_crate_02_1k.gltf",
+        "bytes": 2947,
+        "md5": "ab133a1d655e004fa2f22f039e24efbe",
+        "sha256": "531f7ba7d4b501759b04fb704db1948bcaab34d8342e71e3f5877d9f0340dba7"
+      },
+      {
+        "path": ".local/textured-props/plastic_crate_02/textures/plastic_crate_02_nor_gl_1k.jpg",
+        "sourceUrl": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/plastic_crate_02/plastic_crate_02_nor_gl_1k.jpg",
+        "bytes": 558561,
+        "md5": "3fd1bb590ead064e6b7cf6eb3cd46fa6",
+        "sha256": "492b4cb03b043fb30a21b5de1cdf91dfbcd9bb7d080957af69a333d622050f30"
+      },
+      {
+        "path": ".local/textured-props/plastic_crate_02/textures/plastic_crate_02_diff_1k.jpg",
+        "sourceUrl": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/plastic_crate_02/plastic_crate_02_diff_1k.jpg",
+        "bytes": 492862,
+        "md5": "55ddafcf50ffebdb2806e6b863e9b254",
+        "sha256": "f153478d5f44f39ab27a967850caac27b35ee8f04185d0d4eaf7ad501742fb15"
+      },
+      {
+        "path": ".local/textured-props/plastic_crate_02/textures/plastic_crate_02_arm_1k.jpg",
+        "sourceUrl": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/plastic_crate_02/plastic_crate_02_arm_1k.jpg",
+        "bytes": 597561,
+        "md5": "032b8738359d2423f7bf8dd0aa6f3e5b",
+        "sha256": "f0c667358c7afd46be37b40c30435b63ae3dba8432b45c507f3298fc6f163418"
+      },
+      {
+        "path": ".local/textured-props/plastic_crate_02/plastic_crate_02.bin",
+        "sourceUrl": "https://dl.polyhaven.org/file/ph-assets/Models/gltf/4k/plastic_crate_02/plastic_crate_02.bin",
+        "bytes": 186848,
+        "md5": "a91c131589eae7242c162782cff0290a",
+        "sha256": "f51696aa04643b5c1948da88be8ce1d4e92596ae4908b0132cd690f8fb8e0b63"
+      },
+      {
+        "path": ".local/textured-props/worn_shutter/textures/worn_shutter_nor_gl_1k.jpg",
+        "sourceUrl": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/worn_shutter/worn_shutter_nor_gl_1k.jpg",
+        "bytes": 717669,
+        "md5": "77ea82308a69cfefeb9b42ef55d34179",
+        "sha256": "924e3948a4f654322ddb595b9abca4b0b491d70fd69453f479c108d5ac815c93"
+      },
+      {
+        "path": ".local/textured-props/worn_shutter/textures/worn_shutter_diff_1k.jpg",
+        "sourceUrl": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/worn_shutter/worn_shutter_diff_1k.jpg",
+        "bytes": 560285,
+        "md5": "c6acc47a7bf04379cbf779d64aac8c3b",
+        "sha256": "1e1a84c4f2ce5d005c9c3e8860d23370e2ad6dcc4040cd972803ad700e516a08"
+      },
+      {
+        "path": ".local/textured-props/worn_shutter/textures/worn_shutter_arm_1k.jpg",
+        "sourceUrl": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/worn_shutter/worn_shutter_arm_1k.jpg",
+        "bytes": 445738,
+        "md5": "0deea2efe48ac347e345ab094650f612",
+        "sha256": "daeb8be23cd97a39d3b2bf11e6b57ccab7b5e1fbd65672472a8b93c8fe3e3fdd"
+      },
+      {
+        "path": ".local/textured-props/plastic_crate_02/textures/plastic_crate_02_opacity_1k.png",
+        "sourceUrl": "https://dl.polyhaven.org/file/ph-assets/Models/png/1k/plastic_crate_02/plastic_crate_02_opacity_1k.png",
+        "bytes": 16785,
+        "md5": "1b087615419b81cc55241fa7cdbe36f7",
+        "sha256": "2f755d95d8c28792c54b31427523bdd5ada6ddc003762ac6d057530d224fa170"
+      }
+    ],
+    "totalBytes": 3579256,
+    "gltfDependencies": [
+      {
+        "path": "plastic_crate_02/plastic_crate_02_1k.gltf",
+        "dependencies": [
+          "plastic_crate_02/plastic_crate_02.bin",
+          "plastic_crate_02/textures/plastic_crate_02_arm_1k.jpg",
+          "plastic_crate_02/textures/plastic_crate_02_diff_1k.jpg",
+          "plastic_crate_02/textures/plastic_crate_02_nor_gl_1k.jpg"
+        ]
+      }
+    ],
+    "verifiedBeforeLaunch": true
+  },
+  "methods": [
+    "native",
+    "fileloader"
+  ],
+  "repeats": 3,
+  "expectedCaseCount": 72,
+  "scripts": {
+    "diagnose-asset-transport.cjs": "0fa90bb79c0c1c845eb6fb08ebb056b8f9090c4833021cf47cf3b2b61c39381c",
+    "baseline.cjs": "b2b5c749fd960c5452f0b02b883de813725a25f00450be0a8b15d1aaf489a309",
+    "prepare-props.cjs": "3c7de874e46bd7049a7e7f7a95dc2fb642bffab512d2e4c558cf198d8a5a7536",
+    "../prop-assets.json": "6a4b86e144b50835b1152f4aa32ac4c5e50e352956979cd4ca5fc5f21561810a",
+    "../upstream/petalwake/vendor/three/build/three.core.js": "613e370f76638fdef83926642bf256dc9615684922de1ce1f63a8583e5d78578",
+    "../src/island.js": "7d069b2261c81fb3defeb4618ddbc1fe32fc2a13705773510c4bfc9e2cde7df2",
+    "../.local/petalwake-25443cef0eba802052d9ef24c94ba3c4157b6f2e/assets/terrain/props.json": "e7ede80757854c2952f47b584127bca156b2d606dca6f8f359d25b3070de4574"
+  }
+}

@@ -1,0 +1,715 @@
+{
+  "source": "de9f59b4a8b949cff5df5bccf8ec81ce8db7c69c",
+  "photos": {
+    "source": "de9f59b4a8b949cff5df5bccf8ec81ce8db7c69c",
+    "canvas": [
+      1440,
+      900
+    ],
+    "nativeExit": 0,
+    "method": "Native deployed HTML button click in order A/B/C/D/A. Default evening. Frozen station and island clock 14, one warm-up and two fresh renders per selection, final frame archived.",
+    "exceptions": [],
+    "networkFailures": [
+      {
+        "error": "net::ERR_ABORTED",
+        "url": "assets/models/boulders.glb",
+        "canceled": true
+      },
+      {
+        "error": "net::ERR_ABORTED",
+        "url": "prop-assets/plastic_crate_02/plastic_crate_02.bin",
+        "canceled": true
+      }
+    ],
+    "pictures": {
+      "A": {
+        "view": {
+          "name": "art-a-street",
+          "label": "A · 01 站前主街",
+          "fov": 35.63777782904556,
+          "position": [
+            278.8,
+            10.488,
+            936
+          ],
+          "target": [
+            280,
+            10.088000000000001,
+            875
+          ]
+        },
+        "dom": {
+          "tag": "BUTTON",
+          "datasetView": "art-a-street",
+          "text": "A 主街",
+          "active": true,
+          "modeText": "A · 01 站前主街"
+        },
+        "observed": "art-a-street",
+        "eye": [
+          278.8,
+          10.488,
+          936
+        ],
+        "quat": [
+          -0.003277842930440409,
+          -0.009834585659995631,
+          -0.00003223795934194156,
+          0.9999462663720154
+        ],
+        "fov": 35.63777782904556,
+        "stationTime": 14,
+        "look": {
+          "timeOfDay": "evening",
+          "hemisphere": "c9cbe2",
+          "hemisphereGround": "a08068",
+          "hemisphereIntensity": 1.6,
+          "sun": [
+            {
+              "rgb": "ffc490",
+              "intensity": 2.3
+            }
+          ],
+          "toon": true,
+          "shadowTint": true,
+          "outline": 1,
+          "ao": 0.55,
+          "post": {
+            "exposure": 1.02,
+            "blur": 0,
+            "bloom": 0.2,
+            "distortion": 0,
+            "fringe": 0,
+            "vignette": 0.12,
+            "rays": 0,
+            "saturation": 1,
+            "contrast": 1.05,
+            "speed": 0
+          }
+        },
+        "islandTime": 14,
+        "camDirection": [
+          0.019667903082122552,
+          -0.006555967694040891,
+          -0.9997850733412393
+        ],
+        "pixelRatio": 1,
+        "dimensions": [
+          1440,
+          900
+        ],
+        "weathering": 1,
+        "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "hidden": true,
+        "walking": false,
+        "errors": [],
+        "glError": 0,
+        "hashes": [
+          "b5ffad591618eb1087e79f61f2dba724faf857a29e075486e5ecd56372bd2eea",
+          "6f23261be430332b8e21ffd861964b1f4df3c89fe622ce7d392d6d29ae2c460e",
+          "eac71effc664979b826ee6df50bd3e5732f37bba3597e7b6339b1ac139f349a6"
+        ],
+        "nativeSize": {
+          "width": 1440,
+          "height": 900
+        },
+        "file": "A-street.png",
+        "repeatPixels": {
+          "differentPixels": 3,
+          "maxDifferencePerChannel8Bit": 1
+        }
+      },
+      "B": {
+        "view": {
+          "name": "art-b-konbini",
+          "label": "B · 21 便利店正面",
+          "fov": 58,
+          "position": [
+            279.1,
+            9.8184,
+            912.8
+          ],
+          "target": [
+            272.48,
+            10.0534,
+            910.6
+          ]
+        },
+        "dom": {
+          "tag": "BUTTON",
+          "datasetView": "art-b-konbini",
+          "text": "B 便利店正面",
+          "active": true,
+          "modeText": "B · 21 便利店正面"
+        },
+        "observed": "art-b-konbini",
+        "eye": [
+          279.1,
+          9.8184,
+          912.8
+        ],
+        "quat": [
+          0.013653878147403252,
+          0.5849950384089397,
+          -0.009850566433920587,
+          0.8108620986267578
+        ],
+        "fov": 58,
+        "stationTime": 14,
+        "look": {
+          "timeOfDay": "evening",
+          "hemisphere": "c9cbe2",
+          "hemisphereGround": "a08068",
+          "hemisphereIntensity": 1.6,
+          "sun": [
+            {
+              "rgb": "ffc490",
+              "intensity": 2.3
+            }
+          ],
+          "toon": true,
+          "shadowTint": true,
+          "outline": 1,
+          "ao": 0.55,
+          "post": {
+            "exposure": 1.02,
+            "blur": 0,
+            "bloom": 0.2,
+            "distortion": 0,
+            "fringe": 0,
+            "vignette": 0.12,
+            "rays": 0,
+            "saturation": 1,
+            "contrast": 1.05,
+            "speed": 0
+          }
+        },
+        "islandTime": 14,
+        "camDirection": [
+          -0.948431612193484,
+          0.033667889556717234,
+          -0.315188753296918
+        ],
+        "pixelRatio": 1,
+        "dimensions": [
+          1440,
+          900
+        ],
+        "weathering": 1,
+        "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "hidden": true,
+        "walking": false,
+        "errors": [],
+        "glError": 0,
+        "hashes": [
+          "dc95944b80cad0dac5e48465b981185811408aa1515da9ab6bcf6c09edbce1aa",
+          "dc95944b80cad0dac5e48465b981185811408aa1515da9ab6bcf6c09edbce1aa",
+          "dc95944b80cad0dac5e48465b981185811408aa1515da9ab6bcf6c09edbce1aa"
+        ],
+        "nativeSize": {
+          "width": 1440,
+          "height": 900
+        },
+        "file": "B-konbini.png",
+        "repeatPixels": {
+          "differentPixels": 0,
+          "maxDifferencePerChannel8Bit": 0
+        }
+      },
+      "C": {
+        "view": {
+          "name": "art-c-alley",
+          "label": "C · 20 公寓后巷",
+          "fov": 45,
+          "position": [
+            287.65,
+            14.384808464050293,
+            767.3199999999999
+          ],
+          "target": [
+            278.4,
+            14.55,
+            770.06
+          ]
+        },
+        "dom": {
+          "tag": "BUTTON",
+          "datasetView": "art-c-alley",
+          "text": "C 公寓后巷",
+          "active": true,
+          "modeText": "C · 20 公寓后巷"
+        },
+        "observed": "art-c-alley",
+        "eye": [
+          287.65,
+          14.384808464050293,
+          767.3199999999999
+        ],
+        "quat": [
+          0.00512201791291099,
+          0.8012252009590126,
+          -0.006859231737600546,
+          0.5983016740914732
+        ],
+        "fov": 45,
+        "stationTime": 14,
+        "look": {
+          "timeOfDay": "evening",
+          "hemisphere": "c9cbe2",
+          "hemisphereGround": "a08068",
+          "hemisphereIntensity": 1.6,
+          "sun": [
+            {
+              "rgb": "ffc490",
+              "intensity": 2.3
+            }
+          ],
+          "toon": true,
+          "shadowTint": true,
+          "outline": 1,
+          "ao": 0.55,
+          "post": {
+            "exposure": 1.02,
+            "blur": 0,
+            "bloom": 0.2,
+            "distortion": 0,
+            "fringe": 0,
+            "vignette": 0.12,
+            "rays": 0,
+            "saturation": 1,
+            "contrast": 1.05,
+            "speed": 0
+          }
+        },
+        "islandTime": 14,
+        "camDirection": [
+          -0.9586784919004513,
+          0.017120602438809196,
+          0.2839761154386208
+        ],
+        "pixelRatio": 1,
+        "dimensions": [
+          1440,
+          900
+        ],
+        "weathering": 1,
+        "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "hidden": true,
+        "walking": false,
+        "errors": [],
+        "glError": 0,
+        "hashes": [
+          "65ce179f3039ddf3ec1e06031679e172e19907f25ccedfe10fe45cdcdacb83eb",
+          "65ce179f3039ddf3ec1e06031679e172e19907f25ccedfe10fe45cdcdacb83eb",
+          "65ce179f3039ddf3ec1e06031679e172e19907f25ccedfe10fe45cdcdacb83eb"
+        ],
+        "nativeSize": {
+          "width": 1440,
+          "height": 900
+        },
+        "file": "C-alley.png",
+        "repeatPixels": {
+          "differentPixels": 0,
+          "maxDifferencePerChannel8Bit": 0
+        }
+      },
+      "D": {
+        "view": {
+          "name": "art-d-laundry",
+          "label": "D · 24 洗衣店",
+          "fov": 48,
+          "position": [
+            283.5,
+            12.520055181715234,
+            783.8
+          ],
+          "target": [
+            282.5,
+            14.25,
+            777.4
+          ]
+        },
+        "dom": {
+          "tag": "BUTTON",
+          "datasetView": "art-d-laundry",
+          "text": "D 洗衣店",
+          "active": true,
+          "modeText": "D · 24 洗衣店"
+        },
+        "observed": "art-d-laundry",
+        "eye": [
+          283.5,
+          12.520055181715234,
+          783.8
+        ],
+        "quat": [
+          0.1297258927986663,
+          0.0767626424061459,
+          -0.010073721024303532,
+          0.9885227410703001
+        ],
+        "fov": 48,
+        "stationTime": 14,
+        "look": {
+          "timeOfDay": "evening",
+          "hemisphere": "c9cbe2",
+          "hemisphereGround": "a08068",
+          "hemisphereIntensity": 1.6,
+          "sun": [
+            {
+              "rgb": "ffc490",
+              "intensity": 2.3
+            }
+          ],
+          "toon": true,
+          "shadowTint": true,
+          "outline": 1,
+          "ao": 0.55,
+          "post": {
+            "exposure": 1.02,
+            "blur": 0,
+            "bloom": 0.2,
+            "distortion": 0,
+            "fringe": 0,
+            "vignette": 0.12,
+            "rays": 0,
+            "saturation": 1,
+            "contrast": 1.05,
+            "speed": 0
+          }
+        },
+        "islandTime": 14,
+        "camDirection": [
+          -0.14914959045888027,
+          0.2580205611636348,
+          -0.9545573789368302
+        ],
+        "pixelRatio": 1,
+        "dimensions": [
+          1440,
+          900
+        ],
+        "weathering": 1,
+        "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "hidden": true,
+        "walking": false,
+        "errors": [],
+        "glError": 0,
+        "hashes": [
+          "43df9d76f3e2ab4ce48da48fbece35bdf87db2e6d47f1ec6c3925b35cfd93fec",
+          "43df9d76f3e2ab4ce48da48fbece35bdf87db2e6d47f1ec6c3925b35cfd93fec",
+          "43df9d76f3e2ab4ce48da48fbece35bdf87db2e6d47f1ec6c3925b35cfd93fec"
+        ],
+        "nativeSize": {
+          "width": 1440,
+          "height": 900
+        },
+        "file": "D-laundry.png",
+        "repeatPixels": {
+          "differentPixels": 0,
+          "maxDifferencePerChannel8Bit": 0
+        }
+      }
+    },
+    "returnToA": {
+      "dom": {
+        "tag": "BUTTON",
+        "datasetView": "art-a-street",
+        "text": "A 主街",
+        "active": true,
+        "modeText": "A · 01 站前主街"
+      },
+      "eye": [
+        278.8,
+        10.488,
+        936
+      ],
+      "quat": [
+        -0.003277842930440409,
+        -0.009834585659995631,
+        -0.00003223795934194156,
+        0.9999462663720154
+      ],
+      "fov": 35.63777782904556,
+      "renderHashes": [
+        "6f23261be430332b8e21ffd861964b1f4df3c89fe622ce7d392d6d29ae2c460e",
+        "5765e839ebfdfc05390c526ed49fecbf56a3bc3406b671b082634e7a8fdeb5d8",
+        "5765e839ebfdfc05390c526ed49fecbf56a3bc3406b671b082634e7a8fdeb5d8"
+      ],
+      "pixels": {
+        "differentPixels": 1,
+        "maxDifferencePerChannel8Bit": 1
+      }
+    }
+  },
+  "timing": {
+    "source": "de9f59b4a8b949cff5df5bccf8ec81ce8db7c69c",
+    "verifiedSourceFiles": 45,
+    "startedAt": "2026-11-18T10:45:12.089Z",
+    "finishedAt": "2026-11-18T10:47:06.025Z",
+    "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "canvas": [
+      1440,
+      900
+    ],
+    "dpr": 1,
+    "samples": {
+      "file": "frames.json.gz",
+      "sha256": "508b6dfe93e61e8c915b9b0252afe63b066c6f633e9efb9a20a958cb26d08550",
+      "fps": "1000 × frame count / sum of RAF intervals",
+      "p95": "nearest rank",
+      "fixedSeconds": 10,
+      "walkingSeconds": 3
+    },
+    "threshold": {
+      "fps": 60,
+      "p95Ms": 16.7
+    },
+    "segments": {
+      "art-a-street": {
+        "frames": 658,
+        "durationMs": 10123,
+        "fps": 65.00049392472587,
+        "p95Ms": 15.5,
+        "p99Ms": 15.5,
+        "maxMs": 15.60000000000582,
+        "over20Ms": 0,
+        "pass": true,
+        "samplesSha256": "e5250aadff91e0ac70cb8cd98ec080eeaa8d7d3c55dbdbf07f8ed1a30403b5a3",
+        "camera": {
+          "position": [
+            278.8,
+            10.488,
+            936
+          ],
+          "quaternion": [
+            -0.003277842930440409,
+            -0.009834585659995631,
+            -0.00003223795934194156,
+            0.9999462663720154
+          ],
+          "fov": 35.63777782904556,
+          "hidden": true,
+          "target": [
+            280,
+            10.088000000000001,
+            875
+          ],
+          "currentView": "art-a-street",
+          "mode": "third"
+        }
+      },
+      "art-b-konbini": {
+        "frames": 651,
+        "durationMs": 10107.699999999997,
+        "fps": 64.40634367858169,
+        "p95Ms": 15.5,
+        "p99Ms": 15.69999999999709,
+        "maxMs": 30.90000000000873,
+        "over20Ms": 6,
+        "pass": true,
+        "samplesSha256": "ccd2c6d6fee236f1ff46c772b79bdd457f38f74c411aa0f78f554e01656f52b0",
+        "camera": {
+          "position": [
+            279.1,
+            9.8184,
+            912.8
+          ],
+          "quaternion": [
+            0.013653878147403252,
+            0.5849950384089397,
+            -0.009850566433920587,
+            0.8108620986267578
+          ],
+          "fov": 58,
+          "hidden": true,
+          "target": [
+            272.48,
+            10.0534,
+            910.6
+          ],
+          "currentView": "art-b-konbini",
+          "mode": "third"
+        }
+      },
+      "art-c-alley": {
+        "frames": 657,
+        "durationMs": 10107.600000000006,
+        "fps": 65.00059361272702,
+        "p95Ms": 15.5,
+        "p99Ms": 15.599999999991269,
+        "maxMs": 15.60000000000582,
+        "over20Ms": 0,
+        "pass": true,
+        "samplesSha256": "ab8b1a15feab4134a7826105b662dca9b384667024f4d7bb61d7548653d72b9c",
+        "camera": {
+          "position": [
+            287.65,
+            14.384808464050293,
+            767.3199999999999
+          ],
+          "quaternion": [
+            0.00512201791291099,
+            0.8012252009590126,
+            -0.006859231737600546,
+            0.5983016740914732
+          ],
+          "fov": 45,
+          "hidden": true,
+          "target": [
+            278.4,
+            14.55,
+            770.06
+          ],
+          "currentView": "art-c-alley",
+          "mode": "third"
+        }
+      },
+      "art-d-laundry": {
+        "frames": 657,
+        "durationMs": 10107.799999999988,
+        "fps": 64.99930746552175,
+        "p95Ms": 15.5,
+        "p99Ms": 15.60000000000582,
+        "maxMs": 15.60000000000582,
+        "over20Ms": 0,
+        "pass": true,
+        "samplesSha256": "c33be3f7f0b02f2c099a8ac150b133ada5e4d4809f96139accce6780fad34ebc",
+        "camera": {
+          "position": [
+            283.5,
+            12.520055181715234,
+            783.8
+          ],
+          "quaternion": [
+            0.1297258927986663,
+            0.0767626424061459,
+            -0.010073721024303532,
+            0.9885227410703001
+          ],
+          "fov": 48,
+          "hidden": true,
+          "target": [
+            282.5,
+            14.25,
+            777.4
+          ],
+          "currentView": "art-d-laundry",
+          "mode": "third"
+        }
+      },
+      "walk-third": {
+        "frames": 201,
+        "durationMs": 3107.600000000006,
+        "fps": 64.68013901403,
+        "p95Ms": 15.5,
+        "p99Ms": 15.60000000000582,
+        "maxMs": 30.79999999998836,
+        "over20Ms": 1,
+        "pass": true,
+        "samplesSha256": "69cfc0ffd2ca5712d9cda9798c018348bb23e0da69892e315bbce5ced012cf73",
+        "walk": {
+          "from": {
+            "feet": [
+              281.6,
+              8.812,
+              934
+            ],
+            "mode": "third",
+            "timeMs": 104827.80000019073
+          },
+          "to": {
+            "feet": [
+              280.94347946279134,
+              8.549116929387647,
+              924.6113189067017
+            ],
+            "mode": "third",
+            "timeMs": 107954.60000014305
+          },
+          "distanceXZ": 9.411607295644723
+        }
+      },
+      "walk-first": {
+        "frames": 203,
+        "durationMs": 3122.899999999994,
+        "fps": 65.00368247462306,
+        "p95Ms": 15.5,
+        "p99Ms": 15.5,
+        "maxMs": 15.60000000000582,
+        "over20Ms": 0,
+        "pass": true,
+        "samplesSha256": "62826dfad8a8ee4609ccb5d1932990cd87152596cbe3f249e9a4b380af93b5f1",
+        "walk": {
+          "from": {
+            "feet": [
+              280.9280013919682,
+              8.542919221083741,
+              924.3899721815623
+            ],
+            "mode": "first",
+            "timeMs": 108739.10000014305
+          },
+          "to": {
+            "feet": [
+              280.2709873585429,
+              8.279838545379992,
+              914.9942337635712
+            ],
+            "mode": "first",
+            "timeMs": 111862.30000019073
+          },
+          "distanceXZ": 9.418681853605172
+        }
+      }
+    },
+    "walkingInputs": [
+      {
+        "type": "keydown",
+        "code": "KeyW",
+        "key": "w",
+        "trusted": true,
+        "timeMs": 104828.5
+      },
+      {
+        "type": "keyup",
+        "code": "KeyW",
+        "key": "w",
+        "trusted": true,
+        "timeMs": 107939.60000014305
+      },
+      {
+        "type": "keydown",
+        "code": "KeyW",
+        "key": "w",
+        "trusted": true,
+        "timeMs": 108739.40000009537
+      },
+      {
+        "type": "keyup",
+        "code": "KeyW",
+        "key": "w",
+        "trusted": true,
+        "timeMs": 111862.20000004768
+      }
+    ],
+    "renderOk": true,
+    "nativeExit": 1,
+    "jsExceptions": 0,
+    "networkFailures": [
+      {
+        "asset": "/prop-assets/plastic_crate_02/plastic_crate_02.bin",
+        "stage": "waiting-for-ready-frame",
+        "error": "net::ERR_ABORTED",
+        "canceled": true
+      }
+    ],
+    "canonicalHostSha256": "b225b1006b69f1dea71ec5aa54629dae614e00c1a0ed60c9a617f8293fa0a7e0",
+    "measuredHostSha256": "aa7b2d9aa642174b602b5c46782176f9ec64b6500092144f6b9f9ba54b0c3cc5"
+  },
+  "limits": [
+    "Still images freeze both scene clocks to 14 and hide the HUD. Frame intervals come from a separate animated session.",
+    "These RAF intervals cover render submissions and browser scheduling on this RTX 3060 Laptop. Walking uses native held-W input and is separate from the four fixed camera measurements.",
+    "C uses the paved rear corridor with an open grassy edge. D is a physically composed camera at the town lane, whose background city mesh has no player navigation surface."
+  ]
+}

@@ -1,0 +1,2 @@
+# Preserve the captured log bytes, including original line endings.
+*.log -text -eol

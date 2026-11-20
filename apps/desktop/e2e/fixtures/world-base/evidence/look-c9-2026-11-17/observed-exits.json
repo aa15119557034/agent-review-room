@@ -1,0 +1,15 @@
+{
+  "source": "Root runner observations supplied in the curation handoff; these are not inferred from report.ok.",
+  "runs": [
+    {
+      "artifact": "gpu-town-c9",
+      "exitCode": 1,
+      "rootExecSession": 31136
+    },
+    {
+      "artifact": "gpu-look-c9-v1",
+      "exitCode": 1
+    }
+  ],
+  "note": "Both runs rendered successfully but retained crate glTF ERR_ABORTED transport failures. No retry to obtain green evidence."
+}

@@ -1,0 +1,44 @@
+{
+  "recordedHead": "5463714131eba64f83a828ba509c023072f4d4ea",
+  "matchingCommittedInputs": "5cf3ef7d784ff069b87fef9b8051de63b6695e48",
+  "cleanRecordedHeadClaimed": false,
+  "files": [
+    {
+      "file": "scripts/diagnose-asset-transport.cjs",
+      "sha256": "07d717503cd749d2b9949f801a3ff90e47cc4456926715e85e23b0dc0e1d2210",
+      "verifiedBy": "Pre-commit frozen CPU check and entry-probe hash records only",
+      "exactGitBlobVerified": false,
+      "note": "Do not claim clean 5463714 or byte-identical final driver. No old source reconstruction."
+    },
+    {
+      "file": "scripts/baseline.cjs",
+      "sha256": "b2b5c749fd960c5452f0b02b883de813725a25f00450be0a8b15d1aaf489a309",
+      "verifiedBy": "5cf3ef7d784ff069b87fef9b8051de63b6695e48"
+    },
+    {
+      "file": "scripts/prepare-props.cjs",
+      "sha256": "3c7de874e46bd7049a7e7f7a95dc2fb642bffab512d2e4c558cf198d8a5a7536",
+      "verifiedBy": "5cf3ef7d784ff069b87fef9b8051de63b6695e48"
+    },
+    {
+      "file": "prop-assets.json",
+      "sha256": "6a4b86e144b50835b1152f4aa32ac4c5e50e352956979cd4ca5fc5f21561810a",
+      "verifiedBy": "5cf3ef7d784ff069b87fef9b8051de63b6695e48"
+    },
+    {
+      "file": "upstream/petalwake/vendor/three/build/three.core.js",
+      "sha256": "613e370f76638fdef83926642bf256dc9615684922de1ce1f63a8583e5d78578",
+      "verifiedBy": "5cf3ef7d784ff069b87fef9b8051de63b6695e48"
+    },
+    {
+      "file": "src/island.js",
+      "sha256": "7d069b2261c81fb3defeb4618ddbc1fe32fc2a13705773510c4bfc9e2cde7df2",
+      "verifiedBy": "5cf3ef7d784ff069b87fef9b8051de63b6695e48"
+    },
+    {
+      "file": ".local/petalwake-25443cef0eba802052d9ef24c94ba3c4157b6f2e/assets/terrain/props.json",
+      "sha256": "e7ede80757854c2952f47b584127bca156b2d606dca6f8f359d25b3070de4574",
+      "verifiedBy": "Exact-commit source-files.json and actual local bytes; ignored file never git show"
+    }
+  ]
+}

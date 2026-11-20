@@ -1,0 +1,102 @@
+{
+  "ok": true,
+  "cpuOnly": true,
+  "gpuStarted": false,
+  "electronStarted": false,
+  "gitExecuted": false,
+  "work": "D:\\codex\\2026-11-16\\world-implementation\\world-base\\apps\\desktop\\e2e\\fixtures\\world-base\\.local\\prop-preparation-checks-8zjuAj",
+  "checks": [
+    {
+      "name": "real local nine original files, size/MD5/SHA and closure",
+      "ok": true
+    },
+    {
+      "name": "copy source and repeat verify without overwrite",
+      "ok": true
+    },
+    {
+      "name": "same-size corrupt existing target",
+      "ok": true,
+      "rejection": "plastic_crate_02/plastic_crate_02_1k.gltf: md5 mismatch; existing bytes preserved without overwriting"
+    },
+    {
+      "name": "wrong-size target",
+      "ok": true,
+      "rejection": "plastic_crate_02/plastic_crate_02_1k.gltf: bytes mismatch; existing bytes preserved without overwriting"
+    },
+    {
+      "name": "same-size corrupt source before target writes",
+      "ok": true,
+      "rejection": "plastic_crate_02/plastic_crate_02_1k.gltf: md5 mismatch; existing bytes preserved without overwriting"
+    },
+    {
+      "name": "missing target without acquisition option",
+      "ok": true,
+      "rejection": "Missing plastic_crate_02/plastic_crate_02_1k.gltf; use --source=<textured-props directory> or --download"
+    },
+    {
+      "name": "manifest traversal",
+      "ok": true,
+      "rejection": "Invalid asset relative path: ../outside.gltf"
+    },
+    {
+      "name": "target root junction escape",
+      "ok": true,
+      "rejection": "Path escapes D:\\codex\\2026-11-16\\world-implementation\\world-base\\apps\\desktop\\e2e\\fixtures\\world-base\\.local\\prop-preparation-checks-8zjuAj\\target-junction: D:\\codex\\2026-11-16\\world-implementation\\world-base\\apps\\desktop\\e2e\\fixtures\\world-base\\.local\\prop-preparation-checks-8zjuAj\\outside-target"
+    },
+    {
+      "name": "source junction escape",
+      "ok": true,
+      "rejection": "Path escapes D:\\codex\\2026-11-16\\world-implementation\\world-base\\apps\\desktop\\e2e\\fixtures\\world-base\\.local\\prop-preparation-checks-8zjuAj\\source-junction: D:\\codex\\2026-11-16\\world-implementation\\asset-candidates\\textured-props\\downloads\\plastic_crate_02\\plastic_crate_02_1k.gltf"
+    },
+    {
+      "name": "stale partial preserved",
+      "ok": true,
+      "rejection": "EEXIST: file already exists, open 'D:\\codex\\2026-11-16\\world-implementation\\world-base\\apps\\desktop\\e2e\\fixtures\\world-base\\.local\\prop-preparation-checks-8zjuAj\\stale-part\\.local\\textured-props\\plastic_crate_02\\plastic_crate_02_1k.gltf.part'"
+    },
+    {
+      "name": "hashed glTF with unlisted dependency",
+      "ok": true,
+      "rejection": "plastic_crate_02/plastic_crate_02_1k.gltf: unlisted dependency plastic_crate_02/textures/missing.jpg"
+    },
+    {
+      "name": "real official HTTPS curl download of missing 2947-byte glTF; remaining eight preverified",
+      "ok": true
+    },
+    {
+      "name": "Node HTTP GET nine SHA/lengths; HEAD; direct .local and encoded traversal blocked",
+      "ok": true
+    },
+    {
+      "name": "actual baseline VM: nine actual hashes plus scripts in source manifest; bad file rejects before spawn (all child/Git calls stubbed)",
+      "ok": true
+    },
+    {
+      "name": "transport target assembly 3 Petal + 9 props, 72 planned cases; no Electron transport execution",
+      "ok": true
+    }
+  ],
+  "frozenSourceFiles": [
+    {
+      "file": "prop-assets.json",
+      "syntax": "JSON parse passed",
+      "sha256": "6a4b86e144b50835b1152f4aa32ac4c5e50e352956979cd4ca5fc5f21561810a"
+    },
+    {
+      "file": "scripts/prepare-props.cjs",
+      "syntax": "node --check exit 0",
+      "sha256": "3c7de874e46bd7049a7e7f7a95dc2fb642bffab512d2e4c558cf198d8a5a7536"
+    },
+    {
+      "file": "scripts/baseline.cjs",
+      "syntax": "node --check exit 0",
+      "sha256": "b2b5c749fd960c5452f0b02b883de813725a25f00450be0a8b15d1aaf489a309"
+    },
+    {
+      "file": "scripts/diagnose-asset-transport.cjs",
+      "syntax": "node --check exit 0",
+      "sha256": "07d717503cd749d2b9949f801a3ff90e47cc4456926715e85e23b0dc0e1d2210"
+    }
+  ],
+  "finalVerifyOutput": "9 prop files verified: 3579256 bytes, size + MD5 + SHA-256 + glTF closure; original bytes unchanged"
+}

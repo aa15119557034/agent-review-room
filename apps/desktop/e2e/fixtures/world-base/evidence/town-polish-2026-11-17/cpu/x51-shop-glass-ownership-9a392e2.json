@@ -1,0 +1,89 @@
+{
+  "head": "9a392e23e2d8b6800cc91f2b1995d639f22ff3ca",
+  "sourceHashes": {
+    "src/city-apartments.js": "24980d2755706b63de9c737b365f80b3e2e949dc9e86181e1225a7a1213dee47",
+    "src/city.js": "aa85c5cc747bc7ed9be90e664724dc898651a7f2c7ba540197cac9b28d937033",
+    "src/station.js": "45dfa8e6011e4bb0f7b3515428b25ec5d3496478a4593516c89a5105dc9c80ef",
+    "src/skyline.js": "4d9e6b0c847ab05a181e202b7c0902e43d2b3f4048fb2de3e00d1a86ae5f5650",
+    "upstream/sakuragaoka/src/core/materials.js": "167c859795e828dd281f7628ffadfc5342bae4ef16c307d0eb7188816358733b",
+    "upstream/sakuragaoka/src/world/houses/tex.js": "8d654174fa705a74554b5dccfa12638dd55430e662407910a88a434eb4a71b85"
+  },
+  "review": "Read-only material ownership/clip audit. No renderer, WebGL, Electron, repository mutation or GPU validation.",
+  "finding": {
+    "severity": "P2",
+    "summary": "City-exclusive cached shop glass bypasses the city material ownership set and is unreachable from station root disposal.",
+    "chain": [
+      {
+        "file": "src/city-apartments.js",
+        "line": 176,
+        "fact": "Calls H.ctx.mat.glass directly for tint #e6eef0, opacity .14, streaks false."
+      },
+      {
+        "file": "src/city.js",
+        "line": 47,
+        "fact": "ctx spreads station.ctx; mat remains the station material factory. Only source.M accesses pass through the city clone Proxy at line49."
+      },
+      {
+        "file": "upstream/sakuragaoka/src/core/materials.js",
+        "line": 133,
+        "fact": "Cache key is glass| + JSON.stringify(opts). New ShaderMaterial is inserted into cache at line188. Cache membership does not register an owner."
+      },
+      {
+        "file": "src/city.js",
+        "line": 58,
+        "fact": "Disposal adds geometry and customDepthMaterial from root but does not collect ordinary object.material; only existing ownedMaterials are disposed at line60. Direct factory glass is not in that set."
+      },
+      {
+        "file": "src/station.js",
+        "line": 157,
+        "fact": "Disposal collects materials by traversing station.root only, and does not iterate ctx.mat.cache. City root is separately mounted under the scene."
+      }
+    ],
+    "key": "glass|{\"tint\":\"#e6eef0\",\"opacity\":0.14,\"streaks\":false}",
+    "scope": "Affects explicit city/station disposal and accuracy of stats.materials. This audit does not assert a visible rendering regression or quantify leaked VRAM."
+  },
+  "cacheEvidence": {
+    "uniqueTintSource": [
+      {
+        "path": "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base/src/city-apartments.js",
+        "line": 176,
+        "text": "  const shopGlass = H.ctx.mat.glass({ tint: '#e6eef0', opacity: .14, streaks: false });"
+      }
+    ],
+    "stationHouseGlass": {
+      "tint": "#8fa6bb",
+      "opacity": 0.38
+    },
+    "staticFinding": "Scanned fixture src and all vendored Sakuragaoka JS glass call sites. The exact tint appears only at the new city call; other direct calls and the shopsA/shopsB wrappers use distinct literals/defaults. A full station CPU build was not performed."
+  },
+  "clip": {
+    "current": "New key is created after station.clipMaterials has run. Factory defaults clippingPlanes=null, clipShadows=false, so current shop glass does not borrow the old station rectangle clip.",
+    "potential": "Factory cache hits retain mutations, including clippingPlanes. Directly borrowing a cache hit from station.root could retain station clipping; current exact key is not such a hit."
+  },
+  "cpuProbe": {
+    "scope": "Actual material factory and Three classes; representative station-root with its existing house-glass material, not a complete station build or GPU test",
+    "factoryNewEntry": true,
+    "sameIdentityOnRepeat": true,
+    "shopClipPlanes": null,
+    "shopClipShadows": false,
+    "shopUniforms": {
+      "opacity": 0.14,
+      "streaks": 0
+    },
+    "cityOwnedContainsShop": false,
+    "stationRootContainsShop": false,
+    "shopDisposeEventsAfterBothRootPatterns": 0,
+    "cacheStillRetainsShop": true,
+    "existingCachedMaterialRetainsClip": true
+  },
+  "probeMethod": "Load the actual vendored Three module in Node (no WebGLRenderer constructed). Evaluate core/materials.js with only its import/export syntax replaced for VM binding to real THREE. Create existing house-glass and representative station-root, assign clip planes, call new shop options twice, then mirror current city owned-set and station-root traversal disposal. Observe dispose event count, cache membership, and clipping fields. This verifies the factory/disposal mechanism, not complete station initialization or GPU allocation.",
+  "minimalFix": {
+    "recommendation": "Create a dedicated city-owned clone of the existing city-local M.glass, set its cloned uTint/uOpacity/uStreaks uniforms to the requested values, register it in ownedMaterials, and pass it explicitly to buildTownApartment/buildLaundryShop. Preserve compile hooks/cache key as the existing city clone helper does, and ensure no station clip planes are attached. Use this separate instance only for shop panes.",
+    "avoid": [
+      "Do not mutate M.glass itself: the cached city clone is used by other city windows.",
+      "Do not merely clone the new station factory return and leave the extra station cache entry as an assumed owner.",
+      "Do not dispose all station cache materials during city disposal or dispose a possibly shared cache hit."
+    ],
+    "benefit": "Keeps the requested appearance, avoids creating a city-exclusive station cache entry, and gives the shop glass one explicit owner."
+  }
+}

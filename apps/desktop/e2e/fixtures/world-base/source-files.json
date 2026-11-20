@@ -1,0 +1,3802 @@
+[
+  {
+    "project": "petalwake",
+    "path": ".gitattributes",
+    "sha256": "c9e7176becf7dc819cd4fbac0345a23a220e20d7bc8c23513b1e73df1505f520"
+  },
+  {
+    "project": "petalwake",
+    "path": ".gitignore",
+    "sha256": "3817b7c0ec5fe55a6be4aa6b77ef4bc8e3c4b26900e64259c0c013073e203986"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/models/boulders.glb",
+    "sha256": "05123f357a9b8029fff53fe962c8304df64824d73053bf4de574b65cde41bd1a"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/models/boulders.json",
+    "sha256": "6529e64faf6b0350e6ba7ce96e6a1aae8d85cf649df8cbe9c287018ef07e2f8e"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/models/boulders_preview.png",
+    "sha256": "235e48afb6385a85093d1c134741f658e8ed1e8d6a42c500880a789b1b44bf4b"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/models/lighthouse.glb",
+    "sha256": "53f9ba81d89a1c4485590581a481679081eba129dd74047251b7d1e3a58d47fa"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/models/lighthouse.json",
+    "sha256": "d96807fb22c2479e1aeec35d089d5939404edfbcf8cac647326b689b9085dbea"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/models/lighthouse_preview.png",
+    "sha256": "10b5db5753c700a7c4adf3c4b25f4b9bd6e0d72ed00d5b185f6747431cf58fee"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/models/menhir.glb",
+    "sha256": "82d68e3300134f1eb851707528d09cca01d6fb5db91e597b14de15b9e7bacb6c"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/models/menhir.json",
+    "sha256": "a24314482960cf4c87310d7f77a14e79f1c9c83245ed1be7bf2b708795bf867f"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/models/menhir_preview.png",
+    "sha256": "df66617bb956ccdb03182373a806edb08cbcdc37b7cb1dbdca22de973bcdda9c"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/models/rider.glb",
+    "sha256": "4c2cb8c395bc14110380b80561690970cbfc6b16f6fde822b293c668e0860682"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/models/rider.json",
+    "sha256": "ea0bd5896549f3bc4be08bc3a0a2e9e88f03e824ed524f83509ddc72f609a618"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/models/rider_stand.glb",
+    "sha256": "9160c73058698da275cf39bc693ebcf79f934e1af23e094f89001332e8bb4efd"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/models/rider_stand.json",
+    "sha256": "c907a9e8769871aaa977ecdeccba9d43f905fab4c128a397c91cc3924777045e"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/models/tree.glb",
+    "sha256": "2030e3db94e8f0b7e57cb46e339a00b88ea4f1a3f3e8ebe03ea1eed5d81ef9d0"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/models/tree.json",
+    "sha256": "14298475b117199c88965294a7ee2d6ffe4d79a03431fea5b12dd0ae5a49ac9e"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/models/tree_preview.png",
+    "sha256": "ee9ca6f0f86c851e245a003db049112e75f4fa9748fadd9a93eda9333efad762"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/east.json",
+    "sha256": "77e3ee3d557529399241106ea98acaa066a6552c4ec7163e32b9517bc0496426"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/models/east_anemone.glb",
+    "sha256": "0b2a76b465cb36555cd11c887c1776c1d6b1c5a4105ea05631aa227abeff5f46"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/models/east_anemone.json",
+    "sha256": "da79318f6ccb77d763ec64b71abae5beb2ebbe3a6581ef55f2c1308daf054714"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/models/east_bell.glb",
+    "sha256": "cfa31586ce35581f736b26bc1225b1f9b3b5b49ed5b6eb64c324b2d2dbdb95eb"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/models/east_bell.json",
+    "sha256": "2c874c72614a48de7e6832d1694a28b58d467b78ff0c944d8885f78e3744fba9"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/models/east_bucket.glb",
+    "sha256": "186e290b2764dce666e1fb87f21f1809f05d53a6e98877943766126ed40bb5ec"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/models/east_bucket.json",
+    "sha256": "dad617fa9e131d719abbab5294a5568fc4155902b0b25c7bb07ad5fba2a41a03"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/models/east_cairn.glb",
+    "sha256": "cbd8a6baa22615958166ab86410a2a2cb5f9d9308db5c44a7804339eb4ae9711"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/models/east_cairn.json",
+    "sha256": "f968d38ceafb5ff3855ec8c16850227ec35dfda539da1287531bfb532c44fb65"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/models/east_cairnlet.glb",
+    "sha256": "e08ecf566618ca79b7337914b057eb3fad3dbe2c92fa2aea468ae26392082a30"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/models/east_cairnlet.json",
+    "sha256": "5a92d345fb6a569cc7ec5930e6c784910b24ae82b6b4721820140766d3b73cb3"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/models/east_charms.glb",
+    "sha256": "29663a2a5c546c065b3525a0c46fca232e0702c61b9e1c2aba444c7c1e972fd8"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/models/east_charms.json",
+    "sha256": "bcca745ded526a9c808b726b22db38f8da1161bb1c4207336eed83906746d579"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/models/east_cinder.glb",
+    "sha256": "76500d4096eb29eb04d0982ec5a7c15e64f7faea92f746bb59145b88f15477f6"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/models/east_cinder.json",
+    "sha256": "39f4273eec7649b1fda54524aa28c453883d7df9e04b18577725652e72d12ba5"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/models/east_clam.glb",
+    "sha256": "3aef829153a265754856d60131502a019e9aded4700fd9f9d42f019738b6a306"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/models/east_clam.json",
+    "sha256": "9e4de04a65fbe4952e1b329759b5026a8a2da32a033a547d726259ce09bb3e41"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/models/east_conch.glb",
+    "sha256": "6edb6f82ed55d3287f0461b18af9b84e39464b5123e730cc684050d5d9e9bbf3"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/models/east_conch.json",
+    "sha256": "1e32f9c858d6f093314a945a69e350fe480103a8e0f10f87f16bd1db1dad41f7"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/models/east_coral.glb",
+    "sha256": "7eb4a516d949e63e094444c16505fe0a6493265dad853253e88f3445ca949e6c"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/models/east_coral.json",
+    "sha256": "9dc6fe1b9e5182b176800bd3275d96c099ed486133bcfefb89c15e9dc7a1c316"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/models/east_coralbush.glb",
+    "sha256": "1fb9327d67551ad7de4a812b613759e76454a8edea1b0984a9d0bc7324344344"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/models/east_coralbush.json",
+    "sha256": "c16d11e2e2215c1c11ba66869a83945cfa9f5e1726fdf2a69322311588e3f8e9"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/models/east_cushion.glb",
+    "sha256": "46be451e0232c60666cb833063a6df33edb5e711d5082bb178ed5529d0728b59"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/models/east_cushion.json",
+    "sha256": "274571a4ec8f0dadc7736dda666e1de85c0e39bcdd8b48a328ef55ed3584f4d8"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/models/east_driftwood.glb",
+    "sha256": "fd22ec6c84e1492481001ba33b8debfd59b466e9a9719d4056abd40ab4070a3e"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/models/east_driftwood.json",
+    "sha256": "dea942a9c55669f75d1f0b936035e44dcefa215730743cb6553671eedf87fc92"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/models/east_emberleaf.glb",
+    "sha256": "4b1517a00421fbf2fb3bfbbd4ba7f2584d5ea6af7ead564a82a8acbfd5e05d9d"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/models/east_emberleaf.json",
+    "sha256": "3d87804c21e2698014234abf4f0c918b90e12c1c4bae4a78e403b482428fe0eb"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/models/east_embermoss.glb",
+    "sha256": "0c575aadf7d3dff4f06bf7b5d8268cd47c1f3e12e985067ba32786cf992c6364"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/models/east_embermoss.json",
+    "sha256": "86beb7610b01eafa2528a4955eca5b85c625c561ec368ae5a5c42aa1d7484285"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/models/east_emberstone.glb",
+    "sha256": "2a0e83b70c12071bef65e2e0376a8d3a07355a2bc5b237709af1456225cb9d3a"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/models/east_emberstone.json",
+    "sha256": "214ddc4dbc320dd856049fb6842783eec7e15841e3df02cf6a512ebe05fb59ec"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/models/east_ferrylight.glb",
+    "sha256": "cdfc834aaa28bf96ed5ca29205cce769d2aebe078c79f369b9129c6a06a9fde6"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/models/east_ferrylight.json",
+    "sha256": "7e10b05bdea87f247e58cc44bcf2adbe01447dbe609b837cbfa1f6f1cbe83e71"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/models/east_glasslily.glb",
+    "sha256": "482f333b6d0d972b97175ef22a913d3e739371d65a39cb60b27368176b703887"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/models/east_glasslily.json",
+    "sha256": "2637222722e9ae42c8528a3d80369366400d9f76f57c856fae0ca17f59347f20"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/models/east_jetty.glb",
+    "sha256": "7f0aff42a9782c31d6a3ede2cd14d53570a75248b3be682d007ec4e0dcb78bcd"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/models/east_jetty.json",
+    "sha256": "2bd85ef8713d4eed816bcf68f951fcc40a937c3eda412ac626e414ae132a28d5"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/models/east_lanternberry.glb",
+    "sha256": "97f6c0549f3e7de4ececa1163a54466104bf9c043a3ca52ebddc39791e07bee2"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/models/east_lanternberry.json",
+    "sha256": "a351673b81e6e8060bcb06a462aa480d892eb1eeac296e995dfd99237890b9f2"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/models/east_lotus.glb",
+    "sha256": "9112f31ef44afe451660f8ddea14460a58d2f335504876b150d06a40d02ab817"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/models/east_lotus.json",
+    "sha256": "5ae1a3b89cba660f08ef8b1d52364072a9c38b06c4ea6ddf552fff2f81d4bbf9"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/models/east_mangrove.glb",
+    "sha256": "4d74a73d9ee0bec42aeb4a2377ae4bd079902f67ce2183a1292fed7dba5c9a1f"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/models/east_mangrove.json",
+    "sha256": "48d74811b3b74be1541a487219871f420eda9ee0ae2687ce469c8317ec1307fb"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/models/east_meteor.glb",
+    "sha256": "82d49d16373387049a8296c7c8746c0a9783121fad8aac30893bfe9f32c51c21"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/models/east_meteor.json",
+    "sha256": "14e0736c88dd4b747fbf22a7ce8115a92d0a3279a88cf7029ba000956b8efcf6"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/models/east_moorpost.glb",
+    "sha256": "17135d5f1cab006b127d72e26b28ed487b178a720d4ca8f0acbb00d85d800dfe"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/models/east_moorpost.json",
+    "sha256": "1de0f028e49ef67ac48be238a94c370d03763a01bc7c6fd7e80f414e241946bf"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/models/east_pearl.glb",
+    "sha256": "bcb8adfcb89c282053866540aa93e290212c09a1b43e93b0b14e72b4a02a8e07"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/models/east_pearl.json",
+    "sha256": "0ec99e18a877bbed460ad5d022d8a9d1f09b3503eb2d0246cf370030090420b7"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/models/east_pine.glb",
+    "sha256": "7d03e54249637f2a1c799d3ff81d5825bb568b4f0089b0f37a8a01da43f5650d"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/models/east_pine.json",
+    "sha256": "b3e051e0a1b615101ca53edd6638d0d0fb5fbd254ebfab5043d2b244f335dc4e"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/models/east_plume.glb",
+    "sha256": "9bcb0e5234fceb610eafc1c7fe7bca9636d4e97f182b942eb1d3d1027550b73a"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/models/east_plume.json",
+    "sha256": "c61cf0dd93e4d1c810c6dc3f61d7c317a25f72abf6bbc48b155a12d7ac6f4995"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/models/east_pools.glb",
+    "sha256": "259fde7d80b76f10ad835e6d83cece178d8c7b6da7669283a52d5dbaaf3b3f3d"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/models/east_pools.json",
+    "sha256": "9840142258b563be2dffa7c8e1e3d8f7cbe783ac729814bfefc742558fad9744"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/models/east_ribarch.glb",
+    "sha256": "57962c9fe0f1862b962248450cfa73786fe7fc535359bdf7eb88217533b7c73f"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/models/east_ribarch.json",
+    "sha256": "6434a96397aedf5c174859e4bd3ea33a30f15050a93337e0bce443f3caee797f"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/models/east_scallop.glb",
+    "sha256": "b672621e92392dd2857b2b2d115233cf9adc7a1b4d05670e2d4a6aecb3bbf44e"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/models/east_scallop.json",
+    "sha256": "21df83c9c0bc18762cf5199289981c788e5faed64e7c56699a8e3b74f54b886d"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/models/east_scorchgrass.glb",
+    "sha256": "e9b6e27eccbdeea31701d0f08cfb3e60d17999c176f90a506e5d6e765a047474"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/models/east_scorchgrass.json",
+    "sha256": "b3335d6ee7fd39aa4c1683394214b9a3b67080c25210954168cbd17ddad8a635"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/models/east_seafan.glb",
+    "sha256": "f5b05f2982af90cde8ac3c1c6d10bdacdb8433ecb03b854da55f951cbfd27952"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/models/east_seafan.json",
+    "sha256": "af781724d24a81d65191ef574033563999dbdc44ad7d408865530ddec0f08d38"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/models/east_seaholly.glb",
+    "sha256": "38479a4faeae369c62e22418375ee5e2228d04d54c802c9028086c1d22f45935"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/models/east_seaholly.json",
+    "sha256": "2a9836c073846b18cd850dc1fefdea285979a9febcbab2c2fa8e07ade02d48e3"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/models/east_shard.glb",
+    "sha256": "7147f6d42018022b19e16689c39622367e9593c252856e700e2dbb519f044d1f"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/models/east_shard.json",
+    "sha256": "b5110a0b06378a735cce7015034c98863aa26d1eaf36457594c748e8c0f613ad"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/models/east_skiff.glb",
+    "sha256": "9ce041203758cc597436d5d8bc64be55f4de1877dc83173647fa58824bdd0ff7"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/models/east_skiff.json",
+    "sha256": "5358d888291f22aa9f98d262b7b97812cb0d036e791a0256738997a497eb9ca9"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/models/east_skybell.glb",
+    "sha256": "b32822509aa65fd309c1b96578ab0465c51f38b46484cce9c9c80978c2e97392"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/models/east_skybell.json",
+    "sha256": "a558a132964db4425f44d09708392aa40b2495dd683f339d60f5e5ffa871bbf3"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/models/east_songbone.glb",
+    "sha256": "92d79a2eab4f01c590ed6ed969243cf93df34e6db562a052e4a6c35a4b12deb0"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/models/east_songbone.json",
+    "sha256": "1add6dd4f2a255156a85b4e23d61f73dca1cf2a5d9715b8a22b6092de830a121"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/models/east_splinter.glb",
+    "sha256": "fe8d38ce8449ad467e870789cf1e27d29f33b03023044f29919b096fe34898ae"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/models/east_splinter.json",
+    "sha256": "5f6441acd30e2048e8c3005374441c172eeecd2c03700d285f25205891f85461"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/models/east_starfish.glb",
+    "sha256": "92578187e0f8a2adc9ba9114cc1fed8bf9af1ae7c707a8bc55b2e6a0589f9189"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/models/east_starfish.json",
+    "sha256": "190dafd80912199497158c393c65ad3b440138a3715704b3df09bc778868f6b1"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/models/east_starglass.glb",
+    "sha256": "ed21a0a339b48054b8d63b9bf7d95d9a7739651c8eed24b957e6e8f8b9c89b7a"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/models/east_starglass.json",
+    "sha256": "84a90508234d41da2040264ef04576c8cf2119e9c245037c616a08726a868460"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/models/east_stepstone.glb",
+    "sha256": "ebf6e8ca66c134c17eae4eec08feac1a5cc1a01bcb15dedd6ee35c35268e7073"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/models/east_stepstone.json",
+    "sha256": "001379c955757436ce954dff3155dbf91dd1badc860cccb590bea30af0fb0e07"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/models/east_thrift.glb",
+    "sha256": "81a13435e25948b04e5b05fba0c2e80f0862c4d354f5b683b82e396f6abdb605"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/models/east_thrift.json",
+    "sha256": "1c9e765fcfb2a2c42530f3f24defb58b2f286b4014e542a903275b7567a00c7e"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/models/east_whale.glb",
+    "sha256": "8d4b1cc36061e2bf57ffb6136431d2712b179021b04fec9e825ebab71062f321"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/models/east_whale.json",
+    "sha256": "04ac0cf195a4a01986f0bb800d155c70dad6f647aeb3e6f73724d5f1fce8c4f0"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/west/anchor.glb",
+    "sha256": "866fd2cf0977d51da77fb36b359c3a912bb91c09e672a61a039561ceb7fd160b"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/west/anchor.json",
+    "sha256": "834ba913b38dc41a9bda7b1f652f928910dceecf6bd14ceb431724cd1825a77a"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/west/blossom_tree.glb",
+    "sha256": "b2354aef7be298db514d5eef4d2b6cc1d2261c35f338b37c1c242b4b452a4d9d"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/west/blossom_tree.json",
+    "sha256": "9aaecaa88352b7a6d9b801b6f389f57f2f7072d1d42c2c4eff0531a2120c440c"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/west/bunting.glb",
+    "sha256": "ab3b4d47e3c78452bb283e083e4bdb852356d303ecb3cf15d079a5c9fc9c9d15"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/west/bunting.json",
+    "sha256": "4956d90387a3ec4e43b031616160f21314ded5a1626d90f86343420cf7ee20f8"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/west/cottongrass.glb",
+    "sha256": "849005919ab2f5a1b7e467b4e5ce5fafda543e322c39b785bc1012956bb1eb3e"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/west/cottongrass.json",
+    "sha256": "6a9c838b03fb4e61b4ed1b41c1c6122b66ef96ad51d9f55b723eb077363487d8"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/west/dandelion_bloom.glb",
+    "sha256": "b76cb1b25d7b3786441847dc6e410ead9491770f45876c6981c40235bec8d907"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/west/dandelion_bloom.json",
+    "sha256": "be01d4b45ad67231622c17efb2864be0720ed22f57ec418cdc2d6029d59f6910"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/west/dandelion_clock.glb",
+    "sha256": "46942cbc5959c3a75fb929efdfdfa685872bba6fe1acd0457262c3d6ebff0269"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/west/dandelion_clock.json",
+    "sha256": "e499f5ba125ae6992d4fb60f871bd68078a3ff00ce5ad116b4ff568879309844"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/west/dandelion_half.glb",
+    "sha256": "1cc446d4b5336850649d3936d50bf68bfe29cf7773307c2abf696fd5b82da77c"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/west/dandelion_half.json",
+    "sha256": "f29bebd7c038747d355239b227a752104ec7ee21dc5cba5a30690dcc5a6142ad"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/west/driftwood.glb",
+    "sha256": "4af594aeffbf78415c8381bec7b8ba66d1922f3a9fb57b74b0db4e6c830e51ff"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/west/driftwood.json",
+    "sha256": "7eca0d9b380dbbe6c4c62ffb9f55c80dc7d3b57015ee8fbe22f9d2d17148dea7"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/west/fern.glb",
+    "sha256": "da42e0d03dfaf98d591af4765097024ae70e750d5cec0b2bd407147019a8b075"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/west/fern.json",
+    "sha256": "f6633ce51459326b7ed737319db88261ac7d53a2839036cf55e2d6bd00d4c3fa"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/west/flagiris.glb",
+    "sha256": "0b83c01dae6f20286d0b9558a8f2f89d42e4dc46dbc04d3195bd20ec888fe4d1"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/west/flagiris.json",
+    "sha256": "fb33bd65cdc595b914f43d531d750146390e973dba5fa2f210f3642e4d6eda88"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/west/flower_boat.glb",
+    "sha256": "5652859cd64d73173cd8542a2e79347e27f43097a8b306bb7d81a6d34151a499"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/west/flower_boat.json",
+    "sha256": "726a0f695d731b7cc183abf65f0d400f462480b7057500c638dc191995b706ad"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/west/gentian.glb",
+    "sha256": "77394769e27e86a2f1679d12de25ceb09b09249878871cf43e69cb4f06cf6e0c"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/west/gentian.json",
+    "sha256": "9a8fbadbb7817b192e50b0c667e6ed294e89f11f6f1a65d11b1c5746c6b2c917"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/west/glass_floats.glb",
+    "sha256": "ce382e646b369a195c8d02eb2bcd9747143049e35a285b7cfd41343e90ef5e8e"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/west/glass_floats.json",
+    "sha256": "fe11472a456e484edb8d03de074a268a233fc9a90a62bf262f757f4d75de985d"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/west/groyne_post.glb",
+    "sha256": "980308ae9b7d48888bc4485e619e07e2f837f2953ff0f3660de06463d87b91c1"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/west/groyne_post.json",
+    "sha256": "4547e569e15bfde63629f2b6521b5bbdefb8d40cda9dde653fb7bd4fdfa42b74"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/west/heather.glb",
+    "sha256": "a38a98d30fa56532ccc28f14e9d107a70b0f6804c305607835b9a7b8f59946a6"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/west/heather.json",
+    "sha256": "734e6b9cabbc878607ed9290a05e8c39dc61d1facae4745820832936fedb4325"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/west/hourglass.glb",
+    "sha256": "042aeb77bc24cf8bd6c61a26676b012898e612daddc1b4810f5758c007e70bb6"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/west/hourglass.json",
+    "sha256": "00d0ca224a718d1b75ab273c182abb0f8b09bf27a32b3a8ac413d81528953c14"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/west/marigold.glb",
+    "sha256": "a0d7f6596b188a8275712d1a4c51af919fa31bb648c73103d3ca50bb9bbf1410"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/west/marigold.json",
+    "sha256": "86d424558b5e047d44c52ac918cc1c35dbadade6645030ff22c9a02048d22890"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/west/marram.glb",
+    "sha256": "61b45eaf93439812da9b6ed99d3421ffddf86ddb9723eb67ac8805eb146c0058"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/west/marram.json",
+    "sha256": "b3df0754e976cc731cf0bc90a09ce717fe3cef2e30a3781d594f5857368212c3"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/west/moss.glb",
+    "sha256": "64855d0f44dbbfc8202be597e758d6d7f0d3699af76cd0ba6b82d9caf2cbbea1"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/west/moss.json",
+    "sha256": "72415a515fdf5f57ca5c39ceae8ae02a70bba507cc98812271168646bc1865a0"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/west/oar_flag.glb",
+    "sha256": "12ee2a9381d0fb844a28df30d553ffa62c3f682c8c1105a2ad62f38202796dea"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/west/oar_flag.json",
+    "sha256": "c9e32cec49b38772c5d0b530485b2792bcfa8404f928f8415fe859a440e94601"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/west/pennant_gold.glb",
+    "sha256": "d17ea093c97fbb3b3cd12fa8c59ef8fe062009a8dd88c6d0327f823eb765a71d"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/west/pennant_gold.json",
+    "sha256": "e9277f943463908d40d79f1b3d1e8836e9bb81b26f56733c477c846a814b8a37"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/west/pennant_red.glb",
+    "sha256": "14dbc1851ad966bdc5afd8cc61eeb222316fc67cf5f5e4e740e61e2c0fdb3892"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/west/pennant_red.json",
+    "sha256": "684fba4d5fabbe478f151457bb8636916fd48de5405ef5ce2b3305872213ae36"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/west/pennant_white.glb",
+    "sha256": "a40e91bd3fd33cb0f1ee6520353d2217e7b6114238da939bc47de50e35de6a35"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/west/pennant_white.json",
+    "sha256": "49fdf472ac579c6e9358314bf1ca5bb79dd8f5318ca161ee556331e1917372e3"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/west/petalfall.glb",
+    "sha256": "43afe6c932a5c58fb265713f88df1a6806888c320632c5d1648038aa8e0a02f5"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/west/petalfall.json",
+    "sha256": "7e8b18a7cb67bc079ee1ea1a6dfa3dcdb74363bb4b677627181321b9fad22419"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/west/rimlily.glb",
+    "sha256": "b656b761277814ed6fc5294539f33117310130cf3b89e51ac141d54b97111faf"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/west/rimlily.json",
+    "sha256": "fb6e2130d943e9b52c43975c0355479b1ab604814f4b8b68dd0b0e396b34d866"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/west/seapoppy.glb",
+    "sha256": "822738b5d2c5527d4bf3b6f9163be6941f85679e6e665c98f672faa44ac71bdf"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/west/seapoppy.json",
+    "sha256": "3551be245abe39236ced104ab5401633b16aff6837b85e7bf91f396a99093b6e"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/west/ship_mast.glb",
+    "sha256": "7abde59a1ff39349fdd4d9db867abe79fdb6f262d452d6d167a41bae64116146"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/west/ship_mast.json",
+    "sha256": "6d52ab6dbd08b359872fe6b3b7183cfe0e5596f11cd6f2c75501f33a7af6c714"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/west/spiderlily.glb",
+    "sha256": "779d467f7006566f5ac4591aa98df6dc60a9d7e44b88c6a3736c3e5ff4cd494c"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/west/spiderlily.json",
+    "sha256": "eec82f23166c6b007d7990dc082036cc66ea068beca8b31b5ce633bb77e7adb7"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/west/stone_hand.glb",
+    "sha256": "38815e87425a82f80b463ba105466845c871d577e42ee4615d38f7225df1380a"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/west/stone_hand.json",
+    "sha256": "ec4182dbcb5175a2f8f7350c92199a09fa1e402070db8f22221209baae73e8f7"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/west/stone_lamp.glb",
+    "sha256": "c823ce182e645e83af4826987c8aad5214b0d3bf95b925bcab201aaff2b11d05"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/west/stone_lamp.json",
+    "sha256": "8d97be387d78a94fbda40ec61f78913c76740541aba8b6103f8232369f4f3843"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/west/storm_marble.glb",
+    "sha256": "b4c49ea8672af8888ac46c061f6e746940ab28269869c70e11a841d3d4e98574"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/west/storm_marble.json",
+    "sha256": "a6c3bdcec5cf22ee32fda9a31b9a6d0aba7fc6dd11f53b79d94bb5d1a3840ab5"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/west/sundial.glb",
+    "sha256": "44bf95f3c9f171a390065d9c611e0ba4eac31186bce5769b216db9586ff70ff7"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/west/sundial.json",
+    "sha256": "f818d983928c08134e591667d48eb8182e4f5e1925b3ea98727c7f32271a7a28"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/west/teacup.glb",
+    "sha256": "120d20b2b31ddde7ea57e60967f78a41ab83a06a97e2dc77c40ea1f151bee102"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/west/teacup.json",
+    "sha256": "ca61e3e498dda9475201b3f14bc10fd923f1e2bc3a405cf11c2f56e59adcfc42"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/west/thimble.glb",
+    "sha256": "e4f2db67b29bc4b4c6de6fcef377e692ffc76335f1e5495388aaf6783dfd990b"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/west/thimble.json",
+    "sha256": "44567f93b8d6f994a2097013c89991b1a6f7cb401e05522a3ab0ab8867ab9845"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/west/tide_knot.glb",
+    "sha256": "73095364b08138c009a423b614367bceeeba8b4d8c247adad27acf50f59c4332"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/west/tide_knot.json",
+    "sha256": "87814422dd39e2b023a79058bcc19c9b2b938b1601deef15c3d379748398e047"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/west/whistle.glb",
+    "sha256": "f64f94b75ce70091f4c62fd23a49d99bb536c72198ebcb9d5ab71cfe3efec340"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/west/whistle.json",
+    "sha256": "c42e5908a7f9932cc3d4741d9ffded1c4a58b29c501eb4733d1f797ce45d6f63"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/west/wisteria.glb",
+    "sha256": "e3584980d3dddcbac080b024410f77b40ee11629f9b88bd3cb95af74f28018c0"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/west/wisteria.json",
+    "sha256": "7639a2016697c19c8a758ef7e5a0888092d410ca311ec2bdcac4f9b6b9adbd64"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/west/wisteria_bridge.glb",
+    "sha256": "55547ae07d081c7145751580ebb24daefc4fe470725da8b52e1b6c845f46e8dd"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/west/wisteria_bridge.json",
+    "sha256": "d2715bc5ad5f351e3f72ea56b15670d130d4f2b665b8d6b68a9ac1852a17c894"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/west/wisteria_fall.glb",
+    "sha256": "44f36fa8df9fc7823c44cc8893b6e650ba0fcaafef589e25a01e47d6a080cf3f"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/west/wisteria_fall.json",
+    "sha256": "0ccfffccdc789e3c2fe8c08ad8c30790fb399029acd6cc3799a1b27a244cfc70"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/places/west.json",
+    "sha256": "7cfd233d9ca7abd5407dfdcd37b8345c6a2ab56d8880a5afb5056ee039f005e9"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/shore/shore.bin",
+    "sha256": "689410620e0f51a6f388ff15c20e0c70a03fa768fde5e33b53b3a94839d5815e"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/shore/shore.json",
+    "sha256": "4abfbe5374a11578905110d2438432737dfd990195b737be9563ba8f95249559"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/terrain/height.u16",
+    "sha256": "8506105e460640026e7aaa182d95d5b3ea2b46568dbbb38446ea1c87f7da2c48"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/terrain/light.png",
+    "sha256": "7c44be7d97ada82b4e22e30a8e57a7d321a07b0cd7e7c1dfe78cc5f9559b9a95"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/terrain/meta.json",
+    "sha256": "113110f6eac1693a0ef3e3791482881986bf3050d0b0c339e79fe5481c10e336"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/terrain/preview.png",
+    "sha256": "1b2329d64a393a450bc784d8981e4eb9523ea368a8e1321f64ac0020af64352f"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/terrain/props.json",
+    "sha256": "e7ede80757854c2952f47b584127bca156b2d606dca6f8f359d25b3070de4574"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/terrain/splat.png",
+    "sha256": "bb1ac9351707bd04e714ff7f73c7877eb3645b38df5fe7641d8648d39cb011ee"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/terrain/tint.png",
+    "sha256": "266760c1e71fad5e17f73a6d8657cc5f2458ceb3adabe166308bd4007c35a77e"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/textures/cliff_c.webp",
+    "sha256": "d99bcfd22a7eb4174011ab0c515ac167f604edcaa3924716cebcb29a9bfd1647"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/textures/cliff_n.webp",
+    "sha256": "10a7c00cdcc5d83640d80680a5f7ff068e0e07f19ff335e7944ed2a04220cce7"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/textures/cobble_c.webp",
+    "sha256": "d40757f7c8b843de4d6b07d8ec8b4ea9d73c2af3465e781bc5d125210a631f70"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/textures/cobble_n.webp",
+    "sha256": "9a8fbe55381831fa3e1c0d5038a80ce70f31aca777f09023ffb062da7fbc6b74"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/textures/flagstone_c.webp",
+    "sha256": "2c1caa956dfaca2a6a7bf34a12eab59fb30cc3f05e14a0b21fc68c3d8c344c6f"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/textures/flagstone_n.webp",
+    "sha256": "5c52238c510b814d69585924e9b38db9cc9185cd42ec87dc0d23eb31c753868e"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/textures/ground_c.webp",
+    "sha256": "18512f3bd228c7239f622e31eb23916bcde666e81856cc25d9f906d6fa4d9647"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/textures/ground_n.webp",
+    "sha256": "955590e865c421083c64c51e4f1d0258c00570a074247b4654fd194c33621bb7"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/textures/materials.json",
+    "sha256": "23ba43f2de3ea37df97e25fb57022b4fa729a92d918a28c2848469b28e1ec159"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/textures/pebbles_c.webp",
+    "sha256": "36c04b7deba16742c6d7379b6927ac10aaeb86c0f8eab488a08a0716b86d1d8a"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/textures/pebbles_n.webp",
+    "sha256": "af7e684167823118d25f15789377ce49c444445e2c6b74e98e1f6595f3170206"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/textures/rock_c.webp",
+    "sha256": "81368fe5c29e576dec9034accda1e18fc50b0b650499fb71b49d8fdcb42edb04"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/textures/rock_n.webp",
+    "sha256": "57a472b07acccfedc01b9e38587ca8c91b40f10e1c3a373f3cc0228c873e93fc"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/textures/sand_c.webp",
+    "sha256": "891879c9bbbf8f20c3414aa131d60af8fbce5bdf6cb284ab35e16f7d0fa8edb7"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/textures/sand_n.webp",
+    "sha256": "62f54e1d35713860d5c10abe0fffddf38ca3bf3dc43098696c8035ff382a0e92"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/textures/scree_c.webp",
+    "sha256": "300eb4dfb68e6a3f78ad589accb474b1fc955deb6535a1321fa2003a943c771f"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/textures/scree_n.webp",
+    "sha256": "136360648c101a2944bbd6f55c54f49d8c5497816ef68c2c2b23d47299f0560b"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/town/cairnwick.bin",
+    "sha256": "87a55100636efeea7de019ed9f7d680357b15d952e540df111d65ffe659eacb2"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/town/cairnwick.json",
+    "sha256": "5c101de361c0ebd5278d1cde71fe2e5227586091d2773d752df70c9ccd05e199"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/town/cairnwick_mask.png",
+    "sha256": "d391637153e3d7c41d2074013940598cedd10860a4ee910796c81da2236052bd"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/town/fields.bin",
+    "sha256": "76998bb9bb27c06d0150a866fc9e79f9b29135419a0207f504d7b6cbe175ed33"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/town/fields.json",
+    "sha256": "fd19d495e62d1e8be6ecbfd9b9e3afe1a90a1b4a4c05aa665b4b5a68d8f0b957"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/town/index.json",
+    "sha256": "e5847fcf2221b13a30359e557a2b1c4e9302700d04d9228baba5ec848364653d"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/town/larkhaven.bin",
+    "sha256": "c21f34a0bb6df9257c367f1ac387a19a49289cf5f9f751ea7901fe534b761204"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/town/larkhaven.json",
+    "sha256": "044b1e827604158a1118fd4d50f34a53825dfe259f669306b0154a595389f39a"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/town/larkhaven_mask.png",
+    "sha256": "81279237c871f58697e4f1c956e7dd0a685a038d06a899c23f0d79e1cd6d57b4"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/town/layout.json",
+    "sha256": "d7d57dcf605d64425e547b5d440fe249b62377948a991170b436c9a00c827d5d"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/town/masks.json",
+    "sha256": "c8c69613d29b3ccd5e041e40485f2f8a14d537d76b88380b2406bbba50745853"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/town/sites.json",
+    "sha256": "6de48784b19cc71013f2a5d9af6d9d8edd3b9f952bb3eb5b9746a12279e3c28b"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/town/tex/ashlar_c.webp",
+    "sha256": "cd174439b2fd0b11b03cc32c02fb9e693521dbf724a3dc52d07c655dc2790400"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/town/tex/ashlar_n.webp",
+    "sha256": "f8908778e50bb249b8f4568c5b6104dbe40456aa9d7720683a12c513f59b7186"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/town/tex/brick_c.webp",
+    "sha256": "8615014e0fab803b17e2c8b496e77039a96fb20ad97f0d6088ebedeebdf937f7"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/town/tex/brick_n.webp",
+    "sha256": "5b3f548325ae46c0e31d650e2fd0baa358c7155cff69fa3257b1164a87b2e7b5"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/town/tex/cobble_c.webp",
+    "sha256": "d40757f7c8b843de4d6b07d8ec8b4ea9d73c2af3465e781bc5d125210a631f70"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/town/tex/cobble_n.webp",
+    "sha256": "9a8fbe55381831fa3e1c0d5038a80ce70f31aca777f09023ffb062da7fbc6b74"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/town/tex/flagstone_c.webp",
+    "sha256": "2c1caa956dfaca2a6a7bf34a12eab59fb30cc3f05e14a0b21fc68c3d8c344c6f"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/town/tex/flagstone_n.webp",
+    "sha256": "5c52238c510b814d69585924e9b38db9cc9185cd42ec87dc0d23eb31c753868e"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/town/tex/ivy_c.webp",
+    "sha256": "b4cb847e8ca5ac9a461586b0b8597af971cc6abe49e1345d5ecfc7d62eeff388"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/town/tex/ivy_n.webp",
+    "sha256": "ded54bfdaf798a9b0294b67857c7397708cbe2af96af5d946066395224aa1bf9"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/town/tex/masonry_c.webp",
+    "sha256": "0f8892ce71984a081bb81d746f0decbd18223f0c5b02ccb14bf7f88b0b457d33"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/town/tex/masonry_n.webp",
+    "sha256": "cb60e7637a2f52c3222b31c851d3d9c7c60d17709386f2bc37d4833c8043457a"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/town/tex/materials.json",
+    "sha256": "91ed1f1ac5aa2687a6207e337a56688ef255ef9cdf1c3717ecafc29e50754353"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/town/tex/planks_c.webp",
+    "sha256": "2fe501b5360c5fe6313dca8e9ce3b1386889127078e6762e28ce7e92560901ea"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/town/tex/planks_n.webp",
+    "sha256": "fda3e22a8d699ac81b0f28b47949afd60e3aa15a80777dd9c9ce6230f5bb75f8"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/town/tex/plaster_c.webp",
+    "sha256": "08b28b97386c93a972af591df379dd6a17fe56d032a3e24f23b52ebf03bcfb16"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/town/tex/plaster_n.webp",
+    "sha256": "6001ea8cb0fd08389fd61e829a83491ae9dcd1e82266bcc11c2890d9906e1518"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/town/tex/shingle_c.webp",
+    "sha256": "10bed145f7bf0c56bd248d81eaf60fe24289287fb750e3d610edbc5d0a233b0d"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/town/tex/shingle_n.webp",
+    "sha256": "730a129077a9b6eb863073282ca65369733229c4abd6cd8afc816ef4045c765d"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/town/tex/slate_c.webp",
+    "sha256": "92b934ee22e8882191f51910e381b5870f54148ab9f5a1c8e03405cade53b64c"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/town/tex/slate_n.webp",
+    "sha256": "93296a63dc7baf2576db936b472eabfd371fe72fbc02b43e5329afb7e2e492f3"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/town/tex/thatch_c.webp",
+    "sha256": "40fb10c177c233f95b4fda3a81c43816a9ee0c1b34f7e5ca147a5770ccb5ed21"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/town/tex/thatch_n.webp",
+    "sha256": "43b31a868de842693bbcfd801e309af0edcb6c8f38465c53d912b61f8cad579d"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/town/tex/tiles_c.webp",
+    "sha256": "10fc821f0b047b0ef822b3e056bd2058702b895f3b433b863f30f839796dad91"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/town/tex/tiles_n.webp",
+    "sha256": "39f56e9062cff979cb9468e72452036df542a9961db96ae0fae3c68d7fae3800"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/town/tex/timber_c.webp",
+    "sha256": "35b8a378ee08b78adf7e2d370199937754ed70e01944b82ad2ab732ecd6a10c3"
+  },
+  {
+    "project": "petalwake",
+    "path": "assets/town/tex/timber_n.webp",
+    "sha256": "f423ece9a09d0506c911e16706b292c14776b73bbfe7323b11b11698de2a53b1"
+  },
+  {
+    "project": "petalwake",
+    "path": "index.html",
+    "sha256": "ba282921fd336955127a228b6793b4791cbd7f4a6a341fd04b34dbc107736842"
+  },
+  {
+    "project": "petalwake",
+    "path": "LICENSE",
+    "sha256": "12b60805e440dcf56c7c1347e2eada1105e7c143ee4642fe712a3958cc3e6c6f"
+  },
+  {
+    "project": "petalwake",
+    "path": "package-lock.json",
+    "sha256": "653107486f32384f38f13c77e80a7c7587486740af7fb85f0c50ca48b09b24e4"
+  },
+  {
+    "project": "petalwake",
+    "path": "package.json",
+    "sha256": "554b135ed2c55005040daab4173f434a72b956db932eae13fc3768185339485c"
+  },
+  {
+    "project": "petalwake",
+    "path": "README.md",
+    "sha256": "a8247aa0e96605aafb48460e48eae9181fd8cbe19362ecd5f7422a96de89bc60"
+  },
+  {
+    "project": "petalwake",
+    "path": "screenshots/cairnwick.jpg",
+    "sha256": "02b0b2e4b69c2891d777517844f6b7a52ec367fe4be17641ee2fc4a803d94b79"
+  },
+  {
+    "project": "petalwake",
+    "path": "screenshots/cliff_dive.jpg",
+    "sha256": "47df696135160c211ad00c3543fb9551072dbdd0200123d9a1420d31fd5db3ec"
+  },
+  {
+    "project": "petalwake",
+    "path": "screenshots/cliff_dust.jpg",
+    "sha256": "258efe3057a6535e748937fa8a48523ee8ba8c79388da22050eb7cee8746e787"
+  },
+  {
+    "project": "petalwake",
+    "path": "screenshots/delivery_beacon.jpg",
+    "sha256": "d7d8fbf534b9c336da0efc5cd17634050913d8193fbc3e0018e34fe2c14d7d82"
+  },
+  {
+    "project": "petalwake",
+    "path": "screenshots/farmstead.jpg",
+    "sha256": "b05d8484a83a6ab0d1471efe3ede4da7ee24aafe9e95dae37a9537bf22df2836"
+  },
+  {
+    "project": "petalwake",
+    "path": "screenshots/fjord_waterfall.jpg",
+    "sha256": "ea0bc7f1c0ee97f5fedc7646b41ffbd74e915f454ad8afd1fb6141ac1f154e3c"
+  },
+  {
+    "project": "petalwake",
+    "path": "screenshots/island.jpg",
+    "sha256": "7546174679240708d267fafd287d0cb66f5b5231dd58469d4cebd2f42338374d"
+  },
+  {
+    "project": "petalwake",
+    "path": "screenshots/kickflip.jpg",
+    "sha256": "47a6e58e0334797c9a5f241871c3de0b4c7601616b256e50da8257da9a1fc2ac"
+  },
+  {
+    "project": "petalwake",
+    "path": "screenshots/landing_approach.jpg",
+    "sha256": "77387b3304130e7da826c367b33d9306e8515b7b6789c6b2ca3a8a6308eadbbf"
+  },
+  {
+    "project": "petalwake",
+    "path": "screenshots/landing_landed.jpg",
+    "sha256": "ce042b8a74ce6fa8d82234481548b4093fcecced8540198757902e63e330b31a"
+  },
+  {
+    "project": "petalwake",
+    "path": "screenshots/larkhaven_above.jpg",
+    "sha256": "e105d5c8c761744597fb29aaec82aced434db3731d3e889be110ee2e08e99527"
+  },
+  {
+    "project": "petalwake",
+    "path": "screenshots/larkhaven_crown.jpg",
+    "sha256": "24dbe2e5315ee031be1eff4d21e449051b2082bc9b1714034b8d6f19fec3a192"
+  },
+  {
+    "project": "petalwake",
+    "path": "screenshots/larkhaven_harbour.jpg",
+    "sha256": "ecae00d3a240881092bc85d75b9784b76b051035ccf57b5fdf6428dbcff11b06"
+  },
+  {
+    "project": "petalwake",
+    "path": "screenshots/larkhaven_quay.jpg",
+    "sha256": "153c0bbee0a1953b90f7c4f31f894d87efa3e71091837bf467aef27c2b9230c1"
+  },
+  {
+    "project": "petalwake",
+    "path": "screenshots/larkhaven_square.jpg",
+    "sha256": "b4e489ae16e1c8c041a69949a363e5d93a216799fc57cf64853451b109c690f9"
+  },
+  {
+    "project": "petalwake",
+    "path": "screenshots/lighthouse.jpg",
+    "sha256": "998b3f39fa71f49709f8188f5be758e60a4fc0bbdc61d7f8ea3727f77b6ca713"
+  },
+  {
+    "project": "petalwake",
+    "path": "screenshots/meadow_slow.jpg",
+    "sha256": "c307f294a24f567d07be93ceb081d2ba42f3b07c8f684324b698c3a45ddfcd90"
+  },
+  {
+    "project": "petalwake",
+    "path": "screenshots/meadow_track.jpg",
+    "sha256": "2f8d656f6e2dedffe6b96381d4302c63544ab075d5e9fc341b22e0599eb522db"
+  },
+  {
+    "project": "petalwake",
+    "path": "screenshots/meadow_wake.jpg",
+    "sha256": "8b2c6063593b38cbb73a876ed7a7c6471fbee05c919ac97ee3d8f5b63653e6aa"
+  },
+  {
+    "project": "petalwake",
+    "path": "screenshots/place_blossom_sister.jpg",
+    "sha256": "87615108861ec20106e6aecc55dc3dc5e8e33436673b7e3b3273b607f23fba47"
+  },
+  {
+    "project": "petalwake",
+    "path": "screenshots/place_clock_meadow.jpg",
+    "sha256": "21c32355c5e6f7bd319effdc17d5d532bd8dd5ae3abfde1a8497ed1d67c0cb68"
+  },
+  {
+    "project": "petalwake",
+    "path": "screenshots/place_conch_garden.jpg",
+    "sha256": "3c3c56545bc05cfc6b5edbb9c66656d8d01be78a5d5783c447a0a4d16f4a5c81"
+  },
+  {
+    "project": "petalwake",
+    "path": "screenshots/place_farewell_bridge.jpg",
+    "sha256": "c1c5f8bec7bf5a02c40bd2c07873fa12755cb5f2d661a03e0d043ae5a68bd591"
+  },
+  {
+    "project": "petalwake",
+    "path": "screenshots/place_kettle_pools.jpg",
+    "sha256": "91f6537f2abaca7245b7c3d0fc921d4b85bfb2fc96f18b19226f37b7c053f423"
+  },
+  {
+    "project": "petalwake",
+    "path": "screenshots/place_lantern_roots.jpg",
+    "sha256": "2fbc0e9bdd2c15f14ea5d48dc3bc8fc04e70bad5e151c96c78a68688e66722f8"
+  },
+  {
+    "project": "petalwake",
+    "path": "screenshots/place_marigold_wreck.jpg",
+    "sha256": "e08c16358e0388af51f0db1259d433736a047a4b0fee67f246345af79a29c539"
+  },
+  {
+    "project": "petalwake",
+    "path": "screenshots/place_open_hand.jpg",
+    "sha256": "74140c66724a99333b95b1cd833269ae6edb885a2c27841a01a60bdb9f6f8e28"
+  },
+  {
+    "project": "petalwake",
+    "path": "screenshots/place_shipless_mast.jpg",
+    "sha256": "b6cd7c5fad7cb8ab763bf9b6dc3efc285558933a9a0c95d4481c389f845a9d7e"
+  },
+  {
+    "project": "petalwake",
+    "path": "screenshots/place_starfall.jpg",
+    "sha256": "efabd1c2e77e569b235db1f1ed8f4f038b6a0eb2c42dff1aeefa834fa9a754b1"
+  },
+  {
+    "project": "petalwake",
+    "path": "screenshots/place_whalebone_arbour.jpg",
+    "sha256": "e29a186f298d7f5166edde40358265183c6b41b68cfed2c85652e0096d9ec884"
+  },
+  {
+    "project": "petalwake",
+    "path": "screenshots/place_wish_pine.jpg",
+    "sha256": "c4eaecfc2fc692da714cfb29aae9fb6b37f5e5e32ea511b9424c6bf76036fa7a"
+  },
+  {
+    "project": "petalwake",
+    "path": "screenshots/sea_spray.jpg",
+    "sha256": "47041c3a890c35a6e73e23ae3e2e1565f15b996e2f4ff91273d0e4883c569df8"
+  },
+  {
+    "project": "petalwake",
+    "path": "screenshots/sea_tail.jpg",
+    "sha256": "9e917824cb7915ff8b2170e1240c483cf03543122aa1e903e46d8497b5ea422e"
+  },
+  {
+    "project": "petalwake",
+    "path": "screenshots/shoreline.jpg",
+    "sha256": "6012b1baacba4cac52ffa279b94c88ac86c1780532321aeb61d2967cb39cbe1f"
+  },
+  {
+    "project": "petalwake",
+    "path": "screenshots/shore_crabs.jpg",
+    "sha256": "ace8692342e54d75b5d7c9471f9520ba34c35a0952c423014e4b7a4bf51c7b13"
+  },
+  {
+    "project": "petalwake",
+    "path": "screenshots/shore_rocks.jpg",
+    "sha256": "f2600e3a195fa549d5b31ac5e2bec18284264d7f7f130fca8a08eb593edf4a77"
+  },
+  {
+    "project": "petalwake",
+    "path": "screenshots/shore_stack.jpg",
+    "sha256": "d98195219ec97c311974751eb7434f8921f570512bd119c955834cb8f79ac03d"
+  },
+  {
+    "project": "petalwake",
+    "path": "screenshots/stone_circle.jpg",
+    "sha256": "7f61b7c47bf32fc902d24e1a6c31231b189aa1e6816b9ef50f8c7c77317effb0"
+  },
+  {
+    "project": "petalwake",
+    "path": "src/audio/audio.js",
+    "sha256": "abc349dbf616d39ba795531486edeb6e48c34cc60219138c4722e35606665c35"
+  },
+  {
+    "project": "petalwake",
+    "path": "src/core/ctx.js",
+    "sha256": "f23a781b75c0ed098b87454bcdb9fb1b5e15e4c19722d2d43661d55aa97b2f22"
+  },
+  {
+    "project": "petalwake",
+    "path": "src/core/pipeline.js",
+    "sha256": "0495e8d0ce275729e2a4d2fb4a15707635956ad308fcc591a6a2cf5260359085"
+  },
+  {
+    "project": "petalwake",
+    "path": "src/fx/particles.js",
+    "sha256": "df51b53d98044f409348b9ca803c95e9667878dbf865c8fd17b1a50a3099dcc4"
+  },
+  {
+    "project": "petalwake",
+    "path": "src/fx/strip.js",
+    "sha256": "30ba7b0d210ca1167a80ce9788407d291287a2d8cc2bc750faff43ae307516f9"
+  },
+  {
+    "project": "petalwake",
+    "path": "src/fx/vortex.js",
+    "sha256": "86ae33f29acd10baa3e21a7f136ff43b925fd10bf86ad4fab7d688d3b655e85b"
+  },
+  {
+    "project": "petalwake",
+    "path": "src/fx/wake.js",
+    "sha256": "af6b512db94af24712fe320d5765056f6ecc6be7dbadfe0f855c2a26bb37d6a4"
+  },
+  {
+    "project": "petalwake",
+    "path": "src/fx/windfx.js",
+    "sha256": "d33c23c5dc5f368bc0c80a433686316559baad295d6b16ac301ef1942327fa13"
+  },
+  {
+    "project": "petalwake",
+    "path": "src/game/approach.js",
+    "sha256": "3778d97a579915b936b2559980e86f4d4b55eababefd0d4039e1ffc9dbe2f744"
+  },
+  {
+    "project": "petalwake",
+    "path": "src/game/beacons.js",
+    "sha256": "16d6cbfa82492ba4b16c30d25a844672904fa7cc059da9d5161d311fe3499cde"
+  },
+  {
+    "project": "petalwake",
+    "path": "src/game/courier.js",
+    "sha256": "fa7a17c74e41b5d29a7bbeee04f4805efc56f95819cdb6b85155952dc33d446c"
+  },
+  {
+    "project": "petalwake",
+    "path": "src/game/hud.js",
+    "sha256": "0ad9f0ff6dd1bc0eda94ec4de8079d6f04768eed66452e0b97a10c042c12445a"
+  },
+  {
+    "project": "petalwake",
+    "path": "src/game/index.js",
+    "sha256": "d035c93758ac9d2eca0fae5c04647b9cd2fc0bdbd676d7f816e1978e53953e08"
+  },
+  {
+    "project": "petalwake",
+    "path": "src/game/landing.js",
+    "sha256": "9e379a62dc982604531d36e5ddff415fd046d4cb8addba2302de6edc0c8a09b7"
+  },
+  {
+    "project": "petalwake",
+    "path": "src/game/padtest.js",
+    "sha256": "ab39d9f41771346b2cf0c8e7e556f4591819cc17a124adb38f861834578f0cd0"
+  },
+  {
+    "project": "petalwake",
+    "path": "src/game/sparks.js",
+    "sha256": "ebf85011c150c6030d39b42fbeb52285238205b10063f8326fe2b8bd36d8c6bd"
+  },
+  {
+    "project": "petalwake",
+    "path": "src/game/tricks.js",
+    "sha256": "33d57e9186372e45d0f2f8c63ec86cf29363c25eeba9d771c7b7f125bc304e63"
+  },
+  {
+    "project": "petalwake",
+    "path": "src/main.js",
+    "sha256": "394bf9833a52fd7815c75f45af7b4ea944db14f8242b78a2f5aa381904a92498"
+  },
+  {
+    "project": "petalwake",
+    "path": "src/player/camera.js",
+    "sha256": "639e8f370e551bc4c8edbaad867874f1d2456681fafc0ddc8e3e0d653c79efd7"
+  },
+  {
+    "project": "petalwake",
+    "path": "src/player/flight.js",
+    "sha256": "7026019b8d109be03ce9971798d22c7cf9a6fc74d5791a6d4ccbbe2f72e6d6c4"
+  },
+  {
+    "project": "petalwake",
+    "path": "src/player/input.js",
+    "sha256": "216a2331d7987ed12fabb7fef9954684a26327ce381bbb83768f53a9558741a4"
+  },
+  {
+    "project": "petalwake",
+    "path": "src/player/rider.js",
+    "sha256": "85b0a6df4c1c194c31ec408bfc088eb4aedaf91e9587eded03ba4ccfbd6bb16b"
+  },
+  {
+    "project": "petalwake",
+    "path": "src/shaders/common.js",
+    "sha256": "4f7f1ec32bdc5d87bfdaffe8559590b7a13700d29fca9e431483957fa352544e"
+  },
+  {
+    "project": "petalwake",
+    "path": "src/ui/journal.css",
+    "sha256": "ab2ca0eac48807809955dc6a99fb19b082cac87f62fca3ae75baccd479043ab9"
+  },
+  {
+    "project": "petalwake",
+    "path": "src/ui/journal.js",
+    "sha256": "e9dbc04d037a35430609b8f09518bcb4daf262be1d3280fa3bbf144c13292682"
+  },
+  {
+    "project": "petalwake",
+    "path": "src/ui/style.css",
+    "sha256": "f55f3b804ea3b3a1b0615edfe0ac90e2cacfe7255d9ba89f05670b89ff527e76"
+  },
+  {
+    "project": "petalwake",
+    "path": "src/world/clouds.js",
+    "sha256": "2662cf1ef751cbe5f3cf597436fa35ca23b9dd78bb51df1e2a78c6168f6efdc1"
+  },
+  {
+    "project": "petalwake",
+    "path": "src/world/meadow.js",
+    "sha256": "4f9c6f0b6dedbd8209d8f2cfe8445407cb13fac883ddbfadf7e1d46f4409c52b"
+  },
+  {
+    "project": "petalwake",
+    "path": "src/world/places.js",
+    "sha256": "70290ab1f579101df8dab6ba68ef2981d3d4eb91679619023676e75093aba885"
+  },
+  {
+    "project": "petalwake",
+    "path": "src/world/props.js",
+    "sha256": "d5827bbebbb4b63becdecdcef25f91c095d02c7e1b71186228447553a1987e8f"
+  },
+  {
+    "project": "petalwake",
+    "path": "src/world/river.js",
+    "sha256": "aec8e1de1b320ab5cb4fd71e6541712d78aac38fc5434e75131d4933ab84c43c"
+  },
+  {
+    "project": "petalwake",
+    "path": "src/world/seeds.js",
+    "sha256": "34bb4783b4dc5236c2e557a11aabbb6ceaf8aa1485812e00ed426a086011ec6c"
+  },
+  {
+    "project": "petalwake",
+    "path": "src/world/shore.js",
+    "sha256": "b208ad6ac5f1d54c960615e7e724412e0fac2b39bd8b2372bf989a1f6c67e77c"
+  },
+  {
+    "project": "petalwake",
+    "path": "src/world/sky.js",
+    "sha256": "691fb27c22e5a94be435dcfbc7c72cece4eaa9c161884e6f14f26004a043ea52"
+  },
+  {
+    "project": "petalwake",
+    "path": "src/world/terrain.js",
+    "sha256": "67e1d9522a0bc8204e833137f33a0dfe31ab77387b62d2d9b0284909aa89d5b9"
+  },
+  {
+    "project": "petalwake",
+    "path": "src/world/town.js",
+    "sha256": "d0bd21358e00ac3dc605e67ec756478b31ce057bca580f27b406429985716165"
+  },
+  {
+    "project": "petalwake",
+    "path": "src/world/water.js",
+    "sha256": "6cfdc9c8526453a9cbebf3a117470687849ced971285bc80b472dab452af1be0"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/blender/inspect_glb.py",
+    "sha256": "18615f23be2912e7a4c8d1e73223c178ef7bfa0971d0b0550790fdaf0cd5fa6d"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/blender/place_east_build.sh",
+    "sha256": "41e7137a32c6a826d85ede1dadf3c6d96482e5c6cf912b8660f22dd1133188b0"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/blender/place_east_flora.py",
+    "sha256": "ab69711e5666ca92c796d204d7914ee720486c06de79508d057298c680ad6d18"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/blender/place_east_layout.py",
+    "sha256": "b675ad9135863aeb2a20bc7fad62b1d3472e7a287bf64ce8d24e65fdbc403109"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/blender/place_east_pack.py",
+    "sha256": "3c90d6516edcf6b9248a6bd4566985ec558cf460b83819837d027deefcaf73b2"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/blender/place_east_process.py",
+    "sha256": "e9c4666322939e59e694858eeea5ad17691db40268dd92461f230bd3a99201d6"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/blender/place_east_scene.py",
+    "sha256": "4c31b09d575681e371da2bc1f04846346b16798c247d92c5be58e38cd4cc3a25"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/blender/place_flora_west.py",
+    "sha256": "7b73d257ae82c5e0780da992e794db1e808f09c9483ad4e699a03573df3983c3"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/blender/place_process.py",
+    "sha256": "589684488ef4cafe890651e1dc176580bdba4c2ff97b69bfbec3e40421d37f78"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/blender/prop_process.py",
+    "sha256": "1417bd38ebb4b4bb56978d3e2e7eadff7c7429621a528b5ccb72bac45abbcfeb"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/blender/rider_process.py",
+    "sha256": "934ec693150cbf6dc311fa0c13e0e24c68208f0080cab20f8c3f82a4405d0797"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/blender/rider_stand_preview.py",
+    "sha256": "cb98ab93ae497ed119544ad396c969b7dbc142920a63dad6a93043fb9c009a7e"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/blender/rider_stand_process.py",
+    "sha256": "b7cb4793e305484332cff546abde1db96e53b88948f815c2519baad55b83d0fa"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/blender/rider_stats.py",
+    "sha256": "811f43cbd29b991a6f46356ec9b636695968817eef475e999126987dfe37c639"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/diag.js",
+    "sha256": "e3414be2623dc42c9739940f6f2daa22cb4f4b871af3923071f0c113f554795d"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/gen/lib.mjs",
+    "sha256": "79d0f50423f2c56ccb6295090e9e95190cf5a2ed7f34e92d31b6c80894b2e3d9"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/gen/pack-textures.py",
+    "sha256": "118964c6c4a4c41509470cc67198689442ebc66647a1f2b8bbea4e5a172c4718"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/gen/places-east.mjs",
+    "sha256": "615ed4139459abc595899423edc9f304040ccb9f31c1dda18f098d79d3aef61b"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/gen/places-west.mjs",
+    "sha256": "8261c662beb806e3e1029946e58a38f31acaf23903dfc8fef983f1f16af8b2b0"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/gen/props.mjs",
+    "sha256": "6914ddc73cdb190784b72e7413ea016b19c2c8fdc89a76aa08b3e2856f903b20"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/gen/rider-concept.mjs",
+    "sha256": "d94a20462be162a87c94c08655e52d274ef37e64d2f7b96be9a0b92ff3933148"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/gen/rider-meshy.mjs",
+    "sha256": "9252229dbb39940f8ed0bacf9616daba2b44edbc31a2c23d2de02c91a09f6373"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/gen/rider-stand-concept.mjs",
+    "sha256": "c096bc27b4cc5306f6919a8cf2d6f1310e25244761353407f58be7c33f4075dc"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/gen/rider-stand-meshy.mjs",
+    "sha256": "c047d8b7654a35aad76d42b40e525c025fb0a1ad6b2232032ed591bb6df29fb2"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/gen/textures.mjs",
+    "sha256": "253f78ee6e6f93e390beff7b99a4a3a30eb592e4deab2af6da3f898ff404dd45"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/gen/town-textures.mjs",
+    "sha256": "084f92f9ca4ab4a33da8ba20aac913c640284f4e4d7175e034cdf941351e065d"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/places/glbpack.py",
+    "sha256": "f55aec2c18e610af8f38a5f512ec6ecdb8375e0b3ce121eb409909fa59eba61b"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/places/glbread.py",
+    "sha256": "6cfde5e0bcbc9e89aeaba92e8d420484c668446ab121a6dfd2d6a6edd38a4e5e"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/places/west_layout.py",
+    "sha256": "bb07d452de7b95b18ed248f1b8f63ba0137135e012f014e4732b7341a5702346"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/places/west_models.py",
+    "sha256": "6362d9580aea66d74594c197d78e6b12365254e50f54924ebcf01c52eba844f7"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/requirements.txt",
+    "sha256": "828cebd1d656812bc729acd771ac78c733ee2e2dfcc01b1e82e3eba826ea2a7a"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/serve.py",
+    "sha256": "67169558d2831e45cd63275a17570f61d1b0fd9c897079b9f700854a0c67e993"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/shore/build_shore.py",
+    "sha256": "d0b3551773dee64bda1b263916cf6e492f945de3e3e7b80dab4d8a6808edbc23"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/terrain/bake.py",
+    "sha256": "16daa2de30709d3d9c23f2f80c572a26c61286d143bb06a041494bcd846fa6ea"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/assemble.py",
+    "sha256": "8985cfdba3dbb68347943b5ab297f2e4e133384a3ec18f78cc7fc9f18ff6f54c"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/build.sh",
+    "sha256": "76e261a198d4c76fab0d20d134e67936a2f05593b2434f5c44c21b7ff764e63c"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/c_almshouses.py",
+    "sha256": "83a0e9f6e813e313460d8474c37b6380f56b34f5a3375bcc436a8ecbf35224e5"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/c_cistern.py",
+    "sha256": "d363f628cb4785f2b73554e86e6e79d17a385850e8e43414a43ee0f1104e67d3"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/c_dovecote.py",
+    "sha256": "f8229c10f8ed37594c61058e9f80c370a55700bfc47bf616ab6758b15b596189"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/c_gatehouse.py",
+    "sha256": "282c6d7dfa9d599dd6d7f6d5230d92b76946f3ecf8e07a79c8fa7035e15d1e1b"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/c_library.py",
+    "sha256": "7d6606129ae7b7a2382cb9334c097b94304da6a396382d9fe4c8b417c11b15cf"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/c_manor.py",
+    "sha256": "90ffaa36bbd4a9351ce1a69020a5105f8d3f653ed662bd6d8355e340cf3fef5c"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/c_observatory.py",
+    "sha256": "8faf8d821ae9ca7d05e0718f4f7bcc64bfbed1931af6d7870c60bee6e33a404f"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/c_oldkeep.py",
+    "sha256": "25f08a7e67ac3435d6cb8aa559aa6fceae23125bc04199222f21011096b47797"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/c_pavilion.py",
+    "sha256": "82ed6b136a6a0b235b8a8168ba50d5b1ac52ea2af702fd9b274a9a3091050a07"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/c_terrace_a.py",
+    "sha256": "88dc10d3be6a887e81a5a253b74cc67e89c9982e1dc95ccf3c153e7b0f413564"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/c_terrace_b.py",
+    "sha256": "09ef38f06735753dc36bdd718380e7a15a2b170ef3ca6fa21ffe6e6f8597b330"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/c_terrace_c.py",
+    "sha256": "9b7f268ecbf9b8a080b9a6b1a126b8db0aa772cdd88fac4d3eb81fa98efe0d0b"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/c_terrace_d.py",
+    "sha256": "eacc3c43b6f350881d3305d572dcbd3a626359d490601d68024018d17645eda4"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/c_terrace_e.py",
+    "sha256": "d74b4b3d62fc68ef5aa442a5dc5e85a9961427fceeb569faafce6a739ab877e2"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/c_terrace_f.py",
+    "sha256": "64b18fdd68da86d27d895b5288e215011546bd5da4dc0baea9b10e45980c0673"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/c_towerhouse_a.py",
+    "sha256": "69832735e8f51c93afe70de2b44d281277e47a7678a3ea4f2e88cb3e4444edca"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/c_towerhouse_b.py",
+    "sha256": "072ba846bdf078076f371e79af329ba6f77a08fecf75e7f1ac4f2068c401d11a"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/c_towerhouse_c.py",
+    "sha256": "d48b2922ef19c0b4c52dee2eb0231c23f2edb98e6a3766aea5658dc3a3811c85"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/f_barn_a.py",
+    "sha256": "fb196ee216395c46bf732a41e1269acd7de3bdf294003fa66e9eebed785e4d70"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/f_barn_b.py",
+    "sha256": "caa339929ce9c58953660739c392fedc65ce7435a4686f0e90c5dda8ffdd340a"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/f_beacon.py",
+    "sha256": "7e925b5242141215e58df28754f5b58542dc581af8aba1993e14e89f27e11587"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/f_beehouse.py",
+    "sha256": "5290f92f915563dd29f7fc5c919b008275932b726043a970bc36a9db55750531"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/f_byre.py",
+    "sha256": "0efd51b932f92375725818517ddb8e19d0c9d25c2bd857209e4e22e86d30a664"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/f_dovecote.py",
+    "sha256": "bb42663dc176d7529a89b2f135dbcafbe7561efe9a1e62f0edbf87c003a38104"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/f_farm_a.py",
+    "sha256": "81e47789a50283f380de15b21d81b655e0fd36ba8f3ae3f659b771ef1a50ad02"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/f_farm_b.py",
+    "sha256": "a9f6b772ee59243fb3f596bbdee34a32db9ff297af878fbf73833eef489f096a"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/f_farm_c.py",
+    "sha256": "239ffb44a2ed72ae430bf7500c78d777ec70ecd4d99c809c846b5fe66ffb2163"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/f_granary.py",
+    "sha256": "811654326faf3a44350c351910bc164d0e0e91692de7a3fe16552df306e60c35"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/f_oast.py",
+    "sha256": "271e33cbf9a6de1d14b589a8447f73b8352dfaac48e399f431ff09b01702c37a"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/f_postmill.py",
+    "sha256": "5cf86acad66f568f17cead34e01af25634f4480fd532dd6fa916795cef0c27da"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/f_roadinn.py",
+    "sha256": "2fbaff798f30133740f4733f1b46084c927869759832450e01edebe2707a8768"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/f_shepherd.py",
+    "sha256": "584925f168c22fd74530f3198cb89f6c5bcde0172a4b80b52383bbc2bd5395e5"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/f_shrine.py",
+    "sha256": "79177a72e608035c1b5a8dd6d8ced3ff3ee28765484ae1f5d02797be2d3b37df"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/f_stilt_a.py",
+    "sha256": "27e3a5fd31532d6c470ec3e43de407af40458af1e2c591cbd570d54d522da896"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/f_stilt_b.py",
+    "sha256": "f5b6fb768d360f3d4d9a01937237ea11089a75c2992e9746c0670c966a5bd1fa"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/f_tollhouse.py",
+    "sha256": "5bc748306a7ad8fd9010002574013facd8110f076019fdad0bbb00285128aa96"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/f_wellhouse.py",
+    "sha256": "61444bf65b2cf50def6bcd91951ecbb6319d61b4a17982bd3bb8c324692526fc"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/f_windmill.py",
+    "sha256": "33d69a953bf64e5348cbd642fc80dd24c36e2e5af3ec22b2fb2701743815dc0f"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/h_boathouse.py",
+    "sha256": "14b95cfed6e414e32dca40fd69aeac7565bc12109a0fb745159d272b1141c74c"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/h_chandler.py",
+    "sha256": "c396d8b782f315e36ec958a3b0ea9dfaf4535e63fe3ba02abddb07433d0af9f6"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/h_chapel.py",
+    "sha256": "ae59d0d1baf79182b60ad55554b77658f199d473897b0d4f54986c11febfa6f0"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/h_cottage_a.py",
+    "sha256": "c7f60d6501c8266ea1564bec1e1d7a2e5f2d5266d8141b8e85dae323f4dcfdeb"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/h_cottage_b.py",
+    "sha256": "a658c017f91b0aa399a727edc962e8ba690ceb145a5183ad3c81ee3efe74761b"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/h_cottage_c.py",
+    "sha256": "d3a5ee151a151ea794281df508ed2f5ef5d765ec8290e8815a76764565a085e5"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/h_cottage_d.py",
+    "sha256": "c804297472ea3c80ed1513ab16e8ca1b157b2bf7f5aa93e88ea0ae4066baa16b"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/h_cottage_e.py",
+    "sha256": "7f4eeabe321358d7dc9168f6665820290aed43215f0f8bc8026e965b91bd42b5"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/h_crane.py",
+    "sha256": "a73a167cc97536c3d284890990856997d24cdbbb4299277e8dbbf7ce424dc4ea"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/h_customs.py",
+    "sha256": "af3bba9d329f33a6c666978017e19d399937f55701daa7e1cadf23ce5453f16a"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/h_fishmarket.py",
+    "sha256": "fce7d401c1d03bb8490c28c3c56e9dd67f71ed3363c3bbabf38fe3dc056f32db"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/h_harbourmaster.py",
+    "sha256": "c660aca0cea1bd49acdcb9d0504b46ccd1d058b6e6832a711193cde1c3e1cef5"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/h_inn.py",
+    "sha256": "370f4897592dfd2cf523e8de5d67b57ccea5628282dd54ff40a3ccfea0774cce"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/h_light.py",
+    "sha256": "1dd6b6b0e976fed1e5e76a1d87ac61b4ee230c6bbbdd4077c69b86176586d917"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/h_netloft_a.py",
+    "sha256": "359dadcbc82cd90b62453aa634808b43bb2539546fa76480c69c51c6f8632276"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/h_netloft_b.py",
+    "sha256": "33ecd9ebe0c73381b86fb79d62e81b64538db905c07e9c600dda9801f5e12f2f"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/h_sailloft.py",
+    "sha256": "302b2c6e2e089aa6531e4f897be8307bcb7b6b586238022ee26d1016d98b83af"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/h_smokehouse.py",
+    "sha256": "3c2a9ddbcd1be6c62610ba3cd34be8a4ffb6edf6ed3fdaa318f4c8cf4dfb72c0"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/h_warehouse.py",
+    "sha256": "b54a0d892939e83ffed0d123ee25e8ef0114d557e0c19ad0fdb05a09dd51e3f7"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/k_bathhouse.py",
+    "sha256": "759f5cfa48c64166774f3e60c90a549eaae18934c3296ebd51e912a8bf57c478"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/k_brewhouse.py",
+    "sha256": "9d0e4ad50c3ec9f24c833a370c0d2e4dc4d346e12069f463352f1c0e825ead50"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/k_candlemaker.py",
+    "sha256": "ee24e589b611a0fc6710a4bc31bd693c7ec67ef2b54f96342aed06714e12985a"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/k_carpenter.py",
+    "sha256": "aa36c4cb98778c3c20ac97d841b61ff837228d0dda1a55e07cc27d0a0964dd2c"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/k_cooper.py",
+    "sha256": "e16666eb5a80f2ce2988e12699b89b08c6fda170c5a09aad9cad3e75f8179429"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/k_cottage_a.py",
+    "sha256": "3f64a386b9f167e9f8d10df8b97bf486b9418f1e4e56794be1027135b1d181ab"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/k_cottage_b.py",
+    "sha256": "ac7708fba7fe135e7fde0f93a0ff5c1dcfddc086ed6ae7903b73037841e3738b"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/k_cottage_c.py",
+    "sha256": "7eae1106bed848c21b29c43d237de2c99dbd3e0a3c22d55c8d0a6a2ee4fcbb53"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/k_cottage_d.py",
+    "sha256": "5e4cb44d1d99ded922788f628389d8b2a9cbdb368d9a720a5418fb3b2cc2780d"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/k_cottage_e.py",
+    "sha256": "25c1ffb284d0dc65115d7d84e479db1f4ab7a5b1a54f8a42ea3fd67737f5930a"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/k_cottage_f.py",
+    "sha256": "bfb7aa9ca28a7234c5771a1194fc9a73923d06305398648b916dda5b7860cec4"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/k_dryingtower.py",
+    "sha256": "0c7212ab3c8d713c7a1716d2ad32bc6c83cc8f573ee6523997c3bcc56cacbd16"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/k_glassworks.py",
+    "sha256": "ee8c41532845d2f202282bbb6a45dacf3fe93c1cfb2a7617dd9e941d07dcc004"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/k_pottery.py",
+    "sha256": "7a798850e9ea5d973e2c17f491675c39c407016ee0eee013ac2ae7b23ef3d5ed"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/k_school.py",
+    "sha256": "a5066c47344f543c040e147ed5c52913b23f2a78ddbadac2dcbea6ba441947e5"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/k_shot.py",
+    "sha256": "a45e72a302c4691dd4428415d8ee146395a790a96eaa74efe8f52ce69096dcdd"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/k_smithy.py",
+    "sha256": "e3b3971c250329d9e495f4fcf641c5b673d1297f119866afc338cd15b10960a1"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/k_watermill.py",
+    "sha256": "191e05ba964d3241d2ead58fb8c3780f68bfb71b1fdd65baa9984f5720bd98ab"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/k_weaver.py",
+    "sha256": "89dcb80d38860f295247ccf43577f43f4c4b2bd51f94892513d0054f4e0df82f"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/l_arch.py",
+    "sha256": "47741868f570b51e3473778e1c2b0a79bff927b5c6fe38ac4f5573af29fcfc3c"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/l_bakehouse.py",
+    "sha256": "c54d31e0cb8a75012a341fdf92796870de07198f73ac866212356740767388af"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/l_corner_a.py",
+    "sha256": "f2439cbdb060a4d2ac56b1cbfcd20bce0700de6152d1c6a39236fb946c9ae460"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/l_corner_b.py",
+    "sha256": "d63ee65197d3a17987e04100f2581cf905bee7955059d83465ca7fdbd310f257"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/l_corner_c.py",
+    "sha256": "e47d5f15d6372f8af8fa5d34dc3e4b5514800184ebcd9cbe3bff6a231d507e14"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/l_corner_d.py",
+    "sha256": "5abfd19323209cbd975a4d7399847a7f7b5382b782b6cf505d80e11cc7ca4dac"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/l_narrow_a.py",
+    "sha256": "0d612b3365b1a3094a6364029e2f2ff5741c9dbd97ecdbc55371387797faf80d"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/l_narrow_b.py",
+    "sha256": "525ce61ed2730c14b9519d1f281e2e5760366a9f61fd8761ec580b73fcae6b67"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/l_narrow_c.py",
+    "sha256": "844a113383f4fe3e3c0e56fc1880247cf5628ca9dca61dfbe0d6fe1df720a505"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/l_narrow_d.py",
+    "sha256": "23ccf3b3a6de7839ddde6162f373e850ec58e8ed4906ed873563847d1c521b12"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/l_narrow_e.py",
+    "sha256": "a08c5c9cb69b4a4723f414f79602936574aece4e5a639dbd4bfe34fcf9c8dcf9"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/l_narrow_f.py",
+    "sha256": "2b604c4faca603fab45c75fdbf8ebe309d2c6524e5216851474aa148c33e122f"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/l_narrow_g.py",
+    "sha256": "915d2b5f1709e6ff86d1d467a87d916a83c5ed0d5bbe81ca491af4dbc5cd0579"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/l_narrow_h.py",
+    "sha256": "50b69265e4cf4215d9cdcad2fee9743b16ef1f9d3ae6697ac56703b3d86edb27"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/l_narrow_i.py",
+    "sha256": "fb8ce4e02df60be3c7dc64b06c127f30575d71685f13200cb9e6ea21231dbcf3"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/l_narrow_j.py",
+    "sha256": "72d6c2f44d17967b7bcc12a5bfcd6652c268b3475d8533e922cbac57b5082be7"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/l_stair_a.py",
+    "sha256": "4c78067a48c0594954ab5df2e22cfe251ca22e252fe56a4cc018fcf80d1a8d69"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/l_stair_b.py",
+    "sha256": "820cbbecc0ea07d8bc680c6b3effcf1e5b79c9168079882ce0b1602d8cfdc1bd"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/l_turret_a.py",
+    "sha256": "e5abaa9aa6ba687a6161b88e806c7f09371ddea2e6a0aa83947a445f4e983dd9"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/l_turret_b.py",
+    "sha256": "05645b812eb79c984694a4d809c024f6c2825c73fb65d2fcef78c4e7fb6b89b6"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/m_apothecary.py",
+    "sha256": "1e3dfd83cf6b4a68bb0a2ebdb07c0d488c02fbd93c5a172e1f6af87fb903ea57"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/m_bakery.py",
+    "sha256": "75177738ed6cb67cf5945b85b23a3798b2a975092ff845991082484bfc0237e0"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/m_belltower.py",
+    "sha256": "d647103e1c1e6b4182c99383ed2a1785115069073aa26337529dd7ee35a1caf5"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/m_bookshop.py",
+    "sha256": "5aa857b23027d2f77c87a09d0d11e5398fdbe7d99ffb5e8504b91d25502ea0e1"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/m_chapel.py",
+    "sha256": "b28090ce683b3f523e495fd916f935b0540c0d62b4c22c643a1b3bfea1142e76"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/m_cobbler.py",
+    "sha256": "4d388493369e77006d15099ce9246f2c4f6e8bbbf222bd460aa58500ff58c4c4"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/m_couriers.py",
+    "sha256": "82645f2856c32c2194f870d033944becbc5bc3a50bc8e2aa0a1e6f107e77f388"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/m_grocer.py",
+    "sha256": "3ae77081d04a859952edf8dc99272be5158fdec96821582897f2c67c24d0dfbb"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/m_guildhall.py",
+    "sha256": "89c286a7b3ae1a435f2c55fb4ecc8c1eb887efcc37ed8267aaf370634c97bdc2"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/m_markethall.py",
+    "sha256": "90ed4f1ae2fe28cef15d58d5ac22f0f44672a628bc0e0df5b4aeb2b81a7f9baf"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/m_tailor.py",
+    "sha256": "f42c9d3f2ec5c7152a9c99b10b6e9addee3b98be2e212291380e0aa5581b8af7"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/m_tavern.py",
+    "sha256": "85f829770c8a0d34fde36a227874319f21f0337ccafc1814e5012e880ff7c557"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/m_teahouse.py",
+    "sha256": "7ca57ab50168752df66ab8d51261f200f3b313fe6cb7e214c010eb99524989f3"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/m_townhall.py",
+    "sha256": "9a9a2abde39b935cada4f307692795a4c0ccb7da6b202294bb9daec4e820144c"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/m_town_a.py",
+    "sha256": "8b904636f348a6ae4854b1f90369dd015144fe60790b73a622b5d13b8422a520"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/m_town_b.py",
+    "sha256": "4c3c9cc58358d26abe8b86338a9084388d6007048e06d546eb90154378614fb3"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/m_town_c.py",
+    "sha256": "3e4c2e3882536834a2a2b317766e3ba8fad5db97fefbeed64b9cc668adf98c29"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/m_town_d.py",
+    "sha256": "169b30b5fa75249de8336a380365eca732c0b942ae57a94fbe478a4f16cd3d17"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/m_town_e.py",
+    "sha256": "49e13d7717e77f151149ab4d9d742b7195f37b1d11c0a542f6d53bb00a5d1d50"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/v_barn_a.py",
+    "sha256": "0816ea7bfc74a4e15ec3724a306eb905302df53f8c6d89c888f1f412015c6565"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/v_barn_b.py",
+    "sha256": "9e656737b1d74fec4d286c2104dba2c77086b73f47f554bd9e0f66a523725c04"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/v_bothy_a.py",
+    "sha256": "469e378d03a4f852072719f25a2a78527bbdaa5998cf2048f58d0f0d17859f98"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/v_bothy_b.py",
+    "sha256": "0dd9fba157fdec8242fbc117d9d86d2e77abf3e52d7ecd8273123ffc7a9aa461"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/v_chapel.py",
+    "sha256": "0e3d3a441afcecbd249250a876f84373f2114a1b597e0c072157f91d96d3e12a"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/v_cottage_a.py",
+    "sha256": "1af6fe03452bfb1cf8ce9ab4b019137a473ac5a0671b0dc25a626d8b4dfc4efc"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/v_cottage_b.py",
+    "sha256": "dcdf4b610d2151ff57da269fe6e699207a99daf50add6b6bff35d2619c3b11df"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/v_cottage_c.py",
+    "sha256": "0a1fc4cb3d36caead6ef108d9e185fec28b6f5fe66d9c462d9200631ee98a181"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/v_cottage_d.py",
+    "sha256": "caba8beb39aa93879796a2f9e8792997a234c3a90db31df6c60ce8d95e2eb302"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/v_cottage_e.py",
+    "sha256": "0749c06071d73a68a1d3c0f7280699a102478e2b28fec280443a455f45368a6e"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/v_cottage_f.py",
+    "sha256": "6a9476d969e16a477e5fa39f1357968362f397128c7f0821d72840bcc7851006"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/v_inn.py",
+    "sha256": "03579079271587e13b09ef972f0f6dc260349396254ac1b0440880050de09327"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/v_keepers.py",
+    "sha256": "e42d46949cee9cd46cf746b017b9cc2ed9d687c784786ff0497689aaab3bea0f"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/v_longhouse_a.py",
+    "sha256": "0a451baa07a3e5cfe9006ccdbd91aea50b9f41f35ed90f9fd5442e3bf6a9e6dd"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/v_longhouse_b.py",
+    "sha256": "ab59f8911817fee1036aa0eaff75882852e0ec5e63b27e5d28c2e3cd8b735ba0"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/v_lookout.py",
+    "sha256": "a264499318fad6ca4f6d3fe7836f993516b04b5d55c4ebe75f23297d5eed7954"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/v_signal.py",
+    "sha256": "bf7f4177aca4fad084f5b644e146008eb5b5573b08aff65a63d1bb053a8a25a2"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/v_smokehouse.py",
+    "sha256": "8097e1b3723f3a22cf4bee6f1e999acaa14ece0c8fa4823dd0c23b042c8e56a8"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/v_weather.py",
+    "sha256": "f0821c351c28702189960c949bb3def4bb756bc0b271667679033bfe427f6cb2"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/v_windpump.py",
+    "sha256": "b96b6d1571c8b4a57f035cc678892b164a58259dab1b83d4afe1921fb7e2e26a"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/_t0.py",
+    "sha256": "03d8a7e83a15342256d8435b109ff518014f15e48e8e9fb05e9f92d57dfae0f9"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/_t1.py",
+    "sha256": "62078f85ff42086e872ba5b6ffcb3629f2534ff1a29421b3904c97cb8883f639"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/_t2.py",
+    "sha256": "70f6b4e6210f75dfd9bfc6b97e9ff9ed29b319d4a7141287ccaea1db43c5da6c"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/buildings/_t3.py",
+    "sha256": "145023c0d52f1e229a6960efabc75e6db008bb5c7bbd13ca52c57cb843161cdf"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/catalogue.py",
+    "sha256": "da0f68478f0ca748cfad72ae35124a52bd2ae446808e08d77de0400bc5f7831b"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/fit_terrain.py",
+    "sha256": "642fdb23a1424a86510cada47561f3e33e471327062242be456b10a20baa30dd"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/kit.py",
+    "sha256": "f48f048b720168ebbbef84a579a7912fab738f0b17912e3af1a14ac8e148f242"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/layout.py",
+    "sha256": "5626e4785df6fea6d8521d27bef89510477bc37647894c1be16c36a7c97ecbe5"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/make.py",
+    "sha256": "8e829a6a71e9e1e49fd3315f1f79a34086eb40ba5f83c240979ddd9da1ed19d1"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/pack_textures.py",
+    "sha256": "2cabed998f79adb47b46404a72fd9b18d493a87b0df2d7f2e59d4957a26b1180"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/parts.py",
+    "sha256": "038856d47693f8e170e3f1c3b7cc42b9bb4ce5d814b4387b141960574d8b990b"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/parts_c.py",
+    "sha256": "7f4d6eeb95255a4ac09b3a39802866d3787f3f8e6b3ae70ece761c4db62dc142"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/parts_f.py",
+    "sha256": "35cce6513c9d22a4afba6cb09413ac7fce8dbb86102755cb4e770fc49bc45686"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/parts_h.py",
+    "sha256": "98d5bf3a8736698367723468cc3b57f9730ac29dee51b2449325f91ef8599048"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/parts_k.py",
+    "sha256": "65e2d213b1dd5145ea5695d721847de907b2de6546dddc046a195f0989556696"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/parts_l.py",
+    "sha256": "5d94c1f075e01cff8851cc53a386d59e1d8257a78f5bf583193974c8e74a4b59"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/parts_m.py",
+    "sha256": "707eac09b6eb88b2d19b7c3f61350b683d0bf4f9a2418d03847d0e03f1f8afe6"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/parts_p.py",
+    "sha256": "59e7d5d6284b152faa24d36dcd8a20461df2f8a4546a4ef9e839336cceb941fa"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/parts_v.py",
+    "sha256": "6c12308b4af994bc9fb80ff3002bdc46c5a83f05fe8d3d44b86ee7e70165421e"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/parts_x.py",
+    "sha256": "5e7f12345a4216d22a368c6d296b54a611ca9a4388262efe939b880a4b3d2cc3"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/props/p_bastion.py",
+    "sha256": "61009c63f7a58bdb88333378ef199af4c8a6b483de22ebd22b3697ec0649e662"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/props/p_beehives.py",
+    "sha256": "cb17cc0e598fbf25c8da5db4dea29a3ab15778541c3815e7a330c25bbd15675d"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/props/p_boat_upturned.py",
+    "sha256": "edcb450702e25ddec2e2eba276ddf526f6da7e8d4fd541d13775f4f26e4a9356"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/props/p_bollard_iron.py",
+    "sha256": "e18b88473672f5583d1841be76cef820bc84d30395a008bf61f17ac2b55befd3"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/props/p_bollard_stone.py",
+    "sha256": "6be516281321a7dec452f3efdd9a79b4f74c1b936aec01cb979b6faefc3958ff"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/props/p_bridge_10m.py",
+    "sha256": "49065258375f326037d4917cf17885b79520c2dba57ecce74d2eb75276295c4c"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/props/p_bridge_6m.py",
+    "sha256": "6186e63b235f673f168f8fee8109cebd927cd1bd2d37303e1923dc1d0bbd8ec8"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/props/p_bunting.py",
+    "sha256": "fc6ce8d9bea7cb6996866992f872f934fe4db01b6cfec8df5e5d2b8e99e68739"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/props/p_buoy.py",
+    "sha256": "5104bf570f64b2520afc32793e8b569c59975c63adce996a9828356d64742605"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/props/p_crane.py",
+    "sha256": "ed9a01135b25b018712152c097cb003f836f35312aa15a009e80eac79549ea8f"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/props/p_crates_barrels.py",
+    "sha256": "101a41f96a0b356587669994c981b537f6e2fd958dfaf0f3153d01268c8b2285"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/props/p_fence_picket.py",
+    "sha256": "52ebd7829120383664df015390846ff91e20c9c891fc181c5f14ae69da22cd94"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/props/p_fishing_boat.py",
+    "sha256": "fb070fe52d331b7e4d3a1265d1ab5be28d43a4ec5b8f083938e2de39708f49bd"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/props/p_fish_boxes.py",
+    "sha256": "02bd6770ee34c20601b68dcb86916c4d35e05006adb01bba9a4f175cb188db12"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/props/p_fish_rack.py",
+    "sha256": "975a891e4a83ae61c0fcedfca9dbc92fda82666e582876917b6ef0297fd15b5f"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/props/p_flower_bed.py",
+    "sha256": "6703afef949390f8d41f4acf5642edd914c7b37bd43e7579eb4fbf874c165ba8"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/props/p_flower_cart.py",
+    "sha256": "e108a1804b6c2f2f20af935b33f0633f19a5be9b173ba27363cb92234bd6dfd7"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/props/p_footbridge.py",
+    "sha256": "36874f20d85302f8e5019a8cff520e95ea96d426dfb853cc9948869ae2b4c70b"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/props/p_fountain.py",
+    "sha256": "3da89d716d25ea3dc0e08106be56a4139fc84d70a03cf95e483573a068bc0ec6"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/props/p_gate_piers.py",
+    "sha256": "36856458c3ad1d3ea418b7098d7cbb0be18691ccde5e045d74db3b827507c345"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/props/p_gull_statue.py",
+    "sha256": "783b1afac41664038e430156bebb00a8f4bff8280decedf4c5903786333929ea"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/props/p_hand_cart.py",
+    "sha256": "8d314e380dc1ad67f54b9772b693bbd8bafb04f8aaccec0a8e4655280da62cc3"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/props/p_haystack.py",
+    "sha256": "4645b99624f25b841986893e435ea0d3c4b5656a3f2c71175ec31b20f2f2a377"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/props/p_hay_wagon.py",
+    "sha256": "0e4031dc29ee5aaaaef141bea15e3d89456a1485c715a783b7029eff7bcc002f"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/props/p_hedge.py",
+    "sha256": "ba2956fb1dba5b93199edf9f6348d8b43f26ec6ddde4943d4a612fa5385d2804"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/props/p_horse_trough.py",
+    "sha256": "922cfec1176799e1f68143de77537c73fee8465ed8897ed0656b670a00cdf5e8"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/props/p_jetty.py",
+    "sha256": "6d9c86fd10497dcb8f369a74c95f92b4b2ca9ccdfafc82917b4714427fc92ce6"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/props/p_jetty_end.py",
+    "sha256": "6cc5e41983a6c19433cecaae78d838906084017e62925110c28e282f3ef6c633"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/props/p_ketch.py",
+    "sha256": "231fdafd64a0409b3ca88ca4bb8e71d50e68b6cd4d88500835843464dd5c1ea8"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/props/p_lamp_iron.py",
+    "sha256": "9772da66203bdf6e2a2a2879c4fa3da7d508caf62106cff8a2b7800d8db52cd1"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/props/p_lamp_timber.py",
+    "sha256": "d02ecfd6ba3f5ac12a66477d957454e44c0411eafd43f39b5b93362e2b2ebc90"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/props/p_lobster_pots.py",
+    "sha256": "435d074bc01b62e5abcb7db3212d05ebfd7d431b115bbb7a89f327bb9889b9ff"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/props/p_market_cross.py",
+    "sha256": "9baf5445638ce84821df26cf6baaaae23067094e5cd506c63a5d981b180acdfc"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/props/p_mole.py",
+    "sha256": "b16c2edcd357334f8c770880bad2381b403a5d1f5a7a2b8e09452288d42cc23b"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/props/p_mole_end.py",
+    "sha256": "469ad1d44495dcf600909afb757838ea9902fe439f061c23a5b68467bed950f3"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/props/p_mole_head.py",
+    "sha256": "5dcab6fa178f5b9c8e168a664e5588c9df84740de020179f116809417d0b6c69"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/props/p_mounting_block.py",
+    "sha256": "d516ade7172fa12c5f5d17f28f8f2b90c4289cff37a5f326f4d4166fd3f76a5c"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/props/p_net_rack.py",
+    "sha256": "edbd8ee53a043bc07a2090c86d6a0338d372264057f42520139f6a8aec003d6a"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/props/p_notice_board.py",
+    "sha256": "16bfee2145b3d65f1388efd65078d8a6da1b47264457f287d38d3bbad4286cfa"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/props/p_pergola.py",
+    "sha256": "1dabead4c34dd90a9241c7e160dbcc83f78b27879333598dfcfb03369e092c2b"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/props/p_quay.py",
+    "sha256": "cec14ab38607d26d0ea99ee3a8e2ad452a1affce6db02f7627d00f492e7394f3"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/props/p_quay_b.py",
+    "sha256": "f2c99610d119a2bd02ad4c556e038fa95c9b7a44a4203ad756bc81089aebe9e2"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/props/p_quay_corner.py",
+    "sha256": "4de2b959e40e1691e293c4561731b2675fcd95fef2613f9303b23fdada360943"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/props/p_quay_corner_in.py",
+    "sha256": "fdd50cd70fcbefec6681e95aa2695882826fa6c11a9a8884f29478272c073b1e"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/props/p_quay_stairs.py",
+    "sha256": "779828c20b3c493d4f5bb6fcd6851d61e766429a1359ca6c481df6b8e644feb5"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/props/p_rowboat.py",
+    "sha256": "ca9077291eb5cff931e545eee57e3f79b51091bfa432ea7af1a75b18272b694c"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/props/p_scarecrow.py",
+    "sha256": "955f6cffa7ae2abecf3ece0bccfd4ea06498b0d847b0fad760f16cf7b4038af3"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/props/p_signpost.py",
+    "sha256": "6168b156f004707bb19c2c267e412a29047fe31af039f28e20eb85a8d4fcab96"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/props/p_stall_cloth.py",
+    "sha256": "a1b7b034bdc9627a529c01656b5a13c6ef3df779822a027db1a99f49bb7ca526"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/props/p_stall_fish.py",
+    "sha256": "2582fd0261df2350984118035c211534306952aaeeabf5ea868907f32a27ef98"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/props/p_stall_fruit.py",
+    "sha256": "59b7e46d8cf120bcde38b3d1d279c585ceefddf6f46c8aba847de4804a8e8559"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/props/p_stall_pots.py",
+    "sha256": "bba1768e0cbfe0e3d2857d7bb49d24f2e646ecf384a55c0a102e8477988ba781"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/props/p_steps_2m.py",
+    "sha256": "826e03f2be53fb597f1c0d48771d55b150aeeaff2df886dd75783852085d0f3b"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/props/p_steps_3m.py",
+    "sha256": "b9f6a7369ba79d663d2e403d00e2a93d1f076bd063333ce45a5aac9c90b72cc9"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/props/p_stone_bench.py",
+    "sha256": "a1ea3d02fee4b5ef7d99244dfb786470bc24588ccdaf54d7110f239e039638e7"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/props/p_tavern_table.py",
+    "sha256": "68247dd4014860b4868130eb1e039c3c9fe17ed2db7c4f873a570832eb43bad2"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/props/p_topiary.py",
+    "sha256": "635f7c6d3d4a70b84eba417ecde2330e7ee825e03c9fe6b2013098dbcb0cb6f9"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/props/p_tree_apple.py",
+    "sha256": "d3301ac5e3992d9e38715962a03312c7d09a5aaea9178790b902fd9e11cc1df1"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/props/p_tree_bench.py",
+    "sha256": "10e9024dc824ae33c130cc804f92ef9a670550a6293096cfbb0302498ccfe216"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/props/p_tree_cypress.py",
+    "sha256": "6f626d59a93bab0ee0cf6da536909b2c71054577fa98879437ac41c3ebcd43d2"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/props/p_tree_pine.py",
+    "sha256": "f03a970a46a9f6ca51f8cb7f584dfa9ed28a30dd1668b6cf042c46e643d334b1"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/props/p_veg_patch.py",
+    "sha256": "d4ff803d8a4e2138f9d941136067b40d0875acb6d722feef997cd87ee14d06e9"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/props/p_wall_door.py",
+    "sha256": "b15ea5a4ad899127f425377f2f0085c35872dcd7b543a94c48c00b480637a566"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/props/p_wall_field.py",
+    "sha256": "29ba4cb5ea27d9ac3b69572721cb8605412dcc8a7b8816652ad65b2ac9d288cf"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/props/p_wall_garden.py",
+    "sha256": "4fac29e5314a9f9d6b417c4a216b3de4f95cde4e7e8b0d92c02d0dbccaa12193"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/props/p_wall_pier.py",
+    "sha256": "af0578087012456eef4fdf393f14567d89d5ab1bbac30ed171268d54cad925e1"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/props/p_wall_ruin.py",
+    "sha256": "71792ffd2d32626f597579adcf83cc3f864261dbc5be3919d277cde015c97cba"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/props/p_washing_line.py",
+    "sha256": "9a58ec8353812c54bbdff787de65dd2ece80dadb0e0cc17d8e5e9efb058b91e9"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/props/p_well.py",
+    "sha256": "3026c24febcbc2878572cb14c06c7b8f7db648a4805773add9d16b6aadf06817"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/props/p_wheelbarrow.py",
+    "sha256": "77b83d78f77615900b011a21315c09534f80df7ca26dff2e750736369e0c2298"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/props/p_wood_pile.py",
+    "sha256": "4fbd61913fc6c9d880272ea8a3afc316a590ee21724574cb5bc22dfe952294c4"
+  },
+  {
+    "project": "petalwake",
+    "path": "tools/town/README.md",
+    "sha256": "f240f7802935e2b89d26f141095b86871a385987d580bb8bbfaea992e5b65d4d"
+  },
+  {
+    "project": "petalwake",
+    "path": "vendor/three/build/three.core.js",
+    "sha256": "613e370f76638fdef83926642bf256dc9615684922de1ce1f63a8583e5d78578"
+  },
+  {
+    "project": "petalwake",
+    "path": "vendor/three/build/three.module.js",
+    "sha256": "104f56145899722094556490d787aae0617cc2fc3382f31df02d724ea1aee341"
+  },
+  {
+    "project": "petalwake",
+    "path": "vendor/three/examples/jsm/libs/meshopt_decoder.module.js",
+    "sha256": "d428e73a000057c6c94bfcedc3412d0c2dc14ca8800e88553aab05113ad2bf19"
+  },
+  {
+    "project": "petalwake",
+    "path": "vendor/three/examples/jsm/loaders/GLTFLoader.js",
+    "sha256": "532ac726e120039acbcd6cf54328c57acbf7b438176afaa6951257126d11bff1"
+  },
+  {
+    "project": "petalwake",
+    "path": "vendor/three/examples/jsm/utils/BufferGeometryUtils.js",
+    "sha256": "7bda2a8ba836b2bcf67cb938d4b9e1bb5d1b1bc616817103ed858c0b58296ce7"
+  },
+  {
+    "project": "petalwake",
+    "path": "vendor/three/examples/jsm/utils/SkeletonUtils.js",
+    "sha256": "b1632a703206c3d830de9fcbe515696770d04b71a15ee6b50afa6d2c3298c86f"
+  },
+  {
+    "project": "petalwake",
+    "path": "vendor/three/LICENSE",
+    "sha256": "8b378ebe60e2fe500158cb0ac71cb5e8b7d92953c2abcc63a0eb90499653b5bc"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": ".gitignore",
+    "sha256": "9e8b446ea8184f36748746679cf0395c2864a68d946560c65f0a9ab60bb974e0"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "docs/DESIGN.md",
+    "sha256": "72da97a67eb3a14c893259ad5309f58bbfa09b5b7b7f5166fe307b4677f205fa"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "docs/images/hero-street.jpg",
+    "sha256": "da224c34146e945fbb82844c80e9ac3fb6eba058d67e476de42ae7039f62629d"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "docs/images/konbini.jpg",
+    "sha256": "926c3104c13bb0c4885de20180e5e7a18c1928e2619cd2a86254a760f2416c49"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "docs/images/level-crossing.jpg",
+    "sha256": "946afd33232db5ff0626bb361b78c8d97084f6fb2678585a5df2447451a98355"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "docs/images/overview.jpg",
+    "sha256": "7bd1f1ace234481b10f3355f737b09865ffbb36d39737bdc40121f8dd7db4adb"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "docs/images/ramen.jpg",
+    "sha256": "bb773bc16b6f38cfe4c951c8968823b6d879299f4a980441917c361987baeaa0"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "docs/images/river-levee.jpg",
+    "sha256": "e29bb66c3a39fa0ed46df00fb7dcd90e76de6a0a93499dee9c62d3d8dc68fa29"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "docs/images/station-office.jpg",
+    "sha256": "37a9e892a5108aacf0a71b7420bf45276a294f2c42d3e23c1010c9b8cc42b18d"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "docs/images/station-plaza.jpg",
+    "sha256": "fec096c0ec96a979e17b502a401baa380b6f9fcd9cf1841eb2667e4adb30209e"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "index.html",
+    "sha256": "5b1bb8580b3044abae45478a307fc6eaaeff4453813cc16418e1c1c0d6ea0ad6"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "LICENSE",
+    "sha256": "9b810ad4fc1139f94f7cfaf144a95069d13c4c822fac9f8b657ba6ae6f9de1f7"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "package-lock.json",
+    "sha256": "17def4be00a75bf5ead4d150f17242efbf65c59a138499602d95677cd9b6e35a"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "package.json",
+    "sha256": "db8fd090ad11e0c0b3629528f3798898ec75ccae4f17eb8fcdc322df7e5a26e1"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "README.md",
+    "sha256": "7269ea19321e686b7359fd68caa97d77848dc4b4117b3d1658559e6975395ee3"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/core/audio.js",
+    "sha256": "3cccce60c3dd86d603b2918dcc70daa83d8d7c65a46d3c855988d8ab8c0728b4"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/core/batch.js",
+    "sha256": "55f6e1b6f487b0bde83dc672252102d490dcb3cb92897735565b122d75264921"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/core/batch2.js",
+    "sha256": "cc224240ab1ac2d61af1d3ad96136cc2559c5af29d912da1c167f5a0e69a6c7d"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/core/ctx.js",
+    "sha256": "3c4e8e1a9f8db612eb2648f0b7c78d9f0d52b45b86d4b53d0e98c6d96b4d078a"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/core/geo.js",
+    "sha256": "3b64528e783e433d7651a1e5dc6924e98b3b9173870875e511573c820abbc234"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/core/materials.js",
+    "sha256": "167c859795e828dd281f7628ffadfc5342bae4ef16c307d0eb7188816358733b"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/core/physics.js",
+    "sha256": "484edf5e19595224f3fb26dbddfcd6033e96c37ee5dbf04e6b0e216b7397d811"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/core/player.js",
+    "sha256": "343495b618a834a542c0177d92eef1c0f3b8dc6581e8607e07f58d9e49e396db"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/core/renderer.js",
+    "sha256": "6a3f871fa17ef2be4fd003d621744a8dcd891582b553dd3ac4d8a89620526640"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/core/sky.js",
+    "sha256": "ca9bd33602f6487dab11b2bb81f2d0302448f32e99aafc3a17994ea2aca1eec8"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/core/textures.js",
+    "sha256": "a4a4ff1e887eb6098a05b978c69db8e8d2f6947b363d1a3506f11ef30df0a390"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/main.js",
+    "sha256": "978f97cbed597f2e0f61d16b2187401824754b946ed81999c01cab77d1b1af95"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/world/characters/anim.js",
+    "sha256": "458db7aaf6e4a4491e346accaebdd580e2c0683f500363230d3f50fb317b76cf"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/world/characters/animals.js",
+    "sha256": "0fcd9d20239efab31df6bbe96558dce0c6029e942162c1335a3b90ea29575609"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/world/characters/atlas.js",
+    "sha256": "a788e1b10e1708738934ca2f2099f7cfc3a79cb7d67ec1a6997764093637b2cd"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/world/characters/cast.js",
+    "sha256": "ea5d961b2b7537cfde9f1231d862a4b0d375196c3f2a217eb44cdc1c6c6ee718"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/world/characters/devprops.js",
+    "sha256": "177fa4d1110707c318134df5552473eb04fc2239f0e48ca9587119f1b231a510"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/world/characters/gear.js",
+    "sha256": "2e7a22566ca2e4c745c5c88ab71d770087fb0187e7e35b26dfb70f84e4e514be"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/world/characters/human.js",
+    "sha256": "de5bb2f7a45749c7fdf175cb4e22cf9d15a888b0c31f2fa651c71f6fb25378ed"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/world/characters/skin.js",
+    "sha256": "7738680c10c7d86868b35c0170b40760ab862ab8779ae7fb0483f16b8b3e067e"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/world/characters.js",
+    "sha256": "b5a78540132b7f5b77e4de7a7dcfd9836d388cf9fbe8ce68850a78184427f328"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/world/crossing/glow.js",
+    "sha256": "7767016a482da08e06e4d4ca5510d898886f3867c1c3937b8bc91238affb163d"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/world/crossing/tex.js",
+    "sha256": "56843d50bf1c92aa16dea6c33ae73b447a930e7b9422501e1c1107078a55533e"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/world/crossing.js",
+    "sha256": "38c68c71d4d358b2e00b6b09fa93228b98194e8fbe176ca122aae5a7e461eec2"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/world/environment/common.js",
+    "sha256": "fdaceac6b191109e0fb1c3bfdca092d770ae9058c84db45052ba6ed16c2dff37"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/world/environment/far.js",
+    "sha256": "94801d4d5148a9b8b8427dd1cfbf5b0cb38e87030d331accf405089317c9df63"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/world/environment/flora.js",
+    "sha256": "8ac53cf34e368cf81c8e0d5bb9d32247e8dfb3c3d0716b8123eaf099db434cf4"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/world/environment/levee.js",
+    "sha256": "081fe78e81d7aec92130a1859d2a8657e7d22b36db37694eaba54ca84e9f1329"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/world/environment/park.js",
+    "sha256": "da34ecaab114f19122a7b8c6e49dae28b8745adefa40a0f5909f07cb2beef6c4"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/world/environment/shaders.js",
+    "sha256": "240f69bd594e320150109691324e6cae0872d4fd10700b137bff9dc36b812ca6"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/world/environment/terrain.js",
+    "sha256": "bce5ed82a6caab37f7d19c498487389ec1dd7c5432c0304068016003257e6031"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/world/environment/textures.js",
+    "sha256": "bb7ebce17498f854d15714626ba97dea6b26e0e7184ed788b6dac9ec81ee4d09"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/world/environment/water.js",
+    "sha256": "bff0a31540b2f64340aa4ddfde0a560a4ce255623341170171f63bc7c34c1989"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/world/environment.js",
+    "sha256": "f5899ed58584b1035c220cdb542923b5925dfbaa003fd3b1dc271c8e36d70cab"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/world/houses/apartment.js",
+    "sha256": "279eed59a4708b66ec3ba098c91a60e2bbbe2e72d849efa900aae211a8949556"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/world/houses/far.js",
+    "sha256": "ef7bc4859f956b7f15ccdc1f138f2258cfb2d25b42d397219c726d7cc1b17841"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/world/houses/gb.js",
+    "sha256": "1eff740f7c981529cfbdf4dd070309905d147cf4d9897a5bffcda5040ea2c1c5"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/world/houses/house.js",
+    "sha256": "9d1713efe5670432938cfa05d96c6ef6acc75be6f3586674df62d9af77b91d4b"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/world/houses/laundry.js",
+    "sha256": "528293a90362a60d763b4103fa873b596d34f3e1aa58556c79a2396dd7883f56"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/world/houses/lot.js",
+    "sha256": "53098c01453e67db3e21d410212c7ab7a332675abe79ce1b94e51c531af04327"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/world/houses/props.js",
+    "sha256": "9dec02c33081cfefa6d302dd5d91a3f1b05ff618c0dcf2c3000d198df127f4f2"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/world/houses/tex.js",
+    "sha256": "8d654174fa705a74554b5dccfa12638dd55430e662407910a88a434eb4a71b85"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/world/houses.js",
+    "sha256": "972e8f31a58e56ba915f32cdf6fb7354682aa0210063eef102b0c46f1d106cd4"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/world/layout.js",
+    "sha256": "ca3acd3248e3fc48f8ce58f9bacabfe0fc893e633c58bb385822918deca97b7c"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/world/lib/foliage.js",
+    "sha256": "6c54386dfe6daa83960800a3e443fe4fccf3268aeac3c69fbcbf50b6d1676016"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/world/petals/ground.js",
+    "sha256": "48d59757de8d669d5e473fd6d61ce34008cb6d23ae17550d17d58f481c456d2f"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/world/petals/plan.js",
+    "sha256": "e78ee90513d1b9be74f5d787be6780aa62848cef0bbc58385bbffe71dca30257"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/world/petals/shaders.js",
+    "sha256": "6bea5ab51da18c288a7cbdd7b48f967978568f567dffd8603162d34b0b100e83"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/world/petals/surface.js",
+    "sha256": "dd691399c3b53557997596ed3943b4e7e602494beb1951ce41e2a894d7aa3736"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/world/petals/textures.js",
+    "sha256": "89794abf5de706c7d61953629924b6ac7cef9df1a77c76fd9da41fb149f0acce"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/world/petals/trains.js",
+    "sha256": "3d960e6e8529ed7df29a635c65db2152617971e979974f32420f560742c526cb"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/world/petals.js",
+    "sha256": "38e7e83e08817302255109c1a5ee34dd2c6c9215deedaeb633efb8e10ac751f4"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/world/plaza/furniture.js",
+    "sha256": "88cb993643be9b5529d519abcc8e65fdc0cb8a44a6d10c3f2bd9f2386ebae7ab"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/world/plaza/ground.js",
+    "sha256": "1fcccdeef23b5f744f289f184be9afdd88c39bd02b0a23ff710402a5ebf8fed9"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/world/plaza/plants.js",
+    "sha256": "84087d105fd6454214b3f11c5010c8c9b8a46fe2ed350f45fb835da6d5ed13db"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/world/plaza/signs.js",
+    "sha256": "7ad5b2936e3a0b42edda957ae59a4e50d07a841f017ee0b7196db8053a5a103e"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/world/plaza/textures.js",
+    "sha256": "ecc2c5cc4417957d00c6c69961d3affe76a1e688d48179f00ae0b8f54a992620"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/world/plaza/tree.js",
+    "sha256": "ab6442d7a31f332a1737691850111a3484046b34bd31071b6409504ecf612b0b"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/world/plaza/util.js",
+    "sha256": "11c44c6847ed35727321fb63f18f99df5549c8d78e0cbff06b64feff58cdd6a4"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/world/plaza.js",
+    "sha256": "902087f253fc859c6af911c6efcfa063f6ec77089c6f70b24987b89ffaeb015e"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/world/poles/acc.js",
+    "sha256": "1a3d3f899c1a9c7fbff877cadfea85bf6772ead69769a9d8751a80470e6c1b53"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/world/poles/atlas.js",
+    "sha256": "d49b3a51aba573a3cdcba9b4e5b3c2895bbe3f464528b7faeb71fd01be71a889"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/world/poles/facade.js",
+    "sha256": "5610b5f3657e92c07f7394f56c9680cf61d94b8c66c5ab44d161e6ad86701dde"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/world/poles.js",
+    "sha256": "7dfa0cb8d41b30c55809f8c5152c77a4990d8c7d99be86d16361c4ad5489bb7c"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/world/props/common.js",
+    "sha256": "bf36b3c0b059882efb5a50b8c120f11639e4d4bfa96a878a381719e5e3c5f5a5"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/world/props/optimize.js",
+    "sha256": "53dad6d1ff7add5ea350b7293d22ee453625a2ae1c5a819a05b7ee537c070bd1"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/world/props/scatter.js",
+    "sha256": "b7cc6434c659f11d18bd0a9a2af7322d8bf8f3179c86c3ff679c7274009263ed"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/world/props/shrine.js",
+    "sha256": "4cd8b1da34a017b159eb4d332f0b5926003d4cabb8ccbb9c0bf827138ed909de"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/world/props/shrinetex.js",
+    "sha256": "702336bf0980218755079bb2d3c699ae331757ea30fd8aac25aa013745059777"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/world/props/vending.js",
+    "sha256": "f5917bcaa77cfe46d657735387be8b1722a61c69f496ce1ef75b174594e7a9d6"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/world/props/vendtex.js",
+    "sha256": "39556ecaf911ee558b6eaa7ca7ecec2bcafaa2caa05000f41d70b12221c6bf01"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/world/props.js",
+    "sha256": "655334b043d62a513d7c0da92435b4a56c4cdf194a2c7c4a67ad425ed3f667ef"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/world/railway/catenary.js",
+    "sha256": "fe3b08b7c8205ebf18ca57e87336540df46cad4b88e2565bc3614d546258189a"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/world/railway/merge.js",
+    "sha256": "fca5311d545e0ac330746ae5a2d6cd66e098757230b2daee52d6f35faffc8f7f"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/world/railway/tex.js",
+    "sha256": "5ded261a9c66b1f09b4fa635103da44537beaef8d26463d42616cce8ef1925c1"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/world/railway/track.js",
+    "sha256": "fdb74db539fc2e4c77095b69191e902db54d6579dacec6f69f92a2da54ee7ffc"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/world/railway/trackside.js",
+    "sha256": "81ce2d31c4a56ff7706089416d48bb7a8761762c63a3fda302257406c56ea39f"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/world/railway/weeds.js",
+    "sha256": "eb94b0806095ef9abb43e7e0a0b1685a385e45623bdd5b722402e2a3020babaa"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/world/railway.js",
+    "sha256": "1fc5643d8263c5c2dce211c5312f14cb8a890151666b5f1ce3d209250d8bb91a"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/world/sakura/bases.js",
+    "sha256": "2d2f25e952cfdb131fe301eb4e6cafe3e0142d1d7184f3e2fc1f3ccd545b37a3"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/world/sakura/canopy.js",
+    "sha256": "160d5e8b902a533ddd4c282bf2d3697b0250fc8c830e910a6534afc2f0dbed5b"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/world/sakura/materials.js",
+    "sha256": "fa5cb76f4c3ad8230e153295d0cf6ef0d622a185e096e635014d6502be749478"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/world/sakura/placements.js",
+    "sha256": "9a214e46ee3e9553a4348a6fd037c17471ff6d3bf209e32db6927bdf2fc2d6f1"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/world/sakura/textures.js",
+    "sha256": "67d343801b0812f9d2afeb03e82bf6368818bbf822185a722f87cc5f3f494055"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/world/sakura/tree.js",
+    "sha256": "5e646fea7337a7d0fde7f95ec7c261596ee887c5f9cd4770b47f9ccac37c915e"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/world/sakura/util.js",
+    "sha256": "35c4978e9941ce0f4888a284b68592fd6baaf7a74be4d2ad24b0a3d14194fbb4"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/world/sakura.js",
+    "sha256": "e8535e798d38cd41d95aa291ab744ea8be7fc46fe88a906dc9f995f6cac5d68e"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/world/shopsA/books.js",
+    "sha256": "454ae9fc030046f385d91dad13583b29b823718fb691f3f0bf42b0672ea815ec"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/world/shopsA/cafe.js",
+    "sha256": "3df2f60f091577cbaba453fb2b078215a08f3e3d3f454b4539b2cf73f2fe0166"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/world/shopsA/common.js",
+    "sha256": "552b5ee6f6ab4ffb5f0c1703e06c9cea4d4e624ee5528114c6fad486511b8306"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/world/shopsA/flower.js",
+    "sha256": "1767258c82c79b4c27d6c752f757d2a0815a91a76427a90a996f0fc658d431fc"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/world/shopsA/goods.js",
+    "sha256": "40fdc245dc1e00c79b421089cd6d81a81a6d3a9d99fa377a5e4159e5e2db7418"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/world/shopsA/intBooks.js",
+    "sha256": "0cf35367a168acfa02f9b87e29a824b58a578255f7d79db27e6d6f97829c95ec"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/world/shopsA/intCafe.js",
+    "sha256": "6108afb9cec5cbffe9256f2cfb32ef9c183d86115635ea1b4b34057b225eb4e9"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/world/shopsA/intFlower.js",
+    "sha256": "f5c6400626937b779d70ee84f55b2cdf965296685b9fd3219f32ce2214ddfbdf"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/world/shopsA/intKonbini.js",
+    "sha256": "3fb122d19f1c11889f9cbe62dc53b5a1388dbfc0f1e71c508a7c9054b6cb8244"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/world/shopsA/konbini.js",
+    "sha256": "fd575217e6a8e64f44ea5c5d718f94ab71134ae6e58cd856c08d6339954eade8"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/world/shopsA.js",
+    "sha256": "771de38ca9388f9296cda93c26407fe5336cda2d26ef0f7dab9ba2826722d57a"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/world/shopsB/bike.js",
+    "sha256": "3ec8189fff82e677bbc02f299a3764705300cea48b9d1875bc2889375af388ef"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/world/shopsB/bikeInt.js",
+    "sha256": "4f446f762812861582a0f69d8400738a8ee6e3b26c78181ca56c5d91430f0b8f"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/world/shopsB/common.js",
+    "sha256": "115a1b6c49b93dbb5d57c886f99db3c837d704df44e02d833a1e166f16d8a08d"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/world/shopsB/general.js",
+    "sha256": "d9089476cb751928ba32de834f309a1067493a24cb3befc5d6e5f45f838dc5ec"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/world/shopsB/generalInt.js",
+    "sha256": "399e9da7642646fd15e024d521225bc2bda1db614db11f426c9b4ce013fbcf79"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/world/shopsB/inst.js",
+    "sha256": "742885cf5d76a475514bea3a550a7b338eb7ac18c959cdad9705d6c24aeff3cd"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/world/shopsB/optimize.js",
+    "sha256": "95c0c8484756b3f8ab84c3df832750236c827af9b8daaff284f3ac4d0aa77fff"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/world/shopsB/props.js",
+    "sha256": "41425741d90de5f56f06f222b3b793a38599fabde89e5c00519826b5af79131c"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/world/shopsB/ramen.js",
+    "sha256": "10d93e321f2f75b21cd156c60e66174bba6b9bafc56a6f570b709db082cd3580"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/world/shopsB/ramenInt.js",
+    "sha256": "9e82b58ebcb2148cd8edb01e4f39ac693e9294ace057ab66c25c24bed0c8d115"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/world/shopsB/sweets.js",
+    "sha256": "ae427cf1701f1e74fef8e2dc45507b8f4874029d1667689fdc2c79fd47ddfc22"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/world/shopsB/wagashi.js",
+    "sha256": "94ff636f7b99e0ae2f06831139221d07cbbdc03d95100dc60d41ccf5e54e0ae0"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/world/shopsB/wagashiInt.js",
+    "sha256": "633a4de4bc90b2baa8cf711a6aa25f37009cb233cc4400630554c9567e634287"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/world/shopsB.js",
+    "sha256": "bc1b5c68997e5a3bedc8b5c0e5d84a6f7754a8cce40c75ab467b37929b2855e1"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/world/station/building.js",
+    "sha256": "eb97d221b489ecdbf97fd8af53471c4d6ac07ac3cda6378c007102f4089f2505"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/world/station/interior.js",
+    "sha256": "eb6d512539ae18d21e417c5515fe26504969e141beee16f738738129c6130297"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/world/station/mats.js",
+    "sha256": "1b5c0197e9869aa121fb568f0b63ea8fa3b97179f2a81d2fe01c9a1c870ac53f"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/world/station/office.js",
+    "sha256": "8d91cb4d51c4804e8adb097996dfc1e614a80ed0ee5ddaf730cd0f5cb2c73919"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/world/station/platforms.js",
+    "sha256": "fd24963c6eaa62b078fc54c392b3819bc820c7c6cfd37baaeecaf6f30ff8bc3d"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/world/station/props3d.js",
+    "sha256": "ded912c91a7c0fce99fc9c06a1f8fe9e852591181a860945fb88ef96a2cc517a"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/world/station/tex.js",
+    "sha256": "8b5c7603dafa77eddd6deba2a825b77c0b516cdfb1d547b94d49e039d479a1a1"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/world/station/tex2.js",
+    "sha256": "576bfd8110192d3ba496487c577ef5bbb609489761ed65df17c826ff2ce45b9b"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/world/station/util.js",
+    "sha256": "86a010675026f3c1379f675db6e0bc6fbf0b0ed9af6d249b805e4d529b3d3e8b"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/world/station/yards.js",
+    "sha256": "ee033e1e585104cfa0ecf810fe6c6cbd3eb8a8b9c9af7af9d3dd386a39525508"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/world/station.js",
+    "sha256": "5d57310779a690cf9a0027f39baf4176215484d9a47032ca09faf76dbfd84c7f"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/world/street/ditch.js",
+    "sha256": "b829ee7de383458e43b6c2bdec9cc660bae458879e7761dc9a0ac5d109cc9660"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/world/street/furniture.js",
+    "sha256": "d3033c38d17b2877a942014349ae25d54ace55c4c7ed355205d53906712f592f"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/world/street/mesh.js",
+    "sha256": "cb2df575e36094f3a7c25833cc348c39359894ea604b89b633015734caa46c6f"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/world/street/textures.js",
+    "sha256": "0844b9903cc29d359ec6361a9cba4be1791963c0eb9740a8848ca24891c4f598"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/world/street.js",
+    "sha256": "c8bf81bea57fe23c6803ed246e3e178d1851b210ab4983bf68cd280b0a2199df"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/world/trains/builder.js",
+    "sha256": "7afd999ae51445b0649f54b1d0729667bfd00af25c3378a147b91ed01d881ab2"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/world/trains/car.js",
+    "sha256": "58a684a01c9c6f675e3e21f241fd447dddfb0db7a0b1492012de34ebb4e9d409"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/world/trains/people.js",
+    "sha256": "42f09d0714d747a47af99cc37febf1a6cda0079bac1936ab939ff4289db8b477"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/world/trains/schedule.js",
+    "sha256": "debfb8c0506120c103dc4ef9055ca32993455c2cd9e0026e7b9c88381d9ba3f9"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/world/trains/textures.js",
+    "sha256": "c7ca0a1bea3ab4da5b26da3ccb4f02da51ecf51248da9357b2310789004bab76"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/world/trains.js",
+    "sha256": "5758c12a585e079d21ab42e9e7d11dd97d9944e9fa885cc0504446fb3f4cf1ac"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/world/vehicles/atlas.js",
+    "sha256": "755371bc0edb1a6e85e8370303b83a5f5b23a157bab097245302da9c4d606e7e"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/world/vehicles/bike.js",
+    "sha256": "3954ae1db01ee74c1a019450cb8ad18debcb35c5fddf6de93d4b981d86606dd0"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/world/vehicles/cars.js",
+    "sha256": "496acb05356eb41281f057642d396042dcc9c05def26b8450c69ef0079bb0677"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/world/vehicles/vb.js",
+    "sha256": "ec9a923e0196c4132c4354443571d0f4134352a44eef97627cf605d774cb1199"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/world/vehicles.js",
+    "sha256": "e278770ddc720111ff566bc98654e225969275ad7e3ef7cb536205c98abba66b"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "src/world/_ground.js",
+    "sha256": "ff48bce39089469ef9326590a596f16af4f0c661022d0bec3bd69ea342a2a4dc"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "tools/audio-test.html",
+    "sha256": "4e376e77f664f114d8e561b76ac3424aabe819a5378123516db1843b47b30511"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "tools/audio-test.mjs",
+    "sha256": "5bb733a87a0edb20f600805fad202f9fb19982ee49c8f8d0cc84647806489dad"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "tools/build-artifact.mjs",
+    "sha256": "5e527050375c81a4329f07c9cc6bf6a636b28f53831ab0be751448c12e656272"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "tools/check.mjs",
+    "sha256": "0d9bb4b0463da492485906964daeb8e1ee6da0b3525ac90505c47e0666614b5f"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "tools/serve.mjs",
+    "sha256": "07e0df603e4bfe9c95fe24ed02d75f445b3323f692499b001b7f9749941b8f50"
+  },
+  {
+    "project": "sakuragaoka",
+    "path": "tools/shot.mjs",
+    "sha256": "8216d5f70f224ed6c5a1e3d989e1a8730cfdd0302aa789babcc397e0fec8265e"
+  }
+]

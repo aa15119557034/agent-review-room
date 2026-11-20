@@ -1,0 +1,98 @@
+{
+  "sourceHeads": {
+    "c8": "5cf3ef7d784ff069b87fef9b8051de63b6695e48",
+    "c9": "1b63536ef0dae7c9f28d92efda01b0740e9a005a",
+    "c10": "53cb20a8c017eba04bc8dae1437a8179071a1b9d"
+  },
+  "reportPaths": {
+    "c8": "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base/artifacts/gpu-shutter-c8-grade-v2/grade-report.json",
+    "c9": "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base/artifacts/gpu-look-c9-v1/look-report.json",
+    "c10": "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base/artifacts/gpu-look-c10-v1/look-report.json"
+  },
+  "cameraC9C10Equal": true,
+  "cameraC8C10Equal": true,
+  "roiHDR": [
+    {
+      "roi": {
+        "name": "door-interior-upper",
+        "x": 759,
+        "y": 360,
+        "width": 12,
+        "height": 18
+      },
+      "c8SceneHalfWordsEqual": true,
+      "c8CompHalfWordsEqual": true,
+      "c9SceneHalfWordsEqual": true,
+      "c9CompHalfWordsEqual": true
+    },
+    {
+      "roi": {
+        "name": "door-interior-lower",
+        "x": 759,
+        "y": 450,
+        "width": 12,
+        "height": 18
+      },
+      "c8SceneHalfWordsEqual": true,
+      "c8CompHalfWordsEqual": true,
+      "c9SceneHalfWordsEqual": true,
+      "c9CompHalfWordsEqual": true
+    }
+  ],
+  "points": [
+    {
+      "x": 763,
+      "y": 369,
+      "c8": [
+        0,
+        0,
+        5
+      ],
+      "c9AOOn": [
+        26,
+        31,
+        42
+      ],
+      "c10AOOn": [
+        25,
+        30,
+        42
+      ],
+      "c10AOOff": [
+        26,
+        31,
+        42
+      ]
+    },
+    {
+      "x": 762,
+      "y": 459,
+      "c8": [
+        0,
+        0,
+        3
+      ],
+      "c9AOOn": [
+        26,
+        31,
+        41
+      ],
+      "c10AOOn": [
+        26,
+        31,
+        41
+      ],
+      "c10AOOff": [
+        26,
+        31,
+        41
+      ]
+    }
+  ],
+  "scope": "Two saved legacy shutter HDR ROIs and two exact image points only. C10 new AO can change final output by 1 level at upper point; toe remains intact. No full image/scene equality claim.",
+  "evidenceHashes": {
+    "c9Report": "f628704a3d962fab215699da928ae2c35dcddac009579fdfae14ad72e6791034",
+    "c10Report": "4dee83930e1457bc14fcda50f596aec92f0199f73813b21c7cfeae2f74b93aeb",
+    "legacyReference": "526a7765b3294d99a8820da298b7c8539c4966b01ded0e08a1fa059e9b976614"
+  }
+}

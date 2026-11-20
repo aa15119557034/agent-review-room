@@ -1,0 +1,104 @@
+{
+  "sourceHeadReported": "5cf3ef7",
+  "mode": "Read-only source/image review and CPU camera projection; no GPU run by this agent.",
+  "imagesViewed": [
+    "artifacts/gpu-props-c8-v1/23-service-corner.jpg",
+    "artifacts/gpu-props-c8-v1/24-laundry-details.jpg"
+  ],
+  "runtimeEvidence": "artifacts/gpu-props-c8-integration-v1/integration-report.json (runtime_harness separate run)",
+  "facts": {
+    "uv": "Actual postbatch UV count48 min[0,0] max[1,1]; AO compiled AOMAP_UV=uv. Original doors are makeKit BoxGeometry, not UV-less GB.",
+    "material": "MeshStandardMaterial retained by batchStatic; vertexColors=false; no scene.environment/envMap.",
+    "arm": {
+      "rMean": 211.107,
+      "gMean": 186.166,
+      "bMean": 0.651,
+      "bMax": 18
+    },
+    "diffuseRGBMean": [
+      65.314,
+      60.202,
+      54.238
+    ],
+    "aoOff": "runtime_harness observes still nearly black; excludes AO as sole cause.",
+    "outputEncoding": "Pipeline final shader explicitly calls toSRGB(col).",
+    "doorPlacement": "Shed body front z=-28.7; panel front z=-28.678/-28.66, outside body. No geometry overlay on panel."
+  },
+  "unresolved": "Dominant cause not established. Dark source albedo + backlit Standard illumination + tone grading remain candidates. Root independently running normal/shadow/Basic controlled probes; do not change global light or guess metalness.",
+  "camera": {
+    "fov": 55,
+    "aspect": 1.6,
+    "coordinates": "station-local; world adds [280,8,900]",
+    "service": {
+      "position": [
+        28.4,
+        1.612,
+        -27.1
+      ],
+      "target": [
+        25,
+        0.85,
+        -28.7
+      ],
+      "eyeAboveGround": 1.6,
+      "supportY": 0.012,
+      "stackNDC": {
+        "min": [
+          -0.08109641545535043,
+          -0.8305561012600045
+        ],
+        "max": [
+          0.2088220240689856,
+          -0.26941406845194327
+        ]
+      },
+      "worldPosition": [
+        308.4,
+        9.612,
+        872.9
+      ]
+    },
+    "laundry": {
+      "position": [
+        8,
+        6.384808464050294,
+        -122.1
+      ],
+      "target": [
+        5.15,
+        5.144808464050294,
+        -122.7
+      ],
+      "eyeAbovePlatform": 1.6,
+      "platformY": 4.784808464050293,
+      "propsNDC": {
+        "min": [
+          -0.2660101324305279,
+          -0.8954089751464668
+        ],
+        "max": [
+          0.3448319196562976,
+          0.3495019018342172
+        ]
+      },
+      "worldPosition": [
+        288,
+        14.384808464050295,
+        777.9
+      ],
+      "platformEdgeClearance": 0.29
+    }
+  },
+  "limits": [
+    "CPU projection proves conservative bounding-box framing, not final rendered occlusion or material legibility.",
+    "Laundry camera is a detail view; full upper shop glazing may leave the frame.",
+    "Camera motion remains fixed view; city has no new walking support/physics."
+  ],
+  "sourceHashes": {
+    "src/textured-props.js": "3bce7ebe97de2ec87828e757f6883e3d5cf5ec795faa96ff72d47f59a9bd63c4",
+    "src/look.js": "5e8590a41fc998943342ad878a2b9a6a38e0698eac0a165d1ecb873e3b4caf89",
+    "src/station.js": "5dd6442a1300eaede6d9efdc0c9319a895e4008462a823c60e295fd50f0198c5",
+    "upstream/sakuragaoka/src/world/station/yards.js": "ee033e1e585104cfa0ecf810fe6c6cbd3eb8a8b9c9af7af9d3dd386a39525508",
+    "upstream/petalwake/src/core/pipeline.js": "0495e8d0ce275729e2a4d2fb4a15707635956ad308fcc591a6a2cf5260359085"
+  }
+}

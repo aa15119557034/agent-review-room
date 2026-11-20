@@ -1,0 +1,18 @@
+{
+  "head": "1b63536ef0dae7c9f28d92efda01b0740e9a005a",
+  "sourceHashesVerifiedAgainstCommit": {
+    "src/look.js": "f7625d1aeec0770624d5dc24218ea80f8dcd802c732dc0c92454da62225a9b61",
+    "src/main.js": "b45f1a5da0629deaebbefd60d1a89e922e738a52adb0ae89c53597df5df97caf",
+    "upstream/petalwake/src/core/pipeline.js": "0495e8d0ce275729e2a4d2fb4a15707635956ad308fcc591a6a2cf5260359085"
+  },
+  "resultSha256": "e90f1fcc4ecd8ee38f1022c3f5eb40f463f5b24589865acfd478d41dfcbbabd9",
+  "preservedDriverSha256": "f038313917e803e67a5cb32ccbf9306c5c3a32b663a6326ce3bb71c043ca7bd8",
+  "scope": "CPU literal/math checks and result only; neither shader compilation nor rendered appearance/GPU proof. Driver is preserved at curation time; the original result does not record its driver hash. Curation does not rerun this analysis.",
+  "limitations": [
+    "CPU reference transcription checked against shader source markers; no shader compiler or GPU execution.",
+    "Depth sampled nearest with Float32 encoding; remaining JS arithmetic uses doubles, not every GPU Float32 operation.",
+    "Analytic fields exercise finite planes, corners, screen edges and parallel depth step; do not prove all actual scene depth discontinuities artifact-free.",
+    "Above .12 equality is only per-channel contrast-stage equality. Subsequent luma/chroma grading couples channels; AO change affects the whole image.",
+    "No current code sets camera.zoom, filmOffset or viewOffset; wbPos is correct for the current symmetric perspective camera."
+  ]
+}

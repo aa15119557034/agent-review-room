@@ -1,0 +1,11 @@
+* text=auto eol=lf
+*.png -text
+*.jpg -text
+*.webm -text
+assets/station-art/*.zip -text
+assets/art-preview/downloads/** -text
+assets/art-preview/supplemental/** -text
+upstream/** linguist-vendored
+upstream/mirzaev-highrise/*.mtl -text
+# Unified diff context represents an empty source line with a single space.
+evidence/upstream-changes.patch -whitespace

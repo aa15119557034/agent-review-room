@@ -1,0 +1,2320 @@
+{
+  "sourceCommit": "cc079586460ee5f6e9d623e956a58a56906f4e1d",
+  "head": "cc079586460ee5f6e9d623e956a58a56906f4e1d",
+  "input": {
+    "report": "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base/artifacts/walking-profile-cc07958-v1/walking-profile-report.json",
+    "sha256": "3dc10bef48489479c06c1de4aae7595bab453aca8a5c00d17f9f20854e159a22",
+    "driverSha256": "2306ccb235a36ab18b9d88c14a0ab67747bca9f7ab07ddd96172d16d90077adc"
+  },
+  "status": {
+    "profileComplete": true,
+    "sourceUnchanged": true,
+    "driverUnchanged": true,
+    "transportClean": false,
+    "ok": false,
+    "networkFailures": 3
+  },
+  "method": {
+    "pairing": "Same camera mode and round, delta = A segment render median minus B segment render median. Pair segments, never unrelated frame indexes; each segment retains all its frames. Warmup routes are separate and excluded from the 5 paired rounds.",
+    "quartiles": "Linear interpolation at (n-1)*p for Q1/median/Q3; IQR=Q3-Q1. Paired-delta IQR describes five round differences; segment IQR describes each segment frame distribution.",
+    "slowThreshold": "Frame RAF interval >22ms, unchanged from driver.",
+    "time": "nowMs and preparation states use page performance.now milliseconds; relative to document time origin, not elapsed time since diagnostic segment.",
+    "verification": "Recomputed every segment render median/Q1/Q3/IQR and slow-frame count from saved frames; all exactly match the report.",
+    "limits": "No GPU timer/CPU trace/thermal/OS telemetry. Resource counts count tracked objects, not bytes, uploads, compiles, GPU time, or object identities. Warmup snapshots bound growth timing without per-frame evidence during stationary preparation. Fixed A-then-B order, moving animation and scene history remain confounders; no new causal mechanism is established."
+  },
+  "pairs": [
+    {
+      "mode": "third",
+      "pairs": [
+        {
+          "round": 1,
+          "A": {
+            "median": 11.199999809265137,
+            "iqr": 1.2000000476837158,
+            "fps": 64.67018207143562,
+            "slow": 1
+          },
+          "B": {
+            "median": 10.400000095367432,
+            "iqr": 0.7500001192092896,
+            "fps": 64.99783340555318,
+            "slow": 0
+          },
+          "deltaRenderMedianMs": 0.7999997138977051,
+          "deltaDrawMean": 42.938461538461524,
+          "deltaTrianglesMean": 95692.15897435974
+        },
+        {
+          "round": 2,
+          "A": {
+            "median": 10.5,
+            "iqr": 0.6000000238418579,
+            "fps": 64.99783340555302,
+            "slow": 0
+          },
+          "B": {
+            "median": 11.25,
+            "iqr": 2.099999725818634,
+            "fps": 63.67525619341353,
+            "slow": 4
+          },
+          "deltaRenderMedianMs": -0.75,
+          "deltaDrawMean": 44.56955128205141,
+          "deltaTrianglesMean": 95445.66009615362
+        },
+        {
+          "round": 3,
+          "A": {
+            "median": 12.799999952316284,
+            "iqr": 0.9000000953674316,
+            "fps": 65,
+            "slow": 0
+          },
+          "B": {
+            "median": 13.400000095367432,
+            "iqr": 6.099999904632568,
+            "fps": 59,
+            "slow": 18
+          },
+          "deltaRenderMedianMs": -0.6000001430511475,
+          "deltaDrawMean": 57.83972186006076,
+          "deltaTrianglesMean": 185119.2609300306
+        },
+        {
+          "round": 4,
+          "A": {
+            "median": 12.699999809265137,
+            "iqr": 0.9000000953674316,
+            "fps": 65,
+            "slow": 0
+          },
+          "B": {
+            "median": 10.200000047683716,
+            "iqr": 1.000000238418579,
+            "fps": 64.99783340555302,
+            "slow": 0
+          },
+          "deltaRenderMedianMs": 2.499999761581421,
+          "deltaDrawMean": 42.661538461538385,
+          "deltaTrianglesMean": 105685.9538461538
+        },
+        {
+          "round": 5,
+          "A": {
+            "median": 12.450000047683716,
+            "iqr": 2.9250000715255737,
+            "fps": 64,
+            "slow": 3
+          },
+          "B": {
+            "median": 11.800000190734863,
+            "iqr": 0.9499999284744263,
+            "fps": 64.99783340555302,
+            "slow": 0
+          },
+          "deltaRenderMedianMs": 0.6499998569488525,
+          "deltaDrawMean": 42.985576923076906,
+          "deltaTrianglesMean": 95435.72964743525
+        }
+      ],
+      "pairedDeltaSummary": {
+        "median": 0.6499998569488525,
+        "q1": -0.6000001430511475,
+        "q3": 0.7999997138977051,
+        "iqr": 1.3999998569488525,
+        "min": -0.75,
+        "max": 2.499999761581421
+      }
+    },
+    {
+      "mode": "first",
+      "pairs": [
+        {
+          "round": 1,
+          "A": {
+            "median": 10.200000047683716,
+            "iqr": 1.0499999523162842,
+            "fps": 65,
+            "slow": 0
+          },
+          "B": {
+            "median": 9.099999904632568,
+            "iqr": 0.49999988079071045,
+            "fps": 64.99966836903874,
+            "slow": 0
+          },
+          "deltaRenderMedianMs": 1.1000001430511475,
+          "deltaDrawMean": 43.35826792255352,
+          "deltaTrianglesMean": 96576.89738356881
+        },
+        {
+          "round": 2,
+          "A": {
+            "median": 9.649999976158142,
+            "iqr": 0.7249999642372131,
+            "fps": 65.0018240307763,
+            "slow": 0
+          },
+          "B": {
+            "median": 9.799999952316284,
+            "iqr": 1.4499998092651367,
+            "fps": 65,
+            "slow": 0
+          },
+          "deltaRenderMedianMs": -0.1499999761581421,
+          "deltaDrawMean": 33.43948194662494,
+          "deltaTrianglesMean": 21194.843537414446
+        },
+        {
+          "round": 3,
+          "A": {
+            "median": 12.200000047683716,
+            "iqr": 1.4000000357627869,
+            "fps": 64.66451118296075,
+            "slow": 1
+          },
+          "B": {
+            "median": 10.599999904632568,
+            "iqr": 1,
+            "fps": 65.00397983550019,
+            "slow": 0
+          },
+          "deltaRenderMedianMs": 1.6000001430511475,
+          "deltaDrawMean": 42.38018093835467,
+          "deltaTrianglesMean": 96337.46875657514
+        },
+        {
+          "round": 4,
+          "A": {
+            "median": 11,
+            "iqr": 1.1250000596046448,
+            "fps": 64.99966836903874,
+            "slow": 0
+          },
+          "B": {
+            "median": 11.5,
+            "iqr": 3.6499998569488525,
+            "fps": 63.666666666666664,
+            "slow": 4
+          },
+          "deltaRenderMedianMs": -0.5,
+          "deltaDrawMean": 41.33913879687998,
+          "deltaTrianglesMean": 94476.78843893576
+        },
+        {
+          "round": 5,
+          "A": {
+            "median": 15.100000143051147,
+            "iqr": 4.1000001430511475,
+            "fps": 59,
+            "slow": 18
+          },
+          "B": {
+            "median": 10.099999904632568,
+            "iqr": 1.299999713897705,
+            "fps": 65.00182403077662,
+            "slow": 0
+          },
+          "deltaRenderMedianMs": 5.000000238418579,
+          "deltaDrawMean": 41.35918943848719,
+          "deltaTrianglesMean": 93170.77510665264
+        }
+      ],
+      "pairedDeltaSummary": {
+        "median": 1.1000001430511475,
+        "q1": -0.1499999761581421,
+        "q3": 1.6000001430511475,
+        "iqr": 1.7500001192092896,
+        "min": -0.5,
+        "max": 5.000000238418579
+      }
+    }
+  ],
+  "segments": [
+    {
+      "label": "third-route-warmup",
+      "role": "route-warmup",
+      "round": null,
+      "samplesFile": "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base/artifacts/walking-profile-cc07958-v1/frames-third-route-warmup.json",
+      "samplesSha256": "4731daf2ed9a7d874e37bc6c9c7ba51a1cd53020fb961a1568cc025569265f9d",
+      "frameCount": 196,
+      "fps": 65.00397983550019,
+      "render": {
+        "mean": 11.164285714528999,
+        "median": 10.850000023841858,
+        "q1": 10.400000095367432,
+        "q3": 11.5,
+        "iqr": 1.0999999046325684,
+        "p95": 13.5,
+        "min": 9.799999952316284,
+        "max": 17.40000009536743,
+        "totalCalls": 196
+      },
+      "allPass": {
+        "draws": {
+          "mean": 1524.25,
+          "median": 1528,
+          "q1": 1519,
+          "q3": 1530,
+          "iqr": 11,
+          "p95": 1531,
+          "min": 1506,
+          "max": 1531
+        },
+        "triangles": {
+          "mean": 8440151.010204082,
+          "median": 8440286,
+          "q1": 8417734,
+          "q3": 8447318,
+          "iqr": 29584,
+          "p95": 8489150,
+          "min": 8416198,
+          "max": 8504884
+        }
+      },
+      "resourceRanges": {
+        "programs": {
+          "min": 107,
+          "max": 107
+        },
+        "textures": {
+          "min": 232,
+          "max": 232
+        },
+        "geometries": {
+          "min": 1072,
+          "max": 1072
+        }
+      },
+      "preparation": {
+        "startMs": 36006.10000014305,
+        "endMs": 37529.40000009537,
+        "before": {
+          "programs": 107,
+          "textures": 232,
+          "geometries": 1062
+        },
+        "after": {
+          "programs": 107,
+          "textures": 232,
+          "geometries": 1072
+        }
+      },
+      "slowFrames": []
+    },
+    {
+      "label": "third-A1",
+      "role": "measurement",
+      "round": 1,
+      "samplesFile": "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base/artifacts/walking-profile-cc07958-v1/frames-third-A1.json",
+      "samplesSha256": "6e5af0ea09420b9f9464550e145659a4a32fd69dd0a0f56c7804c30c420240df",
+      "frameCount": 195,
+      "fps": 64.67018207143562,
+      "render": {
+        "mean": 11.714358976559762,
+        "median": 11.199999809265137,
+        "q1": 10.700000047683716,
+        "q3": 11.900000095367432,
+        "iqr": 1.2000000476837158,
+        "p95": 15.200000047683716,
+        "min": 10,
+        "max": 25.300000190734863,
+        "totalCalls": 195
+      },
+      "allPass": {
+        "draws": {
+          "mean": 1524.246153846154,
+          "median": 1528,
+          "q1": 1519,
+          "q3": 1530,
+          "iqr": 11,
+          "p95": 1531,
+          "min": 1506,
+          "max": 1531
+        },
+        "triangles": {
+          "mean": 8440135.087179488,
+          "median": 8440286,
+          "q1": 8417734,
+          "q3": 8447318,
+          "iqr": 29584,
+          "p95": 8489150,
+          "min": 8416198,
+          "max": 8504884
+        }
+      },
+      "resourceRanges": {
+        "programs": {
+          "min": 107,
+          "max": 107
+        },
+        "textures": {
+          "min": 232,
+          "max": 232
+        },
+        "geometries": {
+          "min": 1072,
+          "max": 1072
+        }
+      },
+      "preparation": {
+        "startMs": 40629.300000190735,
+        "endMs": 42144.5,
+        "before": {
+          "programs": 107,
+          "textures": 232,
+          "geometries": 1072
+        },
+        "after": {
+          "programs": 107,
+          "textures": 232,
+          "geometries": 1072
+        }
+      },
+      "slowFrames": [
+        {
+          "index": 119,
+          "nowMs": 44024.7,
+          "frameMs": 30.799999999995634,
+          "renderMs": 11.299999952316284,
+          "geometries": 1072,
+          "draws": 1525,
+          "triangles": 8443256
+        }
+      ]
+    },
+    {
+      "label": "third-B1",
+      "role": "measurement",
+      "round": 1,
+      "samplesFile": "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base/artifacts/walking-profile-cc07958-v1/frames-third-B1.json",
+      "samplesSha256": "85305097a246f6e371a6136106354057d46accf62dc32910fbf1fb98baa5ce8f",
+      "frameCount": 195,
+      "fps": 64.99783340555318,
+      "render": {
+        "mean": 10.578974360686082,
+        "median": 10.400000095367432,
+        "q1": 10.099999904632568,
+        "q3": 10.850000023841858,
+        "iqr": 0.7500001192092896,
+        "p95": 11.700000047683716,
+        "min": 9.599999904632568,
+        "max": 18,
+        "totalCalls": 195
+      },
+      "allPass": {
+        "draws": {
+          "mean": 1481.3076923076924,
+          "median": 1485,
+          "q1": 1476.5,
+          "q3": 1486.5,
+          "iqr": 10,
+          "p95": 1487,
+          "min": 1462,
+          "max": 1488
+        },
+        "triangles": {
+          "mean": 8344442.928205128,
+          "median": 8344647,
+          "q1": 8321839,
+          "q3": 8351423,
+          "iqr": 29584,
+          "p95": 8393487,
+          "min": 8320303,
+          "max": 8408989
+        }
+      },
+      "resourceRanges": {
+        "programs": {
+          "min": 107,
+          "max": 107
+        },
+        "textures": {
+          "min": 232,
+          "max": 232
+        },
+        "geometries": {
+          "min": 1073,
+          "max": 1073
+        }
+      },
+      "preparation": {
+        "startMs": 45209.10000014305,
+        "endMs": 46731.10000014305,
+        "before": {
+          "programs": 107,
+          "textures": 232,
+          "geometries": 1072
+        },
+        "after": {
+          "programs": 107,
+          "textures": 232,
+          "geometries": 1073
+        }
+      },
+      "slowFrames": []
+    },
+    {
+      "label": "third-A2",
+      "role": "measurement",
+      "round": 2,
+      "samplesFile": "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base/artifacts/walking-profile-cc07958-v1/frames-third-A2.json",
+      "samplesSha256": "714ff50eec19a2dff82328f286fbf8fc190aa3f5ff54f7447456f15065d04cbe",
+      "frameCount": 195,
+      "fps": 64.99783340555302,
+      "render": {
+        "mean": 10.707692306469648,
+        "median": 10.5,
+        "q1": 10.299999952316284,
+        "q3": 10.899999976158142,
+        "iqr": 0.6000000238418579,
+        "p95": 11.799999952316284,
+        "min": 9.799999952316284,
+        "max": 16.09999990463257,
+        "totalCalls": 195
+      },
+      "allPass": {
+        "draws": {
+          "mean": 1524.2153846153847,
+          "median": 1528,
+          "q1": 1519.5,
+          "q3": 1529.5,
+          "iqr": 10,
+          "p95": 1532,
+          "min": 1504,
+          "max": 1533
+        },
+        "triangles": {
+          "mean": 8440163.753846154,
+          "median": 8440430,
+          "q1": 8417750,
+          "q3": 8447206,
+          "iqr": 29456,
+          "p95": 8489294,
+          "min": 8416342,
+          "max": 8504772
+        }
+      },
+      "resourceRanges": {
+        "programs": {
+          "min": 107,
+          "max": 107
+        },
+        "textures": {
+          "min": 232,
+          "max": 232
+        },
+        "geometries": {
+          "min": 1073,
+          "max": 1073
+        }
+      },
+      "preparation": {
+        "startMs": 49808.40000009537,
+        "endMs": 51328.5,
+        "before": {
+          "programs": 107,
+          "textures": 232,
+          "geometries": 1073
+        },
+        "after": {
+          "programs": 107,
+          "textures": 232,
+          "geometries": 1073
+        }
+      },
+      "slowFrames": []
+    },
+    {
+      "label": "third-B2",
+      "role": "measurement",
+      "round": 2,
+      "samplesFile": "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base/artifacts/walking-profile-cc07958-v1/frames-third-B2.json",
+      "samplesSha256": "43b116155f5df1becf49ef1445f128824d958bd69a2755a4e6461de1a4664875",
+      "frameCount": 192,
+      "fps": 63.67525619341353,
+      "render": {
+        "mean": 12.196354168156782,
+        "median": 11.25,
+        "q1": 10.600000143051147,
+        "q3": 12.699999868869781,
+        "iqr": 2.099999725818634,
+        "p95": 18,
+        "min": 9.600000143051147,
+        "max": 21,
+        "totalCalls": 192
+      },
+      "allPass": {
+        "draws": {
+          "mean": 1479.6458333333333,
+          "median": 1483,
+          "q1": 1474,
+          "q3": 1486,
+          "iqr": 12,
+          "p95": 1488,
+          "min": 1461,
+          "max": 1490
+        },
+        "triangles": {
+          "mean": 8344718.09375,
+          "median": 8344351,
+          "q1": 8322031,
+          "q3": 8351359,
+          "iqr": 29328,
+          "p95": 8393191,
+          "min": 8320495,
+          "max": 8408925
+        }
+      },
+      "resourceRanges": {
+        "programs": {
+          "min": 107,
+          "max": 107
+        },
+        "textures": {
+          "min": 232,
+          "max": 232
+        },
+        "geometries": {
+          "min": 1073,
+          "max": 1073
+        }
+      },
+      "preparation": {
+        "startMs": 54376.700000047684,
+        "endMs": 55901.200000047684,
+        "before": {
+          "programs": 107,
+          "textures": 232,
+          "geometries": 1073
+        },
+        "after": {
+          "programs": 107,
+          "textures": 232,
+          "geometries": 1073
+        }
+      },
+      "slowFrames": [
+        {
+          "index": 29,
+          "nowMs": 56394,
+          "frameMs": 30.80000000000291,
+          "renderMs": 18.200000047683716,
+          "geometries": 1073,
+          "draws": 1490,
+          "triangles": 8321079
+        },
+        {
+          "index": 32,
+          "nowMs": 56455.4,
+          "frameMs": 30.700000000004366,
+          "renderMs": 19.200000047683716,
+          "geometries": 1073,
+          "draws": 1489,
+          "triangles": 8321043
+        },
+        {
+          "index": 35,
+          "nowMs": 56517,
+          "frameMs": 30.900000000001455,
+          "renderMs": 17.5,
+          "geometries": 1073,
+          "draws": 1489,
+          "triangles": 8320531
+        },
+        {
+          "index": 38,
+          "nowMs": 56578.5,
+          "frameMs": 30.80000000000291,
+          "renderMs": 12.599999904632568,
+          "geometries": 1073,
+          "draws": 1488,
+          "triangles": 8320495
+        }
+      ]
+    },
+    {
+      "label": "third-A3",
+      "role": "measurement",
+      "round": 3,
+      "samplesFile": "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base/artifacts/walking-profile-cc07958-v1/frames-third-A3.json",
+      "samplesSha256": "0de942fe0c63a9e97168434655a64d776052df24b4c601371887f9f1c6595ce7",
+      "frameCount": 195,
+      "fps": 65,
+      "render": {
+        "mean": 13.147179488646678,
+        "median": 12.799999952316284,
+        "q1": 12.400000095367432,
+        "q3": 13.300000190734863,
+        "iqr": 0.9000000953674316,
+        "p95": 15.699999809265137,
+        "min": 11.899999856948853,
+        "max": 20.399999856948853,
+        "totalCalls": 195
+      },
+      "allPass": {
+        "draws": {
+          "mean": 1521.6871794871795,
+          "median": 1525,
+          "q1": 1516,
+          "q3": 1527,
+          "iqr": 11,
+          "p95": 1529,
+          "min": 1503,
+          "max": 1529
+        },
+        "triangles": {
+          "mean": 8440012.656410256,
+          "median": 8440126,
+          "q1": 8417622,
+          "q3": 8447158,
+          "iqr": 29536,
+          "p95": 8488990,
+          "min": 8416086,
+          "max": 8504724
+        }
+      },
+      "resourceRanges": {
+        "programs": {
+          "min": 107,
+          "max": 107
+        },
+        "textures": {
+          "min": 232,
+          "max": 232
+        },
+        "geometries": {
+          "min": 1073,
+          "max": 1073
+        }
+      },
+      "preparation": {
+        "startMs": 59048.800000190735,
+        "endMs": 60577.700000047684,
+        "before": {
+          "programs": 107,
+          "textures": 232,
+          "geometries": 1073
+        },
+        "after": {
+          "programs": 107,
+          "textures": 232,
+          "geometries": 1073
+        }
+      },
+      "slowFrames": []
+    },
+    {
+      "label": "third-B3",
+      "role": "measurement",
+      "round": 3,
+      "samplesFile": "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base/artifacts/walking-profile-cc07958-v1/frames-third-B3.json",
+      "samplesSha256": "78cd5f33ffc73a08ae0bdc1fda4007bf34db56df4c219740a5c6a055d764e82e",
+      "frameCount": 177,
+      "fps": 59,
+      "render": {
+        "mean": 14.327118645953593,
+        "median": 13.400000095367432,
+        "q1": 11.100000143051147,
+        "q3": 17.200000047683716,
+        "iqr": 6.099999904632568,
+        "p95": 20.5,
+        "min": 10.200000047683716,
+        "max": 21.90000009536743,
+        "totalCalls": 177
+      },
+      "allPass": {
+        "draws": {
+          "mean": 1463.8474576271187,
+          "median": 1468,
+          "q1": 1458,
+          "q3": 1469,
+          "iqr": 11,
+          "p95": 1470,
+          "min": 1445,
+          "max": 1477
+        },
+        "triangles": {
+          "mean": 8254893.395480226,
+          "median": 8254523,
+          "q1": 8231959,
+          "q3": 8261543,
+          "iqr": 29584,
+          "p95": 8303375,
+          "min": 8230423,
+          "max": 8319109
+        }
+      },
+      "resourceRanges": {
+        "programs": {
+          "min": 107,
+          "max": 107
+        },
+        "textures": {
+          "min": 232,
+          "max": 232
+        },
+        "geometries": {
+          "min": 1074,
+          "max": 1074
+        }
+      },
+      "preparation": {
+        "startMs": 63654.40000009537,
+        "endMs": 65160,
+        "before": {
+          "programs": 107,
+          "textures": 232,
+          "geometries": 1073
+        },
+        "after": {
+          "programs": 107,
+          "textures": 232,
+          "geometries": 1074
+        }
+      },
+      "slowFrames": [
+        {
+          "index": 100,
+          "nowMs": 66747.8,
+          "frameMs": 30.90000000000873,
+          "renderMs": 18.899999856948853,
+          "geometries": 1074,
+          "draws": 1467,
+          "triangles": 8258051
+        },
+        {
+          "index": 103,
+          "nowMs": 66809.3,
+          "frameMs": 30.80000000000291,
+          "renderMs": 20.5,
+          "geometries": 1074,
+          "draws": 1467,
+          "triangles": 8257539
+        },
+        {
+          "index": 106,
+          "nowMs": 66870.8,
+          "frameMs": 30.80000000000291,
+          "renderMs": 19.299999952316284,
+          "geometries": 1074,
+          "draws": 1466,
+          "triangles": 8257515
+        },
+        {
+          "index": 108,
+          "nowMs": 66917,
+          "frameMs": 30.80000000000291,
+          "renderMs": 21.399999856948853,
+          "geometries": 1074,
+          "draws": 1466,
+          "triangles": 8257515
+        },
+        {
+          "index": 110,
+          "nowMs": 66963.1,
+          "frameMs": 30.70000000001164,
+          "renderMs": 20.200000047683716,
+          "geometries": 1074,
+          "draws": 1466,
+          "triangles": 8257515
+        },
+        {
+          "index": 114,
+          "nowMs": 67040.1,
+          "frameMs": 30.80000000000291,
+          "renderMs": 21.399999856948853,
+          "geometries": 1074,
+          "draws": 1464,
+          "triangles": 8257481
+        },
+        {
+          "index": 119,
+          "nowMs": 67132.3,
+          "frameMs": 30.69999999999709,
+          "renderMs": 17.700000047683716,
+          "geometries": 1074,
+          "draws": 1462,
+          "triangles": 8257001
+        },
+        {
+          "index": 123,
+          "nowMs": 67209.2,
+          "frameMs": 30.69999999999709,
+          "renderMs": 18.300000190734863,
+          "geometries": 1074,
+          "draws": 1461,
+          "triangles": 8254049
+        },
+        {
+          "index": 125,
+          "nowMs": 67255.4,
+          "frameMs": 30.79999999998836,
+          "renderMs": 19.700000047683716,
+          "geometries": 1074,
+          "draws": 1459,
+          "triangles": 8266837
+        },
+        {
+          "index": 128,
+          "nowMs": 67317,
+          "frameMs": 30.80000000000291,
+          "renderMs": 20.90000009536743,
+          "geometries": 1074,
+          "draws": 1460,
+          "triangles": 8279905
+        },
+        {
+          "index": 130,
+          "nowMs": 67363.2,
+          "frameMs": 30.80000000000291,
+          "renderMs": 20.399999856948853,
+          "geometries": 1074,
+          "draws": 1461,
+          "triangles": 8319109
+        },
+        {
+          "index": 132,
+          "nowMs": 67409.3,
+          "frameMs": 30.69999999999709,
+          "renderMs": 18.799999952316284,
+          "geometries": 1074,
+          "draws": 1458,
+          "triangles": 8303887
+        },
+        {
+          "index": 136,
+          "nowMs": 67486.2,
+          "frameMs": 30.80000000000291,
+          "renderMs": 20.199999809265137,
+          "geometries": 1074,
+          "draws": 1458,
+          "triangles": 8303375
+        },
+        {
+          "index": 138,
+          "nowMs": 67532.3,
+          "frameMs": 30.69999999999709,
+          "renderMs": 12.899999856948853,
+          "geometries": 1074,
+          "draws": 1458,
+          "triangles": 8303375
+        },
+        {
+          "index": 149,
+          "nowMs": 67717,
+          "frameMs": 30.80000000000291,
+          "renderMs": 15.900000095367432,
+          "geometries": 1074,
+          "draws": 1454,
+          "triangles": 8254547
+        },
+        {
+          "index": 153,
+          "nowMs": 67793.9,
+          "frameMs": 30.79999999998836,
+          "renderMs": 15.099999904632568,
+          "geometries": 1074,
+          "draws": 1451,
+          "triangles": 8254487
+        },
+        {
+          "index": 170,
+          "nowMs": 68070.8,
+          "frameMs": 30.80000000000291,
+          "renderMs": 16.299999952316284,
+          "geometries": 1074,
+          "draws": 1448,
+          "triangles": 8253529
+        },
+        {
+          "index": 173,
+          "nowMs": 68132.3,
+          "frameMs": 30.69999999999709,
+          "renderMs": 13.5,
+          "geometries": 1074,
+          "draws": 1446,
+          "triangles": 8253443
+        }
+      ]
+    },
+    {
+      "label": "third-A4",
+      "role": "measurement",
+      "round": 4,
+      "samplesFile": "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base/artifacts/walking-profile-cc07958-v1/frames-third-A4.json",
+      "samplesSha256": "876eb4485d30d92e79420b243649cdf4ff4edbf694a451f081c222b8dd646745",
+      "frameCount": 195,
+      "fps": 65,
+      "render": {
+        "mean": 12.989743590966249,
+        "median": 12.699999809265137,
+        "q1": 12.299999952316284,
+        "q3": 13.200000047683716,
+        "iqr": 0.9000000953674316,
+        "p95": 16.600000143051147,
+        "min": 11.300000190734863,
+        "max": 20.600000143051147,
+        "totalCalls": 195
+      },
+      "allPass": {
+        "draws": {
+          "mean": 1501.825641025641,
+          "median": 1505,
+          "q1": 1496,
+          "q3": 1507,
+          "iqr": 11,
+          "p95": 1513,
+          "min": 1483,
+          "max": 1513
+        },
+        "triangles": {
+          "mean": 8296447.63076923,
+          "median": 8290226,
+          "q1": 8286224,
+          "q3": 8324838,
+          "iqr": 38614,
+          "p95": 8335550,
+          "min": 8262598,
+          "max": 8351284
+        }
+      },
+      "resourceRanges": {
+        "programs": {
+          "min": 107,
+          "max": 107
+        },
+        "textures": {
+          "min": 232,
+          "max": 232
+        },
+        "geometries": {
+          "min": 1074,
+          "max": 1075
+        }
+      },
+      "preparation": {
+        "startMs": 68280.40000009537,
+        "endMs": 69792.40000009537,
+        "before": {
+          "programs": 107,
+          "textures": 232,
+          "geometries": 1074
+        },
+        "after": {
+          "programs": 107,
+          "textures": 232,
+          "geometries": 1074
+        }
+      },
+      "slowFrames": []
+    },
+    {
+      "label": "third-B4",
+      "role": "measurement",
+      "round": 4,
+      "samplesFile": "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base/artifacts/walking-profile-cc07958-v1/frames-third-B4.json",
+      "samplesSha256": "2f012ec398573c6aa3be35b557af429927e2ce0b6ed8a883c09e5d2946f641c0",
+      "frameCount": 195,
+      "fps": 64.99783340555302,
+      "render": {
+        "mean": 10.396923072521503,
+        "median": 10.200000047683716,
+        "q1": 9.799999952316284,
+        "q3": 10.800000190734863,
+        "iqr": 1.000000238418579,
+        "p95": 11.5,
+        "min": 9.199999809265137,
+        "max": 15.199999809265137,
+        "totalCalls": 195
+      },
+      "allPass": {
+        "draws": {
+          "mean": 1459.1641025641027,
+          "median": 1462,
+          "q1": 1457,
+          "q3": 1464,
+          "iqr": 7,
+          "p95": 1465,
+          "min": 1444,
+          "max": 1465
+        },
+        "triangles": {
+          "mean": 8190761.676923077,
+          "median": 8190839,
+          "q1": 8168287,
+          "q3": 8197871,
+          "iqr": 29584,
+          "p95": 8239959,
+          "min": 8166751,
+          "max": 8255693
+        }
+      },
+      "resourceRanges": {
+        "programs": {
+          "min": 107,
+          "max": 107
+        },
+        "textures": {
+          "min": 232,
+          "max": 232
+        },
+        "geometries": {
+          "min": 1075,
+          "max": 1075
+        }
+      },
+      "preparation": {
+        "startMs": 72918.30000019073,
+        "endMs": 74424.30000019073,
+        "before": {
+          "programs": 107,
+          "textures": 232,
+          "geometries": 1075
+        },
+        "after": {
+          "programs": 107,
+          "textures": 232,
+          "geometries": 1075
+        }
+      },
+      "slowFrames": []
+    },
+    {
+      "label": "third-A5",
+      "role": "measurement",
+      "round": 5,
+      "samplesFile": "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base/artifacts/walking-profile-cc07958-v1/frames-third-A5.json",
+      "samplesSha256": "044d7472a04505d15f6e60c33569faecbbdddddeda486566fff3ddbe113d2ac2",
+      "frameCount": 192,
+      "fps": 64,
+      "render": {
+        "mean": 12.568229168653488,
+        "median": 12.450000047683716,
+        "q1": 10.599999904632568,
+        "q3": 13.524999976158142,
+        "iqr": 2.9250000715255737,
+        "p95": 16.899999856948853,
+        "min": 9.700000047683716,
+        "max": 19.700000047683716,
+        "totalCalls": 192
+      },
+      "allPass": {
+        "draws": {
+          "mean": 1502.3958333333333,
+          "median": 1504.5,
+          "q1": 1499,
+          "q3": 1510,
+          "iqr": 11,
+          "p95": 1511,
+          "min": 1486,
+          "max": 1511
+        },
+        "triangles": {
+          "mean": 8286333.427083333,
+          "median": 8286622,
+          "q1": 8264070,
+          "q3": 8293910,
+          "iqr": 29840,
+          "p95": 8335742,
+          "min": 8262534,
+          "max": 8351476
+        }
+      },
+      "resourceRanges": {
+        "programs": {
+          "min": 107,
+          "max": 107
+        },
+        "textures": {
+          "min": 232,
+          "max": 232
+        },
+        "geometries": {
+          "min": 1075,
+          "max": 1075
+        }
+      },
+      "preparation": {
+        "startMs": 77470.10000014305,
+        "endMs": 78977.90000009537,
+        "before": {
+          "programs": 107,
+          "textures": 232,
+          "geometries": 1075
+        },
+        "after": {
+          "programs": 107,
+          "textures": 232,
+          "geometries": 1075
+        }
+      },
+      "slowFrames": [
+        {
+          "index": 101,
+          "nowMs": 80578.5,
+          "frameMs": 30.80000000000291,
+          "renderMs": 18.399999856948853,
+          "geometries": 1075,
+          "draws": 1504,
+          "triangles": 8290162
+        },
+        {
+          "index": 105,
+          "nowMs": 80655.4,
+          "frameMs": 30.79999999998836,
+          "renderMs": 17.200000047683716,
+          "geometries": 1075,
+          "draws": 1503,
+          "triangles": 8289626
+        },
+        {
+          "index": 145,
+          "nowMs": 81286.2,
+          "frameMs": 30.80000000000291,
+          "renderMs": 12.799999952316284,
+          "geometries": 1075,
+          "draws": 1499,
+          "triangles": 8335742
+        }
+      ]
+    },
+    {
+      "label": "third-B5",
+      "role": "measurement",
+      "round": 5,
+      "samplesFile": "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base/artifacts/walking-profile-cc07958-v1/frames-third-B5.json",
+      "samplesSha256": "79f23fe48e8f70e67cba41bc357271bc896722d2e9221627f12fded4e9af1396",
+      "frameCount": 195,
+      "fps": 64.99783340555302,
+      "render": {
+        "mean": 12.025641024418366,
+        "median": 11.800000190734863,
+        "q1": 11.400000095367432,
+        "q3": 12.350000023841858,
+        "iqr": 0.9499999284744263,
+        "p95": 14.200000047683716,
+        "min": 10.400000095367432,
+        "max": 16.59999990463257,
+        "totalCalls": 195
+      },
+      "allPass": {
+        "draws": {
+          "mean": 1459.4102564102564,
+          "median": 1462,
+          "q1": 1456,
+          "q3": 1467,
+          "iqr": 11,
+          "p95": 1468,
+          "min": 1443,
+          "max": 1468
+        },
+        "triangles": {
+          "mean": 8190897.697435898,
+          "median": 8191005,
+          "q1": 8168223,
+          "q3": 8198063,
+          "iqr": 29840,
+          "p95": 8239639,
+          "min": 8166687,
+          "max": 8255629
+        }
+      },
+      "resourceRanges": {
+        "programs": {
+          "min": 107,
+          "max": 107
+        },
+        "textures": {
+          "min": 232,
+          "max": 232
+        },
+        "geometries": {
+          "min": 1075,
+          "max": 1075
+        }
+      },
+      "preparation": {
+        "startMs": 82086.30000019073,
+        "endMs": 83604.40000009537,
+        "before": {
+          "programs": 107,
+          "textures": 232,
+          "geometries": 1075
+        },
+        "after": {
+          "programs": 107,
+          "textures": 232,
+          "geometries": 1075
+        }
+      },
+      "slowFrames": []
+    },
+    {
+      "label": "first-route-warmup",
+      "role": "route-warmup",
+      "round": null,
+      "samplesFile": "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base/artifacts/walking-profile-cc07958-v1/frames-first-route-warmup.json",
+      "samplesSha256": "7ce50f2635519fc416f7b6b738a06fb97fc15ba458d8048b687ded84951ab46c",
+      "frameCount": 196,
+      "fps": 65.00397983550019,
+      "render": {
+        "mean": 10.316326533045087,
+        "median": 10.099999904632568,
+        "q1": 9.700000047683716,
+        "q3": 10.700000047683716,
+        "iqr": 1,
+        "p95": 12.099999904632568,
+        "min": 9.099999904632568,
+        "max": 18.799999952316284,
+        "totalCalls": 196
+      },
+      "allPass": {
+        "draws": {
+          "mean": 1361.4897959183672,
+          "median": 1360.5,
+          "q1": 1338.75,
+          "q3": 1381,
+          "iqr": 42.25,
+          "p95": 1423,
+          "min": 1292,
+          "max": 1428
+        },
+        "triangles": {
+          "mean": 8220966.12244898,
+          "median": 8228086,
+          "q1": 8214552,
+          "q3": 8251309,
+          "iqr": 36757,
+          "p95": 8309896,
+          "min": 8078572,
+          "max": 8317528
+        }
+      },
+      "resourceRanges": {
+        "programs": {
+          "min": 107,
+          "max": 107
+        },
+        "textures": {
+          "min": 232,
+          "max": 232
+        },
+        "geometries": {
+          "min": 1076,
+          "max": 1076
+        }
+      },
+      "preparation": {
+        "startMs": 86683.80000019073,
+        "endMs": 88205.60000014305,
+        "before": {
+          "programs": 107,
+          "textures": 232,
+          "geometries": 1075
+        },
+        "after": {
+          "programs": 107,
+          "textures": 232,
+          "geometries": 1076
+        }
+      },
+      "slowFrames": []
+    },
+    {
+      "label": "first-A1",
+      "role": "measurement",
+      "round": 1,
+      "samplesFile": "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base/artifacts/walking-profile-cc07958-v1/frames-first-A1.json",
+      "samplesSha256": "34c62798cf4f6de37e8fd71e72aee41e2f0a5983e4c72614bacd9ea816f5eed4",
+      "frameCount": 195,
+      "fps": 65,
+      "render": {
+        "mean": 10.528205119646513,
+        "median": 10.200000047683716,
+        "q1": 9.75,
+        "q3": 10.799999952316284,
+        "iqr": 1.0499999523162842,
+        "p95": 13.099999904632568,
+        "min": 8.700000047683716,
+        "max": 18,
+        "totalCalls": 195
+      },
+      "allPass": {
+        "draws": {
+          "mean": 1360.2205128205128,
+          "median": 1361,
+          "q1": 1339,
+          "q3": 1381,
+          "iqr": 42,
+          "p95": 1419,
+          "min": 1293,
+          "max": 1424
+        },
+        "triangles": {
+          "mean": 8221741.887179487,
+          "median": 8228244,
+          "q1": 8214734,
+          "q3": 8251309,
+          "iqr": 36575,
+          "p95": 8309640,
+          "min": 8079636,
+          "max": 8317272
+        }
+      },
+      "resourceRanges": {
+        "programs": {
+          "min": 107,
+          "max": 107
+        },
+        "textures": {
+          "min": 232,
+          "max": 232
+        },
+        "geometries": {
+          "min": 1076,
+          "max": 1076
+        }
+      },
+      "preparation": {
+        "startMs": 91269.10000014305,
+        "endMs": 92775.90000009537,
+        "before": {
+          "programs": 107,
+          "textures": 232,
+          "geometries": 1076
+        },
+        "after": {
+          "programs": 107,
+          "textures": 232,
+          "geometries": 1076
+        }
+      },
+      "slowFrames": []
+    },
+    {
+      "label": "first-B1",
+      "role": "measurement",
+      "round": 1,
+      "samplesFile": "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base/artifacts/walking-profile-cc07958-v1/frames-first-B1.json",
+      "samplesSha256": "a6905eba2b2633e027081cd4b4767cad882468fb2cdc72e9ff40af99bbe2ee0f",
+      "frameCount": 196,
+      "fps": 64.99966836903874,
+      "render": {
+        "mean": 9.165306118069863,
+        "median": 9.099999904632568,
+        "q1": 8.800000131130219,
+        "q3": 9.300000011920929,
+        "iqr": 0.49999988079071045,
+        "p95": 9.900000095367432,
+        "min": 8.299999952316284,
+        "max": 16.90000009536743,
+        "totalCalls": 196
+      },
+      "allPass": {
+        "draws": {
+          "mean": 1316.8622448979593,
+          "median": 1317.5,
+          "q1": 1295.75,
+          "q3": 1338,
+          "iqr": 42.25,
+          "p95": 1376,
+          "min": 1247,
+          "max": 1381
+        },
+        "triangles": {
+          "mean": 8125164.989795919,
+          "median": 8132397,
+          "q1": 8118705,
+          "q3": 8155462,
+          "iqr": 36757,
+          "p95": 8213793,
+          "min": 7982597,
+          "max": 8221425
+        }
+      },
+      "resourceRanges": {
+        "programs": {
+          "min": 107,
+          "max": 107
+        },
+        "textures": {
+          "min": 232,
+          "max": 232
+        },
+        "geometries": {
+          "min": 1076,
+          "max": 1076
+        }
+      },
+      "preparation": {
+        "startMs": 95824.60000014305,
+        "endMs": 97345.20000004768,
+        "before": {
+          "programs": 107,
+          "textures": 232,
+          "geometries": 1076
+        },
+        "after": {
+          "programs": 107,
+          "textures": 232,
+          "geometries": 1076
+        }
+      },
+      "slowFrames": []
+    },
+    {
+      "label": "first-A2",
+      "role": "measurement",
+      "round": 2,
+      "samplesFile": "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base/artifacts/walking-profile-cc07958-v1/frames-first-A2.json",
+      "samplesSha256": "a7c4a39f5c9dd1abc51c61201c547e7e1034f85efbc9fe47801f3613e5160eeb",
+      "frameCount": 196,
+      "fps": 65.0018240307763,
+      "render": {
+        "mean": 9.991836741262553,
+        "median": 9.649999976158142,
+        "q1": 9.400000095367432,
+        "q3": 10.125000059604645,
+        "iqr": 0.7249999642372131,
+        "p95": 12.299999952316284,
+        "min": 8.799999952316284,
+        "max": 15.299999952316284,
+        "totalCalls": 196
+      },
+      "allPass": {
+        "draws": {
+          "mean": 1362.3010204081634,
+          "median": 1361,
+          "q1": 1343.75,
+          "q3": 1381,
+          "iqr": 37.25,
+          "p95": 1419,
+          "min": 1297,
+          "max": 1424
+        },
+        "triangles": {
+          "mean": 8249960.510204081,
+          "median": 8255658,
+          "q1": 8219341.5,
+          "q3": 8285568,
+          "iqr": 66226.5,
+          "p95": 8309640,
+          "min": 8142244,
+          "max": 8317272
+        }
+      },
+      "resourceRanges": {
+        "programs": {
+          "min": 107,
+          "max": 107
+        },
+        "textures": {
+          "min": 232,
+          "max": 232
+        },
+        "geometries": {
+          "min": 1076,
+          "max": 1076
+        }
+      },
+      "preparation": {
+        "startMs": 100406.70000004768,
+        "endMs": 101917,
+        "before": {
+          "programs": 107,
+          "textures": 232,
+          "geometries": 1076
+        },
+        "after": {
+          "programs": 107,
+          "textures": 232,
+          "geometries": 1076
+        }
+      },
+      "slowFrames": []
+    },
+    {
+      "label": "first-B2",
+      "role": "measurement",
+      "round": 2,
+      "samplesFile": "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base/artifacts/walking-profile-cc07958-v1/frames-first-B2.json",
+      "samplesSha256": "08554498b225bfefe73dbe96b2d59d119b2f473ffd9b99be124c527d2885c060",
+      "frameCount": 195,
+      "fps": 65,
+      "render": {
+        "mean": 10.361538472542396,
+        "median": 9.799999952316284,
+        "q1": 9.300000190734863,
+        "q3": 10.75,
+        "iqr": 1.4499998092651367,
+        "p95": 14,
+        "min": 8.5,
+        "max": 18,
+        "totalCalls": 195
+      },
+      "allPass": {
+        "draws": {
+          "mean": 1328.8615384615384,
+          "median": 1325,
+          "q1": 1309.5,
+          "q3": 1345.5,
+          "iqr": 36,
+          "p95": 1385,
+          "min": 1273,
+          "max": 1390
+        },
+        "triangles": {
+          "mean": 8228765.666666667,
+          "median": 8237073,
+          "q1": 8189800,
+          "q3": 8275317,
+          "iqr": 85517,
+          "p95": 8285747,
+          "min": 8137429,
+          "max": 8299017
+        }
+      },
+      "resourceRanges": {
+        "programs": {
+          "min": 107,
+          "max": 107
+        },
+        "textures": {
+          "min": 232,
+          "max": 232
+        },
+        "geometries": {
+          "min": 1076,
+          "max": 1076
+        }
+      },
+      "preparation": {
+        "startMs": 104994.30000019073,
+        "endMs": 106501.30000019073,
+        "before": {
+          "programs": 107,
+          "textures": 232,
+          "geometries": 1076
+        },
+        "after": {
+          "programs": 107,
+          "textures": 232,
+          "geometries": 1076
+        }
+      },
+      "slowFrames": []
+    },
+    {
+      "label": "first-A3",
+      "role": "measurement",
+      "round": 3,
+      "samplesFile": "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base/artifacts/walking-profile-cc07958-v1/frames-first-A3.json",
+      "samplesSha256": "6821f6a3f473e2f4ccb14f1d0560848dbf912276fc629eca4bee1f3f59dcf36e",
+      "frameCount": 194,
+      "fps": 64.66451118296075,
+      "render": {
+        "mean": 12.577835043681036,
+        "median": 12.200000047683716,
+        "q1": 11.700000047683716,
+        "q3": 13.100000083446503,
+        "iqr": 1.4000000357627869,
+        "p95": 15.299999952316284,
+        "min": 10.799999952316284,
+        "max": 19.299999952316284,
+        "totalCalls": 194
+      },
+      "allPass": {
+        "draws": {
+          "mean": 1382.7577319587629,
+          "median": 1382,
+          "q1": 1360,
+          "q3": 1405,
+          "iqr": 45,
+          "p95": 1444,
+          "min": 1314,
+          "max": 1449
+        },
+        "triangles": {
+          "mean": 8375151.43814433,
+          "median": 8381598,
+          "q1": 8368243,
+          "q3": 8405013,
+          "iqr": 36770,
+          "p95": 8463408,
+          "min": 8233148,
+          "max": 8471040
+        }
+      },
+      "resourceRanges": {
+        "programs": {
+          "min": 107,
+          "max": 107
+        },
+        "textures": {
+          "min": 232,
+          "max": 232
+        },
+        "geometries": {
+          "min": 1076,
+          "max": 1076
+        }
+      },
+      "preparation": {
+        "startMs": 109545.90000009537,
+        "endMs": 111071.20000004768,
+        "before": {
+          "programs": 107,
+          "textures": 232,
+          "geometries": 1076
+        },
+        "after": {
+          "programs": 107,
+          "textures": 232,
+          "geometries": 1076
+        }
+      },
+      "slowFrames": [
+        {
+          "index": 64,
+          "nowMs": 112116.9,
+          "frameMs": 30.5,
+          "renderMs": 14.400000095367432,
+          "geometries": 1076,
+          "draws": 1397,
+          "triangles": 8373053
+        }
+      ]
+    },
+    {
+      "label": "first-B3",
+      "role": "measurement",
+      "round": 3,
+      "samplesFile": "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base/artifacts/walking-profile-cc07958-v1/frames-first-B3.json",
+      "samplesSha256": "0882ed5bdaa9619b03e4d78a91829c55aaed22ab4449983ee249d32a0e28788b",
+      "frameCount": 196,
+      "fps": 65.00397983550019,
+      "render": {
+        "mean": 10.665816328963455,
+        "median": 10.599999904632568,
+        "q1": 10.099999904632568,
+        "q3": 11.099999904632568,
+        "iqr": 1,
+        "p95": 12.100000143051147,
+        "min": 8.899999856948853,
+        "max": 15.200000047683716,
+        "totalCalls": 196
+      },
+      "allPass": {
+        "draws": {
+          "mean": 1340.3775510204082,
+          "median": 1340,
+          "q1": 1317.75,
+          "q3": 1363,
+          "iqr": 45.25,
+          "p95": 1402,
+          "min": 1269,
+          "max": 1407
+        },
+        "triangles": {
+          "mean": 8278813.969387755,
+          "median": 8285949,
+          "q1": 8272257,
+          "q3": 8309206,
+          "iqr": 36949,
+          "p95": 8367601,
+          "min": 8136149,
+          "max": 8375233
+        }
+      },
+      "resourceRanges": {
+        "programs": {
+          "min": 107,
+          "max": 107
+        },
+        "textures": {
+          "min": 232,
+          "max": 232
+        },
+        "geometries": {
+          "min": 1076,
+          "max": 1076
+        }
+      },
+      "preparation": {
+        "startMs": 114160.70000004768,
+        "endMs": 115683.30000019073,
+        "before": {
+          "programs": 107,
+          "textures": 232,
+          "geometries": 1076
+        },
+        "after": {
+          "programs": 107,
+          "textures": 232,
+          "geometries": 1076
+        }
+      },
+      "slowFrames": []
+    },
+    {
+      "label": "first-A4",
+      "role": "measurement",
+      "round": 4,
+      "samplesFile": "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base/artifacts/walking-profile-cc07958-v1/frames-first-A4.json",
+      "samplesSha256": "f96ef2279c1d93fe4fd2ac6d6e8f5f9ee6c07b9514c77bcc7dda61c61bcf43e5",
+      "frameCount": 196,
+      "fps": 64.99966836903874,
+      "render": {
+        "mean": 11.072959180997342,
+        "median": 11,
+        "q1": 10.374999940395355,
+        "q3": 11.5,
+        "iqr": 1.1250000596046448,
+        "p95": 12.799999952316284,
+        "min": 9,
+        "max": 18.5,
+        "totalCalls": 196
+      },
+      "allPass": {
+        "draws": {
+          "mean": 1382.2448979591836,
+          "median": 1382.5,
+          "q1": 1361.75,
+          "q3": 1403,
+          "iqr": 41.25,
+          "p95": 1441,
+          "min": 1313,
+          "max": 1446
+        },
+        "triangles": {
+          "mean": 8374432.081632653,
+          "median": 8381662,
+          "q1": 8368104,
+          "q3": 8404861,
+          "iqr": 36757,
+          "p95": 8463192,
+          "min": 8232044,
+          "max": 8470824
+        }
+      },
+      "resourceRanges": {
+        "programs": {
+          "min": 107,
+          "max": 107
+        },
+        "textures": {
+          "min": 232,
+          "max": 232
+        },
+        "geometries": {
+          "min": 1076,
+          "max": 1076
+        }
+      },
+      "preparation": {
+        "startMs": 118748,
+        "endMs": 120255.30000019073,
+        "before": {
+          "programs": 107,
+          "textures": 232,
+          "geometries": 1076
+        },
+        "after": {
+          "programs": 107,
+          "textures": 232,
+          "geometries": 1076
+        }
+      },
+      "slowFrames": []
+    },
+    {
+      "label": "first-B4",
+      "role": "measurement",
+      "round": 4,
+      "samplesFile": "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base/artifacts/walking-profile-cc07958-v1/frames-first-B4.json",
+      "samplesSha256": "7b1570c4fbbcc89d0130b378ec60d6f6275a421c6c6a4e66d19cdc4360800e9c",
+      "frameCount": 191,
+      "fps": 63.666666666666664,
+      "render": {
+        "mean": 12.31413613064751,
+        "median": 11.5,
+        "q1": 10.5,
+        "q3": 14.149999856948853,
+        "iqr": 3.6499998569488525,
+        "p95": 17.399999856948853,
+        "min": 9.099999904632568,
+        "max": 19.299999952316284,
+        "totalCalls": 191
+      },
+      "allPass": {
+        "draws": {
+          "mean": 1340.9057591623036,
+          "median": 1341,
+          "q1": 1321,
+          "q3": 1362,
+          "iqr": 41,
+          "p95": 1399,
+          "min": 1273,
+          "max": 1404
+        },
+        "triangles": {
+          "mean": 8279955.2931937175,
+          "median": 8285997,
+          "q1": 8272493,
+          "q3": 8310049.5,
+          "iqr": 37556.5,
+          "p95": 8367393,
+          "min": 8137389,
+          "max": 8375025
+        }
+      },
+      "resourceRanges": {
+        "programs": {
+          "min": 107,
+          "max": 107
+        },
+        "textures": {
+          "min": 232,
+          "max": 232
+        },
+        "geometries": {
+          "min": 1076,
+          "max": 1076
+        }
+      },
+      "preparation": {
+        "startMs": 123331.60000014305,
+        "endMs": 124835.90000009537,
+        "before": {
+          "programs": 107,
+          "textures": 232,
+          "geometries": 1076
+        },
+        "after": {
+          "programs": 107,
+          "textures": 232,
+          "geometries": 1076
+        }
+      },
+      "slowFrames": [
+        {
+          "index": 142,
+          "nowMs": 127070.8,
+          "frameMs": 30.80000000000291,
+          "renderMs": 17.5,
+          "geometries": 1076,
+          "draws": 1321,
+          "triangles": 8288475
+        },
+        {
+          "index": 150,
+          "nowMs": 127209.3,
+          "frameMs": 30.80000000000291,
+          "renderMs": 18.5,
+          "geometries": 1076,
+          "draws": 1313,
+          "triangles": 8287289
+        },
+        {
+          "index": 158,
+          "nowMs": 127347.7,
+          "frameMs": 30.59999999999127,
+          "renderMs": 17.5,
+          "geometries": 1076,
+          "draws": 1302,
+          "triangles": 8251115
+        },
+        {
+          "index": 170,
+          "nowMs": 127547.8,
+          "frameMs": 30.80000000000291,
+          "renderMs": 13.400000095367432,
+          "geometries": 1076,
+          "draws": 1292,
+          "triangles": 8169473
+        }
+      ]
+    },
+    {
+      "label": "first-A5",
+      "role": "measurement",
+      "round": 5,
+      "samplesFile": "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base/artifacts/walking-profile-cc07958-v1/frames-first-A5.json",
+      "samplesSha256": "bcce6252f8bfe43ad7a6b07cfc3cb23f6251f06d644a65633eaa1931540a5f5e",
+      "frameCount": 177,
+      "fps": 59,
+      "render": {
+        "mean": 15.233333338451924,
+        "median": 15.100000143051147,
+        "q1": 13,
+        "q3": 17.100000143051147,
+        "iqr": 4.1000001430511475,
+        "p95": 19.899999856948853,
+        "min": 10.5,
+        "max": 21.600000143051147,
+        "totalCalls": 177
+      },
+      "allPass": {
+        "draws": {
+          "mean": 1381.231638418079,
+          "median": 1382,
+          "q1": 1356,
+          "q3": 1404,
+          "iqr": 48,
+          "p95": 1442,
+          "min": 1313,
+          "max": 1447
+        },
+        "triangles": {
+          "mean": 8371935.785310734,
+          "median": 8381844,
+          "q1": 8367624,
+          "q3": 8404909,
+          "iqr": 37285,
+          "p95": 8463240,
+          "min": 8232044,
+          "max": 8470872
+        }
+      },
+      "resourceRanges": {
+        "programs": {
+          "min": 107,
+          "max": 107
+        },
+        "textures": {
+          "min": 232,
+          "max": 232
+        },
+        "geometries": {
+          "min": 1076,
+          "max": 1076
+        }
+      },
+      "preparation": {
+        "startMs": 127956.40000009537,
+        "endMs": 129477.90000009537,
+        "before": {
+          "programs": 107,
+          "textures": 232,
+          "geometries": 1076
+        },
+        "after": {
+          "programs": 107,
+          "textures": 232,
+          "geometries": 1076
+        }
+      },
+      "slowFrames": [
+        {
+          "index": 5,
+          "nowMs": 129624.6,
+          "frameMs": 30.80000000000291,
+          "renderMs": 16.199999809265137,
+          "geometries": 1076,
+          "draws": 1442,
+          "triangles": 8463240
+        },
+        {
+          "index": 17,
+          "nowMs": 129824.6,
+          "frameMs": 30.70000000001164,
+          "renderMs": 13.300000190734863,
+          "geometries": 1076,
+          "draws": 1434,
+          "triangles": 8443656
+        },
+        {
+          "index": 26,
+          "nowMs": 129978.5,
+          "frameMs": 30.69999999999709,
+          "renderMs": 19.200000047683716,
+          "geometries": 1076,
+          "draws": 1424,
+          "triangles": 8436612
+        },
+        {
+          "index": 29,
+          "nowMs": 130040.1,
+          "frameMs": 30.90000000000873,
+          "renderMs": 18.59999990463257,
+          "geometries": 1076,
+          "draws": 1416,
+          "triangles": 8425842
+        },
+        {
+          "index": 34,
+          "nowMs": 130132.4,
+          "frameMs": 30.89999999999418,
+          "renderMs": 17.5,
+          "geometries": 1076,
+          "draws": 1408,
+          "triangles": 8407752
+        },
+        {
+          "index": 45,
+          "nowMs": 130317,
+          "frameMs": 30.80000000000291,
+          "renderMs": 15.099999904632568,
+          "geometries": 1076,
+          "draws": 1402,
+          "triangles": 8399817
+        },
+        {
+          "index": 53,
+          "nowMs": 130455.4,
+          "frameMs": 30.79999999998836,
+          "renderMs": 18.299999952316284,
+          "geometries": 1076,
+          "draws": 1398,
+          "triangles": 8386497
+        },
+        {
+          "index": 59,
+          "nowMs": 130563.1,
+          "frameMs": 30.80000000000291,
+          "renderMs": 17.799999952316284,
+          "geometries": 1076,
+          "draws": 1394,
+          "triangles": 8372919
+        },
+        {
+          "index": 70,
+          "nowMs": 130747.7,
+          "frameMs": 30.80000000000291,
+          "renderMs": 16.40000009536743,
+          "geometries": 1076,
+          "draws": 1391,
+          "triangles": 8402233
+        },
+        {
+          "index": 79,
+          "nowMs": 130901.6,
+          "frameMs": 30.80000000000291,
+          "renderMs": 18.90000009536743,
+          "geometries": 1076,
+          "draws": 1386,
+          "triangles": 8368340
+        },
+        {
+          "index": 83,
+          "nowMs": 130978.4,
+          "frameMs": 30.59999999999127,
+          "renderMs": 13,
+          "geometries": 1076,
+          "draws": 1384,
+          "triangles": 8367624
+        },
+        {
+          "index": 93,
+          "nowMs": 131147.7,
+          "frameMs": 30.800000000017462,
+          "renderMs": 17.09999990463257,
+          "geometries": 1076,
+          "draws": 1381,
+          "triangles": 8376988
+        },
+        {
+          "index": 96,
+          "nowMs": 131209.3,
+          "frameMs": 30.79999999998836,
+          "renderMs": 21.200000047683716,
+          "geometries": 1076,
+          "draws": 1380,
+          "triangles": 8376946
+        },
+        {
+          "index": 99,
+          "nowMs": 131270.8,
+          "frameMs": 30.699999999982538,
+          "renderMs": 19.700000047683716,
+          "geometries": 1076,
+          "draws": 1376,
+          "triangles": 8376698
+        },
+        {
+          "index": 102,
+          "nowMs": 131332.4,
+          "frameMs": 30.79999999998836,
+          "renderMs": 14.300000190734863,
+          "geometries": 1076,
+          "draws": 1374,
+          "triangles": 8375808
+        },
+        {
+          "index": 107,
+          "nowMs": 131424.6,
+          "frameMs": 30.70000000001164,
+          "renderMs": 12.899999856948853,
+          "geometries": 1076,
+          "draws": 1372,
+          "triangles": 8374092
+        },
+        {
+          "index": 119,
+          "nowMs": 131624.7,
+          "frameMs": 30.800000000017462,
+          "renderMs": 19.200000047683716,
+          "geometries": 1076,
+          "draws": 1367,
+          "triangles": 8384896
+        },
+        {
+          "index": 123,
+          "nowMs": 131701.5,
+          "frameMs": 30.70000000001164,
+          "renderMs": 16,
+          "geometries": 1076,
+          "draws": 1364,
+          "triangles": 8384322
+        }
+      ]
+    },
+    {
+      "label": "first-B5",
+      "role": "measurement",
+      "round": 5,
+      "samplesFile": "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base/artifacts/walking-profile-cc07958-v1/frames-first-B5.json",
+      "samplesSha256": "e8a45b18e3d755dcf0cadf78c2f906dc8d556e9d12be2839301fccb1ae414146",
+      "frameCount": 196,
+      "fps": 65.00182403077662,
+      "render": {
+        "mean": 10.320408159372757,
+        "median": 10.099999904632568,
+        "q1": 9.400000095367432,
+        "q3": 10.699999809265137,
+        "iqr": 1.299999713897705,
+        "p95": 12.5,
+        "min": 8.899999856948853,
+        "max": 17.40000009536743,
+        "totalCalls": 196
+      },
+      "allPass": {
+        "draws": {
+          "mean": 1339.8724489795918,
+          "median": 1340.5,
+          "q1": 1318.75,
+          "q3": 1361,
+          "iqr": 42.25,
+          "p95": 1399,
+          "min": 1270,
+          "max": 1404
+        },
+        "triangles": {
+          "mean": 8278765.010204081,
+          "median": 8285997,
+          "q1": 8272305,
+          "q3": 8309062,
+          "iqr": 36757,
+          "p95": 8367393,
+          "min": 8136197,
+          "max": 8375025
+        }
+      },
+      "resourceRanges": {
+        "programs": {
+          "min": 107,
+          "max": 107
+        },
+        "textures": {
+          "min": 232,
+          "max": 232
+        },
+        "geometries": {
+          "min": 1076,
+          "max": 1076
+        }
+      },
+      "preparation": {
+        "startMs": 132562.30000019073,
+        "endMs": 134083.40000009537,
+        "before": {
+          "programs": 107,
+          "textures": 232,
+          "geometries": 1076
+        },
+        "after": {
+          "programs": 107,
+          "textures": 232,
+          "geometries": 1076
+        }
+      },
+      "slowFrames": []
+    }
+  ],
+  "inSampleResourceTransitions": [
+    {
+      "label": "third-A4",
+      "key": "geometries",
+      "from": 1074,
+      "to": 1075,
+      "atMs": 71932.4,
+      "frameIndex": 136,
+      "neighbors": [
+        {
+          "nowMs": 71901.6,
+          "frameMs": 15.400000000008731,
+          "renderMs": 13.099999904632568,
+          "geometries": 1074,
+          "draws": 1497,
+          "triangles": 8299012
+        },
+        {
+          "nowMs": 71917,
+          "frameMs": 15.39999999999418,
+          "renderMs": 12.900000095367432,
+          "geometries": 1074,
+          "draws": 1497,
+          "triangles": 8299012
+        },
+        {
+          "nowMs": 71932.4,
+          "frameMs": 15.39999999999418,
+          "renderMs": 12.699999809265137,
+          "geometries": 1075,
+          "draws": 1497,
+          "triangles": 8299012
+        },
+        {
+          "nowMs": 71947.7,
+          "frameMs": 15.30000000000291,
+          "renderMs": 13.200000047683716,
+          "geometries": 1075,
+          "draws": 1498,
+          "triangles": 8312080
+        },
+        {
+          "nowMs": 71963.1,
+          "frameMs": 15.400000000008731,
+          "renderMs": 12.800000190734863,
+          "geometries": 1075,
+          "draws": 1499,
+          "triangles": 8351284
+        }
+      ]
+    }
+  ],
+  "frameTotals": {
+    "includingWarmups": 4250,
+    "measurementOnly": 3858,
+    "slow": 49,
+    "rendererInfoAutoReset": [
+      false
+    ],
+    "infoMatchesAllPassEveryFrame": true
+  },
+  "conclusions": [
+    {
+      "claim": "Paired render median deltas are usually positive but reverse sign in 2/5 rounds in each mode; do not treat them as a proven steady-state city cost.",
+      "numbers": "A-B median deltas (ms): third [0.80,-0.75,-0.60,2.50,0.65], median=0.65, Q1=-0.60,Q3=0.80,IQR=1.40; first [1.10,-0.15,1.60,-0.50,5.00], median=1.10,Q1=-0.15,Q3=1.60,IQR=1.75. Segment IQRs are separately retained for A and B in pairs; these paired-delta quartiles are descriptive across 5 rounds, not confidence intervals."
+    },
+    {
+      "claim": "Observed resource-count growth does not coincide consistently with slow frames; counts alone cannot identify an environmental cause or exclude other resource work.",
+      "numbers": "Programs=107 and textures=232 throughout all 4250 recorded frames. Geometries grow during stationary preparations 1062→1072 (36.006–37.529s),1072→1073 (45.209–46.731s),1073→1074 (63.654–65.160s),1075→1076 (86.684–88.206s); precise intra-preparation moments are unavailable. The sole sampled increment is third-A4 frame136 at 71.9324s,1074→1075,frame=15.4ms,render=12.7ms; its whole segment has zero >22ms frames. Slow frames total49, including18 in hidden third-B3 and18 in visible first-A5, all with fixed in-segment resource counts."
+    },
+    {
+      "claim": "A submits more geometry in every pair, but changing non-isolated scene work and fixed ordering confound subtraction.",
+      "numbers": "A-B per-frame mean draw differences span33.44–57.84; triangle differences21,194.84–185,119.26. Several pairs are near43 draws/95k triangles, but third round3 and first round2 differ substantially. This is full-scene accounting, not a direct city-only counter. All recorded renderer.info.autoReset values are false, and calls/triangles match separately wrapped all-pass counters exactly in all4250 frames. A/B switches city connections/foundations as well as the three buildings; animation/time and runtime history continue."
+    }
+  ]
+}

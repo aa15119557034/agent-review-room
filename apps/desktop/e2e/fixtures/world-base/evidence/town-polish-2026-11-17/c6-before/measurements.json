@@ -1,0 +1,1619 @@
+{
+  "sourceCommit": "9a392e23e2d8b6800cc91f2b1995d639f22ff3ca",
+  "verifiedSourceFiles": 199,
+  "completedAt": "2026-11-17T03:46:07.426Z",
+  "ok": false,
+  "renderOk": true,
+  "transportClean": false,
+  "versions": {
+    "node": "24.22.0",
+    "acorn": "8.18.0",
+    "ada": "4.0.0",
+    "amaro": "1.1.11",
+    "ares": "1.34.8",
+    "brotli": "1.2.0",
+    "cldr": "48.0",
+    "icu": "78.2",
+    "llhttp": "9.4.3",
+    "merve": "1.2.2",
+    "modules": "149",
+    "napi": "10",
+    "nbytes": "0.1.4",
+    "ncrypto": "0.0.1",
+    "nghttp2": "1.70.0",
+    "nghttp3": "",
+    "ngtcp2": "",
+    "openssl": "0.0.0",
+    "simdjson": "4.6.11",
+    "simdutf": "7.7.0",
+    "sqlite": "3.53.4",
+    "tz": "2026d",
+    "undici": "7.29.1",
+    "unicode": "17.0",
+    "uv": "1.52.1",
+    "uvwasi": "0.0.23",
+    "v8": "15.2.124.43-electron.0",
+    "zlib": "1.3.2.1-motley",
+    "zstd": "1.6.0",
+    "electron": "44.9.0",
+    "chrome": "152.0.7977.167"
+  },
+  "dimensions": {
+    "viewport": [
+      1440,
+      900
+    ],
+    "canvas": [
+      1440,
+      900
+    ],
+    "pixelRatio": 1
+  },
+  "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "timing": {
+    "timeOriginMs": 1794887070753.4,
+    "performanceNowMs": 33276.799999952316,
+    "firstWebGLDrawMs": 1894.9000000953674,
+    "sceneReadyMs": 33149,
+    "firstReadyFrameMs": 33176.90000009537,
+    "navigation": {
+      "name": "http://127.0.0.1:58834/",
+      "entryType": "navigation",
+      "startTime": 0,
+      "duration": 241.09999990463257,
+      "navigationId": 6235,
+      "initiatorType": "navigation",
+      "deliveryType": "",
+      "nextHopProtocol": "http/1.1",
+      "renderBlockingStatus": "non-blocking",
+      "contentType": "text/html",
+      "contentEncoding": "",
+      "workerStart": 0,
+      "workerRouterEvaluationStart": 0,
+      "workerCacheLookupStart": 0,
+      "workerMatchedSourceType": "",
+      "workerFinalSourceType": "",
+      "redirectStart": 0,
+      "redirectEnd": 0,
+      "fetchStart": 0.20000004768371582,
+      "domainLookupStart": 5.099999904632568,
+      "domainLookupEnd": 5.099999904632568,
+      "connectStart": 5.099999904632568,
+      "secureConnectionStart": 0,
+      "connectEnd": 5.400000095367432,
+      "requestStart": 5.5,
+      "responseStart": 12.599999904632568,
+      "firstInterimResponseStart": 0,
+      "finalResponseHeadersStart": 12.599999904632568,
+      "responseEnd": 13.099999904632568,
+      "transferSize": 2342,
+      "encodedBodySize": 2042,
+      "decodedBodySize": 2042,
+      "responseStatus": 200,
+      "serverTiming": [],
+      "unloadEventStart": 0,
+      "unloadEventEnd": 0,
+      "domInteractive": 23.799999952316284,
+      "domContentLoadedEventStart": 240.90000009536743,
+      "domContentLoadedEventEnd": 240.90000009536743,
+      "domComplete": 241,
+      "loadEventStart": 241,
+      "loadEventEnd": 241.09999990463257,
+      "type": "navigate",
+      "redirectCount": 0,
+      "activationStart": 0,
+      "criticalCHRestart": 0,
+      "notRestoredReasons": null,
+      "confidence": {}
+    }
+  },
+  "performance": {
+    "method": "RAF intervals with WebGL2 submission counters across all passes; instrumentation overhead included",
+    "unsupportedDrawPaths": [
+      "ANGLE_instanced_arrays",
+      "WEBGL_multi_draw"
+    ],
+    "frameCount": 983,
+    "sampleMs": 15123.099999999999,
+    "fps": 64.99990081398656,
+    "p95FrameMs": 15.5,
+    "drawCalls": {
+      "mean": 1496.0437436419124,
+      "min": 1494,
+      "max": 1499
+    },
+    "triangles": {
+      "mean": 8264762.628687691,
+      "min": 8264640,
+      "max": 8264960
+    },
+    "framesWithoutDraws": 0,
+    "samplesFile": "frame-samples.json"
+  },
+  "views": [
+    {
+      "name": "station-street",
+      "method": "RAF intervals with WebGL2 submission counters across all passes; instrumentation overhead included",
+      "unsupportedDrawPaths": [
+        "ANGLE_instanced_arrays",
+        "WEBGL_multi_draw"
+      ],
+      "frameCount": 202,
+      "sampleMs": 3107.699999999997,
+      "fps": 64.99983910930919,
+      "p95FrameMs": 15.5,
+      "drawCalls": {
+        "mean": 1495.1881188118812,
+        "min": 1494,
+        "max": 1498
+      },
+      "triangles": {
+        "mean": 8264716.039603961,
+        "min": 8264640,
+        "max": 8264896
+      },
+      "framesWithoutDraws": 0,
+      "samplesFile": "frame-samples-station-street.json",
+      "capture": {
+        "file": "01-station-street.png",
+        "jpeg": "01-station-street.jpg",
+        "jpegWidth": 960,
+        "pixels": {
+          "width": 1440,
+          "height": 900,
+          "samples": 39816,
+          "meanRgb": 98.44230125242818,
+          "nonBlackFraction": 0.9671740004018485,
+          "notBlack": true
+        }
+      }
+    },
+    {
+      "name": "station-port",
+      "method": "RAF intervals with WebGL2 submission counters across all passes; instrumentation overhead included",
+      "unsupportedDrawPaths": [
+        "ANGLE_instanced_arrays",
+        "WEBGL_multi_draw"
+      ],
+      "frameCount": 202,
+      "sampleMs": 3107.5999999999985,
+      "fps": 65.00193075041835,
+      "p95FrameMs": 15.5,
+      "drawCalls": {
+        "mean": 806.6633663366337,
+        "min": 799,
+        "max": 814
+      },
+      "triangles": {
+        "mean": 7886045.247524752,
+        "min": 7833136,
+        "max": 7922928
+      },
+      "framesWithoutDraws": 0,
+      "samplesFile": "frame-samples-station-port.json",
+      "capture": {
+        "file": "02-station-port.png",
+        "jpeg": "02-station-port.jpg",
+        "jpegWidth": 960,
+        "pixels": {
+          "width": 1440,
+          "height": 900,
+          "samples": 39816,
+          "meanRgb": 172.82650190878164,
+          "nonBlackFraction": 1,
+          "notBlack": true
+        }
+      }
+    },
+    {
+      "name": "island-aerial",
+      "method": "RAF intervals with WebGL2 submission counters across all passes; instrumentation overhead included",
+      "unsupportedDrawPaths": [
+        "ANGLE_instanced_arrays",
+        "WEBGL_multi_draw"
+      ],
+      "frameCount": 203,
+      "sampleMs": 3123.100000000006,
+      "fps": 64.99951970798233,
+      "p95FrameMs": 15.5,
+      "drawCalls": {
+        "mean": 1731,
+        "min": 1731,
+        "max": 1731
+      },
+      "triangles": {
+        "mean": 7735370,
+        "min": 7735370,
+        "max": 7735370
+      },
+      "framesWithoutDraws": 0,
+      "samplesFile": "frame-samples-island-aerial.json",
+      "capture": {
+        "file": "03-island-aerial.png",
+        "jpeg": "03-island-aerial.jpg",
+        "jpegWidth": 960,
+        "pixels": {
+          "width": 1440,
+          "height": 900,
+          "samples": 39816,
+          "meanRgb": 106.54742649521093,
+          "nonBlackFraction": 0.9999748844685553,
+          "notBlack": true
+        }
+      }
+    },
+    {
+      "name": "shop-interior",
+      "method": "RAF intervals with WebGL2 submission counters across all passes; instrumentation overhead included",
+      "unsupportedDrawPaths": [
+        "ANGLE_instanced_arrays",
+        "WEBGL_multi_draw"
+      ],
+      "frameCount": 202,
+      "sampleMs": 3107.699999999997,
+      "fps": 64.99983910930919,
+      "p95FrameMs": 15.5,
+      "drawCalls": {
+        "mean": 883.2277227722773,
+        "min": 883,
+        "max": 886
+      },
+      "triangles": {
+        "mean": 7514374.247524752,
+        "min": 7509647,
+        "max": 7571303
+      },
+      "framesWithoutDraws": 0,
+      "samplesFile": "frame-samples-shop-interior.json",
+      "capture": {
+        "file": "04-shop-interior.png",
+        "jpeg": "04-shop-interior.jpg",
+        "jpegWidth": 960,
+        "pixels": {
+          "width": 1440,
+          "height": 900,
+          "samples": 39816,
+          "meanRgb": 152.26166197843236,
+          "nonBlackFraction": 1,
+          "notBlack": true
+        }
+      }
+    }
+  ],
+  "behaviorValidation": {
+    "ok": true,
+    "checks": [
+      {
+        "name": "closed shop door blocks the walking capsule",
+        "passed": true,
+        "evidence": {
+          "displacement": 0.34999999999999964,
+          "candidate": {
+            "x": -7.23,
+            "z": 8
+          }
+        }
+      },
+      {
+        "name": "approaching opens the real shop door collider",
+        "passed": true,
+        "evidence": {
+          "displacement": 0,
+          "candidate": {
+            "x": -7.58,
+            "z": 8
+          }
+        }
+      },
+      {
+        "name": "adjacent storefront wall remains solid",
+        "passed": true,
+        "evidence": {
+          "displacement": 0.40000000000000036,
+          "candidate": {
+            "x": -7.1,
+            "z": 12
+          }
+        }
+      },
+      {
+        "name": "open entrance provides a continuous capsule-width passage",
+        "passed": true,
+        "evidence": {
+          "maxCorrection": 0
+        }
+      },
+      {
+        "name": "interior floor uses its raised walkable surface",
+        "passed": true,
+        "evidence": {
+          "expectedFloor": 0.4134,
+          "maxHeightError": 0
+        }
+      },
+      {
+        "name": "W3 sidewalk walking clears existing furniture and new planters",
+        "passed": true,
+        "evidence": {
+          "endLotX": 3.9674163653903243,
+          "minLotZ": 1.061816375746971,
+          "maxLotZ": 1.1500000000000001,
+          "radius": 0.3,
+          "step": 0.1,
+          "inputDistance": 8
+        }
+      },
+      {
+        "name": "W3 planters leave the existing garden gate approach clear",
+        "passed": true,
+        "evidence": {
+          "maxCorrection": 0
+        }
+      },
+      {
+        "name": "low planter tops support approaching feet and release them on exit",
+        "passed": true,
+        "evidence": [
+          {
+            "id": "w3-planter-south",
+            "expectedTop": 1.1152975042415103,
+            "onTop": 1.1152975042415103,
+            "initialFeet": 0.8553631994889643,
+            "finalFeet": 0.8553631994889643,
+            "supported": true,
+            "returnedToSidewalk": true
+          },
+          {
+            "id": "w3-planter-north",
+            "expectedTop": 1.00881568627451,
+            "onTop": 1.00881568627451,
+            "initialFeet": 0.7488156862745098,
+            "finalFeet": 0.7488156862745098,
+            "supported": true,
+            "returnedToSidewalk": true
+          }
+        ]
+      },
+      {
+        "name": "first person camera is 1.52m above world-space feet",
+        "passed": true,
+        "evidence": {
+          "feet": [
+            281.6,
+            8.812,
+            934
+          ],
+          "camera": [
+            281.6,
+            10.331999999999999,
+            934
+          ],
+          "error": 0
+        }
+      },
+      {
+        "name": "third person camera follows within its obstruction-limited boom",
+        "passed": true,
+        "evidence": {
+          "followDistance": 4.224038352098614,
+          "maximum": 4.224038352098617
+        }
+      },
+      {
+        "name": "view switching preserves the body and collision position",
+        "passed": true,
+        "evidence": {
+          "feet": [
+            281.6,
+            8.812,
+            934
+          ],
+          "initialFeet": [
+            281.6,
+            8.812,
+            934
+          ]
+        }
+      },
+      {
+        "name": "station local/world coordinates round-trip at its nonzero placement",
+        "passed": true,
+        "evidence": {
+          "local": [
+            1.6000000000000227,
+            0.8119999999999994,
+            34
+          ],
+          "world": [
+            281.6,
+            8.812,
+            934
+          ]
+        }
+      },
+      {
+        "name": "real shop wall shortens third-person boom with near-plane clearance",
+        "passed": true,
+        "evidence": {
+          "shortened": 0.7951227548559752,
+          "cameraLotZ": -2.290597833643244,
+          "streetSideWallZ": -2.6,
+          "clearance": 0.30940216635678375,
+          "raycastCalls": 0
+        }
+      },
+      {
+        "name": "camera collision never scans rendered triangles",
+        "passed": true,
+        "evidence": {
+          "raycastCalls": 0
+        }
+      }
+    ]
+  },
+  "walkingValidation": {
+    "ok": true,
+    "method": "Electron sendInputEvent holds W for each measured segment; positions come from the live walker, with no per-frame pose overrides.",
+    "segments": [
+      {
+        "mode": "third",
+        "before": {
+          "feet": [
+            281.6,
+            8.812,
+            934
+          ],
+          "mode": "third",
+          "timeMs": 87347.70000004768
+        },
+        "after": {
+          "feet": [
+            280.9462972920396,
+            8.550245240785783,
+            924.6516157423493
+          ],
+          "mode": "third",
+          "timeMs": 90454.5
+        },
+        "distance": 9.374866986419411,
+        "horizontalDistance": 9.371212059231466,
+        "method": "RAF intervals with WebGL2 submission counters across all passes; instrumentation overhead included",
+        "unsupportedDrawPaths": [
+          "ANGLE_instanced_arrays",
+          "WEBGL_multi_draw"
+        ],
+        "frameCount": 202,
+        "sampleMs": 3107.5999999999913,
+        "fps": 65.00193075041851,
+        "p95FrameMs": 15.5,
+        "drawCalls": {
+          "mean": 1475.09900990099,
+          "min": 870,
+          "max": 1487
+        },
+        "triangles": {
+          "mean": 8209089.752475248,
+          "min": 7442435,
+          "max": 8277889
+        },
+        "framesWithoutDraws": 0,
+        "samplesFile": "frame-samples-walking-third.json",
+        "capture": {
+          "file": "walking-third.png",
+          "jpeg": "walking-third.jpg",
+          "jpegWidth": 960,
+          "pixels": {
+            "width": 1440,
+            "height": 900,
+            "samples": 39816,
+            "meanRgb": 112.23071964369666,
+            "nonBlackFraction": 0.9927918424753868,
+            "notBlack": true
+          }
+        },
+        "ok": true
+      },
+      {
+        "mode": "first",
+        "before": {
+          "feet": [
+            280.92800726616554,
+            8.542921573221932,
+            924.3900561864975
+          ],
+          "mode": "first",
+          "timeMs": 91177.20000004768
+        },
+        "after": {
+          "feet": [
+            280.2743195910348,
+            8.281172833433159,
+            915.0418869083271
+          ],
+          "mode": "first",
+          "timeMs": 94285.70000004768
+        },
+        "distance": 9.374651397930915,
+        "horizontalDistance": 9.370996554793255,
+        "method": "RAF intervals with WebGL2 submission counters across all passes; instrumentation overhead included",
+        "unsupportedDrawPaths": [
+          "ANGLE_instanced_arrays",
+          "WEBGL_multi_draw"
+        ],
+        "frameCount": 202,
+        "sampleMs": 3107.5,
+        "fps": 65.00402252614641,
+        "p95FrameMs": 15.5,
+        "drawCalls": {
+          "mean": 1337.5346534653465,
+          "min": 1265,
+          "max": 1457
+        },
+        "triangles": {
+          "mean": 8148936.405940594,
+          "min": 8000657,
+          "max": 8244055
+        },
+        "framesWithoutDraws": 0,
+        "samplesFile": "frame-samples-walking-first.json",
+        "capture": {
+          "file": "walking-first.png",
+          "jpeg": "walking-first.jpg",
+          "jpegWidth": 960,
+          "pixels": {
+            "width": 1440,
+            "height": 900,
+            "samples": 39816,
+            "meanRgb": 115.31905933962875,
+            "nonBlackFraction": 0.9963080168776371,
+            "notBlack": true
+          }
+        },
+        "ok": true
+      }
+    ],
+    "viewSwitch": {
+      "before": [
+        280.92800726616554,
+        8.542921573221932,
+        924.3900561864975
+      ],
+      "after": [
+        280.92800726616554,
+        8.542921573221932,
+        924.3900561864975
+      ],
+      "distance": 0,
+      "mode": "first"
+    },
+    "inputEvents": [
+      {
+        "type": "keydown",
+        "code": "KeyW",
+        "key": "w",
+        "trusted": true,
+        "timeMs": 87348.40000009537
+      },
+      {
+        "type": "keyup",
+        "code": "KeyW",
+        "key": "w",
+        "trusted": true,
+        "timeMs": 90454.59999990463
+      },
+      {
+        "type": "keydown",
+        "code": "KeyW",
+        "key": "w",
+        "trusted": true,
+        "timeMs": 91177.40000009537
+      },
+      {
+        "type": "keyup",
+        "code": "KeyW",
+        "key": "w",
+        "trusted": true,
+        "timeMs": 94285.5
+      }
+    ]
+  },
+  "lookValidation": {
+    "ok": true,
+    "method": "Actual pipeline uniforms/parameters and UI state; central-pixel nonblack smoke checks. Images retain animation.",
+    "toon": {
+      "on": {
+        "state": {
+          "toon": 1,
+          "blur": 0,
+          "rays": 0,
+          "toonCheckbox": true,
+          "effectsCheckbox": false,
+          "currentView": "station-street"
+        },
+        "capture": {
+          "file": "05-street-toon-on.png",
+          "jpeg": "05-street-toon-on.jpg",
+          "jpegWidth": 960,
+          "pixels": {
+            "width": 1440,
+            "height": 900,
+            "samples": 39816,
+            "meanRgb": 98.33596209229158,
+            "nonBlackFraction": 0.9672493469961825,
+            "notBlack": true
+          }
+        }
+      },
+      "off": {
+        "state": {
+          "toon": 0,
+          "blur": 0,
+          "rays": 0,
+          "toonCheckbox": false,
+          "effectsCheckbox": false,
+          "currentView": "station-street"
+        },
+        "capture": {
+          "file": "06-street-toon-off.png",
+          "jpeg": "06-street-toon-off.jpg",
+          "jpegWidth": 960,
+          "pixels": {
+            "width": 1440,
+            "height": 900,
+            "samples": 39816,
+            "meanRgb": 58.73044337284803,
+            "nonBlackFraction": 0.7921940928270043,
+            "notBlack": true
+          }
+        }
+      },
+      "difference": {
+        "meanAbsoluteRgbDifference": 40.3654670781893,
+        "isolatedFromAnimation": false
+      }
+    },
+    "flightEffects": {
+      "on": {
+        "state": {
+          "toon": 1,
+          "blur": 1,
+          "rays": 0.55,
+          "toonCheckbox": true,
+          "effectsCheckbox": true,
+          "currentView": "station-street"
+        },
+        "capture": {
+          "file": "07-flight-effects-on.png",
+          "jpeg": "07-flight-effects-on.jpg",
+          "jpegWidth": 960,
+          "pixels": {
+            "width": 1440,
+            "height": 900,
+            "samples": 39816,
+            "meanRgb": 98.35664891835793,
+            "nonBlackFraction": 0.967274462527627,
+            "notBlack": true
+          }
+        }
+      },
+      "off": {
+        "state": {
+          "toon": 1,
+          "blur": 0,
+          "rays": 0,
+          "toonCheckbox": true,
+          "effectsCheckbox": false,
+          "currentView": "station-street"
+        },
+        "capture": {
+          "file": "08-flight-effects-off.png",
+          "jpeg": "08-flight-effects-off.jpg",
+          "jpegWidth": 960,
+          "pixels": {
+            "width": 1440,
+            "height": 900,
+            "samples": 39816,
+            "meanRgb": 98.3127637130797,
+            "nonBlackFraction": 0.966998191681736,
+            "notBlack": true
+          }
+        }
+      },
+      "difference": {
+        "meanAbsoluteRgbDifference": 1.5990853909465021,
+        "isolatedFromAnimation": false
+      }
+    }
+  },
+  "city": {
+    "buildings": 5,
+    "apartments": 3,
+    "lowHouses": 2,
+    "modelTriangles": 22224,
+    "modelPrimitives": 28,
+    "connections": {
+      "roads": [
+        {
+          "name": "town-front-lane",
+          "minX": -56,
+          "maxX": 37,
+          "minZ": -118.5,
+          "maxZ": -115.8,
+          "triangles": 558,
+          "groundOffset": 0.06
+        },
+        {
+          "name": "town-levee-lane",
+          "minX": 32,
+          "maxX": 37,
+          "minZ": -115.8,
+          "maxZ": -101,
+          "triangles": 150,
+          "groundOffset": 0.06
+        }
+      ],
+      "stairs": [
+        {
+          "name": "town-apartment-3f-entry",
+          "x": -17,
+          "width": 2.2,
+          "highZ": -123.5,
+          "lowZ": -118.51,
+          "steps": 12,
+          "rise": 0.16522699094701745,
+          "tread": 0.4158333333333329,
+          "top": 5.458040148417157,
+          "bottom": 3.4753162570529477,
+          "minClearance": 0.1520745146716722
+        },
+        {
+          "name": "town-apartment-4f-entry",
+          "x": 2,
+          "width": 2.2,
+          "highZ": -122,
+          "lowZ": -118.51,
+          "steps": 9,
+          "rise": 0.16519691556765836,
+          "tread": 0.3877777777777772,
+          "top": 4.904808464050293,
+          "bottom": 3.418036223941368,
+          "minClearance": 0.16489170203975156
+        },
+        {
+          "name": "town-apartment-5f-entry",
+          "x": 22,
+          "width": 2.2,
+          "highZ": -121,
+          "lowZ": -118.51,
+          "steps": 8,
+          "rise": 0.16888438367843667,
+          "tread": 0.31124999999999936,
+          "top": 4.783957901000977,
+          "bottom": 3.4328828315734836,
+          "minClearance": 0.19491120815277263
+        },
+        {
+          "name": "town-house-0-entry",
+          "x": -37,
+          "width": 2.2,
+          "highZ": -121.50032998154778,
+          "lowZ": -118.51,
+          "steps": 8,
+          "rise": 0.16701789847613763,
+          "tread": 0.3737912476934717,
+          "top": 4.265555652798646,
+          "bottom": 2.929412464989545,
+          "minClearance": 0.1903727568173812
+        },
+        {
+          "name": "town-house-1-entry",
+          "x": -50,
+          "width": 2.2,
+          "highZ": -122.16807376975453,
+          "lowZ": -118.51,
+          "steps": 9,
+          "rise": 0.1703773724573469,
+          "tread": 0.4064526410838359,
+          "top": 4.317841223382807,
+          "bottom": 2.7844448712666847,
+          "minClearance": 0.1884255007462241
+        },
+        {
+          "name": "town-levee-stairs",
+          "x": 34.5,
+          "width": 5,
+          "highZ": -94.53,
+          "lowZ": -101,
+          "steps": 10,
+          "rise": 0.17436214139726358,
+          "tread": 0.6469999999999999,
+          "top": 3.23,
+          "bottom": 1.4863785860273642,
+          "minClearance": 0.030398222222221882
+        }
+      ],
+      "walkable": false
+    },
+    "trees": [
+      {
+        "x": -57.5,
+        "y": 3.5195525222354185,
+        "z": -122.5,
+        "triangles": 364
+      },
+      {
+        "x": 30.5,
+        "y": 4.387975295384702,
+        "z": -127,
+        "triangles": 364
+      }
+    ],
+    "poles": [
+      {
+        "x": -28,
+        "z": -116.2,
+        "height": 7.4
+      },
+      {
+        "x": 30.4,
+        "z": -116.2,
+        "height": 7.4
+      }
+    ],
+    "planting": [
+      {
+        "name": "town-apartment-3f",
+        "hedgeZ": -122.8,
+        "triangles": 1538
+      },
+      {
+        "name": "town-apartment-4f",
+        "hedgeZ": -121.3,
+        "triangles": 1634
+      },
+      {
+        "name": "town-apartment-5f",
+        "hedgeZ": -120.3,
+        "triangles": 1636
+      },
+      {
+        "name": "town-house-0",
+        "hedgeZ": -120.95032998154778,
+        "triangles": 1274
+      },
+      {
+        "name": "town-house-1",
+        "hedgeZ": -121.61807376975453,
+        "triangles": 1132
+      }
+    ],
+    "totalTriangles": 22224,
+    "materials": 18,
+    "geometries": 18,
+    "borrowedTextures": 8,
+    "uniqueTextures": 8,
+    "ownedTextures": 0,
+    "newTexturePixels": 0,
+    "ownedTextureRGBA8WithMipsEstimateBytes": 0,
+    "textureCacheEntriesAdded": 0,
+    "laundryItems": 8,
+    "suppressedPhysicsCalls": 0,
+    "ownership": "Own emitted geometry, far instances and material clones; borrow all station atlases, far facade textures and gradient maps. Dispose before station.",
+    "limitation": "Background only: no new physics or navigable interiors. Foundations and stairs are CPU checked; camera composition and visible CDLOD contacts need GPU acceptance.",
+    "placements": [
+      {
+        "name": "town-apartment-3f",
+        "type": "apartment",
+        "center": [
+          -17,
+          -123.5
+        ],
+        "frontage": [
+          -17,
+          -123.5
+        ],
+        "floors": 3,
+        "baseY": 5.3180401484171576,
+        "floorHeight": 2.85,
+        "height": 10.735000000000001,
+        "footprint": {
+          "minX": -24.7,
+          "maxX": -11.25,
+          "minZ": -134.95000000000002,
+          "maxZ": -123.35
+        },
+        "ground": {
+          "min": 11.911900393168086,
+          "max": 13.268040148417157,
+          "relief": 1.356139755249071,
+          "samples": 110,
+          "method": "All bilinear grid and footprint boundary intersections"
+        },
+        "foundation": {
+          "top": 13.318040148417158,
+          "bottom": 11.861900393168085,
+          "height": 1.4561397552490725
+        },
+        "model": {
+          "bounds": {
+            "minX": -7.55,
+            "maxX": 5.7,
+            "minZ": -11.3,
+            "maxZ": 0,
+            "minY": 0,
+            "maxY": 10.735000000000001
+          },
+          "groundSupportBounds": {
+            "minX": -7.55,
+            "maxX": 5.6,
+            "minZ": -11.3,
+            "maxZ": 0
+          },
+          "supportSamples": [
+            {
+              "x": -7.55,
+              "z": -11.3
+            },
+            {
+              "x": -7.55,
+              "z": -5.125
+            },
+            {
+              "x": -7.55,
+              "z": 0
+            },
+            {
+              "x": 0,
+              "z": -11.3
+            },
+            {
+              "x": 0,
+              "z": -5.125
+            },
+            {
+              "x": 0,
+              "z": 0
+            },
+            {
+              "x": 5.6,
+              "z": -11.3
+            },
+            {
+              "x": 5.6,
+              "z": -5.125
+            },
+            {
+              "x": 5.6,
+              "z": 0
+            }
+          ],
+          "floors": 3,
+          "floorHeight": 2.85,
+          "height": 10.735000000000001,
+          "entrances": [
+            {
+              "x": 0,
+              "y": 0.14,
+              "z": 0,
+              "width": 1.02
+            }
+          ],
+          "triangles": 2866,
+          "laundryTriangles": 48,
+          "garments": 2,
+          "features": {
+            "balconies": 2,
+            "rearCorridor": true,
+            "stairFlights": 2,
+            "stairTreads": 32,
+            "roofTank": true,
+            "bicycleShelter": true,
+            "mailboxes": 3,
+            "shop": null,
+            "walkable": false
+          }
+        },
+        "scale": 1,
+        "staticTriangles": 2866,
+        "worldOrigin": [
+          263,
+          13.318040148417158,
+          776.5
+        ]
+      },
+      {
+        "name": "town-apartment-4f",
+        "type": "apartment",
+        "center": [
+          2,
+          -122
+        ],
+        "frontage": [
+          2,
+          -122
+        ],
+        "floors": 4,
+        "baseY": 4.764808464050294,
+        "floorHeight": 2.85,
+        "height": 13.585,
+        "footprint": {
+          "minX": -6.200000000000001,
+          "maxX": 8.25,
+          "minZ": -133.45000000000002,
+          "maxZ": -121.85
+        },
+        "ground": {
+          "min": 11.467428440517818,
+          "max": 12.714808464050293,
+          "relief": 1.2473800235324752,
+          "samples": 110,
+          "method": "All bilinear grid and footprint boundary intersections"
+        },
+        "foundation": {
+          "top": 12.764808464050294,
+          "bottom": 11.417428440517817,
+          "height": 1.3473800235324767
+        },
+        "model": {
+          "bounds": {
+            "minX": -8.05,
+            "maxX": 6.2,
+            "minZ": -11.3,
+            "maxZ": 0,
+            "minY": 0,
+            "maxY": 13.585
+          },
+          "groundSupportBounds": {
+            "minX": -8.05,
+            "maxX": 6.1,
+            "minZ": -11.3,
+            "maxZ": 0
+          },
+          "supportSamples": [
+            {
+              "x": -8.05,
+              "z": -11.3
+            },
+            {
+              "x": -8.05,
+              "z": -5.125
+            },
+            {
+              "x": -8.05,
+              "z": 0
+            },
+            {
+              "x": 0,
+              "z": -11.3
+            },
+            {
+              "x": 0,
+              "z": -5.125
+            },
+            {
+              "x": 0,
+              "z": 0
+            },
+            {
+              "x": 6.1,
+              "z": -11.3
+            },
+            {
+              "x": 6.1,
+              "z": -5.125
+            },
+            {
+              "x": 6.1,
+              "z": 0
+            }
+          ],
+          "floors": 4,
+          "floorHeight": 2.85,
+          "height": 13.585,
+          "entrances": [
+            {
+              "x": 0,
+              "y": 0.14,
+              "z": 0,
+              "width": 1.2
+            }
+          ],
+          "triangles": 4432,
+          "laundryTriangles": 48,
+          "garments": 2,
+          "features": {
+            "balconies": 3,
+            "rearCorridor": true,
+            "stairFlights": 3,
+            "stairTreads": 48,
+            "roofTank": true,
+            "bicycleShelter": true,
+            "mailboxes": 3,
+            "shop": "laundromat",
+            "walkable": false
+          }
+        },
+        "scale": 1,
+        "staticTriangles": 4432,
+        "worldOrigin": [
+          282,
+          12.764808464050294,
+          778
+        ]
+      },
+      {
+        "name": "town-apartment-5f",
+        "type": "apartment",
+        "center": [
+          22,
+          -121
+        ],
+        "frontage": [
+          22,
+          -121
+        ],
+        "floors": 5,
+        "baseY": 4.643957901000977,
+        "floorHeight": 2.85,
+        "height": 16.435,
+        "footprint": {
+          "minX": 13.799999999999999,
+          "maxX": 28.25,
+          "minZ": -133.45000000000002,
+          "maxZ": -120.85
+        },
+        "ground": {
+          "min": 11.284379045698369,
+          "max": 12.593957901000977,
+          "relief": 1.3095788553026075,
+          "samples": 110,
+          "method": "All bilinear grid and footprint boundary intersections"
+        },
+        "foundation": {
+          "top": 12.643957901000977,
+          "bottom": 11.234379045698368,
+          "height": 1.409578855302609
+        },
+        "model": {
+          "bounds": {
+            "minX": -8.05,
+            "maxX": 6.2,
+            "minZ": -12.3,
+            "maxZ": 0,
+            "minY": 0,
+            "maxY": 16.435
+          },
+          "groundSupportBounds": {
+            "minX": -8.05,
+            "maxX": 6.1,
+            "minZ": -12.3,
+            "maxZ": 0
+          },
+          "supportSamples": [
+            {
+              "x": -8.05,
+              "z": -12.3
+            },
+            {
+              "x": -8.05,
+              "z": -5.625
+            },
+            {
+              "x": -8.05,
+              "z": 0
+            },
+            {
+              "x": 0,
+              "z": -12.3
+            },
+            {
+              "x": 0,
+              "z": -5.625
+            },
+            {
+              "x": 0,
+              "z": 0
+            },
+            {
+              "x": 6.1,
+              "z": -12.3
+            },
+            {
+              "x": 6.1,
+              "z": -5.625
+            },
+            {
+              "x": 6.1,
+              "z": 0
+            }
+          ],
+          "floors": 5,
+          "floorHeight": 2.85,
+          "height": 16.435,
+          "entrances": [
+            {
+              "x": 0,
+              "y": 0.14,
+              "z": 0,
+              "width": 1.02
+            }
+          ],
+          "triangles": 4736,
+          "laundryTriangles": 96,
+          "garments": 4,
+          "features": {
+            "balconies": 4,
+            "rearCorridor": true,
+            "stairFlights": 4,
+            "stairTreads": 64,
+            "roofTank": true,
+            "bicycleShelter": true,
+            "mailboxes": 3,
+            "shop": null,
+            "walkable": false
+          }
+        },
+        "scale": 1,
+        "staticTriangles": 4736,
+        "worldOrigin": [
+          302,
+          12.643957901000977,
+          779
+        ]
+      },
+      {
+        "name": "town-house-0",
+        "type": "low-house",
+        "center": [
+          -37,
+          -126.5
+        ],
+        "floors": 2,
+        "footprint": {
+          "minX": -42.05023296657734,
+          "maxX": -31.94976703342266,
+          "minZ": -131.4996700184522,
+          "maxZ": -121.50032998154778
+        },
+        "ground": {
+          "min": 11.101207744342059,
+          "max": 12.215555652798646,
+          "relief": 1.1143479084565868,
+          "samples": 72,
+          "method": "All bilinear grid and footprint boundary intersections"
+        },
+        "foundation": {
+          "top": 12.265555652798646,
+          "bottom": 11.051207744342058,
+          "height": 1.2143479084565882
+        },
+        "sourceSize": [
+          9.80046593315468,
+          8.556545406579971,
+          9.699340036904427
+        ],
+        "scale": 1
+      },
+      {
+        "name": "town-house-1",
+        "type": "low-house",
+        "center": [
+          -50,
+          -127
+        ],
+        "floors": 2,
+        "footprint": {
+          "minX": -54.16661962163774,
+          "maxX": -45.83338037836226,
+          "minZ": -131.83192623024547,
+          "maxZ": -122.16807376975453
+        },
+        "ground": {
+          "min": 11.188034454869921,
+          "max": 12.267841223382806,
+          "relief": 1.079806768512885,
+          "samples": 63,
+          "method": "All bilinear grid and footprint boundary intersections"
+        },
+        "foundation": {
+          "top": 12.317841223382807,
+          "bottom": 11.13803445486992,
+          "height": 1.1798067685128864
+        },
+        "sourceSize": [
+          8.033239243275489,
+          8.24363163113594,
+          9.363852460490925
+        ],
+        "scale": 1
+      }
+    ],
+    "vegetationClear": {
+      "areas": [
+        {
+          "name": "town-apartment-3f",
+          "minX": -24.7,
+          "maxX": -11.25,
+          "minZ": -134.95000000000002,
+          "maxZ": -123.35
+        },
+        {
+          "name": "town-apartment-4f",
+          "minX": -6.200000000000001,
+          "maxX": 8.25,
+          "minZ": -133.45000000000002,
+          "maxZ": -121.85
+        },
+        {
+          "name": "town-apartment-5f",
+          "minX": 13.799999999999999,
+          "maxX": 28.25,
+          "minZ": -133.45000000000002,
+          "maxZ": -120.85
+        },
+        {
+          "name": "town-house-0",
+          "minX": -42.05023296657734,
+          "maxX": -31.94976703342266,
+          "minZ": -131.4996700184522,
+          "maxZ": -121.50032998154778
+        },
+        {
+          "name": "town-house-1",
+          "minX": -54.16661962163774,
+          "maxX": -45.83338037836226,
+          "minZ": -131.83192623024547,
+          "maxZ": -122.16807376975453
+        },
+        {
+          "name": "town-front-lane",
+          "minX": -56,
+          "maxX": 37,
+          "minZ": -118.5,
+          "maxZ": -115.8
+        },
+        {
+          "name": "town-levee-lane",
+          "minX": 32,
+          "maxX": 37,
+          "minZ": -115.8,
+          "maxZ": -101
+        },
+        {
+          "name": "town-apartment-3f-entry",
+          "minX": -18.1,
+          "maxX": -15.9,
+          "minZ": -123.5,
+          "maxZ": -118.51
+        },
+        {
+          "name": "town-apartment-4f-entry",
+          "minX": 0.8999999999999999,
+          "maxX": 3.1,
+          "minZ": -122,
+          "maxZ": -118.51
+        },
+        {
+          "name": "town-apartment-5f-entry",
+          "minX": 20.9,
+          "maxX": 23.1,
+          "minZ": -121,
+          "maxZ": -118.51
+        },
+        {
+          "name": "town-house-0-entry",
+          "minX": -38.1,
+          "maxX": -35.9,
+          "minZ": -121.50032998154778,
+          "maxZ": -118.51
+        },
+        {
+          "name": "town-house-1-entry",
+          "minX": -51.1,
+          "maxX": -48.9,
+          "minZ": -122.16807376975453,
+          "maxZ": -118.51
+        },
+        {
+          "name": "town-levee-stairs",
+          "minX": 32,
+          "maxX": 37,
+          "minZ": -101,
+          "maxZ": -94.53
+        },
+        {
+          "name": "town-tree--57.5",
+          "minX": -58.4,
+          "maxX": -56.6,
+          "minZ": -123.4,
+          "maxZ": -121.6
+        },
+        {
+          "name": "town-tree-30.5",
+          "minX": 29.6,
+          "maxX": 31.4,
+          "minZ": -127.9,
+          "maxZ": -126.1
+        }
+      ],
+      "changedTexels": 240,
+      "texelSizeM": 3,
+      "channels": "R flowers / A grass; G species and B wetness retained"
+    }
+  },
+  "networkFailures": [
+    {
+      "url": "http://127.0.0.1:58834/assets/models/boulders.glb",
+      "type": "Fetch",
+      "canceled": true,
+      "errorText": "net::ERR_ABORTED",
+      "requestId": "51576.118",
+      "timestamp": 1897252.159384,
+      "stage": "waiting-for-ready-frame",
+      "receivedWallTime": 1794887073.105
+    }
+  ],
+  "exceptions": [],
+  "townDetailCaptures": [
+    {
+      "name": "18-town-shop-balconies",
+      "position": [
+        14,
+        11.764808464050294,
+        -106
+      ],
+      "target": [
+        2,
+        8.764808464050294,
+        -126
+      ],
+      "afterPerformanceMeasurements": true,
+      "capture": {
+        "file": "18-town-shop-balconies.png",
+        "jpeg": "18-town-shop-balconies.jpg",
+        "jpegWidth": 960,
+        "pixels": {
+          "width": 1440,
+          "height": 900,
+          "samples": 39816,
+          "meanRgb": 118.52037706785332,
+          "nonBlackFraction": 1,
+          "notBlack": true
+        }
+      }
+    },
+    {
+      "name": "19-town-rear-stairs",
+      "position": [
+        -13,
+        14.764808464050294,
+        -147
+      ],
+      "target": [
+        2,
+        10.764808464050294,
+        -132
+      ],
+      "afterPerformanceMeasurements": true,
+      "capture": {
+        "file": "19-town-rear-stairs.png",
+        "jpeg": "19-town-rear-stairs.jpg",
+        "jpegWidth": 960,
+        "pixels": {
+          "width": 1440,
+          "height": 900,
+          "samples": 39816,
+          "meanRgb": 164.02936842809973,
+          "nonBlackFraction": 0.9999497689371107,
+          "notBlack": true
+        }
+      }
+    }
+  ],
+  "stageHistory": [
+    {
+      "stage": "bootstrap",
+      "wallTime": 1794887070.534
+    },
+    {
+      "stage": "app-ready",
+      "wallTime": 1794887070.613
+    },
+    {
+      "stage": "server-listening",
+      "wallTime": 1794887070.626
+    },
+    {
+      "stage": "creating-window",
+      "wallTime": 1794887070.627
+    },
+    {
+      "stage": "window-created",
+      "wallTime": 1794887070.672
+    },
+    {
+      "stage": "initializing-renderer",
+      "wallTime": 1794887070.672
+    },
+    {
+      "stage": "debugger-attached",
+      "wallTime": 1794887070.722
+    },
+    {
+      "stage": "cdp:Runtime.enable",
+      "wallTime": 1794887070.722
+    },
+    {
+      "stage": "cdp:Network.enable",
+      "wallTime": 1794887070.724
+    },
+    {
+      "stage": "cdp:Page.enable",
+      "wallTime": 1794887070.73
+    },
+    {
+      "stage": "cdp:Page.addScriptToEvaluateOnNewDocument",
+      "wallTime": 1794887070.737
+    },
+    {
+      "stage": "navigating",
+      "wallTime": 1794887070.744
+    },
+    {
+      "stage": "waiting-for-ready-frame",
+      "wallTime": 1794887070.996
+    },
+    {
+      "stage": "scene-ready",
+      "wallTime": 1794887104.03
+    },
+    {
+      "stage": "validating-station",
+      "wallTime": 1794887104.043
+    },
+    {
+      "stage": "measuring",
+      "wallTime": 1794887109.103
+    },
+    {
+      "stage": "capturing",
+      "wallTime": 1794887124.243
+    },
+    {
+      "stage": "capturing-view:station-street",
+      "wallTime": 1794887124.556
+    },
+    {
+      "stage": "capturing-view:station-port",
+      "wallTime": 1794887129.489
+    },
+    {
+      "stage": "capturing-view:island-aerial",
+      "wallTime": 1794887134.378
+    },
+    {
+      "stage": "capturing-view:shop-interior",
+      "wallTime": 1794887139.306
+    },
+    {
+      "stage": "capturing-streetscape",
+      "wallTime": 1794887144.209
+    },
+    {
+      "stage": "validating-look-controls",
+      "wallTime": 1794887153.852
+    },
+    {
+      "stage": "validating-real-walking",
+      "wallTime": 1794887158.088
+    },
+    {
+      "stage": "capturing-town-details",
+      "wallTime": 1794887165.762
+    },
+    {
+      "stage": "complete",
+      "wallTime": 1794887167.426
+    }
+  ]
+}

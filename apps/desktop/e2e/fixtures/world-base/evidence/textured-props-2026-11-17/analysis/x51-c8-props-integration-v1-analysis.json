@@ -1,0 +1,579 @@
+{
+  "report": "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base/artifacts/gpu-props-c8-integration-v1/integration-report.json",
+  "sourceHead": "5cf3ef7d784ff069b87fef9b8051de63b6695e48",
+  "status": {
+    "exitCode": 1,
+    "renderOk": true,
+    "transportClean": false,
+    "sourceUnchanged": true,
+    "driverUnchanged": true,
+    "assetsUnchanged": true,
+    "assetFiles": 9,
+    "integrationPassed": true,
+    "checks": 10
+  },
+  "visualVerdict": {
+    "stylePass": false,
+    "observations": [
+      "Viewed original and diagnostic capture-2 JPEG for both detail views. Service shutter remains nearly black when only material.aoMap is removed; this does not support aoMap as the sole black-door cause.",
+      "Original service corner crops crate/carton at bottom; laundry view crops crate lower portion and does not adequately frame the pot. Preserve original configured views as failed composition evidence.",
+      "World AO-off removes added bands in laundry glazing; the large ring/grime pattern on the right wall remains visible and must not be attributed to AO. Camera/time/quality/light/shadow are unchanged. This does not diagnose every visible wall pattern."
+    ],
+    "limits": "Resource binding/integration passed is not a style pass. Projected AABB bounds are not visible-pixel segmentation. No destructive city.dispose test and no actual keyboard walk; service collision uses production capsule solver. No repair performed."
+  },
+  "shutter": [
+    {
+      "uv": {
+        "count": 48,
+        "min": [
+          0,
+          0
+        ],
+        "max": [
+          1,
+          1
+        ],
+        "uv1": false,
+        "uv2": false
+      },
+      "material": {
+        "uuid": "f414d624-24d5-4cae-a500-7eef956c0bcf",
+        "name": "tool-shed-worn-shutter",
+        "type": "MeshStandardMaterial",
+        "vertexColors": false,
+        "metalness": 1,
+        "roughness": 1,
+        "aoMapIntensity": 1,
+        "envMap": false,
+        "sceneEnvironment": false,
+        "alphaTest": 0,
+        "transparent": false,
+        "depthWrite": true,
+        "normalScale": [
+          1,
+          1
+        ],
+        "clippingPlanes": 4,
+        "maps": {
+          "map": {
+            "uuid": "c4395ce1-497e-4a60-beb9-3b5ca34f329f",
+            "type": 1009,
+            "colorSpace": "srgb",
+            "flipY": true,
+            "channel": 0,
+            "image": {
+              "width": 1024,
+              "height": 1024
+            },
+            "repeat": [
+              0.8175182481751825,
+              1.2043795620437954
+            ],
+            "url": "http://127.0.0.1:59194/prop-assets/worn_shutter/textures/worn_shutter_diff_1k.jpg"
+          },
+          "alphaMap": null,
+          "normalMap": {
+            "uuid": "c77973be-b56c-47de-88fb-3b019d9ae6cd",
+            "type": 1009,
+            "colorSpace": "",
+            "flipY": true,
+            "channel": 0,
+            "image": {
+              "width": 1024,
+              "height": 1024
+            },
+            "repeat": [
+              0.8175182481751825,
+              1.2043795620437954
+            ],
+            "url": "http://127.0.0.1:59194/prop-assets/worn_shutter/textures/worn_shutter_nor_gl_1k.jpg"
+          },
+          "roughnessMap": {
+            "uuid": "1ac6c350-15b8-4deb-8629-0dc95af2d754",
+            "type": 1009,
+            "colorSpace": "",
+            "flipY": true,
+            "channel": 0,
+            "image": {
+              "width": 1024,
+              "height": 1024
+            },
+            "repeat": [
+              0.8175182481751825,
+              1.2043795620437954
+            ],
+            "url": "http://127.0.0.1:59194/prop-assets/worn_shutter/textures/worn_shutter_arm_1k.jpg"
+          },
+          "metalnessMap": {
+            "uuid": "1ac6c350-15b8-4deb-8629-0dc95af2d754",
+            "type": 1009,
+            "colorSpace": "",
+            "flipY": true,
+            "channel": 0,
+            "image": {
+              "width": 1024,
+              "height": 1024
+            },
+            "repeat": [
+              0.8175182481751825,
+              1.2043795620437954
+            ],
+            "url": "http://127.0.0.1:59194/prop-assets/worn_shutter/textures/worn_shutter_arm_1k.jpg"
+          },
+          "aoMap": {
+            "uuid": "1ac6c350-15b8-4deb-8629-0dc95af2d754",
+            "type": 1009,
+            "colorSpace": "",
+            "flipY": true,
+            "channel": 0,
+            "image": {
+              "width": 1024,
+              "height": 1024
+            },
+            "repeat": [
+              0.8175182481751825,
+              1.2043795620437954
+            ],
+            "url": "http://127.0.0.1:59194/prop-assets/worn_shutter/textures/worn_shutter_arm_1k.jpg"
+          }
+        }
+      },
+      "armChannels": [
+        {
+          "min": 110,
+          "max": 252,
+          "mean": 211.1074619293213
+        },
+        {
+          "min": 162,
+          "max": 203,
+          "mean": 186.16565132141113
+        },
+        {
+          "min": 0,
+          "max": 18,
+          "mean": 0.6510152816772461
+        }
+      ],
+      "diffuseChannels": [
+        {
+          "min": 29,
+          "max": 153,
+          "mean": 65.31399917602539
+        },
+        {
+          "min": 26,
+          "max": 146,
+          "mean": 60.20156002044678
+        },
+        {
+          "min": 19,
+          "max": 139,
+          "mean": 54.23767852783203
+        }
+      ],
+      "compiledUV": [
+        "#define USE_AOMAP",
+        "#define AOMAP_UV uv",
+        "\tvarying vec2 vUv;",
+        "#ifdef USE_AOMAP",
+        "\tuniform mat3 aoMapTransform;",
+        "\tvarying vec2 vAoMapUv;",
+        "\tvUv = vec3( uv, 1 ).xy;",
+        "#ifdef USE_AOMAP",
+        "\tvAoMapUv = ( aoMapTransform * vec3( AOMAP_UV, 1 ) ).xy;"
+      ]
+    }
+  ],
+  "captureRepeatAndBounds": [
+    {
+      "name": "service-corner-capture-2",
+      "repeatPngEqual": true,
+      "diagnostic": {
+        "worldAO": 0.55,
+        "shutterAOMaps": [
+          "1ac6c350-15b8-4deb-8629-0dc95af2d754"
+        ]
+      },
+      "projectedBounds": {
+        "stationCrate": {
+          "minX": 967.4743992755551,
+          "maxX": 1417.613169062769,
+          "minY": 910.8592325192059,
+          "maxY": 1455.0189212645719
+        },
+        "stationCarton": {
+          "minX": 951.2643733716291,
+          "maxX": 1499.5568001220918,
+          "minY": 773.856584464424,
+          "maxY": 1374.748405850548
+        },
+        "cityCrate": {
+          "minX": 1402.4816712483703,
+          "maxX": 1411.6562365793022,
+          "minY": 152.09630482995527,
+          "maxY": 155.5720914625873
+        }
+      }
+    },
+    {
+      "name": "service-corner-shutter-ao-off-capture-2",
+      "repeatPngEqual": true,
+      "diagnostic": {
+        "worldAO": 0.55,
+        "shutterAOMaps": [
+          null
+        ]
+      },
+      "projectedBounds": {
+        "stationCrate": {
+          "minX": 967.4743992755551,
+          "maxX": 1417.613169062769,
+          "minY": 910.8592325192059,
+          "maxY": 1455.0189212645719
+        },
+        "stationCarton": {
+          "minX": 951.2643733716291,
+          "maxX": 1499.5568001220918,
+          "minY": 773.856584464424,
+          "maxY": 1374.748405850548
+        },
+        "cityCrate": {
+          "minX": 1402.4816712483703,
+          "maxX": 1411.6562365793022,
+          "minY": 152.09630482995527,
+          "maxY": 155.5720914625873
+        }
+      }
+    },
+    {
+      "name": "laundry-details-capture-2",
+      "repeatPngEqual": true,
+      "diagnostic": {
+        "worldAO": 0.55,
+        "shutterAOMaps": [
+          "1ac6c350-15b8-4deb-8629-0dc95af2d754"
+        ]
+      },
+      "projectedBounds": {
+        "stationCrate": {
+          "minX": 2500.7143469092107,
+          "maxX": 2529.619407698735,
+          "minY": 195.304841896794,
+          "maxY": 202.6846716982429
+        },
+        "stationCarton": {
+          "minX": 2497.105855742542,
+          "maxX": 2530.109305493228,
+          "minY": 200.69813088647842,
+          "maxY": 208.8052019397865
+        },
+        "cityCrate": {
+          "minX": 574.0976869734384,
+          "maxX": 750.8352946058196,
+          "minY": 759.8169227698264,
+          "maxY": 970.080101492981
+        }
+      }
+    },
+    {
+      "name": "laundry-details-world-ao-off-capture-2",
+      "repeatPngEqual": true,
+      "diagnostic": {
+        "worldAO": 0,
+        "shutterAOMaps": [
+          "1ac6c350-15b8-4deb-8629-0dc95af2d754"
+        ]
+      },
+      "projectedBounds": {
+        "stationCrate": {
+          "minX": 2500.7143469092107,
+          "maxX": 2529.619407698735,
+          "minY": 195.304841896794,
+          "maxY": 202.6846716982429
+        },
+        "stationCarton": {
+          "minX": 2497.105855742542,
+          "maxX": 2530.109305493228,
+          "minY": 200.69813088647842,
+          "maxY": 208.8052019397865
+        },
+        "cityCrate": {
+          "minX": 574.0976869734384,
+          "maxX": 750.8352946058196,
+          "minY": 759.8169227698264,
+          "maxY": 970.080101492981
+        }
+      }
+    }
+  ],
+  "performance": [
+    {
+      "view": "station-street",
+      "phase": "A1",
+      "ao": 0.55,
+      "fps": 65.0010966442685,
+      "frames": 326,
+      "dtMs": {
+        "min": 15.099999999998545,
+        "max": 15.69999999999709,
+        "mean": 15.384355828220867,
+        "median": 15.400000000001455,
+        "p95": 15.5
+      },
+      "cpuRenderMs": {
+        "min": 10.599999904632568,
+        "max": 16.59999990463257,
+        "mean": 11.74815950656961,
+        "median": 11.5,
+        "p95": 13.200000047683716
+      },
+      "calls": {
+        "min": 1548,
+        "max": 1548,
+        "mean": 1548,
+        "median": 1548,
+        "p95": 1548
+      },
+      "triangles": {
+        "min": 8311540,
+        "max": 8311540,
+        "mean": 8311540,
+        "median": 8311540,
+        "p95": 8311540
+      },
+      "over20ms": 0,
+      "frozenEqualsA1": true,
+      "timeAfter": 14
+    },
+    {
+      "view": "station-street",
+      "phase": "B",
+      "ao": 0,
+      "fps": 65,
+      "frames": 325,
+      "dtMs": {
+        "min": 15.19999999999709,
+        "max": 15.599999999998545,
+        "mean": 15.384615384615385,
+        "median": 15.400000000001455,
+        "p95": 15.5
+      },
+      "cpuRenderMs": {
+        "min": 10.700000047683716,
+        "max": 19.200000047683716,
+        "mean": 11.926153841752273,
+        "median": 11.600000143051147,
+        "p95": 13.5
+      },
+      "calls": {
+        "min": 1548,
+        "max": 1548,
+        "mean": 1548,
+        "median": 1548,
+        "p95": 1548
+      },
+      "triangles": {
+        "min": 8311540,
+        "max": 8311540,
+        "mean": 8311540,
+        "median": 8311540,
+        "p95": 8311540
+      },
+      "over20ms": 0,
+      "frozenEqualsA1": true,
+      "timeAfter": 14
+    },
+    {
+      "view": "station-street",
+      "phase": "A2",
+      "ao": 0.55,
+      "fps": 65.0010966442685,
+      "frames": 326,
+      "dtMs": {
+        "min": 15.099999999998545,
+        "max": 15.60000000000582,
+        "mean": 15.384355828220867,
+        "median": 15.400000000001455,
+        "p95": 15.5
+      },
+      "cpuRenderMs": {
+        "min": 10.799999952316284,
+        "max": 18.200000047683716,
+        "mean": 11.85920244930712,
+        "median": 11.600000143051147,
+        "p95": 13.5
+      },
+      "calls": {
+        "min": 1548,
+        "max": 1548,
+        "mean": 1548,
+        "median": 1548,
+        "p95": 1548
+      },
+      "triangles": {
+        "min": 8311540,
+        "max": 8311540,
+        "mean": 8311540,
+        "median": 8311540,
+        "p95": 8311540
+      },
+      "over20ms": 0,
+      "frozenEqualsA1": true,
+      "timeAfter": 14
+    },
+    {
+      "view": "island-aerial",
+      "phase": "A1",
+      "ao": 0.55,
+      "fps": 64.9987000259995,
+      "frames": 325,
+      "dtMs": {
+        "min": 15.10000000000582,
+        "max": 15.60000000000582,
+        "mean": 15.384923076923073,
+        "median": 15.400000000001455,
+        "p95": 15.5
+      },
+      "cpuRenderMs": {
+        "min": 11.599999904632568,
+        "max": 19.299999952316284,
+        "mean": 13.072615387989924,
+        "median": 12.700000047683716,
+        "p95": 15.5
+      },
+      "calls": {
+        "min": 1784,
+        "max": 1784,
+        "mean": 1784,
+        "median": 1784,
+        "p95": 1784
+      },
+      "triangles": {
+        "min": 7782206,
+        "max": 7782206,
+        "mean": 7782206,
+        "median": 7782206,
+        "p95": 7782206
+      },
+      "over20ms": 0,
+      "frozenEqualsA1": true,
+      "timeAfter": 14
+    },
+    {
+      "view": "island-aerial",
+      "phase": "B",
+      "ao": 0,
+      "fps": 65.0010966442685,
+      "frames": 326,
+      "dtMs": {
+        "min": 15.10000000000582,
+        "max": 15.60000000000582,
+        "mean": 15.384355828220867,
+        "median": 15.39999999999418,
+        "p95": 15.5
+      },
+      "cpuRenderMs": {
+        "min": 11.600000143051147,
+        "max": 19.799999952316284,
+        "mean": 12.974846630008674,
+        "median": 12.600000143051147,
+        "p95": 15.100000143051147
+      },
+      "calls": {
+        "min": 1784,
+        "max": 1784,
+        "mean": 1784,
+        "median": 1784,
+        "p95": 1784
+      },
+      "triangles": {
+        "min": 7782206,
+        "max": 7782206,
+        "mean": 7782206,
+        "median": 7782206,
+        "p95": 7782206
+      },
+      "over20ms": 0,
+      "frozenEqualsA1": true,
+      "timeAfter": 14
+    },
+    {
+      "view": "island-aerial",
+      "phase": "A2",
+      "ao": 0.55,
+      "fps": 64.59870802583941,
+      "frames": 323,
+      "dtMs": {
+        "min": 15.19999999999709,
+        "max": 30.70000000001164,
+        "mean": 15.480185758513949,
+        "median": 15.39999999999418,
+        "p95": 15.5
+      },
+      "cpuRenderMs": {
+        "min": 12,
+        "max": 23.90000009536743,
+        "mean": 13.753869969040247,
+        "median": 13.399999856948853,
+        "p95": 16.700000047683716
+      },
+      "calls": {
+        "min": 1784,
+        "max": 1784,
+        "mean": 1784,
+        "median": 1784,
+        "p95": 1784
+      },
+      "triangles": {
+        "min": 7782206,
+        "max": 7782206,
+        "mean": 7782206,
+        "median": 7782206,
+        "p95": 7782206
+      },
+      "over20ms": 2,
+      "frozenEqualsA1": true,
+      "timeAfter": 14
+    }
+  ],
+  "performanceLimitations": [
+    "2s warmup+5s sample each phase, A1(.55)/B(0)/A2(.55), only one sequence per view.",
+    "All captured camera/time/LOD/quality state equal across A/B/A; all pass calls/tris invariant. Main RAF frozen and no per-frame island/station/walker updates; not the normal baseline.",
+    "About65FPS suggests presentation cap; failure to see FPS improvement does not establish zero AO GPU cost. CPU render elapsed includes submission/waiting and wrapper overhead, not GPU timer.",
+    "Does not isolate4096 shadow map or props cost. Aerial A2 has2 frames>20ms while A1/B have0; retain this variation rather than label environment/steady AO cost."
+  ],
+  "networkFailures": [
+    {
+      "stage": "loading",
+      "url": "http://127.0.0.1:59194/prop-assets/plastic_crate_02/plastic_crate_02_1k.gltf",
+      "canceled": true,
+      "errorText": "net::ERR_ABORTED",
+      "requestId": "44304.235",
+      "timestamp": 1909016.800241,
+      "type": "Fetch"
+    },
+    {
+      "stage": "loading",
+      "url": "http://127.0.0.1:59194/prop-assets/plastic_crate_02/plastic_crate_02.bin",
+      "canceled": true,
+      "errorText": "net::ERR_ABORTED",
+      "requestId": "44304.240",
+      "timestamp": 1909016.813384,
+      "type": "Fetch"
+    }
+  ],
+  "restore": {
+    "hookCountRestored": 3,
+    "view": "station-street",
+    "fov": 58,
+    "walking": false,
+    "feet": [
+      281.6,
+      8.812,
+      934
+    ],
+    "time": 34.392300000000006,
+    "frozen": false
+  }
+}

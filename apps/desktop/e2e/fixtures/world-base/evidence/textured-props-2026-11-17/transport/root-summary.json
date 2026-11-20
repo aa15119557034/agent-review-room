@@ -1,0 +1,133 @@
+{
+  "report": "D:\\codex\\2026-11-16\\world-implementation\\world-base\\apps\\desktop\\e2e\\fixtures\\world-base\\artifacts\\asset-transport-props-c8-entry-fixed\\asset-transport-report.json",
+  "stage": "complete",
+  "ok": false,
+  "bytesIntegrity": true,
+  "transportClean": false,
+  "inputsUnchanged": true,
+  "expected": 72,
+  "cases": 72,
+  "bytesPass": 72,
+  "transportPass": 49,
+  "exceptions": [],
+  "networkFailures": 23,
+  "httpErrors": 0,
+  "missingTerminal": [],
+  "failingCases": [
+    {
+      "id": "menhir-fileloader-2",
+      "bytes": true,
+      "transport": false
+    },
+    {
+      "id": "menhir-fileloader-3",
+      "bytes": true,
+      "transport": false
+    },
+    {
+      "id": "boulders-fileloader-1",
+      "bytes": true,
+      "transport": false
+    },
+    {
+      "id": "boulders-fileloader-2",
+      "bytes": true,
+      "transport": false
+    },
+    {
+      "id": "boulders-fileloader-3",
+      "bytes": true,
+      "transport": false
+    },
+    {
+      "id": "lighthouse-fileloader-1",
+      "bytes": true,
+      "transport": false
+    },
+    {
+      "id": "lighthouse-fileloader-2",
+      "bytes": true,
+      "transport": false
+    },
+    {
+      "id": "lighthouse-fileloader-3",
+      "bytes": true,
+      "transport": false
+    },
+    {
+      "id": "prop-plastic_crate_02-textures-plastic_crate_02_nor_gl_1k.jpg-fileloader-2",
+      "bytes": true,
+      "transport": false
+    },
+    {
+      "id": "prop-plastic_crate_02-textures-plastic_crate_02_nor_gl_1k.jpg-fileloader-3",
+      "bytes": true,
+      "transport": false
+    },
+    {
+      "id": "prop-plastic_crate_02-textures-plastic_crate_02_diff_1k.jpg-fileloader-1",
+      "bytes": true,
+      "transport": false
+    },
+    {
+      "id": "prop-plastic_crate_02-textures-plastic_crate_02_diff_1k.jpg-fileloader-3",
+      "bytes": true,
+      "transport": false
+    },
+    {
+      "id": "prop-plastic_crate_02-textures-plastic_crate_02_arm_1k.jpg-fileloader-1",
+      "bytes": true,
+      "transport": false
+    },
+    {
+      "id": "prop-plastic_crate_02-textures-plastic_crate_02_arm_1k.jpg-fileloader-2",
+      "bytes": true,
+      "transport": false
+    },
+    {
+      "id": "prop-worn_shutter-textures-worn_shutter_nor_gl_1k.jpg-fileloader-1",
+      "bytes": true,
+      "transport": false
+    },
+    {
+      "id": "prop-worn_shutter-textures-worn_shutter_nor_gl_1k.jpg-fileloader-2",
+      "bytes": true,
+      "transport": false
+    },
+    {
+      "id": "prop-worn_shutter-textures-worn_shutter_nor_gl_1k.jpg-fileloader-3",
+      "bytes": true,
+      "transport": false
+    },
+    {
+      "id": "prop-worn_shutter-textures-worn_shutter_diff_1k.jpg-fileloader-1",
+      "bytes": true,
+      "transport": false
+    },
+    {
+      "id": "prop-worn_shutter-textures-worn_shutter_diff_1k.jpg-fileloader-2",
+      "bytes": true,
+      "transport": false
+    },
+    {
+      "id": "prop-worn_shutter-textures-worn_shutter_diff_1k.jpg-fileloader-3",
+      "bytes": true,
+      "transport": false
+    },
+    {
+      "id": "prop-worn_shutter-textures-worn_shutter_arm_1k.jpg-fileloader-1",
+      "bytes": true,
+      "transport": false
+    },
+    {
+      "id": "prop-worn_shutter-textures-worn_shutter_arm_1k.jpg-fileloader-2",
+      "bytes": true,
+      "transport": false
+    },
+    {
+      "id": "prop-worn_shutter-textures-worn_shutter_arm_1k.jpg-fileloader-3",
+      "bytes": true,
+      "transport": false
+    }
+  ]
+}

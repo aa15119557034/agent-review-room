@@ -1,0 +1,121 @@
+{
+  "total_count": 1,
+  "jobs": [
+    {
+      "id": 134045769501,
+      "run_id": 44085220238,
+      "workflow_name": "Project verification",
+      "head_branch": "codex/X-51-world-base",
+      "run_url": "https://api.github.com/repos/aa15119557034/agent-review-room/actions/runs/44085220238",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOVP05I88AAAAfNcAfHQ",
+      "head_sha": "7d362bc069b20c8e38fdf776c4eac5e87b0081ec",
+      "url": "https://api.github.com/repos/aa15119557034/agent-review-room/actions/jobs/134045769501",
+      "html_url": "https://github.com/aa15119557034/agent-review-room/actions/runs/44085220238/job/134045769501",
+      "status": "completed",
+      "conclusion": "success",
+      "created_at": "2026-11-17T12:39:40Z",
+      "started_at": "2026-11-17T12:39:42Z",
+      "completed_at": "2026-11-17T12:44:13Z",
+      "name": "windows",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-11-17T12:39:42Z",
+          "completed_at": "2026-11-17T12:39:44Z"
+        },
+        {
+          "name": "Run actions/checkout@v7",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-11-17T12:39:44Z",
+          "completed_at": "2026-11-17T12:40:01Z"
+        },
+        {
+          "name": "Run actions/setup-node@v7",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-11-17T12:40:01Z",
+          "completed_at": "2026-11-17T12:40:06Z"
+        },
+        {
+          "name": "Run pnpm/action-setup@v6",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-11-17T12:40:06Z",
+          "completed_at": "2026-11-17T12:40:17Z"
+        },
+        {
+          "name": "Run pnpm install --frozen-lockfile",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-11-17T12:40:17Z",
+          "completed_at": "2026-11-17T12:40:21Z"
+        },
+        {
+          "name": "Run node scripts/verify.mjs",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-11-17T12:40:21Z",
+          "completed_at": "2026-11-17T12:44:08Z"
+        },
+        {
+          "name": "Verification summary",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7,
+          "started_at": "2026-11-17T12:44:08Z",
+          "completed_at": "2026-11-17T12:44:09Z"
+        },
+        {
+          "name": "Post Run pnpm/action-setup@v6",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 12,
+          "started_at": "2026-11-17T12:44:09Z",
+          "completed_at": "2026-11-17T12:44:09Z"
+        },
+        {
+          "name": "Post Run actions/setup-node@v7",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 13,
+          "started_at": "2026-11-17T12:44:09Z",
+          "completed_at": "2026-11-17T12:44:09Z"
+        },
+        {
+          "name": "Post Run actions/checkout@v7",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 14,
+          "started_at": "2026-11-17T12:44:09Z",
+          "completed_at": "2026-11-17T12:44:10Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 15,
+          "started_at": "2026-11-17T12:44:10Z",
+          "completed_at": "2026-11-17T12:44:10Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/aa15119557034/agent-review-room/check-runs/134045769501",
+      "labels": [
+        "windows-2022"
+      ],
+      "runner_id": 1000000212,
+      "runner_name": "GitHub Actions 1000000212",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    }
+  ]
+}

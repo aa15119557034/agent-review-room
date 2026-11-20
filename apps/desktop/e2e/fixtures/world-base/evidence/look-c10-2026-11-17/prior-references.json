@@ -1,0 +1,44 @@
+[
+  {
+    "file": "../look-c9-2026-11-17/README.md",
+    "presentInCommit": "53cb20a8c017eba04bc8dae1437a8179071a1b9d",
+    "sha256": "8414a7c9e8ac5c24bc7165ef36096f75f2c8cccc685b34ca1c9e4e79a77d8682",
+    "copied": false
+  },
+  {
+    "file": "../look-c9-2026-11-17/baseline/23-service-corner.jpg",
+    "presentInCommit": "53cb20a8c017eba04bc8dae1437a8179071a1b9d",
+    "sha256": "5dabcae33ca3f8fa94968c95b892b04fee36aebc7fa7847fa1617b5b9e9dd3c0",
+    "copied": false
+  },
+  {
+    "file": "../look-c9-2026-11-17/baseline/24-laundry-details.jpg",
+    "presentInCommit": "53cb20a8c017eba04bc8dae1437a8179071a1b9d",
+    "sha256": "d07e789c48f5fb3c6fdd50f95468cb172a733fbea459a72845287e667a46317c",
+    "copied": false
+  },
+  {
+    "file": "../look-c9-2026-11-17/diagnostic/shop-interior-ao-on-capture-2.png",
+    "presentInCommit": "53cb20a8c017eba04bc8dae1437a8179071a1b9d",
+    "sha256": "5ab810ad3859888f6b15165b672b61d2ac5693738f8dc7cd3d897fff21d45657",
+    "copied": false
+  },
+  {
+    "file": "../look-c9-2026-11-17/diagnostic/20-rear-eye-ao-on-capture-2.png",
+    "presentInCommit": "53cb20a8c017eba04bc8dae1437a8179071a1b9d",
+    "sha256": "2bf03848591ba01998ff9d490fb13a5149e67f358f619126186fc1e31051c966",
+    "copied": false
+  },
+  {
+    "file": "../look-c9-2026-11-17/analysis/x51-c9-look-v1-analysis.json",
+    "presentInCommit": "53cb20a8c017eba04bc8dae1437a8179071a1b9d",
+    "sha256": "c09658a46f8763030c9b805f0a0c68007e638aba5e5d4157adea3e571e252017",
+    "copied": false
+  },
+  {
+    "file": "../textured-props-2026-11-17/shutter-grade/grade-report.json.gz",
+    "presentInCommit": "53cb20a8c017eba04bc8dae1437a8179071a1b9d",
+    "sha256": "8936fea87afe0f52a495be8cfad3477a4d7bf4d4d4b46dfcdad13619ddbfb243",
+    "copied": false
+  }
+]

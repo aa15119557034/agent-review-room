@@ -1,0 +1,35 @@
+{
+  "method": "Read-only CPU PNG channel comparison; animation not frozen.",
+  "width": 1440,
+  "height": 900,
+  "results": [
+    {
+      "name": "road-lower",
+      "pixels": 648000,
+      "changed": 480437,
+      "maxChannelDifference": 25,
+      "meanChannelDifference": 0.45558744855967076
+    },
+    {
+      "name": "road-left",
+      "pixels": 291600,
+      "changed": 214935,
+      "maxChannelDifference": 1,
+      "meanChannelDifference": 0.39852194787379974
+    },
+    {
+      "name": "road-middle",
+      "pixels": 181125,
+      "changed": 134251,
+      "maxChannelDifference": 1,
+      "meanChannelDifference": 0.39913135495744195
+    },
+    {
+      "name": "road-right",
+      "pixels": 291600,
+      "changed": 216382,
+      "maxChannelDifference": 1,
+      "meanChannelDifference": 0.4003795153177869
+    }
+  ]
+}

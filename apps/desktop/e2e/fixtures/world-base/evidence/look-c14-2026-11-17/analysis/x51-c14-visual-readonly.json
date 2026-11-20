@@ -1,0 +1,103 @@
+{
+  "schema": 1,
+  "sourceHead": "7d362bc069b20c8e38fdf776c4eac5e87b0081ec",
+  "method": "Independent human-like visual inspection using view_image of five existing C14 capture-2 JPEGs; additionally opened C13 rear/front/laundry JPEGs for direct comparison. No CPU simulation, new rendering, GPU launch, or repository edits.",
+  "images": [
+    {
+      "path": "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base/artifacts/gpu-look-c14-v1/20-rear-eye-ao-on-capture-2.jpg",
+      "bytes": 164259,
+      "sha256": "e2fe135ea4d347ed066458bfdca9cb90c8ef8f7c87acbdb92bfe89bcad60018c"
+    },
+    {
+      "path": "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base/artifacts/gpu-look-c14-v1/21-front-eye-ao-on-capture-2.jpg",
+      "bytes": 86905,
+      "sha256": "7f4bf49c45ef2be76a87ee6aa9f052377a13206714586597e1f898c613189d67"
+    },
+    {
+      "path": "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base/artifacts/gpu-look-c14-v1/laundry-details-ao-on-capture-2.jpg",
+      "bytes": 64994,
+      "sha256": "e3df69f10ba6249c47db4cd7e540940fae9f24e2ba88330076e1ba7cd9e4f0da"
+    },
+    {
+      "path": "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base/artifacts/gpu-look-c14-v1/service-corner-ao-on-capture-2.jpg",
+      "bytes": 94841,
+      "sha256": "1ec184279132d93165f6f2301124468e4edd56b0127c12c9d5b406f8736d9e1f"
+    },
+    {
+      "path": "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base/artifacts/gpu-look-c14-v1/street-detail-ao-on-capture-2.jpg",
+      "bytes": 100887,
+      "sha256": "f72473769705125208989a4323aa9a41b103061d335a751a64e011f992a9a857"
+    }
+  ],
+  "comparisonImages": [
+    {
+      "path": "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base/artifacts/gpu-look-c13-v1/20-rear-eye-ao-on-capture-2.jpg",
+      "bytes": 167196,
+      "sha256": "23c9e356c19eeae9b0eee1f51ba67d80d4fe27e14b107a5b2508f9dfe4eb6c87"
+    },
+    {
+      "path": "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base/artifacts/gpu-look-c13-v1/21-front-eye-ao-on-capture-2.jpg",
+      "bytes": 88272,
+      "sha256": "4ac503a2c877db662997bcf2aa644984d40e851e23daaa2dbedccaf962970760"
+    },
+    {
+      "path": "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base/artifacts/gpu-look-c13-v1/laundry-details-ao-on-capture-2.jpg",
+      "bytes": 66907,
+      "sha256": "a0188d308e40f7deb08bf650bf5ac410a1dff33395e8d378904cda66bf5c9ec3"
+    }
+  ],
+  "observations": [
+    {
+      "view": "20-rear-eye",
+      "finding": "C13 repeated grey blotches and dark specks on the left grey 5F rear wall and right warm wall are substantially reduced. Wall tones remain distinct. Cast shadows beneath rear galleries and from steel stair flights/railings remain clearly visible, with recognizable stair tread pattern and directional silhouettes.",
+      "scope": "Visible JPEG appearance; not a proof that every shadow pixel is unchanged."
+    },
+    {
+      "view": "21-front-eye",
+      "finding": "Sunlit 5F wall no longer draws attention with rows of dark grey patches. Balcony slab edges, large lower-floor shadow and the foreground facade shadow remain readable. Front access stairs and entrance remain visually open; no new obstruction identified."
+    },
+    {
+      "view": "laundry-details",
+      "finding": "The close wall on the right is markedly smoother, with faint wash remaining instead of conspicuous black specks. Window frame, umbrella stand, A-frame board, crate and pot remain distinct; the tiled/paved landing still has its original darker seam/mark pattern rather than inheriting the smoothed wall treatment."
+    },
+    {
+      "view": "service-corner",
+      "finding": "Two muted sorting bins keep readable labels and lid edges; carton/crate stack remains grounded in appearance. Shed door remains visually accessible. Dustpan is still mostly obscured, only blue portions visible behind the stack/bins; this is not claimed as fully visible prop density."
+    },
+    {
+      "view": "street-detail",
+      "finding": "Meter and vertical pipe remain readable on the wooden wall between the cafe and shop window. Existing bench, canopy supports and shop goods retain their arrangement; no newly apparent blockage or scale problem. No claim of byte/pixel identity was made."
+    }
+  ],
+  "decision": {
+    "localWallBlotchItem": "Supports closing the specific excessive apartment-wall grey blotch/dark-speck issue for these inspected views.",
+    "blockers": [],
+    "notClaimed": [
+      "Overall scene art/style approval",
+      "All camera viewpoints or moving-camera acceptance",
+      "Pixel-identical shadows or unaffected regions",
+      "Performance acceptance; normal aerial repeat remains a separate runtime task",
+      "Full visibility of every density prop"
+    ]
+  },
+  "existingReportReadback": {
+    "report": {
+      "path": "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base/artifacts/gpu-look-c14-v1/look-report.json",
+      "bytes": 4945742,
+      "sha256": "e36d56dca07f62b0f35d0bd1d82f8c4ca245d90a964cfd9c39004cfbc3268d06"
+    },
+    "sourceUnchanged": true,
+    "renderOk": true,
+    "transportClean": true,
+    "exceptions": 0,
+    "networkFailures": 0,
+    "httpErrors": 0,
+    "wallProgramCompiledAndLinked": true,
+    "scope": "Read existing runtime report only; this agent did not run or independently reproduce GPU execution."
+  },
+  "limitations": [
+    "JPEG review at the provided fixed frames is a visual judgement, not a numerical image-diff or shader/lighting causal experiment.",
+    "C13/C14 reference JPEGs were actually opened for the three apartment views; the two station views were inspected as C14 current-state controls, not re-opened side-by-side against C13 in this review.",
+    "The existing C14 report may be cited for compile/link evidence separately from the earlier CPU-only audit. That CPU audit remains unchanged."
+  ]
+}

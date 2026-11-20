@@ -1,0 +1,8 @@
+{
+  "fixture": "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base",
+  "output": "D:\\codex\\2026-11-16\\world-implementation\\world-base\\apps\\desktop\\e2e\\fixtures\\world-base\\artifacts\\gpu-shutter-c8-cause-v1",
+  "runtime": "D:\\codex\\2026-11-16\\world-implementation\\world-base\\apps\\desktop\\e2e\\fixtures\\world-base\\artifacts\\gpu-shutter-c8-cause-v1\\runtime-HcxWwr",
+  "startedAt": "2026-11-17T07:08:10.874Z",
+  "timeoutMs": 120000,
+  "driverSha256": "221bc616b7aceaf24212ba8d20f65dcd2d47abbb561c9871cda551fe0145bf3f"
+}

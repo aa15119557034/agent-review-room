@@ -1,0 +1,8 @@
+{
+  "originalHead": "50e190b092fb2b30ab9ed19a28302d5638f947f4",
+  "currentHead": "0184c79d94094c7d76378302592572bf367be6c7",
+  "candidateSha256": "58d4705a0fa3c0404a8d4d336f28c4ffd997f66afa027540ffe9e3c36ee8cccf",
+  "candidateReference": "../greenery-c16-2026-11-18/cpu/x51-c16-north-seam-views.json",
+  "auditReference": "../greenery-c16-2026-11-18/cpu/x51-c16-north-seam-views-audit.json",
+  "scope": "Inherited C16 candidate selection; no C17 selection CPU rerun. Referenced terrain/transition/layout/levee/island source bytes checked unchanged. Original files not duplicated."
+}

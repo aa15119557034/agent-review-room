@@ -1,0 +1,8 @@
+{
+  "fixture": "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base",
+  "output": "D:\\codex\\2026-11-16\\world-implementation\\world-base\\apps\\desktop\\e2e\\fixtures\\world-base\\artifacts\\gpu-shutter-c8-grade-v2",
+  "runtime": "D:\\codex\\2026-11-16\\world-implementation\\world-base\\apps\\desktop\\e2e\\fixtures\\world-base\\artifacts\\gpu-shutter-c8-grade-v2\\runtime-9wuztx",
+  "startedAt": "2026-11-17T07:15:55.106Z",
+  "timeoutMs": 90000,
+  "driverSha256": "bf39bda306f189325ea14d898064f19cc1399c26ada259d6c612fcecfc2060d1"
+}

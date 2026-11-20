@@ -1,0 +1,1219 @@
+{
+  "schema": 1,
+  "purpose": "Read-only analysis of walking-profile-76a-v1; no rerun and no evidence modification.",
+  "inputs": {
+    "sceneCommit": "76a000dbded2ed581f41eae5446b37137a1aafe4",
+    "traceFile": "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base/artifacts/walking-profile-76a-v1/walking-trace.json",
+    "traceSha256": "4b4a068ea8777a58f01a4530aeac78ff2aa481ac95e5b859365ae0653c0430d6",
+    "traceBytes": 42707057,
+    "traceEvents": 220630,
+    "reportFile": "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base/artifacts/walking-profile-76a-v1/walking-profile-report.json",
+    "reportSha256": "8e9828a74768e06dadb65aab3d2b54c1b8082c54cd68bc2399304b3627fe9aad",
+    "driverFile": "D:/codex/2026-11-16/world-implementation/handoff/x51-profile-walking.cjs",
+    "driverSha256": "d7ab2ff39f4f6a6daab43a29cd4db0b22bac993e8a14a5b241341aeec2ea515d",
+    "sourceUnchanged": true,
+    "driverUnchanged": true,
+    "profileComplete": true,
+    "transportClean": false,
+    "traceDataLossOccurred": false
+  },
+  "method": {
+    "segmentation": "Each interval is the renderer blink.user_timing performance.mark label:start through label:end, for third-A1/B/A2 and first-A1/B/A2. All trace time units are microseconds; displayed durations divide by 1000.",
+    "renderer": {
+      "pid": 56504,
+      "mainThreadId": 61124,
+      "profileId": "0x1",
+      "profileChunkThreadId": 59460
+    },
+    "threadCpu": "Subtract the corresponding marks tts (thread timestamp); wall time subtracts ts. FunctionCall sums use renderer-main complete X events fully contained in the segment, separately dur and tdur. Do not sum arbitrary nested timeline event categories.",
+    "gc": "Select renderer-main complete events named MinorGC, MajorGC, V8.GCIncrementalMarking and V8.GCIncrementalMarkingStart; clip intervals to the segment, sort and merge overlapping intervals before summing. GC counts count individual selected events, not disjoint pauses.",
+    "cpuProfile": "Collect ProfileChunk by renderer PID and profile id, not main-thread tid: chunks are emitted on a separate thread. Merge node definitions by id. Starting at Profile.args.data.startTime, cumulatively add chunk timeDeltas in trace order and pair with samples. Select timestamps inside each mark interval; sum associated timeDelta/1000 by leaf callFrame for topLeafSamples. Inclusive sample totals follow parent chains to the corresponding src/look.js, station, walker or island path; unattributed includes idle/program and samples without these ancestors. These are sampled time estimates, not exact function durations; an edge sample can straddle the mark boundary.",
+    "sampleCount": 30957,
+    "nodeCount": 1230,
+    "profileChunkCount": 342,
+    "windowDifference": "Marks span about 3006–3049ms, while RAF sample summaries cover 3000–3015.4ms: the start mark precedes RAF arming. They are adjacent but not identical measurement windows."
+  },
+  "segments": [
+    {
+      "label": "third-A1",
+      "wallMs": 3013.413,
+      "threadCpuMs": 2614.934,
+      "functionWallMs": 2554.159,
+      "functionThreadMs": 2493.102,
+      "gcUnionMs": 2.117,
+      "gcCounts": {
+        "MinorGC": 4
+      },
+      "inclusiveSampleMs": {
+        "render": 2393.9100000000035,
+        "station": 13.136000000000003,
+        "walker": 6.372,
+        "island": 13.344999999999999,
+        "unattributed": 586.933
+      },
+      "nativeTop": [
+        [
+          "(idle)",
+          326.7050000000002
+        ],
+        [
+          "(program)",
+          242.78499999999997
+        ],
+        [
+          "bindVertexArray",
+          95.40899999999998
+        ],
+        [
+          "uniformMatrix4fv",
+          30.828999999999997
+        ],
+        [
+          "drawElements",
+          30.21400000000001
+        ],
+        [
+          "uniform4fv",
+          21.014999999999997
+        ],
+        [
+          "bindTexture",
+          17.893999999999995
+        ],
+        [
+          "bufferSubData",
+          14.145
+        ]
+      ],
+      "threadCpuWallRatio": 0.8677648898441734,
+      "gcWallRatio": 0.0007025256743765292,
+      "markStartUs": 1888952598205,
+      "markEndUs": 1888955611618,
+      "frameSummary": {
+        "frameCount": 195,
+        "durationMs": 3000,
+        "fps": 65,
+        "frameMs": {
+          "mean": 15.384615384615385,
+          "p95": 15.5,
+          "max": 15.5
+        },
+        "framesOver22Ms": 0,
+        "draws": {
+          "mean": 1558.3487179487179,
+          "p95": 1565,
+          "max": 1565
+        },
+        "triangles": {
+          "mean": 9167856.287179487,
+          "p95": 9216850,
+          "max": 9232584
+        },
+        "cpu": {
+          "station": {
+            "mean": 0.3184615367498153,
+            "p95": 0.5,
+            "max": 0.7000000476837158,
+            "totalCalls": 195
+          },
+          "walker": {
+            "mean": 0.10769231502826397,
+            "p95": 0.20000004768371582,
+            "max": 0.2999999523162842,
+            "totalCalls": 195
+          },
+          "island": {
+            "mean": 0.16461537312238644,
+            "p95": 0.2999999523162842,
+            "max": 0.5,
+            "totalCalls": 195
+          },
+          "render": {
+            "mean": 12.326153854223397,
+            "p95": 13.100000143051147,
+            "max": 13.799999952316284,
+            "totalCalls": 195
+          }
+        }
+      },
+      "rendererCounters": {
+        "before": {
+          "programs": 111,
+          "textures": 236,
+          "geometries": 1107
+        },
+        "end": {
+          "programs": 111,
+          "textures": 236,
+          "geometries": 1107
+        }
+      },
+      "topLeafSamples": [
+        {
+          "functionName": "(idle)",
+          "url": "",
+          "lineNumber": null,
+          "weightedMs": 326.7050000000002
+        },
+        {
+          "functionName": "(program)",
+          "url": "",
+          "lineNumber": null,
+          "weightedMs": 242.78499999999997
+        },
+        {
+          "functionName": "setProgram",
+          "url": "http://127.0.0.1:51978/upstream/petalwake/vendor/three/build/three.module.js",
+          "lineNumber": 18219,
+          "weightedMs": 161.98600000000005
+        },
+        {
+          "functionName": "projectObject",
+          "url": "http://127.0.0.1:51978/upstream/petalwake/vendor/three/build/three.module.js",
+          "lineNumber": 17695,
+          "weightedMs": 125.27399999999999
+        },
+        {
+          "functionName": "WebGLRenderer.renderBufferDirect",
+          "url": "http://127.0.0.1:51978/upstream/petalwake/vendor/three/build/three.module.js",
+          "lineNumber": 17022,
+          "weightedMs": 121.44500000000001
+        },
+        {
+          "functionName": "upload",
+          "url": "http://127.0.0.1:51978/upstream/petalwake/vendor/three/build/three.module.js",
+          "lineNumber": 5940,
+          "weightedMs": 109.79100000000003
+        },
+        {
+          "functionName": "getBindingState",
+          "url": "http://127.0.0.1:51978/upstream/petalwake/vendor/three/build/three.module.js",
+          "lineNumber": 1679,
+          "weightedMs": 105.778
+        },
+        {
+          "functionName": "toArray",
+          "url": "http://127.0.0.1:51978/upstream/petalwake/vendor/three/build/three.core.js",
+          "lineNumber": 5957,
+          "weightedMs": 105.59899999999993
+        },
+        {
+          "functionName": "updateMatrixWorld",
+          "url": "http://127.0.0.1:51978/upstream/petalwake/vendor/three/build/three.core.js",
+          "lineNumber": 13070,
+          "weightedMs": 98.271
+        },
+        {
+          "functionName": "bindVertexArray",
+          "url": "",
+          "lineNumber": null,
+          "weightedMs": 95.40899999999998
+        },
+        {
+          "functionName": "update",
+          "url": "http://127.0.0.1:51978/upstream/petalwake/vendor/three/build/three.module.js",
+          "lineNumber": 241,
+          "weightedMs": 93.71399999999997
+        },
+        {
+          "functionName": "renderObject",
+          "url": "http://127.0.0.1:51978/upstream/petalwake/vendor/three/build/three.module.js",
+          "lineNumber": 9364,
+          "weightedMs": 82.10099999999996
+        }
+      ]
+    },
+    {
+      "label": "third-B",
+      "wallMs": 3014.406,
+      "threadCpuMs": 2854.403,
+      "functionWallMs": 2802.904,
+      "functionThreadMs": 2730.223,
+      "gcUnionMs": 1.674,
+      "gcCounts": {
+        "MinorGC": 3
+      },
+      "inclusiveSampleMs": {
+        "render": 2642.562000000001,
+        "station": 11.066,
+        "walker": 6.377000000000001,
+        "island": 15.741999999999997,
+        "unattributed": 339.4690000000003
+      },
+      "nativeTop": [
+        [
+          "(program)",
+          241.75600000000023
+        ],
+        [
+          "bindVertexArray",
+          105.84899999999995
+        ],
+        [
+          "(idle)",
+          76.83300000000001
+        ],
+        [
+          "drawElements",
+          51.90799999999999
+        ],
+        [
+          "uniformMatrix4fv",
+          39.82100000000001
+        ],
+        [
+          "uniform4fv",
+          27.865000000000002
+        ],
+        [
+          "bindTexture",
+          17.817000000000004
+        ],
+        [
+          "bufferSubData",
+          16.089
+        ]
+      ],
+      "threadCpuWallRatio": 0.9469205541655635,
+      "gcWallRatio": 0.0005553332895436116,
+      "markStartUs": 1888957217661,
+      "markEndUs": 1888960232067,
+      "frameSummary": {
+        "frameCount": 193,
+        "durationMs": 3000,
+        "fps": 64.33333333333333,
+        "frameMs": {
+          "mean": 15.544041450777202,
+          "p95": 15.5,
+          "max": 30.80000000000291
+        },
+        "framesOver22Ms": 2,
+        "draws": {
+          "mean": 1481.1917098445597,
+          "p95": 1488,
+          "max": 1488
+        },
+        "triangles": {
+          "mean": 8344530.046632124,
+          "p95": 8393303,
+          "max": 8409037
+        },
+        "cpu": {
+          "station": {
+            "mean": 0.3000000066707789,
+            "p95": 0.40000009536743164,
+            "max": 0.5999999046325684,
+            "totalCalls": 193
+          },
+          "walker": {
+            "mean": 0.07461140069319176,
+            "p95": 0.20000004768371582,
+            "max": 0.7000000476837158,
+            "totalCalls": 193
+          },
+          "island": {
+            "mean": 0.16580309769032534,
+            "p95": 0.2999999523162842,
+            "max": 0.39999985694885254,
+            "totalCalls": 193
+          },
+          "render": {
+            "mean": 13.80000000543545,
+            "p95": 16.90000009536743,
+            "max": 18.200000047683716,
+            "totalCalls": 193
+          }
+        }
+      },
+      "rendererCounters": {
+        "before": {
+          "programs": 111,
+          "textures": 236,
+          "geometries": 1107
+        },
+        "end": {
+          "programs": 111,
+          "textures": 236,
+          "geometries": 1107
+        }
+      },
+      "topLeafSamples": [
+        {
+          "functionName": "(program)",
+          "url": "",
+          "lineNumber": null,
+          "weightedMs": 241.75600000000023
+        },
+        {
+          "functionName": "setProgram",
+          "url": "http://127.0.0.1:51978/upstream/petalwake/vendor/three/build/three.module.js",
+          "lineNumber": 18219,
+          "weightedMs": 195.1669999999999
+        },
+        {
+          "functionName": "WebGLRenderer.renderBufferDirect",
+          "url": "http://127.0.0.1:51978/upstream/petalwake/vendor/three/build/three.module.js",
+          "lineNumber": 17022,
+          "weightedMs": 146.83800000000002
+        },
+        {
+          "functionName": "updateMatrixWorld",
+          "url": "http://127.0.0.1:51978/upstream/petalwake/vendor/three/build/three.core.js",
+          "lineNumber": 13070,
+          "weightedMs": 113.16099999999999
+        },
+        {
+          "functionName": "projectObject",
+          "url": "http://127.0.0.1:51978/upstream/petalwake/vendor/three/build/three.module.js",
+          "lineNumber": 17695,
+          "weightedMs": 111.75800000000004
+        },
+        {
+          "functionName": "renderObject",
+          "url": "http://127.0.0.1:51978/upstream/petalwake/vendor/three/build/three.module.js",
+          "lineNumber": 9364,
+          "weightedMs": 106.84299999999998
+        },
+        {
+          "functionName": "bindVertexArray",
+          "url": "",
+          "lineNumber": null,
+          "weightedMs": 105.84899999999995
+        },
+        {
+          "functionName": "upload",
+          "url": "http://127.0.0.1:51978/upstream/petalwake/vendor/three/build/three.module.js",
+          "lineNumber": 5940,
+          "weightedMs": 96.53200000000004
+        },
+        {
+          "functionName": "getBindingState",
+          "url": "http://127.0.0.1:51978/upstream/petalwake/vendor/three/build/three.module.js",
+          "lineNumber": 1679,
+          "weightedMs": 95.99199999999999
+        },
+        {
+          "functionName": "toArray",
+          "url": "http://127.0.0.1:51978/upstream/petalwake/vendor/three/build/three.core.js",
+          "lineNumber": 5957,
+          "weightedMs": 94.49899999999997
+        },
+        {
+          "functionName": "update",
+          "url": "http://127.0.0.1:51978/upstream/petalwake/vendor/three/build/three.module.js",
+          "lineNumber": 241,
+          "weightedMs": 92.88900000000004
+        },
+        {
+          "functionName": "multiplyMatrices",
+          "url": "http://127.0.0.1:51978/upstream/petalwake/vendor/three/build/three.core.js",
+          "lineNumber": 10563,
+          "weightedMs": 79.221
+        }
+      ]
+    },
+    {
+      "label": "third-A2",
+      "wallMs": 3045.738,
+      "threadCpuMs": 2824.791,
+      "functionWallMs": 2935.84,
+      "functionThreadMs": 2723.428,
+      "gcUnionMs": 2.963,
+      "gcCounts": {
+        "MinorGC": 2
+      },
+      "inclusiveSampleMs": {
+        "render": 2811.566000000004,
+        "station": 10.416000000000002,
+        "walker": 4.379,
+        "island": 10.552000000000003,
+        "unattributed": 209.15600000000003
+      },
+      "nativeTop": [
+        [
+          "(program)",
+          178.69099999999995
+        ],
+        [
+          "bindVertexArray",
+          132.36899999999997
+        ],
+        [
+          "drawElements",
+          64.24000000000001
+        ],
+        [
+          "uniformMatrix4fv",
+          32.03399999999999
+        ],
+        [
+          "uniform4fv",
+          31.427000000000003
+        ],
+        [
+          "bindTexture",
+          31.020000000000007
+        ],
+        [
+          "useProgram",
+          18.658
+        ],
+        [
+          "prototype.<computed>",
+          15.654999999999998
+        ]
+      ],
+      "threadCpuWallRatio": 0.9274569907194907,
+      "gcWallRatio": 0.0009728348268958132,
+      "markStartUs": 1888961868063,
+      "markEndUs": 1888964913801,
+      "frameSummary": {
+        "frameCount": 127,
+        "durationMs": 3015.4000000000015,
+        "fps": 42.11713205544868,
+        "frameMs": {
+          "mean": 23.743307086614184,
+          "p95": 46.099999999998545,
+          "max": 46.30000000000291
+        },
+        "framesOver22Ms": 60,
+        "draws": {
+          "mean": 1559.9212598425197,
+          "p95": 1567,
+          "max": 1567
+        },
+        "triangles": {
+          "mean": 9162584.94488189,
+          "p95": 9216778,
+          "max": 9232792
+        },
+        "cpu": {
+          "station": {
+            "mean": 0.37007873077092207,
+            "p95": 0.5999999046325684,
+            "max": 0.7999999523162842,
+            "totalCalls": 127
+          },
+          "walker": {
+            "mean": 0.08188976640776387,
+            "p95": 0.20000004768371582,
+            "max": 0.20000004768371582,
+            "totalCalls": 127
+          },
+          "island": {
+            "mean": 0.18740158381424551,
+            "p95": 0.2999999523162842,
+            "max": 0.6000001430511475,
+            "totalCalls": 127
+          },
+          "render": {
+            "mean": 22.19370078665065,
+            "p95": 33.700000047683716,
+            "max": 42.39999985694885,
+            "totalCalls": 127
+          }
+        }
+      },
+      "rendererCounters": {
+        "before": {
+          "programs": 111,
+          "textures": 236,
+          "geometries": 1108
+        },
+        "end": {
+          "programs": 111,
+          "textures": 236,
+          "geometries": 1108
+        }
+      },
+      "topLeafSamples": [
+        {
+          "functionName": "setProgram",
+          "url": "http://127.0.0.1:51978/upstream/petalwake/vendor/three/build/three.module.js",
+          "lineNumber": 18219,
+          "weightedMs": 189.02700000000004
+        },
+        {
+          "functionName": "(program)",
+          "url": "",
+          "lineNumber": null,
+          "weightedMs": 178.69099999999995
+        },
+        {
+          "functionName": "projectObject",
+          "url": "http://127.0.0.1:51978/upstream/petalwake/vendor/three/build/three.module.js",
+          "lineNumber": 17695,
+          "weightedMs": 154.04500000000002
+        },
+        {
+          "functionName": "WebGLRenderer.renderBufferDirect",
+          "url": "http://127.0.0.1:51978/upstream/petalwake/vendor/three/build/three.module.js",
+          "lineNumber": 17022,
+          "weightedMs": 148.38899999999995
+        },
+        {
+          "functionName": "bindVertexArray",
+          "url": "",
+          "lineNumber": null,
+          "weightedMs": 132.36899999999997
+        },
+        {
+          "functionName": "getBindingState",
+          "url": "http://127.0.0.1:51978/upstream/petalwake/vendor/three/build/three.module.js",
+          "lineNumber": 1679,
+          "weightedMs": 116.375
+        },
+        {
+          "functionName": "renderObject",
+          "url": "http://127.0.0.1:51978/upstream/petalwake/vendor/three/build/three.module.js",
+          "lineNumber": 9364,
+          "weightedMs": 114.326
+        },
+        {
+          "functionName": "toArray",
+          "url": "http://127.0.0.1:51978/upstream/petalwake/vendor/three/build/three.core.js",
+          "lineNumber": 5957,
+          "weightedMs": 97.25399999999998
+        },
+        {
+          "functionName": "update",
+          "url": "http://127.0.0.1:51978/upstream/petalwake/vendor/three/build/three.module.js",
+          "lineNumber": 241,
+          "weightedMs": 94.28699999999998
+        },
+        {
+          "functionName": "needsUpdate",
+          "url": "http://127.0.0.1:51978/upstream/petalwake/vendor/three/build/three.module.js",
+          "lineNumber": 1758,
+          "weightedMs": 83.521
+        },
+        {
+          "functionName": "upload",
+          "url": "http://127.0.0.1:51978/upstream/petalwake/vendor/three/build/three.module.js",
+          "lineNumber": 5940,
+          "weightedMs": 79.97600000000001
+        },
+        {
+          "functionName": "updateMatrixWorld",
+          "url": "http://127.0.0.1:51978/upstream/petalwake/vendor/three/build/three.core.js",
+          "lineNumber": 13070,
+          "weightedMs": 75.54400000000001
+        }
+      ]
+    },
+    {
+      "label": "first-A1",
+      "wallMs": 3006.407,
+      "threadCpuMs": 2849.59,
+      "functionWallMs": 2872.734,
+      "functionThreadMs": 2733.609,
+      "gcUnionMs": 1.678,
+      "gcCounts": {
+        "MinorGC": 2
+      },
+      "inclusiveSampleMs": {
+        "render": 2720.1239999999966,
+        "station": 12.495000000000001,
+        "walker": 3.6579999999999995,
+        "island": 15.553999999999998,
+        "unattributed": 255.175
+      },
+      "nativeTop": [
+        [
+          "(program)",
+          223.03999999999996
+        ],
+        [
+          "bindVertexArray",
+          106.26500000000006
+        ],
+        [
+          "drawElements",
+          53.26900000000001
+        ],
+        [
+          "uniformMatrix4fv",
+          33.471000000000004
+        ],
+        [
+          "uniform4fv",
+          26.312
+        ],
+        [
+          "bindTexture",
+          24.43
+        ],
+        [
+          "useProgram",
+          10.937
+        ],
+        [
+          "bindBuffer",
+          10.658000000000001
+        ]
+      ],
+      "threadCpuWallRatio": 0.9478390650367698,
+      "gcWallRatio": 0.0005581413295006298,
+      "markStartUs": 1888966652295,
+      "markEndUs": 1888969658702,
+      "frameSummary": {
+        "frameCount": 160,
+        "durationMs": 3000,
+        "fps": 53.333333333333336,
+        "frameMs": {
+          "mean": 18.75,
+          "p95": 30.80000000000291,
+          "max": 46.19999999999709
+        },
+        "framesOver22Ms": 33,
+        "draws": {
+          "mean": 1409.04375,
+          "p95": 1472,
+          "max": 1483
+        },
+        "triangles": {
+          "mean": 9098470.60625,
+          "p95": 9181884,
+          "max": 9201996
+        },
+        "cpu": {
+          "station": {
+            "mean": 0.3462499901652336,
+            "p95": 0.5999999046325684,
+            "max": 1.1000001430511475,
+            "totalCalls": 160
+          },
+          "walker": {
+            "mean": 0.05062500387430191,
+            "p95": 0.10000014305114746,
+            "max": 0.20000004768371582,
+            "totalCalls": 160
+          },
+          "island": {
+            "mean": 0.19312500208616257,
+            "p95": 0.3000001907348633,
+            "max": 0.7000000476837158,
+            "totalCalls": 160
+          },
+          "render": {
+            "mean": 17.02124999165535,
+            "p95": 28.90000009536743,
+            "max": 33.80000019073486,
+            "totalCalls": 160
+          }
+        }
+      },
+      "rendererCounters": {
+        "before": {
+          "programs": 111,
+          "textures": 236,
+          "geometries": 1109
+        },
+        "end": {
+          "programs": 111,
+          "textures": 236,
+          "geometries": 1109
+        }
+      },
+      "topLeafSamples": [
+        {
+          "functionName": "setProgram",
+          "url": "http://127.0.0.1:51978/upstream/petalwake/vendor/three/build/three.module.js",
+          "lineNumber": 18219,
+          "weightedMs": 228.13000000000008
+        },
+        {
+          "functionName": "(program)",
+          "url": "",
+          "lineNumber": null,
+          "weightedMs": 223.03999999999996
+        },
+        {
+          "functionName": "WebGLRenderer.renderBufferDirect",
+          "url": "http://127.0.0.1:51978/upstream/petalwake/vendor/three/build/three.module.js",
+          "lineNumber": 17022,
+          "weightedMs": 156.93000000000006
+        },
+        {
+          "functionName": "projectObject",
+          "url": "http://127.0.0.1:51978/upstream/petalwake/vendor/three/build/three.module.js",
+          "lineNumber": 17695,
+          "weightedMs": 123.71399999999998
+        },
+        {
+          "functionName": "renderObject",
+          "url": "http://127.0.0.1:51978/upstream/petalwake/vendor/three/build/three.module.js",
+          "lineNumber": 9364,
+          "weightedMs": 106.90400000000001
+        },
+        {
+          "functionName": "bindVertexArray",
+          "url": "",
+          "lineNumber": null,
+          "weightedMs": 106.26500000000006
+        },
+        {
+          "functionName": "toArray",
+          "url": "http://127.0.0.1:51978/upstream/petalwake/vendor/three/build/three.core.js",
+          "lineNumber": 5957,
+          "weightedMs": 104.39900000000003
+        },
+        {
+          "functionName": "upload",
+          "url": "http://127.0.0.1:51978/upstream/petalwake/vendor/three/build/three.module.js",
+          "lineNumber": 5940,
+          "weightedMs": 103.09099999999998
+        },
+        {
+          "functionName": "updateMatrixWorld",
+          "url": "http://127.0.0.1:51978/upstream/petalwake/vendor/three/build/three.core.js",
+          "lineNumber": 13070,
+          "weightedMs": 100.99000000000002
+        },
+        {
+          "functionName": "getBindingState",
+          "url": "http://127.0.0.1:51978/upstream/petalwake/vendor/three/build/three.module.js",
+          "lineNumber": 1679,
+          "weightedMs": 99.03300000000003
+        },
+        {
+          "functionName": "update",
+          "url": "http://127.0.0.1:51978/upstream/petalwake/vendor/three/build/three.module.js",
+          "lineNumber": 241,
+          "weightedMs": 97.74999999999999
+        },
+        {
+          "functionName": "multiplyMatrices",
+          "url": "http://127.0.0.1:51978/upstream/petalwake/vendor/three/build/three.core.js",
+          "lineNumber": 10563,
+          "weightedMs": 84.39099999999998
+        }
+      ]
+    },
+    {
+      "label": "first-B",
+      "wallMs": 3009.717,
+      "threadCpuMs": 2747.675,
+      "functionWallMs": 2685.149,
+      "functionThreadMs": 2611.84,
+      "gcUnionMs": 2.037,
+      "gcCounts": {
+        "MinorGC": 3
+      },
+      "inclusiveSampleMs": {
+        "render": 2536.9999999999973,
+        "station": 11.310000000000002,
+        "walker": 2.883,
+        "island": 14.426000000000002,
+        "unattributed": 444.4069999999994
+      },
+      "nativeTop": [
+        [
+          "(program)",
+          246.32399999999996
+        ],
+        [
+          "(idle)",
+          173.916
+        ],
+        [
+          "bindVertexArray",
+          100.11999999999998
+        ],
+        [
+          "drawElements",
+          50.86300000000001
+        ],
+        [
+          "uniform4fv",
+          37.166000000000004
+        ],
+        [
+          "uniformMatrix4fv",
+          34.079
+        ],
+        [
+          "bindTexture",
+          17.878000000000004
+        ],
+        [
+          "useProgram",
+          13.104000000000001
+        ]
+      ],
+      "threadCpuWallRatio": 0.9129346712664347,
+      "gcWallRatio": 0.0006768078194727278,
+      "markStartUs": 1888971294082,
+      "markEndUs": 1888974303799,
+      "frameSummary": {
+        "frameCount": 195,
+        "durationMs": 3000,
+        "fps": 65,
+        "frameMs": {
+          "mean": 15.384615384615385,
+          "p95": 15.5,
+          "max": 15.599999999998545
+        },
+        "framesOver22Ms": 0,
+        "draws": {
+          "mean": 1338.7846153846153,
+          "p95": 1402,
+          "max": 1407
+        },
+        "triangles": {
+          "mean": 8278237.77948718,
+          "p95": 8367601,
+          "max": 8375233
+        },
+        "cpu": {
+          "station": {
+            "mean": 0.3123076927967561,
+            "p95": 0.40000009536743164,
+            "max": 0.6000001430511475,
+            "totalCalls": 195
+          },
+          "walker": {
+            "mean": 0.05435896897927309,
+            "p95": 0.10000014305114746,
+            "max": 0.20000004768371582,
+            "totalCalls": 195
+          },
+          "island": {
+            "mean": 0.16000000758048816,
+            "p95": 0.2999999523162842,
+            "max": 0.3000001907348633,
+            "totalCalls": 195
+          },
+          "render": {
+            "mean": 13.052820515021299,
+            "p95": 14.300000190734863,
+            "max": 16.90000009536743,
+            "totalCalls": 195
+          }
+        }
+      },
+      "rendererCounters": {
+        "before": {
+          "programs": 111,
+          "textures": 236,
+          "geometries": 1109
+        },
+        "end": {
+          "programs": 111,
+          "textures": 236,
+          "geometries": 1109
+        }
+      },
+      "topLeafSamples": [
+        {
+          "functionName": "(program)",
+          "url": "",
+          "lineNumber": null,
+          "weightedMs": 246.32399999999996
+        },
+        {
+          "functionName": "(idle)",
+          "url": "",
+          "lineNumber": null,
+          "weightedMs": 173.916
+        },
+        {
+          "functionName": "WebGLRenderer.renderBufferDirect",
+          "url": "http://127.0.0.1:51978/upstream/petalwake/vendor/three/build/three.module.js",
+          "lineNumber": 17022,
+          "weightedMs": 161.196
+        },
+        {
+          "functionName": "setProgram",
+          "url": "http://127.0.0.1:51978/upstream/petalwake/vendor/three/build/three.module.js",
+          "lineNumber": 18219,
+          "weightedMs": 154.77100000000002
+        },
+        {
+          "functionName": "projectObject",
+          "url": "http://127.0.0.1:51978/upstream/petalwake/vendor/three/build/three.module.js",
+          "lineNumber": 17695,
+          "weightedMs": 125.727
+        },
+        {
+          "functionName": "renderObject",
+          "url": "http://127.0.0.1:51978/upstream/petalwake/vendor/three/build/three.module.js",
+          "lineNumber": 9364,
+          "weightedMs": 115.967
+        },
+        {
+          "functionName": "updateMatrixWorld",
+          "url": "http://127.0.0.1:51978/upstream/petalwake/vendor/three/build/three.core.js",
+          "lineNumber": 13070,
+          "weightedMs": 111.54900000000004
+        },
+        {
+          "functionName": "update",
+          "url": "http://127.0.0.1:51978/upstream/petalwake/vendor/three/build/three.module.js",
+          "lineNumber": 241,
+          "weightedMs": 109.67499999999995
+        },
+        {
+          "functionName": "toArray",
+          "url": "http://127.0.0.1:51978/upstream/petalwake/vendor/three/build/three.core.js",
+          "lineNumber": 5957,
+          "weightedMs": 106.76299999999999
+        },
+        {
+          "functionName": "bindVertexArray",
+          "url": "",
+          "lineNumber": null,
+          "weightedMs": 100.11999999999998
+        },
+        {
+          "functionName": "getBindingState",
+          "url": "http://127.0.0.1:51978/upstream/petalwake/vendor/three/build/three.module.js",
+          "lineNumber": 1679,
+          "weightedMs": 93.919
+        },
+        {
+          "functionName": "upload",
+          "url": "http://127.0.0.1:51978/upstream/petalwake/vendor/three/build/three.module.js",
+          "lineNumber": 5940,
+          "weightedMs": 89.13399999999999
+        }
+      ]
+    },
+    {
+      "label": "first-A2",
+      "wallMs": 3049.004,
+      "threadCpuMs": 2784.279,
+      "functionWallMs": 2936.192,
+      "functionThreadMs": 2681.877,
+      "gcUnionMs": 14.866,
+      "gcCounts": {
+        "MinorGC": 2,
+        "V8.GCIncrementalMarkingStart": 1,
+        "V8.GCIncrementalMarking": 11,
+        "MajorGC": 1
+      },
+      "inclusiveSampleMs": {
+        "render": 2778.066000000006,
+        "station": 18.374,
+        "walker": 4.807,
+        "island": 7.669,
+        "unattributed": 240.4590000000001
+      },
+      "nativeTop": [
+        [
+          "(program)",
+          212.87700000000015
+        ],
+        [
+          "bindVertexArray",
+          106.77599999999998
+        ],
+        [
+          "drawElements",
+          71.03000000000002
+        ],
+        [
+          "uniform4fv",
+          45.15500000000001
+        ],
+        [
+          "uniformMatrix4fv",
+          33.394
+        ],
+        [
+          "bindTexture",
+          30.213999999999995
+        ],
+        [
+          "useProgram",
+          22.605
+        ],
+        [
+          "uniform1f",
+          15.007
+        ]
+      ],
+      "threadCpuWallRatio": 0.9131765651996521,
+      "gcWallRatio": 0.004875690553374151,
+      "markStartUs": 1888975943038,
+      "markEndUs": 1888978992042,
+      "frameSummary": {
+        "frameCount": 106,
+        "durationMs": 3015.4000000000015,
+        "fps": 35.15288187305165,
+        "frameMs": {
+          "mean": 28.44716981132077,
+          "p95": 30.900000000001455,
+          "max": 46.299999999995634
+        },
+        "framesOver22Ms": 87,
+        "draws": {
+          "mean": 1416.9716981132076,
+          "p95": 1478,
+          "max": 1480
+        },
+        "triangles": {
+          "mean": 9105295.603773585,
+          "p95": 9201180,
+          "max": 9208796
+        },
+        "cpu": {
+          "station": {
+            "mean": 0.5075471671122425,
+            "p95": 0.7999999523162842,
+            "max": 1.2000000476837158,
+            "totalCalls": 106
+          },
+          "walker": {
+            "mean": 0.06981131940517786,
+            "p95": 0.20000004768371582,
+            "max": 0.20000004768371582,
+            "totalCalls": 106
+          },
+          "island": {
+            "mean": 0.2330188683743747,
+            "p95": 0.40000009536743164,
+            "max": 1.7000000476837158,
+            "totalCalls": 106
+          },
+          "render": {
+            "mean": 26.551886783455902,
+            "p95": 31.100000143051147,
+            "max": 35.09999990463257,
+            "totalCalls": 106
+          }
+        }
+      },
+      "rendererCounters": {
+        "before": {
+          "programs": 111,
+          "textures": 236,
+          "geometries": 1109
+        },
+        "end": {
+          "programs": 111,
+          "textures": 236,
+          "geometries": 1109
+        }
+      },
+      "topLeafSamples": [
+        {
+          "functionName": "(program)",
+          "url": "",
+          "lineNumber": null,
+          "weightedMs": 212.87700000000015
+        },
+        {
+          "functionName": "setProgram",
+          "url": "http://127.0.0.1:51978/upstream/petalwake/vendor/three/build/three.module.js",
+          "lineNumber": 18219,
+          "weightedMs": 179.477
+        },
+        {
+          "functionName": "WebGLRenderer.renderBufferDirect",
+          "url": "http://127.0.0.1:51978/upstream/petalwake/vendor/three/build/three.module.js",
+          "lineNumber": 17022,
+          "weightedMs": 138.12599999999995
+        },
+        {
+          "functionName": "renderObject",
+          "url": "http://127.0.0.1:51978/upstream/petalwake/vendor/three/build/three.module.js",
+          "lineNumber": 9364,
+          "weightedMs": 136.01599999999996
+        },
+        {
+          "functionName": "projectObject",
+          "url": "http://127.0.0.1:51978/upstream/petalwake/vendor/three/build/three.module.js",
+          "lineNumber": 17695,
+          "weightedMs": 130.30400000000003
+        },
+        {
+          "functionName": "toArray",
+          "url": "http://127.0.0.1:51978/upstream/petalwake/vendor/three/build/three.core.js",
+          "lineNumber": 5957,
+          "weightedMs": 107.70600000000002
+        },
+        {
+          "functionName": "bindVertexArray",
+          "url": "",
+          "lineNumber": null,
+          "weightedMs": 106.77599999999998
+        },
+        {
+          "functionName": "getBindingState",
+          "url": "http://127.0.0.1:51978/upstream/petalwake/vendor/three/build/three.module.js",
+          "lineNumber": 1679,
+          "weightedMs": 105.132
+        },
+        {
+          "functionName": "update",
+          "url": "http://127.0.0.1:51978/upstream/petalwake/vendor/three/build/three.module.js",
+          "lineNumber": 241,
+          "weightedMs": 95.299
+        },
+        {
+          "functionName": "updateMatrixWorld",
+          "url": "http://127.0.0.1:51978/upstream/petalwake/vendor/three/build/three.core.js",
+          "lineNumber": 13070,
+          "weightedMs": 91.87999999999998
+        },
+        {
+          "functionName": "upload",
+          "url": "http://127.0.0.1:51978/upstream/petalwake/vendor/three/build/three.module.js",
+          "lineNumber": 5940,
+          "weightedMs": 86.116
+        },
+        {
+          "functionName": "multiplyMatrices",
+          "url": "http://127.0.0.1:51978/upstream/petalwake/vendor/three/build/three.core.js",
+          "lineNumber": 10563,
+          "weightedMs": 71.58300000000001
+        }
+      ]
+    }
+  ],
+  "findings": [
+    {
+      "claim": "The measured slowdown is concentrated in look.render / the render submission path.",
+      "evidence": "Render wrapper mean rises from 12.326ms to 22.193ms across third A1/A2 and from about 17.02ms to 26.55ms across first A1/A2; every station/walker/island wrapper mean remains below 1ms. Sampled stacks predominantly descend through look.render."
+    },
+    {
+      "claim": "Observed GC is too small to explain the sustained A2 slowdown.",
+      "evidence": "Merged GC duration is 1.674–2.963ms per segment except first-A2 at 14.866ms, less than 0.5% of its 3049.004ms mark interval."
+    },
+    {
+      "claim": "This trace does not establish a predominantly passive GPU synchronization wait.",
+      "evidence": "Renderer thread CPU is 92.7% of wall time in third-A2 and 91.3% in first-A2; FunctionCall thread time also accounts for most FunctionCall wall time. Render self samples are distributed among Three traversal/program/uniform/binding operations. Trace categories do not provide a complete GPU/driver wait timeline."
+    },
+    {
+      "claim": "A stable city rendering cost cannot be calculated from this ABA.",
+      "evidence": "Visible A1 versus A2 differs strongly (third 65→42.12 FPS, first 53.33→35.15 FPS), despite similar draw/triangle counts. Order-dependent drift confounds visible-versus-hidden subtraction."
+    },
+    {
+      "claim": "No shader-program or texture-count growth is observed across the six segments.",
+      "evidence": "All before/end counters report 111 programs and 236 textures. Geometries increase modestly between segments (1107→1109), so this is not proof of constant resource work."
+    }
+  ],
+  "limitations": [
+    "CDP timeline and V8 CPU profiling can perturb workload; this recording alone cannot prove profiling is the cause of drift.",
+    "CPU wrapper durations are wall time for JavaScript and synchronous render submission, not completed GPU execution. Busy driver work and some blocking remain possible.",
+    "Sampled stack weights and trace thread timestamps are not hardware GPU timers. No thermal, power or OS scheduling telemetry was collected.",
+    "Animation, simulation time, shader caches and transient physics state continue; the route is controlled but exact pixels and internal history are not rewound.",
+    "The preserved run is transportClean=false. The analysis does not suppress network failures or turn the overall result green."
+  ],
+  "nextStep": {
+    "driver": "D:/codex/2026-11-16/world-implementation/handoff/x51-profile-walking-no-trace.cjs",
+    "defaultOutput": "artifacts/walking-profile-76a-v2",
+    "traceEnabled": false,
+    "purpose": "Repeat the same six real-W route segments without CDP Tracing to assess profiler interference; retain CPU wrappers, all-pass draw counters, warmup, network collection and route unchanged. This does not predetermine the cause.",
+    "referenceDriverSha256": "d7ab2ff39f4f6a6daab43a29cd4db0b22bac993e8a14a5b241341aeec2ea515d",
+    "differences": [
+      "CLI help names the separate no-trace driver",
+      "Default output uses a new v2 directory",
+      "Report explicitly records traceEnabled=false and v1 comparison",
+      "Limits correctly describe remaining measurement overhead",
+      "No Tracing.start; guarded trace cleanup stays inactive",
+      "profileComplete does not require a trace that was not collected"
+    ]
+  }
+}

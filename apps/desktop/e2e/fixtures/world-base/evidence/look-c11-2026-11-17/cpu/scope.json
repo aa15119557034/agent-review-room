@@ -1,0 +1,21 @@
+{
+  "head": "e1f32af2cfcde2e1e958a0dffb87f8d219886d5c",
+  "commands": [
+    {
+      "command": "node D:/codex/2026-11-16/world-implementation/handoff/x51-c11-city-shadow-driver.mjs",
+      "exitCode": 0,
+      "result": "x51-c11-city-shadow-result.json"
+    }
+  ],
+  "driverSha256": "dff06ccf805edc066e47e97adcd233b4c465ea6f15e8d1ad94f0bf67340522ff",
+  "resultSha256": "5706be10b1c316f72dfd045c9d69bc09e15720be01575ab5bd8f8f3729583168",
+  "scope": "This round uses the real city GB/material/GLTF geometry with mocked image pixels. CPU mesh flags, construction stacks, topology and disposal counts are not GPU shadow-map or visibility proof. CPU/GPU four-bin matching covers triangle count, material type, exact world bounds and flags; CPU has no attribute-byte hashes, so it does not establish byte-identical geometry. No C10 failed driver, result or cast-shadow erratum is reused as C11 evidence.",
+  "frameScope": "Root reported this baseline sample only: initial 982 frames plus four fixed views and two walking segments all had zero frames above 20ms; initial maximum was 15.8ms. This does not establish that a performance root cause was fixed. Raw segment samples remain authoritative.",
+  "limitations": [
+    "CPU builds actual city/upstream GB/materials/GLTF geometry from current source; image pixels/canvas painting are placeholders.",
+    "No shader/GPU execution, no visual acceptance. Actual topology/mesh flags and primitive origin stacks are captured after city final traversal.",
+    "No fixture write, no GPU, no install, read-only Git diff only.",
+    "Current CPU traces establish final object flags/topology; visual shadow impact requires root/runtime GPU images.",
+    "No previous C10 CPU assertion result is claimed as a C11 test."
+  ]
+}

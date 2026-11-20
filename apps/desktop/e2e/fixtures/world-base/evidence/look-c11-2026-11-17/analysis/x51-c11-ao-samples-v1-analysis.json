@@ -1,0 +1,3611 @@
+{
+  "head": "e1f32af2cfcde2e1e958a0dffb87f8d219886d5c",
+  "artifactDirectory": "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base/artifacts/gpu-ao-c11-samples-v1",
+  "process": {
+    "pid": 65120,
+    "session": 89647,
+    "actualExitCode": 1
+  },
+  "status": {
+    "ok": false,
+    "renderOk": true,
+    "transportClean": false,
+    "sourceUnchanged": true,
+    "driverUnchanged": true,
+    "assetsUnchanged": true,
+    "assetFiles": 9,
+    "captures": 3,
+    "exceptions": [],
+    "httpErrors": [],
+    "networkFailures": [
+      {
+        "stage": "loading",
+        "url": "http://127.0.0.1:63662/assets/models/menhir.glb",
+        "canceled": true,
+        "errorText": "net::ERR_ABORTED",
+        "requestId": "57788.117",
+        "timestamp": 1922148.783973,
+        "type": "Fetch"
+      },
+      {
+        "stage": "loading",
+        "url": "http://127.0.0.1:63662/prop-assets/plastic_crate_02/plastic_crate_02_1k.gltf",
+        "canceled": true,
+        "errorText": "net::ERR_ABORTED",
+        "requestId": "57788.235",
+        "timestamp": 1922159.886538,
+        "type": "Fetch"
+      }
+    ],
+    "restore": {
+      "ao": 0.55,
+      "contrast": 1.05,
+      "uploadedContrast": 1.05,
+      "materialsUnchanged": true,
+      "view": "station-street",
+      "fov": 58,
+      "time": 33.9747,
+      "frozen": false,
+      "lightMaterialsUnchanged": true
+    }
+  },
+  "files": {
+    "driver": "D:/codex/2026-11-16/world-implementation/handoff/x51-c11-ao-samples-gpu.cjs",
+    "offlineDriver": "D:/codex/2026-11-16/world-implementation/handoff/x51-c11-ao-samples-offline-analysis.cjs",
+    "report": "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base/artifacts/gpu-ao-c11-samples-v1/look-report.json",
+    "gpuSamples": "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base/artifacts/gpu-ao-c11-samples-v1/gpu-ao-samples.json"
+  },
+  "hashes": {
+    "driver": "4ee221a5be7966f85719b33e08041b8be6803fd3683267709588b869759a1632",
+    "offlineDriver": "33486566b5261151c7b4565afbdc997d7559e7dfd698a214d43d0369e6721560",
+    "report": "a18e6093a422586c753ca132a939789871d42ec9815f615049a348620af637da",
+    "gpuSamples": "e7475b232b8bf7b5f9f33de5cbf278763dbb97cf6e7a01d70056b6d89c38ad81",
+    "sourceManifest": "d2c00dbb2c4da08648506c2abb98a942775bd82e7caf2c6dfe2eeaf781598595",
+    "assetManifest": "dd8734fb67c85176d5061a76463eb61801dff175053a82b1c5bb0c22e2723ccc"
+  },
+  "validation": {
+    "glError": 0,
+    "rawFloat32Values": 3840,
+    "output": {
+      "width": 16,
+      "height": 60,
+      "type": "FloatType",
+      "internalFormat": "RGBA32F",
+      "rowOrigin": "bottom",
+      "fieldRows": [
+        "center xyz/rawDepth",
+        "center normal/original wbAO",
+        "sample uv/rawDepth/radiusPx",
+        "sample xyz/linearDepth",
+        "sample normal/distance",
+        "unit delta/rise",
+        "angleCos/angleGate/heightGate/up",
+        "h/frontGate/planeNearWeight/near",
+        "rangeWeight/contribution/inBounds/upPass",
+        "rangePass/outerActive/coefficient/unused"
+      ]
+    },
+    "originalFunctionsPresentInSource": true,
+    "exactFunctionsSha256": "4c7661fbd1c7936f6aa0ce12900339f40390776fe2428dc3dc4e72591a96d583",
+    "maxOriginalAOvsSumError": 2.7567148119800322e-8,
+    "rendererRestored": true,
+    "temporaryResourcesDisposed": true,
+    "capture2MatchesFullDiagnostic": true
+  },
+  "numeric": {
+    "artifactDirectory": "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base/artifacts/gpu-ao-c11-samples-v1",
+    "head": "e1f32af2cfcde2e1e958a0dffb87f8d219886d5c",
+    "reportSha256": "a18e6093a422586c753ca132a939789871d42ec9815f615049a348620af637da",
+    "gpuSamplesSha256": "e7475b232b8bf7b5f9f33de5cbf278763dbb97cf6e7a01d70056b6d89c38ad81",
+    "exactFunctionsSha256": "4c7661fbd1c7936f6aa0ce12900339f40390776fe2428dc3dc4e72591a96d583",
+    "uniforms": {
+      "uProbeYs": [
+        285,
+        289,
+        295,
+        304,
+        313,
+        322
+      ],
+      "uNear": 0.2,
+      "uFar": 16000,
+      "uReversed": 0,
+      "uToon": 1,
+      "uHaze": 1,
+      "uProjScale": 811.8214898721407,
+      "uAO": 0.55,
+      "uRes": [
+        1440,
+        900
+      ]
+    },
+    "depthTexture": {
+      "uuid": "be7fb764-de35-47bf-917f-bb7b8efe65ab",
+      "type": 1015,
+      "format": 1026,
+      "internalFormat": null,
+      "width": 1440,
+      "height": 900,
+      "minFilter": 1003,
+      "magFilter": 1003,
+      "compareFunction": null
+    },
+    "glError": 0,
+    "rendererRestored": true,
+    "temporaryResourcesDisposed": true,
+    "centres": [
+      {
+        "pixel": [
+          350,
+          285
+        ],
+        "gpuAO": 0.5762997269630432,
+        "aoFromGPUContributions": 0.5762996993958951,
+        "agreementError": 2.7567148119800322e-8,
+        "centerGPUViewPosition": [
+          -3.7455294132232666,
+          1.6674954891204834,
+          -8.229232788085938
+        ],
+        "centerGPUViewNormal": [
+          5.122513471178536e-7,
+          -0.04409429803490639,
+          0.9990273714065552
+        ],
+        "centerRay": {
+          "mesh": "",
+          "uuid": "0bcf5f25-0efe-4b3f-9fdd-789f3a3be066",
+          "point": [
+            263.4050006866455,
+            11.213843771794021,
+            911.7454594187727
+          ],
+          "stationLocal": [
+            -16.594999313354492,
+            3.2138437717940214,
+            11.745459418772725
+          ],
+          "viewPosition": [
+            -3.7454594187726116,
+            1.6674643420516095,
+            -8.22907833722195
+          ],
+          "faceNormalWorld": [
+            1,
+            0,
+            0
+          ],
+          "material": {
+            "uuid": "70d50703-a2b9-4b9a-a2bf-f3cdc7799b05",
+            "type": "MeshToonMaterial",
+            "colorRGB": [
+              1,
+              1,
+              1
+            ],
+            "vertexColors": true,
+            "toneMapped": true,
+            "depthWrite": true,
+            "opacity": 1,
+            "transparent": false,
+            "clipPlanes": 4
+          }
+        },
+        "centerNormalAngleDeg": 0.017567815607500228,
+        "ringSums": [
+          2.90411239862442,
+          1.9381767511367798
+        ],
+        "nonzeroTaps": [
+          {
+            "tap": 1,
+            "ring": 1,
+            "pixel": [
+              392.33886432647705,
+              276.4174814224243
+            ],
+            "sourceDepthTexelTopLeft": [
+              392,
+              276
+            ],
+            "viewPosition": [
+              -3.2259535789489746,
+              1.7066701650619507,
+              -8.004919052124023
+            ],
+            "stationLocal": [
+              -16.372801855293233,
+              3.26296374008235,
+              11.225953578948975
+            ],
+            "viewNormal": [
+              -0.000004761427589983214,
+              -0.9990177750587463,
+              -0.044310178607702255
+            ],
+            "distance": 0.5672833323478699,
+            "rise": 0.22236844897270203,
+            "angleCos": 0.3919883370399475,
+            "angleGate": 1,
+            "heightGate": 1,
+            "up": 1,
+            "h": 0.04907805100083351,
+            "frontGate": 1,
+            "planeNearWeight": 0.9707751274108887,
+            "near": 0.9707751274108887,
+            "rangeWeight": 1,
+            "kernelCoefficient": 1.399999976158142,
+            "contribution": 0.9707751274108887,
+            "ray": {
+              "mesh": "",
+              "uuid": "0bcf5f25-0efe-4b3f-9fdd-789f3a3be066",
+              "point": [
+                263.6489392758325,
+                11.263400077819824,
+                911.2205250523475
+              ],
+              "stationLocal": [
+                -16.351060724167496,
+                3.263400077819824,
+                11.220525052347512
+              ],
+              "viewPosition": [
+                -3.220525052347398,
+                1.7061407529231762,
+                -7.983179988297934
+              ],
+              "faceNormalWorld": [
+                0,
+                -1,
+                0
+              ],
+              "material": {
+                "uuid": "70d50703-a2b9-4b9a-a2bf-f3cdc7799b05",
+                "type": "MeshToonMaterial",
+                "colorRGB": [
+                  1,
+                  1,
+                  1
+                ],
+                "vertexColors": true,
+                "toneMapped": true,
+                "depthWrite": true,
+                "opacity": 1,
+                "transparent": false,
+                "clipPlanes": 4
+              }
+            },
+            "rayDepthDifference": 0.021739063826089478,
+            "rayNormalAngleDeg": 0.005193700671603535
+          },
+          {
+            "tap": 2,
+            "ring": 0,
+            "pixel": [
+              360.6085891723633,
+              268.9969356060028
+            ],
+            "sourceDepthTexelTopLeft": [
+              361,
+              269
+            ],
+            "viewPosition": [
+              -3.3668618202209473,
+              1.6933501958847046,
+              -7.615926742553711
+            ],
+            "stationLocal": [
+              -15.983601752618426,
+              3.2669284042112405,
+              11.366861820220947
+            ],
+            "viewNormal": [
+              1.1229691665448627e-7,
+              -0.9989920258522034,
+              -0.04488721489906311
+            ],
+            "distance": 0.7212502360343933,
+            "rise": 0.6115697026252747,
+            "angleCos": 0.8479300141334534,
+            "angleGate": 1,
+            "heightGate": 1,
+            "up": 1,
+            "h": 0.053358204662799835,
+            "frontGate": 1,
+            "planeNearWeight": 0.9656757116317749,
+            "near": 0.9656757116317749,
+            "rangeWeight": 1,
+            "kernelCoefficient": 1.399999976158142,
+            "contribution": 0.9656757116317749,
+            "ray": {
+              "mesh": "",
+              "uuid": "0bcf5f25-0efe-4b3f-9fdd-789f3a3be066",
+              "point": [
+                264.03626648109014,
+                11.263400077819824,
+                911.3544938097542
+              ],
+              "stationLocal": [
+                -15.963733518909862,
+                3.263400077819824,
+                11.354493809754217
+              ],
+              "viewPosition": [
+                -3.3544938097541035,
+                1.6889431873377387,
+                -7.596234762625613
+              ],
+              "faceNormalWorld": [
+                0,
+                -1,
+                0
+              ],
+              "material": {
+                "uuid": "70d50703-a2b9-4b9a-a2bf-f3cdc7799b05",
+                "type": "MeshToonMaterial",
+                "colorRGB": [
+                  1,
+                  1,
+                  1
+                ],
+                "vertexColors": true,
+                "toneMapped": true,
+                "depthWrite": true,
+                "opacity": 1,
+                "transparent": false,
+                "clipPlanes": 4
+              }
+            },
+            "rayDepthDifference": 0.01969197992809768,
+            "rayNormalAngleDeg": 0.027908116279394435
+          },
+          {
+            "tap": 4,
+            "ring": 0,
+            "pixel": [
+              346.1854929924011,
+              266.1827619075775
+            ],
+            "sourceDepthTexelTopLeft": [
+              346,
+              266
+            ],
+            "viewPosition": [
+              -3.430717706680298,
+              1.6846646070480347,
+              -7.46054744720459
+            ],
+            "stationLocal": [
+              -15.827990045851664,
+              3.265150317103574,
+              11.430717706680298
+            ],
+            "viewNormal": [
+              5.776746903052299e-8,
+              -0.9990023970603943,
+              -0.044657956808805466
+            ],
+            "distance": 0.830829918384552,
+            "rise": 0.7671808004379272,
+            "angleCos": 0.9233909249305725,
+            "angleGate": 1,
+            "heightGate": 1,
+            "up": 1,
+            "h": 0.05147988721728325,
+            "frontGate": 1,
+            "planeNearWeight": 0.9679597616195679,
+            "near": 0.9679597616195679,
+            "rangeWeight": 1,
+            "kernelCoefficient": 1.399999976158142,
+            "contribution": 0.9679597616195679,
+            "ray": {
+              "mesh": "",
+              "uuid": "0bcf5f25-0efe-4b3f-9fdd-789f3a3be066",
+              "point": [
+                264.1910036153773,
+                11.263400077819824,
+                911.4237284861804
+              ],
+              "stationLocal": [
+                -15.808996384622674,
+                3.263400077819824,
+                11.42372848618038
+              ],
+              "viewPosition": [
+                -3.4237284861802664,
+                1.682072763625476,
+                -7.441650229099707
+              ],
+              "faceNormalWorld": [
+                0,
+                -1,
+                0
+              ],
+              "material": {
+                "uuid": "70d50703-a2b9-4b9a-a2bf-f3cdc7799b05",
+                "type": "MeshToonMaterial",
+                "colorRGB": [
+                  1,
+                  1,
+                  1
+                ],
+                "vertexColors": true,
+                "toneMapped": true,
+                "depthWrite": true,
+                "opacity": 1,
+                "transparent": false,
+                "clipPlanes": 4
+              }
+            },
+            "rayDepthDifference": 0.01889721810488254,
+            "rayNormalAngleDeg": 0.014759162270890297
+          },
+          {
+            "tap": 6,
+            "ring": 0,
+            "pixel": [
+              333.9968914985657,
+              274.39150166511536
+            ],
+            "sourceDepthTexelTopLeft": [
+              334,
+              274
+            ],
+            "viewPosition": [
+              -3.74655818939209,
+              1.701812982559204,
+              -7.889784336090088
+            ],
+            "stationLocal": [
+              -16.257565022488166,
+              3.263223399742534,
+              11.74655818939209
+            ],
+            "viewNormal": [
+              0.000004291883215046255,
+              -0.9990161657333374,
+              -0.044347167015075684
+            ],
+            "distance": 0.34118029475212097,
+            "rise": 0.3376050889492035,
+            "angleCos": 0.9895210862159729,
+            "angleGate": 1,
+            "heightGate": 1,
+            "up": 1,
+            "h": 0.04933731257915497,
+            "frontGate": 1,
+            "planeNearWeight": 0.9704769253730774,
+            "near": 0.9704769253730774,
+            "rangeWeight": 1,
+            "kernelCoefficient": 1.399999976158142,
+            "contribution": 0.9704769253730774,
+            "ray": {
+              "mesh": "",
+              "uuid": "0bcf5f25-0efe-4b3f-9fdd-789f3a3be066",
+              "point": [
+                263.7635729792375,
+                11.263400077819824,
+                911.7364965227407
+              ],
+              "stationLocal": [
+                -16.236427020762505,
+                3.263400077819824,
+                11.736496522740708
+              ],
+              "viewPosition": [
+                -3.7364965227405946,
+                1.7010509461503802,
+                -7.868659335910024
+              ],
+              "faceNormalWorld": [
+                0,
+                -1,
+                0
+              ],
+              "material": {
+                "uuid": "70d50703-a2b9-4b9a-a2bf-f3cdc7799b05",
+                "type": "MeshToonMaterial",
+                "colorRGB": [
+                  1,
+                  1,
+                  1
+                ],
+                "vertexColors": true,
+                "toneMapped": true,
+                "depthWrite": true,
+                "opacity": 1,
+                "transparent": false,
+                "clipPlanes": 4
+              }
+            },
+            "rayDepthDifference": 0.02112500018006358,
+            "rayNormalAngleDeg": 0.0030750948682200514
+          },
+          {
+            "tap": 7,
+            "ring": 1,
+            "pixel": [
+              313.99301958084106,
+              261.13087487220764
+            ],
+            "sourceDepthTexelTopLeft": [
+              314,
+              261
+            ],
+            "viewPosition": [
+              -3.6040103435516357,
+              1.674161672592163,
+              -7.215198040008545
+            ],
+            "stationLocal": [
+              -15.582416263919868,
+              3.265551404804734,
+              11.604010343551636
+            ],
+            "viewNormal": [
+              -0.000002557287189119961,
+              -0.9990023374557495,
+              -0.04465771093964577
+            ],
+            "distance": 1.0238840579986572,
+            "rise": 1.0127545595169067,
+            "angleCos": 0.9891300797462463,
+            "angleGate": 1,
+            "heightGate": 1,
+            "up": 1,
+            "h": 0.05194436386227608,
+            "frontGate": 1,
+            "planeNearWeight": 0.9674016237258911,
+            "near": 0.9674016237258911,
+            "rangeWeight": 1,
+            "kernelCoefficient": 1.399999976158142,
+            "contribution": 0.9674016237258911,
+            "ray": {
+              "mesh": "",
+              "uuid": "0bcf5f25-0efe-4b3f-9fdd-789f3a3be066",
+              "point": [
+                264.43536272372614,
+                11.263400077819824,
+                911.5951244275294
+              ],
+              "stationLocal": [
+                -15.564637276273857,
+                3.263400077819824,
+                11.595124427529413
+              ],
+              "viewPosition": [
+                -3.5951244275292993,
+                1.6712230692709764,
+                -7.197532106123447
+              ],
+              "faceNormalWorld": [
+                0,
+                -1,
+                0
+              ],
+              "material": {
+                "uuid": "70d50703-a2b9-4b9a-a2bf-f3cdc7799b05",
+                "type": "MeshToonMaterial",
+                "colorRGB": [
+                  1,
+                  1,
+                  1
+                ],
+                "vertexColors": true,
+                "toneMapped": true,
+                "depthWrite": true,
+                "opacity": 1,
+                "transparent": false,
+                "clipPlanes": 4
+              }
+            },
+            "rayDepthDifference": 0.017665933885098184,
+            "rayNormalAngleDeg": 0.014745969163716533
+          }
+        ],
+        "allTapSkipEvidence": [
+          {
+            "tap": 0,
+            "rise": 0.00010559611109783873,
+            "up": 0,
+            "distance": 0.19532041251659393,
+            "h": -0.00010482301149750128,
+            "near": 0.9999794363975525,
+            "rangeWeight": 1,
+            "flags": {
+              "inBounds": 1,
+              "upPass": 0,
+              "rangePass": 1,
+              "outerActive": 1
+            },
+            "contribution": 0
+          },
+          {
+            "tap": 1,
+            "rise": 0.22236844897270203,
+            "up": 1,
+            "distance": 0.5672833323478699,
+            "h": 0.04907805100083351,
+            "near": 0.9707751274108887,
+            "rangeWeight": 1,
+            "flags": {
+              "inBounds": 1,
+              "upPass": 1,
+              "rangePass": 1,
+              "outerActive": 1
+            },
+            "contribution": 0.9707751274108887
+          },
+          {
+            "tap": 2,
+            "rise": 0.6115697026252747,
+            "up": 1,
+            "distance": 0.7212502360343933,
+            "h": 0.053358204662799835,
+            "near": 0.9656757116317749,
+            "rangeWeight": 1,
+            "flags": {
+              "inBounds": 1,
+              "upPass": 1,
+              "rangePass": 1,
+              "outerActive": 1
+            },
+            "contribution": 0.9656757116317749
+          },
+          {
+            "tap": 3,
+            "rise": 1.8185386657714844,
+            "up": 1,
+            "distance": 2.08280611038208,
+            "h": -0.6488274335861206,
+            "near": 0,
+            "rangeWeight": 0,
+            "flags": {
+              "inBounds": 1,
+              "upPass": 1,
+              "rangePass": 0,
+              "outerActive": 1
+            },
+            "contribution": 0
+          },
+          {
+            "tap": 4,
+            "rise": 0.7671808004379272,
+            "up": 1,
+            "distance": 0.830829918384552,
+            "h": 0.05147988721728325,
+            "near": 0.9679597616195679,
+            "rangeWeight": 1,
+            "flags": {
+              "inBounds": 1,
+              "upPass": 1,
+              "rangePass": 1,
+              "outerActive": 1
+            },
+            "contribution": 0.9679597616195679
+          },
+          {
+            "tap": 5,
+            "rise": 1.8449175357818604,
+            "up": 1,
+            "distance": 2.0004184246063232,
+            "h": -1.844934105873108,
+            "near": 0,
+            "rangeWeight": 0,
+            "flags": {
+              "inBounds": 1,
+              "upPass": 1,
+              "rangePass": 0,
+              "outerActive": 1
+            },
+            "contribution": 0
+          },
+          {
+            "tap": 6,
+            "rise": 0.3376050889492035,
+            "up": 1,
+            "distance": 0.34118029475212097,
+            "h": 0.04933731257915497,
+            "near": 0.9704769253730774,
+            "rangeWeight": 1,
+            "flags": {
+              "inBounds": 1,
+              "upPass": 1,
+              "rangePass": 1,
+              "outerActive": 1
+            },
+            "contribution": 0.9704769253730774
+          },
+          {
+            "tap": 7,
+            "rise": 1.0127545595169067,
+            "up": 1,
+            "distance": 1.0238840579986572,
+            "h": 0.05194436386227608,
+            "near": 0.9674016237258911,
+            "rangeWeight": 1,
+            "flags": {
+              "inBounds": 1,
+              "upPass": 1,
+              "rangePass": 1,
+              "outerActive": 1
+            },
+            "contribution": 0.9674016237258911
+          },
+          {
+            "tap": 8,
+            "rise": -0.0000846001785248518,
+            "up": 0,
+            "distance": 0.19539731740951538,
+            "h": 0.00008158353011822328,
+            "near": 0.9999999403953552,
+            "rangeWeight": 1,
+            "flags": {
+              "inBounds": 1,
+              "upPass": 0,
+              "rangePass": 1,
+              "outerActive": 1
+            },
+            "contribution": 0
+          },
+          {
+            "tap": 9,
+            "rise": -0.00021188982645981014,
+            "up": 0,
+            "distance": 0.43977200984954834,
+            "h": 0.00020706671057268977,
+            "near": 0.999999463558197,
+            "rangeWeight": 1,
+            "flags": {
+              "inBounds": 1,
+              "upPass": 0,
+              "rangePass": 1,
+              "outerActive": 1
+            },
+            "contribution": 0
+          },
+          {
+            "tap": 10,
+            "rise": -0.000047495774197159335,
+            "up": 0,
+            "distance": 0.1955476701259613,
+            "h": 0.00004369152884464711,
+            "near": 1,
+            "rangeWeight": 1,
+            "flags": {
+              "inBounds": 1,
+              "upPass": 0,
+              "rangePass": 1,
+              "outerActive": 1
+            },
+            "contribution": 0
+          },
+          {
+            "tap": 11,
+            "rise": -0.00009874626266537234,
+            "up": 0,
+            "distance": 0.4404585659503937,
+            "h": 0.0000920356615097262,
+            "near": 0.9999998807907104,
+            "rangeWeight": 1,
+            "flags": {
+              "inBounds": 1,
+              "upPass": 0,
+              "rangePass": 1,
+              "outerActive": 1
+            },
+            "contribution": 0
+          },
+          {
+            "tap": 12,
+            "rise": -0.00013290703645907342,
+            "up": 0,
+            "distance": 0.19259192049503326,
+            "h": 0.00013212785415817052,
+            "near": 0.9999997615814209,
+            "rangeWeight": 1,
+            "flags": {
+              "inBounds": 1,
+              "upPass": 0,
+              "rangePass": 1,
+              "outerActive": 1
+            },
+            "contribution": 0
+          },
+          {
+            "tap": 13,
+            "rise": 0.000026727677322924137,
+            "up": 0,
+            "distance": 0.4339506924152374,
+            "h": -0.0000623028608970344,
+            "near": 0.9999927282333374,
+            "rangeWeight": 1,
+            "flags": {
+              "inBounds": 1,
+              "upPass": 0,
+              "rangePass": 1,
+              "outerActive": 1
+            },
+            "contribution": 0
+          },
+          {
+            "tap": 14,
+            "rise": -0.00020114585640840232,
+            "up": 0,
+            "distance": 0.1923937350511551,
+            "h": 0.00019595037156250328,
+            "near": 0.9999995231628418,
+            "rangeWeight": 1,
+            "flags": {
+              "inBounds": 1,
+              "upPass": 0,
+              "rangePass": 1,
+              "outerActive": 1
+            },
+            "contribution": 0
+          },
+          {
+            "tap": 15,
+            "rise": -0.00013236359518487006,
+            "up": 0,
+            "distance": 0.43334028124809265,
+            "h": 0.000136029499117285,
+            "near": 0.9999997615814209,
+            "rangeWeight": 1,
+            "flags": {
+              "inBounds": 1,
+              "upPass": 0,
+              "rangePass": 1,
+              "outerActive": 1
+            },
+            "contribution": 0
+          }
+        ]
+      },
+      {
+        "pixel": [
+          350,
+          289
+        ],
+        "gpuAO": 0.690396785736084,
+        "aoFromGPUContributions": 0.6903968118131161,
+        "agreementError": 2.60770320892334e-8,
+        "centerGPUViewPosition": [
+          -3.746337890625,
+          1.6272996664047241,
+          -8.231008529663086
+        ],
+        "centerGPUViewNormal": [
+          -7.850322276681254e-7,
+          -0.04417109116911888,
+          0.999023973941803
+        ],
+        "centerRay": {
+          "mesh": "",
+          "uuid": "0bcf5f25-0efe-4b3f-9fdd-789f3a3be066",
+          "point": [
+            263.4050006866455,
+            11.173611018636066,
+            911.7462724788261
+          ],
+          "stationLocal": [
+            -16.594999313354492,
+            3.173611018636066,
+            11.746272478826086
+          ],
+          "viewPosition": [
+            -3.746272478825972,
+            1.627271266174667,
+            -8.230864696149808
+          ],
+          "faceNormalWorld": [
+            1,
+            0,
+            0
+          ],
+          "material": {
+            "uuid": "70d50703-a2b9-4b9a-a2bf-f3cdc7799b05",
+            "type": "MeshToonMaterial",
+            "colorRGB": [
+              1,
+              1,
+              1
+            ],
+            "vertexColors": true,
+            "toneMapped": true,
+            "depthWrite": true,
+            "opacity": 1,
+            "transparent": false,
+            "clipPlanes": 4
+          }
+        },
+        "centerNormalAngleDeg": 0.013163641475497846,
+        "ringSums": [
+          2.634917140007019,
+          0.9034050107002258
+        ],
+        "nonzeroTaps": [
+          {
+            "tap": 2,
+            "ring": 0,
+            "pixel": [
+              360.6085891723633,
+              272.9969139099121
+            ],
+            "sourceDepthTexelTopLeft": [
+              361,
+              273
+            ],
+            "viewPosition": [
+              -3.463029146194458,
+              1.7031203508377075,
+              -7.833459854125977
+            ],
+            "stationLocal": [
+              -16.201354135317786,
+              3.267030320263972,
+              11.463029146194458
+            ],
+            "viewNormal": [
+              -0.0000022669294139632257,
+              -0.9989921450614929,
+              -0.04488552361726761
+            ],
+            "distance": 0.49402183294296265,
+            "rise": 0.39381134510040283,
+            "angleCos": 0.7971537709236145,
+            "angleGate": 1,
+            "heightGate": 1,
+            "up": 1,
+            "h": 0.09358908981084824,
+            "frontGate": 1,
+            "planeNearWeight": 0.9007761478424072,
+            "near": 0.9007761478424072,
+            "rangeWeight": 1,
+            "kernelCoefficient": 1.399999976158142,
+            "contribution": 0.9007761478424072,
+            "ray": {
+              "mesh": "",
+              "uuid": "0bcf5f25-0efe-4b3f-9fdd-789f3a3be066",
+              "point": [
+                263.8196652779939,
+                11.263400077819824,
+                911.4500504719512
+              ],
+              "stationLocal": [
+                -16.18033472200608,
+                3.263400077819824,
+                11.450050471951158
+              ],
+              "viewPosition": [
+                -3.4500504719510445,
+                1.6985604136661974,
+                -7.81262235501589
+              ],
+              "faceNormalWorld": [
+                0,
+                -1,
+                0
+              ],
+              "material": {
+                "uuid": "70d50703-a2b9-4b9a-a2bf-f3cdc7799b05",
+                "type": "MeshToonMaterial",
+                "colorRGB": [
+                  1,
+                  1,
+                  1
+                ],
+                "vertexColors": true,
+                "toneMapped": true,
+                "depthWrite": true,
+                "opacity": 1,
+                "transparent": false,
+                "clipPlanes": 4
+              }
+            },
+            "rayDepthDifference": 0.02083749911008681,
+            "rayNormalAngleDeg": 0.027811306601481314
+          },
+          {
+            "tap": 4,
+            "ring": 0,
+            "pixel": [
+              346.1854929924011,
+              270.1827402114868
+            ],
+            "sourceDepthTexelTopLeft": [
+              346,
+              270
+            ],
+            "viewPosition": [
+              -3.5266458988189697,
+              1.6939831972122192,
+              -7.669156074523926
+            ],
+            "stationLocal": [
+              -16.036806695813027,
+              3.2651973662748404,
+              11.52664589881897
+            ],
+            "viewNormal": [
+              -0.000004046170943183824,
+              -0.9990051984786987,
+              -0.044594429433345795
+            ],
+            "distance": 0.6069509387016296,
+            "rise": 0.5583584308624268,
+            "angleCos": 0.9199399352073669,
+            "angleGate": 1,
+            "heightGate": 1,
+            "up": 1,
+            "h": 0.09167357534170151,
+            "frontGate": 1,
+            "planeNearWeight": 0.90450519323349,
+            "near": 0.90450519323349,
+            "rangeWeight": 1,
+            "kernelCoefficient": 1.399999976158142,
+            "contribution": 0.90450519323349,
+            "ray": {
+              "mesh": "",
+              "uuid": "0bcf5f25-0efe-4b3f-9fdd-789f3a3be066",
+              "point": [
+                263.98324888136307,
+                11.263400077819824,
+                911.5192172962948
+              ],
+              "stationLocal": [
+                -16.016751118636932,
+                3.263400077819824,
+                11.519217296294755
+              ],
+              "viewPosition": [
+                -3.5192172962946415,
+                1.6912972012983194,
+                -7.649200076738623
+              ],
+              "faceNormalWorld": [
+                0,
+                -1,
+                0
+              ],
+              "material": {
+                "uuid": "70d50703-a2b9-4b9a-a2bf-f3cdc7799b05",
+                "type": "MeshToonMaterial",
+                "colorRGB": [
+                  1,
+                  1,
+                  1
+                ],
+                "vertexColors": true,
+                "toneMapped": true,
+                "depthWrite": true,
+                "opacity": 1,
+                "transparent": false,
+                "clipPlanes": 4
+              }
+            },
+            "rayDepthDifference": 0.01995599778530277,
+            "rayNormalAngleDeg": 0.011118191987228576
+          },
+          {
+            "tap": 6,
+            "ring": 0,
+            "pixel": [
+              333.9968914985657,
+              278.39147996902466
+            ],
+            "sourceDepthTexelTopLeft": [
+              334,
+              278
+            ],
+            "viewPosition": [
+              -3.8575329780578613,
+              1.7121953964233398,
+              -8.123482704162598
+            ],
+            "stationLocal": [
+              -16.491493904287665,
+              3.2632192235926727,
+              11.857532978057861
+            ],
+            "viewNormal": [
+              -0.0000012412343721734942,
+              -0.9990138411521912,
+              -0.04439932107925415
+            ],
+            "distance": 0.17644669115543365,
+            "rise": 0.10367102921009064,
+            "angleCos": 0.5875487327575684,
+            "angleGate": 1,
+            "heightGate": 0.913191020488739,
+            "up": 0.913191020488739,
+            "h": 0.08958594501018524,
+            "frontGate": 1,
+            "planeNearWeight": 0.908501923084259,
+            "near": 0.908501923084259,
+            "rangeWeight": 1,
+            "kernelCoefficient": 1.399999976158142,
+            "contribution": 0.8296357989311218,
+            "ray": {
+              "mesh": "",
+              "uuid": "0bcf5f25-0efe-4b3f-9fdd-789f3a3be066",
+              "point": [
+                263.5309195286558,
+                11.263400077819824,
+                911.8468649432431
+              ],
+              "stationLocal": [
+                -16.469080471344228,
+                3.263400077819824,
+                11.846864943243077
+              ],
+              "viewPosition": [
+                -3.846864943242963,
+                1.711380902117185,
+                -8.101083345163147
+              ],
+              "faceNormalWorld": [
+                0,
+                -1,
+                0
+              ],
+              "material": {
+                "uuid": "70d50703-a2b9-4b9a-a2bf-f3cdc7799b05",
+                "type": "MeshToonMaterial",
+                "colorRGB": [
+                  1,
+                  1,
+                  1
+                ],
+                "vertexColors": true,
+                "toneMapped": true,
+                "depthWrite": true,
+                "opacity": 1,
+                "transparent": false,
+                "clipPlanes": 4
+              }
+            },
+            "rayDepthDifference": 0.02239935899945067,
+            "rayNormalAngleDeg": 0.00010268380756295462
+          },
+          {
+            "tap": 7,
+            "ring": 1,
+            "pixel": [
+              313.99301958084106,
+              265.13085317611694
+            ],
+            "sourceDepthTexelTopLeft": [
+              314,
+              265
+            ],
+            "viewPosition": [
+              -3.7013888359069824,
+              1.682885766029358,
+              -7.410149097442627
+            ],
+            "stationLocal": [
+              -15.777562416983585,
+              3.265610948021312,
+              11.701388835906982
+            ],
+            "viewNormal": [
+              -0.0000012378850442473777,
+              -0.9989993572235107,
+              -0.0447230190038681
+            ],
+            "distance": 0.8239663243293762,
+            "rise": 0.8176029324531555,
+            "angleCos": 0.9922771453857422,
+            "angleGate": 1,
+            "heightGate": 1,
+            "up": 1,
+            "h": 0.09224184602499008,
+            "frontGate": 1,
+            "planeNearWeight": 0.9034050107002258,
+            "near": 0.9034050107002258,
+            "rangeWeight": 1,
+            "kernelCoefficient": 1.399999976158142,
+            "contribution": 0.9034050107002258,
+            "ray": {
+              "mesh": "",
+              "uuid": "0bcf5f25-0efe-4b3f-9fdd-789f3a3be066",
+              "point": [
+                264.24119256778886,
+                11.263400077819824,
+                911.692015616395
+              ],
+              "stationLocal": [
+                -15.758807432211142,
+                3.263400077819824,
+                11.692015616394997
+              ],
+              "viewPosition": [
+                -3.692015616394883,
+                1.6798443433414225,
+                -7.3915107727085
+              ],
+              "faceNormalWorld": [
+                0,
+                -1,
+                0
+              ],
+              "material": {
+                "uuid": "70d50703-a2b9-4b9a-a2bf-f3cdc7799b05",
+                "type": "MeshToonMaterial",
+                "colorRGB": [
+                  1,
+                  1,
+                  1
+                ],
+                "vertexColors": true,
+                "toneMapped": true,
+                "depthWrite": true,
+                "opacity": 1,
+                "transparent": false,
+                "clipPlanes": 4
+              }
+            },
+            "rayDepthDifference": 0.018638324734126854,
+            "rayNormalAngleDeg": 0.018491146336555492
+          }
+        ],
+        "allTapSkipEvidence": [
+          {
+            "tap": 0,
+            "rise": 0.00008144534513121471,
+            "up": 0,
+            "distance": 0.19535669684410095,
+            "h": -0.0000845859685796313,
+            "near": 0.9999865889549255,
+            "rangeWeight": 1,
+            "flags": {
+              "inBounds": 1,
+              "upPass": 0,
+              "rangePass": 1,
+              "outerActive": 1
+            },
+            "contribution": 0
+          },
+          {
+            "tap": 1,
+            "rise": 0.00020493805641308427,
+            "up": 0,
+            "distance": 0.4394419193267822,
+            "h": -0.00020170756033621728,
+            "near": 0.9999240040779114,
+            "rangeWeight": 1,
+            "flags": {
+              "inBounds": 1,
+              "upPass": 0,
+              "rangePass": 1,
+              "outerActive": 1
+            },
+            "contribution": 0
+          },
+          {
+            "tap": 2,
+            "rise": 0.39381134510040283,
+            "up": 1,
+            "distance": 0.49402183294296265,
+            "h": 0.09358908981084824,
+            "near": 0.9007761478424072,
+            "rangeWeight": 1,
+            "flags": {
+              "inBounds": 1,
+              "upPass": 1,
+              "rangePass": 1,
+              "outerActive": 1
+            },
+            "contribution": 0.9007761478424072
+          },
+          {
+            "tap": 3,
+            "rise": 1.7428113222122192,
+            "up": 1,
+            "distance": 2.001351833343506,
+            "h": 0.021839389577507973,
+            "near": 0.993977963924408,
+            "rangeWeight": 0,
+            "flags": {
+              "inBounds": 1,
+              "upPass": 1,
+              "rangePass": 0,
+              "outerActive": 1
+            },
+            "contribution": 0
+          },
+          {
+            "tap": 4,
+            "rise": 0.5583584308624268,
+            "up": 1,
+            "distance": 0.6069509387016296,
+            "h": 0.09167357534170151,
+            "near": 0.90450519323349,
+            "rangeWeight": 1,
+            "flags": {
+              "inBounds": 1,
+              "upPass": 1,
+              "rangePass": 1,
+              "outerActive": 1
+            },
+            "contribution": 0.90450519323349
+          },
+          {
+            "tap": 5,
+            "rise": 1.8449021577835083,
+            "up": 1,
+            "distance": 2.0006766319274902,
+            "h": -1.8449252843856812,
+            "near": 0,
+            "rangeWeight": 0,
+            "flags": {
+              "inBounds": 1,
+              "upPass": 1,
+              "rangePass": 0,
+              "outerActive": 1
+            },
+            "contribution": 0
+          },
+          {
+            "tap": 6,
+            "rise": 0.10367102921009064,
+            "up": 0.913191020488739,
+            "distance": 0.17644669115543365,
+            "h": 0.08958594501018524,
+            "near": 0.908501923084259,
+            "rangeWeight": 1,
+            "flags": {
+              "inBounds": 1,
+              "upPass": 1,
+              "rangePass": 1,
+              "outerActive": 1
+            },
+            "contribution": 0.8296357989311218
+          },
+          {
+            "tap": 7,
+            "rise": 0.8176029324531555,
+            "up": 1,
+            "distance": 0.8239663243293762,
+            "h": 0.09224184602499008,
+            "near": 0.9034050107002258,
+            "rangeWeight": 1,
+            "flags": {
+              "inBounds": 1,
+              "upPass": 1,
+              "rangePass": 1,
+              "outerActive": 1
+            },
+            "contribution": 0.9034050107002258
+          },
+          {
+            "tap": 8,
+            "rise": -0.00010274237865814939,
+            "up": 0,
+            "distance": 0.1954503208398819,
+            "h": 0.0001035975365084596,
+            "near": 0.9999998807907104,
+            "rangeWeight": 1,
+            "flags": {
+              "inBounds": 1,
+              "upPass": 0,
+              "rangePass": 1,
+              "outerActive": 1
+            },
+            "contribution": 0
+          },
+          {
+            "tap": 9,
+            "rise": -0.0002049152390100062,
+            "up": 0,
+            "distance": 0.4398708939552307,
+            "h": 0.0002168501086998731,
+            "near": 0.9999994039535522,
+            "rangeWeight": 1,
+            "flags": {
+              "inBounds": 1,
+              "upPass": 0,
+              "rangePass": 1,
+              "outerActive": 1
+            },
+            "contribution": 0
+          },
+          {
+            "tap": 10,
+            "rise": -0.000035717264836421236,
+            "up": 0,
+            "distance": 0.19561883807182312,
+            "h": 0.000047496374463662505,
+            "near": 1,
+            "rangeWeight": 1,
+            "flags": {
+              "inBounds": 1,
+              "upPass": 0,
+              "rangePass": 1,
+              "outerActive": 1
+            },
+            "contribution": 0
+          },
+          {
+            "tap": 11,
+            "rise": -0.00009137046436080709,
+            "up": 0,
+            "distance": 0.44062304496765137,
+            "h": 0.00011991812789347023,
+            "near": 0.9999998211860657,
+            "rangeWeight": 1,
+            "flags": {
+              "inBounds": 1,
+              "upPass": 0,
+              "rangePass": 1,
+              "outerActive": 1
+            },
+            "contribution": 0
+          },
+          {
+            "tap": 12,
+            "rise": -0.00013968805433250964,
+            "up": 0,
+            "distance": 0.1926698386669159,
+            "h": 0.00015702143718954176,
+            "near": 0.9999997019767761,
+            "rangeWeight": 1,
+            "flags": {
+              "inBounds": 1,
+              "upPass": 0,
+              "rangePass": 1,
+              "outerActive": 1
+            },
+            "contribution": 0
+          },
+          {
+            "tap": 13,
+            "rise": 0.0000378770382667426,
+            "up": 0,
+            "distance": 0.43413060903549194,
+            "h": 0.000008222645192290656,
+            "near": 1,
+            "rangeWeight": 1,
+            "flags": {
+              "inBounds": 1,
+              "upPass": 0,
+              "rangePass": 1,
+              "outerActive": 1
+            },
+            "contribution": 0
+          },
+          {
+            "tap": 14,
+            "rise": -0.00021411044872365892,
+            "up": 0,
+            "distance": 0.1924392580986023,
+            "h": 0.0002196181012550369,
+            "near": 0.9999993443489075,
+            "rangeWeight": 1,
+            "flags": {
+              "inBounds": 1,
+              "upPass": 0,
+              "rangePass": 1,
+              "outerActive": 1
+            },
+            "contribution": 0
+          },
+          {
+            "tap": 15,
+            "rise": -0.00011548231123015285,
+            "up": 0,
+            "distance": 0.43346190452575684,
+            "h": 0.00012022983719361946,
+            "near": 0.9999998211860657,
+            "rangeWeight": 1,
+            "flags": {
+              "inBounds": 1,
+              "upPass": 0,
+              "rangePass": 1,
+              "outerActive": 1
+            },
+            "contribution": 0
+          }
+        ]
+      },
+      {
+        "pixel": [
+          350,
+          295
+        ],
+        "gpuAO": 0.7974770069122314,
+        "aoFromGPUContributions": 0.7974769889842719,
+        "agreementError": 1.792795956134796e-8,
+        "centerGPUViewPosition": [
+          -3.747560739517212,
+          1.5669771432876587,
+          -8.233695030212402
+        ],
+        "centerGPUViewNormal": [
+          -0.000001067109224095475,
+          -0.04414302855730057,
+          0.9990252256393433
+        ],
+        "centerRay": {
+          "mesh": "",
+          "uuid": "0bcf5f25-0efe-4b3f-9fdd-789f3a3be066",
+          "point": [
+            263.4050006866455,
+            11.113229126930808,
+            911.7474927309896
+          ],
+          "stationLocal": [
+            -16.594999313354492,
+            3.1132291269308077,
+            11.74749273098962
+          ],
+          "viewPosition": [
+            -3.7474927309895065,
+            1.5669489227005653,
+            -8.233545689193136
+          ],
+          "faceNormalWorld": [
+            1,
+            0,
+            0
+          ],
+          "material": {
+            "uuid": "70d50703-a2b9-4b9a-a2bf-f3cdc7799b05",
+            "type": "MeshToonMaterial",
+            "colorRGB": [
+              1,
+              1,
+              1
+            ],
+            "vertexColors": true,
+            "toneMapped": true,
+            "depthWrite": true,
+            "opacity": 1,
+            "transparent": false,
+            "clipPlanes": 4
+          }
+        },
+        "centerNormalAngleDeg": 0.014773158911726049,
+        "ringSums": [
+          0.7996804714202881,
+          1.514868225902319
+        ],
+        "nonzeroTaps": [
+          {
+            "tap": 2,
+            "ring": 0,
+            "pixel": [
+              360.6085891723633,
+              278.9969081878662
+            ],
+            "sourceDepthTexelTopLeft": [
+              361,
+              279
+            ],
+            "viewPosition": [
+              -3.618036985397339,
+              1.7188667058944702,
+              -8.184091567993164
+            ],
+            "stationLocal": [
+              -16.552339206282795,
+              3.267192883116609,
+              11.618036985397339
+            ],
+            "viewNormal": [
+              0.0000010886500376727781,
+              -0.9996572136878967,
+              0.026179775595664978
+            ],
+            "distance": 0.2056874930858612,
+            "rise": 0.042850106954574585,
+            "angleCos": 0.20832626521587372,
+            "angleGate": 0.8767794966697693,
+            "heightGate": 0.05533617362380028,
+            "up": 0.0485176220536232,
+            "h": 0.15053874254226685,
+            "frontGate": 1,
+            "planeNearWeight": 0.7666181921958923,
+            "near": 0.7666181921958923,
+            "rangeWeight": 1,
+            "kernelCoefficient": 1.399999976158142,
+            "contribution": 0.03719449043273926,
+            "ray": {
+              "mesh": "",
+              "uuid": "0bcf5f25-0efe-4b3f-9fdd-789f3a3be066",
+              "point": [
+                263.47059265701154,
+                11.263400077819824,
+                911.6040487602737
+              ],
+              "stationLocal": [
+                -16.529407342988463,
+                3.263400077819824,
+                11.604048760273713
+              ],
+              "viewPosition": [
+                -3.6040487602735993,
+                1.714059452236008,
+                -8.161350722836687
+              ],
+              "faceNormalWorld": [
+                0,
+                -1,
+                0
+              ],
+              "material": {
+                "uuid": "70d50703-a2b9-4b9a-a2bf-f3cdc7799b05",
+                "type": "MeshToonMaterial",
+                "colorRGB": [
+                  1,
+                  1,
+                  1
+                ],
+                "vertexColors": true,
+                "toneMapped": true,
+                "depthWrite": true,
+                "opacity": 1,
+                "transparent": false,
+                "clipPlanes": 4
+              }
+            },
+            "rayDepthDifference": 0.022740845156477008,
+            "rayNormalAngleDeg": 4.044966483359009
+          },
+          {
+            "tap": 3,
+            "ring": 1,
+            "pixel": [
+              373.8693017959595,
+              258.99310064315796
+            ],
+            "sourceDepthTexelTopLeft": [
+              374,
+              259
+            ],
+            "viewPosition": [
+              -3.031970262527466,
+              1.6711803674697876,
+              -7.121528148651123
+            ],
+            "stationLocal": [
+              -15.488706377426809,
+              3.266732040480248,
+              11.031970262527466
+            ],
+            "viewNormal": [
+              -0.000002528353434172459,
+              -0.998991847038269,
+              -0.044891856610774994
+            ],
+            "distance": 1.3265907764434814,
+            "rise": 1.1064821481704712,
+            "angleCos": 0.8340794444084167,
+            "angleGate": 1,
+            "heightGate": 1,
+            "up": 1,
+            "h": 0.15402722358703613,
+            "frontGate": 1,
+            "planeNearWeight": 0.7571731209754944,
+            "near": 0.7571731209754944,
+            "rangeWeight": 0.9328061938285828,
+            "kernelCoefficient": 1.399999976158142,
+            "contribution": 0.7062957882881165,
+            "ray": {
+              "mesh": "",
+              "uuid": "0bcf5f25-0efe-4b3f-9fdd-789f3a3be066",
+              "point": [
+                264.52867553080574,
+                11.263400077819824,
+                911.0234966589348
+              ],
+              "stationLocal": [
+                -15.471324469194258,
+                3.263400077819824,
+                11.023496658934846
+              ],
+              "viewPosition": [
+                -3.0234966589347323,
+                1.6670799233779712,
+                -7.104311323530794
+              ],
+              "faceNormalWorld": [
+                0,
+                -1,
+                0
+              ],
+              "material": {
+                "uuid": "70d50703-a2b9-4b9a-a2bf-f3cdc7799b05",
+                "type": "MeshToonMaterial",
+                "colorRGB": [
+                  1,
+                  1,
+                  1
+                ],
+                "vertexColors": true,
+                "toneMapped": true,
+                "depthWrite": true,
+                "opacity": 1,
+                "transparent": false,
+                "clipPlanes": 4
+              }
+            },
+            "rayDepthDifference": 0.01721682512032885,
+            "rayNormalAngleDeg": 0.028174630294536568
+          },
+          {
+            "tap": 4,
+            "ring": 0,
+            "pixel": [
+              346.1854929924011,
+              276.1827344894409
+            ],
+            "sourceDepthTexelTopLeft": [
+              346,
+              276
+            ],
+            "viewPosition": [
+              -3.6810460090637207,
+              1.7089848518371582,
+              -8.004919052124023
+            ],
+            "stationLocal": [
+              -16.372904628806396,
+              3.2652761441284284,
+              11.68104600906372
+            ],
+            "viewNormal": [
+              0.000005746966053266078,
+              -0.9990047812461853,
+              -0.044603556394577026
+            ],
+            "distance": 0.2773604989051819,
+            "rise": 0.2222842574119568,
+            "angleCos": 0.8014272451400757,
+            "angleGate": 1,
+            "heightGate": 1,
+            "up": 1,
+            "h": 0.15207022428512573,
+            "frontGate": 1,
+            "planeNearWeight": 0.7624859809875488,
+            "near": 0.7624859809875488,
+            "rangeWeight": 1,
+            "kernelCoefficient": 1.399999976158142,
+            "contribution": 0.7624859809875488,
+            "ray": {
+              "mesh": "",
+              "uuid": "0bcf5f25-0efe-4b3f-9fdd-789f3a3be066",
+              "point": [
+                263.6489392758325,
+                11.263400077819824,
+                911.6728736093187
+              ],
+              "stationLocal": [
+                -16.351060724167496,
+                3.263400077819824,
+                11.672873609318685
+              ],
+              "viewPosition": [
+                -3.6728736093185717,
+                1.7061407529231762,
+                -7.983179988297934
+              ],
+              "faceNormalWorld": [
+                0,
+                -1,
+                0
+              ],
+              "material": {
+                "uuid": "70d50703-a2b9-4b9a-a2bf-f3cdc7799b05",
+                "type": "MeshToonMaterial",
+                "colorRGB": [
+                  1,
+                  1,
+                  1
+                ],
+                "vertexColors": true,
+                "toneMapped": true,
+                "depthWrite": true,
+                "opacity": 1,
+                "transparent": false,
+                "clipPlanes": 4
+              }
+            },
+            "rayDepthDifference": 0.021739063826089478,
+            "rayNormalAngleDeg": 0.011643913687735666
+          },
+          {
+            "tap": 5,
+            "ring": 1,
+            "pixel": [
+              341.41734075546265,
+              252.66115617752075
+            ],
+            "sourceDepthTexelTopLeft": [
+              341,
+              253
+            ],
+            "viewPosition": [
+              -3.022064208984375,
+              1.5733586549758911,
+              -6.4889960289001465
+            ],
+            "stationLocal": [
+              -14.85245471270207,
+              3.1970916133784364,
+              11.022064208984375
+            ],
+            "viewNormal": [
+              0.000004545494903140934,
+              -0.9989686608314514,
+              -0.04540380835533142
+            ],
+            "distance": 1.8895397186279297,
+            "rise": 1.742715835571289,
+            "angleCos": 0.9222964644432068,
+            "angleGate": 1,
+            "heightGate": 1,
+            "up": 1,
+            "h": 0.08558761328458786,
+            "frontGate": 1,
+            "planeNearWeight": 0.9159573316574097,
+            "near": 0.9159573316574097,
+            "rangeWeight": 0.05192967504262924,
+            "kernelCoefficient": 1.399999976158142,
+            "contribution": 0.04756536707282066,
+            "ray": {
+              "mesh": "",
+              "uuid": "e141ebc3-9861-476b-80d3-5a983b17bdf0",
+              "point": [
+                265.1629388506204,
+                11.191400051116943,
+                911.018348196141
+              ],
+              "stationLocal": [
+                -14.837061149379622,
+                3.1914000511169434,
+                11.018348196141005
+              ],
+              "viewPosition": [
+                -3.0183481961408916,
+                1.566989222038972,
+                -6.47387035546717
+              ],
+              "faceNormalWorld": [
+                0,
+                -1,
+                0
+              ],
+              "material": {
+                "uuid": "10b045b6-648e-45e2-8d2a-c527fe833038",
+                "type": "MeshBasicMaterial",
+                "colorRGB": [
+                  1,
+                  1,
+                  1
+                ],
+                "vertexColors": true,
+                "toneMapped": false,
+                "depthWrite": true,
+                "opacity": 1,
+                "transparent": false,
+                "clipPlanes": 4
+              }
+            },
+            "rayDepthDifference": 0.015125673432976328,
+            "rayNormalAngleDeg": 0.05753759033248549
+          },
+          {
+            "tap": 7,
+            "ring": 1,
+            "pixel": [
+              313.99301958084106,
+              271.13084745407104
+            ],
+            "sourceDepthTexelTopLeft": [
+              314,
+              271
+            ],
+            "viewPosition": [
+              -3.8577351570129395,
+              1.6968905925750732,
+              -7.7231526374816895
+            ],
+            "stationLocal": [
+              -16.090879097847676,
+              3.2657044138544524,
+              11.85773515701294
+            ],
+            "viewNormal": [
+              0.0000033052783692255616,
+              -0.9989994168281555,
+              -0.04472200945019722
+            ],
+            "distance": 0.5382094979286194,
+            "rise": 0.5043100714683533,
+            "angleCos": 0.9370144605636597,
+            "angleGate": 1,
+            "heightGate": 1,
+            "up": 1,
+            "h": 0.15261630713939667,
+            "frontGate": 1,
+            "planeNearWeight": 0.7610070705413818,
+            "near": 0.7610070705413818,
+            "rangeWeight": 1,
+            "kernelCoefficient": 1.399999976158142,
+            "contribution": 0.7610070705413818,
+            "ray": {
+              "mesh": "",
+              "uuid": "0bcf5f25-0efe-4b3f-9fdd-789f3a3be066",
+              "point": [
+                263.9294867520013,
+                11.263400077819824,
+                911.8475572696533
+              ],
+              "stationLocal": [
+                -16.07051324799869,
+                3.263400077819824,
+                11.847557269653294
+              ],
+              "viewPosition": [
+                -3.84755726965318,
+                1.6936842728315367,
+                -7.70290918623607
+              ],
+              "faceNormalWorld": [
+                0,
+                -1,
+                0
+              ],
+              "material": {
+                "uuid": "70d50703-a2b9-4b9a-a2bf-f3cdc7799b05",
+                "type": "MeshToonMaterial",
+                "colorRGB": [
+                  1,
+                  1,
+                  1
+                ],
+                "vertexColors": true,
+                "toneMapped": true,
+                "depthWrite": true,
+                "opacity": 1,
+                "transparent": false,
+                "clipPlanes": 4
+              }
+            },
+            "rayDepthDifference": 0.020243451245619326,
+            "rayNormalAngleDeg": 0.018434045072895196
+          }
+        ],
+        "allTapSkipEvidence": [
+          {
+            "tap": 0,
+            "rise": 0.00008324805094162002,
+            "up": 0,
+            "distance": 0.1954236626625061,
+            "h": -0.00008282886119559407,
+            "near": 0.9999871850013733,
+            "rangeWeight": 1,
+            "flags": {
+              "inBounds": 1,
+              "upPass": 0,
+              "rangePass": 1,
+              "outerActive": 1
+            },
+            "contribution": 0
+          },
+          {
+            "tap": 1,
+            "rise": 0.0002075459051411599,
+            "up": 0,
+            "distance": 0.4395919144153595,
+            "h": -0.00021229239064268768,
+            "near": 0.9999158382415771,
+            "rangeWeight": 1,
+            "flags": {
+              "inBounds": 1,
+              "upPass": 0,
+              "rangePass": 1,
+              "outerActive": 1
+            },
+            "contribution": 0
+          },
+          {
+            "tap": 2,
+            "rise": 0.042850106954574585,
+            "up": 0.0485176220536232,
+            "distance": 0.2056874930858612,
+            "h": 0.15053874254226685,
+            "near": 0.7666181921958923,
+            "rangeWeight": 1,
+            "flags": {
+              "inBounds": 1,
+              "upPass": 1,
+              "rangePass": 1,
+              "outerActive": 1
+            },
+            "contribution": 0.03719449043273926
+          },
+          {
+            "tap": 3,
+            "rise": 1.1064821481704712,
+            "up": 1,
+            "distance": 1.3265907764434814,
+            "h": 0.15402722358703613,
+            "near": 0.7571731209754944,
+            "rangeWeight": 0.9328061938285828,
+            "flags": {
+              "inBounds": 1,
+              "upPass": 1,
+              "rangePass": 1,
+              "outerActive": 1
+            },
+            "contribution": 0.7062957882881165
+          },
+          {
+            "tap": 4,
+            "rise": 0.2222842574119568,
+            "up": 1,
+            "distance": 0.2773604989051819,
+            "h": 0.15207022428512573,
+            "near": 0.7624859809875488,
+            "rangeWeight": 1,
+            "flags": {
+              "inBounds": 1,
+              "upPass": 1,
+              "rangePass": 1,
+              "outerActive": 1
+            },
+            "contribution": 0.7624859809875488
+          },
+          {
+            "tap": 5,
+            "rise": 1.742715835571289,
+            "up": 1,
+            "distance": 1.8895397186279297,
+            "h": 0.08558761328458786,
+            "near": 0.9159573316574097,
+            "rangeWeight": 0.05192967504262924,
+            "flags": {
+              "inBounds": 1,
+              "upPass": 1,
+              "rangePass": 1,
+              "outerActive": 1
+            },
+            "contribution": 0.04756536707282066
+          },
+          {
+            "tap": 6,
+            "rise": 0.00019750923092942685,
+            "up": 0,
+            "distance": 0.1923007369041443,
+            "h": -0.00018169888062402606,
+            "near": 0.9999382495880127,
+            "rangeWeight": 1,
+            "flags": {
+              "inBounds": 1,
+              "upPass": 0,
+              "rangePass": 1,
+              "outerActive": 1
+            },
+            "contribution": 0
+          },
+          {
+            "tap": 7,
+            "rise": 0.5043100714683533,
+            "up": 1,
+            "distance": 0.5382094979286194,
+            "h": 0.15261630713939667,
+            "near": 0.7610070705413818,
+            "rangeWeight": 1,
+            "flags": {
+              "inBounds": 1,
+              "upPass": 1,
+              "rangePass": 1,
+              "outerActive": 1
+            },
+            "contribution": 0.7610070705413818
+          },
+          {
+            "tap": 8,
+            "rise": -0.0001035927125485614,
+            "up": 0,
+            "distance": 0.19551683962345123,
+            "h": 0.0001044987584464252,
+            "near": 0.9999998807907104,
+            "rangeWeight": 1,
+            "flags": {
+              "inBounds": 1,
+              "upPass": 0,
+              "rangePass": 1,
+              "outerActive": 1
+            },
+            "contribution": 0
+          },
+          {
+            "tap": 9,
+            "rise": -0.00020754124852828681,
+            "up": 0,
+            "distance": 0.4400208294391632,
+            "h": 0.00021162882330827415,
+            "near": 0.9999994039535522,
+            "rangeWeight": 1,
+            "flags": {
+              "inBounds": 1,
+              "upPass": 0,
+              "rangePass": 1,
+              "outerActive": 1
+            },
+            "contribution": 0
+          },
+          {
+            "tap": 10,
+            "rise": -0.00004035070742247626,
+            "up": 0,
+            "distance": 0.19572632014751434,
+            "h": 0.00005220899765845388,
+            "near": 0.9999999403953552,
+            "rangeWeight": 1,
+            "flags": {
+              "inBounds": 1,
+              "upPass": 0,
+              "rangePass": 1,
+              "outerActive": 1
+            },
+            "contribution": 0
+          },
+          {
+            "tap": 11,
+            "rise": -0.00010153555922443047,
+            "up": 0,
+            "distance": 0.44086575508117676,
+            "h": 0.00013043812941759825,
+            "near": 0.9999997615814209,
+            "rangeWeight": 1,
+            "flags": {
+              "inBounds": 1,
+              "upPass": 0,
+              "rangePass": 1,
+              "outerActive": 1
+            },
+            "contribution": 0
+          },
+          {
+            "tap": 12,
+            "rise": -0.00012415210949257016,
+            "up": 0,
+            "distance": 0.19279791414737701,
+            "h": 0.00012263422831892967,
+            "near": 0.9999998211860657,
+            "rangeWeight": 1,
+            "flags": {
+              "inBounds": 1,
+              "upPass": 0,
+              "rangePass": 1,
+              "outerActive": 1
+            },
+            "contribution": 0
+          },
+          {
+            "tap": 13,
+            "rise": 0.6800036430358887,
+            "up": 1,
+            "distance": 0.9204354882240295,
+            "h": -0.680040717124939,
+            "near": 0,
+            "rangeWeight": 1,
+            "flags": {
+              "inBounds": 1,
+              "upPass": 1,
+              "rangePass": 1,
+              "outerActive": 1
+            },
+            "contribution": 0
+          },
+          {
+            "tap": 14,
+            "rise": -0.00019672134658321738,
+            "up": 0,
+            "distance": 0.19253043830394745,
+            "h": 0.00019153433095198125,
+            "near": 0.9999995231628418,
+            "rangeWeight": 1,
+            "flags": {
+              "inBounds": 1,
+              "upPass": 0,
+              "rangePass": 1,
+              "outerActive": 1
+            },
+            "contribution": 0
+          },
+          {
+            "tap": 15,
+            "rise": -0.00012303481344133615,
+            "up": 0,
+            "distance": 0.433645635843277,
+            "h": 0.00015073525719344616,
+            "near": 0.9999997019767761,
+            "rangeWeight": 1,
+            "flags": {
+              "inBounds": 1,
+              "upPass": 0,
+              "rangePass": 1,
+              "outerActive": 1
+            },
+            "contribution": 0
+          }
+        ]
+      },
+      {
+        "pixel": [
+          350,
+          304
+        ],
+        "gpuAO": 0.9159594178199768,
+        "aoFromGPUContributions": 0.9159594129770994,
+        "agreementError": 4.842877432409409e-9,
+        "centerGPUViewPosition": [
+          -3.749391555786133,
+          1.4764180183410645,
+          -8.237717628479004
+        ],
+        "centerGPUViewNormal": [
+          0.0000014213688928066404,
+          -0.04409714788198471,
+          0.9990272521972656
+        ],
+        "centerRay": {
+          "mesh": "",
+          "uuid": "0bcf5f25-0efe-4b3f-9fdd-789f3a3be066",
+          "point": [
+            263.4050006866455,
+            11.022582498873586,
+            911.7493246004606
+          ],
+          "stationLocal": [
+            -16.594999313354492,
+            3.022582498873586,
+            11.749324600460568
+          ],
+          "viewPosition": [
+            -3.7493246004604543,
+            1.4763916897617944,
+            -8.23757045510149
+          ],
+          "faceNormalWorld": [
+            1,
+            0,
+            0
+          ],
+          "material": {
+            "uuid": "70d50703-a2b9-4b9a-a2bf-f3cdc7799b05",
+            "type": "MeshToonMaterial",
+            "colorRGB": [
+              1,
+              1,
+              1
+            ],
+            "vertexColors": true,
+            "toneMapped": true,
+            "depthWrite": true,
+            "opacity": 1,
+            "transparent": false,
+            "clipPlanes": 4
+          }
+        },
+        "centerNormalAngleDeg": 0.017404555024342575,
+        "ringSums": [
+          0,
+          0.9604638516902924
+        ],
+        "nonzeroTaps": [
+          {
+            "tap": 3,
+            "ring": 1,
+            "pixel": [
+              373.8693017959595,
+              267.9931457042694
+            ],
+            "sourceDepthTexelTopLeft": [
+              374,
+              268
+            ],
+            "viewPosition": [
+              -3.220101833343506,
+              1.6910260915756226,
+              -7.563413619995117
+            ],
+            "stationLocal": [
+              -15.931037226504316,
+              3.266938206783541,
+              11.220101833343506
+            ],
+            "viewNormal": [
+              -0.00000505534353578696,
+              -0.9989946484565735,
+              -0.04482908546924591
+            ],
+            "distance": 0.8836798667907715,
+            "rise": 0.6641852259635925,
+            "angleCos": 0.7516130208969116,
+            "angleGate": 1,
+            "heightGate": 1,
+            "up": 1,
+            "h": 0.24462342262268066,
+            "frontGate": 1,
+            "planeNearWeight": 0.4855536222457886,
+            "near": 0.4855536222457886,
+            "rangeWeight": 1,
+            "kernelCoefficient": 1.399999976158142,
+            "contribution": 0.4855536222457886,
+            "ray": {
+              "mesh": "",
+              "uuid": "0bcf5f25-0efe-4b3f-9fdd-789f3a3be066",
+              "point": [
+                264.0885549108552,
+                11.263400077819824,
+                911.2106211855066
+              ],
+              "stationLocal": [
+                -15.91144508914482,
+                3.263400077819824,
+                11.210621185506625
+              ],
+              "viewPosition": [
+                -3.210621185506511,
+                1.686621548970907,
+                -7.543997899371902
+              ],
+              "faceNormalWorld": [
+                0,
+                -1,
+                0
+              ],
+              "material": {
+                "uuid": "70d50703-a2b9-4b9a-a2bf-f3cdc7799b05",
+                "type": "MeshToonMaterial",
+                "colorRGB": [
+                  1,
+                  1,
+                  1
+                ],
+                "vertexColors": true,
+                "toneMapped": true,
+                "depthWrite": true,
+                "opacity": 1,
+                "transparent": false,
+                "clipPlanes": 4
+              }
+            },
+            "rayDepthDifference": 0.01941572062321484,
+            "rayNormalAngleDeg": 0.024575863517598
+          },
+          {
+            "tap": 5,
+            "ring": 1,
+            "pixel": [
+              341.41734075546265,
+              261.6612012386322
+            ],
+            "sourceDepthTexelTopLeft": [
+              341,
+              262
+            ],
+            "viewPosition": [
+              -3.382521390914917,
+              1.6805022954940796,
+              -7.262971878051758
+            ],
+            "stationLocal": [
+              -15.630424515260472,
+              3.269764586901209,
+              11.382521390914917
+            ],
+            "viewNormal": [
+              -0.0000034824270187527873,
+              -0.9989734888076782,
+              -0.04529968649148941
+            ],
+            "distance": 1.061307430267334,
+            "rise": 0.9647985696792603,
+            "angleCos": 0.9090660810470581,
+            "angleGate": 1,
+            "heightGate": 1,
+            "up": 1,
+            "h": 0.24803173542022705,
+            "frontGate": 1,
+            "planeNearWeight": 0.4749102294445038,
+            "near": 0.4749102294445038,
+            "rangeWeight": 1,
+            "kernelCoefficient": 1.399999976158142,
+            "contribution": 0.4749102294445038,
+            "ray": {
+              "mesh": "",
+              "uuid": "0bcf5f25-0efe-4b3f-9fdd-789f3a3be066",
+              "point": [
+                264.3877819370567,
+                11.263400077819824,
+                911.3779069702518
+              ],
+              "stationLocal": [
+                -15.612218062943327,
+                3.263400077819824,
+                11.377906970251843
+              ],
+              "viewPosition": [
+                -3.377906970251729,
+                1.673335685395657,
+                -7.24506596892877
+              ],
+              "faceNormalWorld": [
+                0,
+                -1,
+                0
+              ],
+              "material": {
+                "uuid": "70d50703-a2b9-4b9a-a2bf-f3cdc7799b05",
+                "type": "MeshToonMaterial",
+                "colorRGB": [
+                  1,
+                  1,
+                  1
+                ],
+                "vertexColors": true,
+                "toneMapped": true,
+                "depthWrite": true,
+                "opacity": 1,
+                "transparent": false,
+                "clipPlanes": 4
+              }
+            },
+            "rayDepthDifference": 0.017905909122987396,
+            "rayNormalAngleDeg": 0.05156523650916573
+          }
+        ],
+        "allTapSkipEvidence": [
+          {
+            "tap": 0,
+            "rise": 0.00008573212107876316,
+            "up": 0,
+            "distance": 0.1955229490995407,
+            "h": -0.00008464157144771889,
+            "near": 0.9999865889549255,
+            "rangeWeight": 1,
+            "flags": {
+              "inBounds": 1,
+              "upPass": 0,
+              "rangePass": 1,
+              "outerActive": 1
+            },
+            "contribution": 0
+          },
+          {
+            "tap": 1,
+            "rise": 0.00021261509391479194,
+            "up": 0,
+            "distance": 0.4398161470890045,
+            "h": -0.0002082732826238498,
+            "near": 0.9999189376831055,
+            "rangeWeight": 1,
+            "flags": {
+              "inBounds": 1,
+              "upPass": 0,
+              "rangePass": 1,
+              "outerActive": 1
+            },
+            "contribution": 0
+          },
+          {
+            "tap": 2,
+            "rise": 0.0000486982062284369,
+            "up": 0,
+            "distance": 0.1955481767654419,
+            "h": -0.00005041804615757428,
+            "near": 0.999995231628418,
+            "rangeWeight": 1,
+            "flags": {
+              "inBounds": 1,
+              "upPass": 0,
+              "rangePass": 1,
+              "outerActive": 1
+            },
+            "contribution": 0
+          },
+          {
+            "tap": 3,
+            "rise": 0.6641852259635925,
+            "up": 1,
+            "distance": 0.8836798667907715,
+            "h": 0.24462342262268066,
+            "near": 0.4855536222457886,
+            "rangeWeight": 1,
+            "flags": {
+              "inBounds": 1,
+              "upPass": 1,
+              "rangePass": 1,
+              "outerActive": 1
+            },
+            "contribution": 0.4855536222457886
+          },
+          {
+            "tap": 4,
+            "rise": 0.00013226713053882122,
+            "up": 0,
+            "distance": 0.19258594512939453,
+            "h": -0.00013277707330416888,
+            "near": 0.9999670386314392,
+            "rangeWeight": 1,
+            "flags": {
+              "inBounds": 1,
+              "upPass": 0,
+              "rangePass": 1,
+              "outerActive": 1
+            },
+            "contribution": 0
+          },
+          {
+            "tap": 5,
+            "rise": 0.9647985696792603,
+            "up": 1,
+            "distance": 1.061307430267334,
+            "h": 0.24803173542022705,
+            "near": 0.4749102294445038,
+            "rangeWeight": 1,
+            "flags": {
+              "inBounds": 1,
+              "upPass": 1,
+              "rangePass": 1,
+              "outerActive": 1
+            },
+            "contribution": 0.4749102294445038
+          },
+          {
+            "tap": 6,
+            "rise": 0.00020117044914513826,
+            "up": 0,
+            "distance": 0.1924239695072174,
+            "h": -0.0001956319756573066,
+            "near": 0.9999284744262695,
+            "rangeWeight": 1,
+            "flags": {
+              "inBounds": 1,
+              "upPass": 0,
+              "rangePass": 1,
+              "outerActive": 1
+            },
+            "contribution": 0
+          },
+          {
+            "tap": 7,
+            "rise": 0.00013220676919445395,
+            "up": 0,
+            "distance": 0.43279168009757996,
+            "h": -0.0001047885962179862,
+            "near": 0.9999794363975525,
+            "rangeWeight": 1,
+            "flags": {
+              "inBounds": 1,
+              "upPass": 0,
+              "rangePass": 1,
+              "outerActive": 1
+            },
+            "contribution": 0
+          },
+          {
+            "tap": 8,
+            "rise": -0.00010601978283375502,
+            "up": 0,
+            "distance": 0.19561684131622314,
+            "h": 0.00010643783025443554,
+            "near": 0.9999998807907104,
+            "rangeWeight": 1,
+            "flags": {
+              "inBounds": 1,
+              "upPass": 0,
+              "rangePass": 1,
+              "outerActive": 1
+            },
+            "contribution": 0
+          },
+          {
+            "tap": 9,
+            "rise": -0.0002125576138496399,
+            "up": 0,
+            "distance": 0.44024574756622314,
+            "h": 0.00020715004939120263,
+            "near": 0.999999463558197,
+            "rangeWeight": 1,
+            "flags": {
+              "inBounds": 1,
+              "upPass": 0,
+              "rangePass": 1,
+              "outerActive": 1
+            },
+            "contribution": 0
+          },
+          {
+            "tap": 10,
+            "rise": -0.00004772548345499672,
+            "up": 0,
+            "distance": 0.19588853418827057,
+            "h": 0.000058907768107019365,
+            "near": 0.9999999403953552,
+            "rangeWeight": 1,
+            "flags": {
+              "inBounds": 1,
+              "upPass": 0,
+              "rangePass": 1,
+              "outerActive": 1
+            },
+            "contribution": 0
+          },
+          {
+            "tap": 11,
+            "rise": 0.679867148399353,
+            "up": 1,
+            "distance": 0.8054828643798828,
+            "h": -0.6799147725105286,
+            "near": 0,
+            "rangeWeight": 1,
+            "flags": {
+              "inBounds": 1,
+              "upPass": 1,
+              "rangePass": 1,
+              "outerActive": 1
+            },
+            "contribution": 0
+          },
+          {
+            "tap": 12,
+            "rise": -0.000153260218212381,
+            "up": 0,
+            "distance": 0.19298063218593597,
+            "h": 0.0001521941157989204,
+            "near": 0.9999997019767761,
+            "rangeWeight": 1,
+            "flags": {
+              "inBounds": 1,
+              "upPass": 0,
+              "rangePass": 1,
+              "outerActive": 1
+            },
+            "contribution": 0
+          },
+          {
+            "tap": 13,
+            "rise": 0.6799797415733337,
+            "up": 1,
+            "distance": 0.9167694449424744,
+            "h": -0.6800166964530945,
+            "near": 0,
+            "rangeWeight": 1,
+            "flags": {
+              "inBounds": 1,
+              "upPass": 1,
+              "rangePass": 1,
+              "outerActive": 1
+            },
+            "contribution": 0
+          },
+          {
+            "tap": 14,
+            "rise": -0.00022240096586756408,
+            "up": 0,
+            "distance": 0.1926448494195938,
+            "h": 0.00022801720479037613,
+            "near": 0.9999993443489075,
+            "rangeWeight": 1,
+            "flags": {
+              "inBounds": 1,
+              "upPass": 0,
+              "rangePass": 1,
+              "outerActive": 1
+            },
+            "contribution": 0
+          },
+          {
+            "tap": 15,
+            "rise": -0.00013227858289610595,
+            "up": 0,
+            "distance": 0.43392226099967957,
+            "h": 0.00011427776917116717,
+            "near": 0.9999998211860657,
+            "rangeWeight": 1,
+            "flags": {
+              "inBounds": 1,
+              "upPass": 0,
+              "rangePass": 1,
+              "outerActive": 1
+            },
+            "contribution": 0
+          }
+        ]
+      },
+      {
+        "pixel": [
+          350,
+          313
+        ],
+        "gpuAO": 0.9626880884170532,
+        "aoFromGPUContributions": 0.962688104994595,
+        "agreementError": 1.6577541783746597e-8,
+        "centerGPUViewPosition": [
+          -3.7512240409851074,
+          1.3857700824737549,
+          -8.241744041442871
+        ],
+        "centerGPUViewNormal": [
+          8.821244250611926e-7,
+          -0.04415000602602959,
+          0.9990248084068298
+        ],
+        "centerRay": {
+          "mesh": "",
+          "uuid": "0bcf5f25-0efe-4b3f-9fdd-789f3a3be066",
+          "point": [
+            263.4050006866455,
+            10.931847206734506,
+            911.7511582617359
+          ],
+          "stationLocal": [
+            -16.594999313354492,
+            2.9318472067345063,
+            11.751158261735895
+          ],
+          "viewPosition": [
+            -3.7511582617357817,
+            1.385745880181109,
+            -8.241599157749533
+          ],
+          "faceNormalWorld": [
+            1,
+            0,
+            0
+          ],
+          "material": {
+            "uuid": "70d50703-a2b9-4b9a-a2bf-f3cdc7799b05",
+            "type": "MeshToonMaterial",
+            "colorRGB": [
+              1,
+              1,
+              1
+            ],
+            "vertexColors": true,
+            "toneMapped": true,
+            "depthWrite": true,
+            "opacity": 1,
+            "transparent": false,
+            "clipPlanes": 4
+          }
+        },
+        "centerNormalAngleDeg": 0.014372676088839687,
+        "ringSums": [
+          0,
+          0.426421657204628
+        ],
+        "nonzeroTaps": [
+          {
+            "tap": 3,
+            "ring": 1,
+            "pixel": [
+              373.8693017959595,
+              276.99313712120056
+            ],
+            "sourceDepthTexelTopLeft": [
+              374,
+              277
+            ],
+            "viewPosition": [
+              -3.4331250190734863,
+              1.7134983539581299,
+              -8.063764572143555
+            ],
+            "stationLocal": [
+              -16.431892518018344,
+              3.267172417865096,
+              11.433125019073486
+            ],
+            "viewNormal": [
+              0.0000024293092337757116,
+              -0.9989920258522034,
+              -0.04488794878125191
+            ],
+            "distance": 0.4901729226112366,
+            "rise": 0.16333697736263275,
+            "angleCos": 0.3332231640815735,
+            "angleGate": 1,
+            "heightGate": 1,
+            "up": 1,
+            "h": 0.3353863060474396,
+            "frontGate": 1,
+            "planeNearWeight": 0.21761290729045868,
+            "near": 0.21761290729045868,
+            "rangeWeight": 1,
+            "kernelCoefficient": 1.399999976158142,
+            "contribution": 0.21761290729045868,
+            "ray": {
+              "mesh": "",
+              "uuid": "0bcf5f25-0efe-4b3f-9fdd-789f3a3be066",
+              "point": [
+                263.5903619655537,
+                11.263400077819824,
+                911.4224361171525
+              ],
+              "stationLocal": [
+                -16.40963803444629,
+                3.263400077819824,
+                11.422436117152529
+              ],
+              "viewPosition": [
+                -3.422436117152415,
+                1.708741621443807,
+                -8.041699530012124
+              ],
+              "faceNormalWorld": [
+                0,
+                -1,
+                0
+              ],
+              "material": {
+                "uuid": "70d50703-a2b9-4b9a-a2bf-f3cdc7799b05",
+                "type": "MeshToonMaterial",
+                "colorRGB": [
+                  1,
+                  1,
+                  1
+                ],
+                "vertexColors": true,
+                "toneMapped": true,
+                "depthWrite": true,
+                "opacity": 1,
+                "transparent": false,
+                "clipPlanes": 4
+              }
+            },
+            "rayDepthDifference": 0.022065042131430346,
+            "rayNormalAngleDeg": 0.02795046806345407
+          },
+          {
+            "tap": 5,
+            "ring": 1,
+            "pixel": [
+              341.41734075546265,
+              270.66119265556335
+            ],
+            "sourceDepthTexelTopLeft": [
+              341,
+              271
+            ],
+            "viewPosition": [
+              -3.5968375205993652,
+              1.701358437538147,
+              -7.7231526374816895
+            ],
+            "stationLocal": [
+              -16.091077472905624,
+              3.270167852657714,
+              11.596837520599365
+            ],
+            "viewNormal": [
+              0.000005564918865275104,
+              -0.998973548412323,
+              -0.04529803246259689
+            ],
+            "distance": 0.6263930201530457,
+            "rise": 0.5041525959968567,
+            "angleCos": 0.8048503398895264,
+            "angleGate": 1,
+            "heightGate": 1,
+            "up": 1,
+            "h": 0.3387547433376312,
+            "frontGate": 1,
+            "planeNearWeight": 0.2088087499141693,
+            "near": 0.2088087499141693,
+            "rangeWeight": 1,
+            "kernelCoefficient": 1.399999976158142,
+            "contribution": 0.2088087499141693,
+            "ray": {
+              "mesh": "",
+              "uuid": "0bcf5f25-0efe-4b3f-9fdd-789f3a3be066",
+              "point": [
+                263.9294867520013,
+                11.263400077819824,
+                911.5913697325866
+              ],
+              "stationLocal": [
+                -16.07051324799869,
+                3.263400077819824,
+                11.5913697325866
+              ],
+              "viewPosition": [
+                -3.591369732586486,
+                1.6936842728315367,
+                -7.70290918623607
+              ],
+              "faceNormalWorld": [
+                0,
+                -1,
+                0
+              ],
+              "material": {
+                "uuid": "70d50703-a2b9-4b9a-a2bf-f3cdc7799b05",
+                "type": "MeshToonMaterial",
+                "colorRGB": [
+                  1,
+                  1,
+                  1
+                ],
+                "vertexColors": true,
+                "toneMapped": true,
+                "depthWrite": true,
+                "opacity": 1,
+                "transparent": false,
+                "clipPlanes": 4
+              }
+            },
+            "rayDepthDifference": 0.020243451245619326,
+            "rayNormalAngleDeg": 0.05147101178367903
+          }
+        ],
+        "allTapSkipEvidence": [
+          {
+            "tap": 0,
+            "rise": 0.00008380133658647537,
+            "up": 0,
+            "distance": 0.19562309980392456,
+            "h": -0.00008635945414425805,
+            "near": 0.9999860525131226,
+            "rangeWeight": 1,
+            "flags": {
+              "inBounds": 1,
+              "upPass": 0,
+              "rangePass": 1,
+              "outerActive": 1
+            },
+            "contribution": 0
+          },
+          {
+            "tap": 1,
+            "rise": 0.00020779987971764058,
+            "up": 0,
+            "distance": 0.44004026055336,
+            "h": -0.00021188054233789444,
+            "near": 0.999916136264801,
+            "rangeWeight": 1,
+            "flags": {
+              "inBounds": 1,
+              "upPass": 0,
+              "rangePass": 1,
+              "outerActive": 1
+            },
+            "contribution": 0
+          },
+          {
+            "tap": 2,
+            "rise": 0.00003886599006364122,
+            "up": 0,
+            "distance": 0.19570955634117126,
+            "h": -0.000056967084674397483,
+            "near": 0.9999939203262329,
+            "rangeWeight": 1,
+            "flags": {
+              "inBounds": 1,
+              "upPass": 0,
+              "rangePass": 1,
+              "outerActive": 1
+            },
+            "contribution": 0
+          },
+          {
+            "tap": 3,
+            "rise": 0.16333697736263275,
+            "up": 1,
+            "distance": 0.4901729226112366,
+            "h": 0.3353863060474396,
+            "near": 0.21761290729045868,
+            "rangeWeight": 1,
+            "flags": {
+              "inBounds": 1,
+              "upPass": 1,
+              "rangePass": 1,
+              "outerActive": 1
+            },
+            "contribution": 0.21761290729045868
+          },
+          {
+            "tap": 4,
+            "rise": 0.00012262677773833275,
+            "up": 0,
+            "distance": 0.1927717924118042,
+            "h": -0.00012331704783719033,
+            "near": 0.9999715089797974,
+            "rangeWeight": 1,
+            "flags": {
+              "inBounds": 1,
+              "upPass": 0,
+              "rangePass": 1,
+              "outerActive": 1
+            },
+            "contribution": 0
+          },
+          {
+            "tap": 5,
+            "rise": 0.5041525959968567,
+            "up": 1,
+            "distance": 0.6263930201530457,
+            "h": 0.3387547433376312,
+            "near": 0.2088087499141693,
+            "rangeWeight": 1,
+            "flags": {
+              "inBounds": 1,
+              "upPass": 1,
+              "rangePass": 1,
+              "outerActive": 1
+            },
+            "contribution": 0.2088087499141693
+          },
+          {
+            "tap": 6,
+            "rise": 0.00019566829723771662,
+            "up": 0,
+            "distance": 0.19254718720912933,
+            "h": -0.0002004103153012693,
+            "near": 0.9999249577522278,
+            "rangeWeight": 1,
+            "flags": {
+              "inBounds": 1,
+              "upPass": 0,
+              "rangePass": 1,
+              "outerActive": 1
+            },
+            "contribution": 0
+          },
+          {
+            "tap": 7,
+            "rise": 0.00011978652764810249,
+            "up": 0,
+            "distance": 0.4330667555332184,
+            "h": -0.00011508929310366511,
+            "near": 0.9999752044677734,
+            "rangeWeight": 1,
+            "flags": {
+              "inBounds": 1,
+              "upPass": 0,
+              "rangePass": 1,
+              "outerActive": 1
+            },
+            "contribution": 0
+          },
+          {
+            "tap": 8,
+            "rise": -0.0001031353822327219,
+            "up": 0,
+            "distance": 0.1957165151834488,
+            "h": 0.00010352422395953909,
+            "near": 0.9999998807907104,
+            "rangeWeight": 1,
+            "flags": {
+              "inBounds": 1,
+              "upPass": 0,
+              "rangePass": 1,
+              "outerActive": 1
+            },
+            "contribution": 0
+          },
+          {
+            "tap": 9,
+            "rise": -0.0002077428507618606,
+            "up": 0,
+            "distance": 0.440470814704895,
+            "h": 0.0002106220053974539,
+            "near": 0.9999994039535522,
+            "rangeWeight": 1,
+            "flags": {
+              "inBounds": 1,
+              "upPass": 0,
+              "rangePass": 1,
+              "outerActive": 1
+            },
+            "contribution": 0
+          },
+          {
+            "tap": 10,
+            "rise": -0.000039788948924979195,
+            "up": 0,
+            "distance": 0.19605028629302979,
+            "h": 0.00005199129009270109,
+            "near": 0.9999999403953552,
+            "rangeWeight": 1,
+            "flags": {
+              "inBounds": 1,
+              "upPass": 0,
+              "rangePass": 1,
+              "outerActive": 1
+            },
+            "contribution": 0
+          },
+          {
+            "tap": 11,
+            "rise": 0.6798701286315918,
+            "up": 1,
+            "distance": 0.8017397522926331,
+            "h": -0.6799179315567017,
+            "near": 0,
+            "rangeWeight": 1,
+            "flags": {
+              "inBounds": 1,
+              "upPass": 1,
+              "rangePass": 1,
+              "outerActive": 1
+            },
+            "contribution": 0
+          },
+          {
+            "tap": 12,
+            "rise": -0.00014262605691328645,
+            "up": 0,
+            "distance": 0.19316695630550385,
+            "h": 0.00015895208343863487,
+            "near": 0.9999996423721313,
+            "rangeWeight": 1,
+            "flags": {
+              "inBounds": 1,
+              "upPass": 0,
+              "rangePass": 1,
+              "outerActive": 1
+            },
+            "contribution": 0
+          },
+          {
+            "tap": 13,
+            "rise": 0.6800029873847961,
+            "up": 1,
+            "distance": 0.9131398797035217,
+            "h": -0.6800208687782288,
+            "near": 0,
+            "rangeWeight": 1,
+            "flags": {
+              "inBounds": 1,
+              "upPass": 1,
+              "rangePass": 1,
+              "outerActive": 1
+            },
+            "contribution": 0
+          },
+          {
+            "tap": 14,
+            "rise": -0.00021592926350422204,
+            "up": 0,
+            "distance": 0.19276876747608185,
+            "h": 0.00022111335420049727,
+            "near": 0.9999993443489075,
+            "rangeWeight": 1,
+            "flags": {
+              "inBounds": 1,
+              "upPass": 0,
+              "rangePass": 1,
+              "outerActive": 1
+            },
+            "contribution": 0
+          },
+          {
+            "tap": 15,
+            "rise": 0.674831748008728,
+            "up": 1,
+            "distance": 0.9766528606414795,
+            "h": -0.6748606562614441,
+            "near": 0,
+            "rangeWeight": 1,
+            "flags": {
+              "inBounds": 1,
+              "upPass": 1,
+              "rangePass": 1,
+              "outerActive": 1
+            },
+            "contribution": 0
+          }
+        ]
+      },
+      {
+        "pixel": [
+          350,
+          322
+        ],
+        "gpuAO": 1,
+        "aoFromGPUContributions": 1,
+        "agreementError": 0,
+        "centerGPUViewPosition": [
+          -3.7530581951141357,
+          1.2950334548950195,
+          -8.245774269104004
+        ],
+        "centerGPUViewNormal": [
+          -2.0651729926157714e-7,
+          -0.04411125183105469,
+          0.9990265965461731
+        ],
+        "centerRay": {
+          "mesh": "",
+          "uuid": "0bcf5f25-0efe-4b3f-9fdd-789f3a3be066",
+          "point": [
+            263.4050006866455,
+            10.84102312036261,
+            911.7529937174459
+          ],
+          "stationLocal": [
+            -16.594999313354492,
+            2.8410231203626104,
+            11.752993717445861
+          ],
+          "viewPosition": [
+            -3.7529937174457473,
+            1.2950113639359047,
+            -8.245631802915966
+          ],
+          "faceNormalWorld": [
+            1,
+            0,
+            0
+          ],
+          "material": {
+            "uuid": "70d50703-a2b9-4b9a-a2bf-f3cdc7799b05",
+            "type": "MeshToonMaterial",
+            "colorRGB": [
+              1,
+              1,
+              1
+            ],
+            "vertexColors": true,
+            "toneMapped": true,
+            "depthWrite": true,
+            "opacity": 1,
+            "transparent": false,
+            "clipPlanes": 4
+          }
+        },
+        "centerNormalAngleDeg": 0.016595401457987415,
+        "ringSums": [
+          0,
+          0
+        ],
+        "nonzeroTaps": [],
+        "allTapSkipEvidence": [
+          {
+            "tap": 0,
+            "rise": 0.00008432827598880976,
+            "up": 0,
+            "distance": 0.19572235643863678,
+            "h": -0.00008014920604182407,
+            "near": 0.9999879598617554,
+            "rangeWeight": 1,
+            "flags": {
+              "inBounds": 1,
+              "upPass": 0,
+              "rangePass": 1,
+              "outerActive": 1
+            },
+            "contribution": 0
+          },
+          {
+            "tap": 1,
+            "rise": 0.00021066369663458318,
+            "up": 0,
+            "distance": 0.440264493227005,
+            "h": -0.00020747580856550485,
+            "near": 0.9999195337295532,
+            "rangeWeight": 1,
+            "flags": {
+              "inBounds": 1,
+              "upPass": 0,
+              "rangePass": 1,
+              "outerActive": 1
+            },
+            "contribution": 0
+          },
+          {
+            "tap": 2,
+            "rise": 0.00004566722418530844,
+            "up": 0,
+            "distance": 0.1958712786436081,
+            "h": -0.00003323017153888941,
+            "near": 0.9999979734420776,
+            "rangeWeight": 1,
+            "flags": {
+              "inBounds": 1,
+              "upPass": 0,
+              "rangePass": 1,
+              "outerActive": 1
+            },
+            "contribution": 0
+          },
+          {
+            "tap": 3,
+            "rise": 0.00009266901906812564,
+            "up": 0,
+            "distance": 0.44023051857948303,
+            "h": -0.00009894088725559413,
+            "near": 0.999981701374054,
+            "rangeWeight": 1,
+            "flags": {
+              "inBounds": 1,
+              "upPass": 0,
+              "rangePass": 1,
+              "outerActive": 1
+            },
+            "contribution": 0
+          },
+          {
+            "tap": 4,
+            "rise": 0.00013038128963671625,
+            "up": 0,
+            "distance": 0.19295784831047058,
+            "h": -0.00013107155973557383,
+            "near": 0.9999678730964661,
+            "rangeWeight": 1,
+            "flags": {
+              "inBounds": 1,
+              "upPass": 0,
+              "rangePass": 1,
+              "outerActive": 1
+            },
+            "contribution": 0
+          },
+          {
+            "tap": 5,
+            "rise": -0.00003292438850621693,
+            "up": 0,
+            "distance": 0.4336760640144348,
+            "h": 0.00007709753845119849,
+            "near": 0.9999999403953552,
+            "rangeWeight": 1,
+            "flags": {
+              "inBounds": 1,
+              "upPass": 0,
+              "rangePass": 1,
+              "outerActive": 1
+            },
+            "contribution": 0
+          },
+          {
+            "tap": 6,
+            "rise": 0.00020004826365038753,
+            "up": 0,
+            "distance": 0.19267092645168304,
+            "h": -0.00020453300385270268,
+            "near": 0.9999218583106995,
+            "rangeWeight": 1,
+            "flags": {
+              "inBounds": 1,
+              "upPass": 0,
+              "rangePass": 1,
+              "outerActive": 1
+            },
+            "contribution": 0
+          },
+          {
+            "tap": 7,
+            "rise": 0.00012957998842466623,
+            "up": 0,
+            "distance": 0.43334245681762695,
+            "h": -0.00014761366765014827,
+            "near": 0.9999592304229736,
+            "rangeWeight": 1,
+            "flags": {
+              "inBounds": 1,
+              "upPass": 0,
+              "rangePass": 1,
+              "outerActive": 1
+            },
+            "contribution": 0
+          },
+          {
+            "tap": 8,
+            "rise": -0.00010462605132488534,
+            "up": 0,
+            "distance": 0.19581668078899384,
+            "h": 0.00010532686428632587,
+            "near": 0.9999998807907104,
+            "rangeWeight": 1,
+            "flags": {
+              "inBounds": 1,
+              "upPass": 0,
+              "rangePass": 1,
+              "outerActive": 1
+            },
+            "contribution": 0
+          },
+          {
+            "tap": 9,
+            "rise": -0.00023172260262072086,
+            "up": 0,
+            "distance": 0.4407059848308563,
+            "h": 0.00023581257846672088,
+            "near": 0.9999992847442627,
+            "rangeWeight": 1,
+            "flags": {
+              "inBounds": 1,
+              "upPass": 0,
+              "rangePass": 1,
+              "outerActive": 1
+            },
+            "contribution": 0
+          },
+          {
+            "tap": 10,
+            "rise": 0.6799209117889404,
+            "up": 1,
+            "distance": 0.7450330853462219,
+            "h": -0.6799440979957581,
+            "near": 0,
+            "rangeWeight": 1,
+            "flags": {
+              "inBounds": 1,
+              "upPass": 1,
+              "rangePass": 1,
+              "outerActive": 1
+            },
+            "contribution": 0
+          },
+          {
+            "tap": 11,
+            "rise": 0.6748742461204529,
+            "up": 1,
+            "distance": 0.7934112548828125,
+            "h": -0.7892464995384216,
+            "near": 0,
+            "rangeWeight": 1,
+            "flags": {
+              "inBounds": 1,
+              "upPass": 1,
+              "rangePass": 1,
+              "outerActive": 1
+            },
+            "contribution": 0
+          },
+          {
+            "tap": 12,
+            "rise": 0.6798239350318909,
+            "up": 1,
+            "distance": 0.8002903461456299,
+            "h": -0.6798462867736816,
+            "near": 0,
+            "rangeWeight": 1,
+            "flags": {
+              "inBounds": 1,
+              "upPass": 1,
+              "rangePass": 1,
+              "outerActive": 1
+            },
+            "contribution": 0
+          },
+          {
+            "tap": 13,
+            "rise": 0.09503692388534546,
+            "up": 0.7028555870056152,
+            "distance": 0.46064120531082153,
+            "h": -0.09483754634857178,
+            "near": 0,
+            "rangeWeight": 1,
+            "flags": {
+              "inBounds": 1,
+              "upPass": 1,
+              "rangePass": 1,
+              "outerActive": 1
+            },
+            "contribution": 0
+          },
+          {
+            "tap": 14,
+            "rise": -0.0002212825056631118,
+            "up": 0,
+            "distance": 0.19289153814315796,
+            "h": 0.00022726670431438833,
+            "near": 0.9999993443489075,
+            "rangeWeight": 1,
+            "flags": {
+              "inBounds": 1,
+              "upPass": 0,
+              "rangePass": 1,
+              "outerActive": 1
+            },
+            "contribution": 0
+          },
+          {
+            "tap": 15,
+            "rise": 0.6748315095901489,
+            "up": 1,
+            "distance": 0.974653959274292,
+            "h": -0.6748575568199158,
+            "near": 0,
+            "rangeWeight": 1,
+            "flags": {
+              "inBounds": 1,
+              "upPass": 1,
+              "rangePass": 1,
+              "outerActive": 1
+            },
+            "contribution": 0
+          }
+        ]
+      }
+    ],
+    "maxOriginalVsSumError": 2.7567148119800322e-8,
+    "maxCenterNormalAngleDeg": 0.017567815607500228,
+    "method": "Summarizes actual GPU output only. CPU rotates geometric normals for comparison and sums recorded GPU contributions. No CPU replacement of depth/normal/AO shader, no renderer, no writes."
+  },
+  "c10Comparison": [
+    {
+      "pixel": [
+        350,
+        285
+      ],
+      "c10AO": 0.6836678981781006,
+      "c11AO": 0.5762997269630432
+    },
+    {
+      "pixel": [
+        350,
+        289
+      ],
+      "c10AO": 0.6801742315292358,
+      "c11AO": 0.690396785736084
+    },
+    {
+      "pixel": [
+        350,
+        295
+      ],
+      "c10AO": 0.7882729768753052,
+      "c11AO": 0.7974770069122314
+    },
+    {
+      "pixel": [
+        350,
+        304
+      ],
+      "c10AO": 0.9396043419837952,
+      "c11AO": 0.9159594178199768
+    },
+    {
+      "pixel": [
+        350,
+        313
+      ],
+      "c10AO": 0.8857477307319641,
+      "c11AO": 0.9626880884170532
+    },
+    {
+      "pixel": [
+        350,
+        322
+      ],
+      "c10AO": 0.9949713945388794,
+      "c11AO": 1
+    }
+  ],
+  "kernelDescription": {
+    "rise": "dot(receiverNormal,samplePosition-centerPosition)",
+    "angleGate": "smoothstep(.06,.25,rise/max(L,1e-4))",
+    "heightGate": "smoothstep(.03,.12,rise)",
+    "up": "angleGate*heightGate",
+    "h": "dot(sampleNormal,centerPosition-samplePosition)",
+    "frontGate": "smoothstep(-.04,0,h)",
+    "planeNearWeight": "1-smoothstep(0,.48,h)",
+    "near": "frontGate*planeNearWeight",
+    "rangeWeight": "1-smoothstep(1.2,2.0,L)",
+    "contribution": "up*near*rangeWeight after inBounds/up>0/L<=2.0 guards",
+    "coefficient": 1.4
+  },
+  "conclusion": "The known C10 secondary peak at these six actual shop rear-wall centers is removed: C11 GPU AO increases monotonically toward1, including .9159594 at304 -> .9626881 at313 ->1 at322. Both main contributors3/5 now decay by increasing h; broad distance cutoff remains1 at these points, so the old L attenuation rebound no longer drives them.",
+  "limits": [
+    "Only six points and this frozen actual scene/camera; not universal AO monotonicity/normal correctness. Full50-row PNG statistics are in the separate view analysis.",
+    "Depth/normal/AO are actual GPU reads with new C11 functions, not CPU replacement. CPU merely serializes/sums GPU fields.",
+    "Geometry raycasts only corroborate nearest texel geometry and do not execute fragment clipping/alpha/depthWrite; old raster-vs-ray discrepancies remain possible.",
+    "No performance test or change to fixture/shader product. All transport cancellations retained, no rerun to green."
+  ],
+  "offlineReproduction": {
+    "syntaxExitCode": 0,
+    "actualExitCode": 0
+  }
+}

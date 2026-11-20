@@ -1,0 +1,584 @@
+{
+  "initial-afternoon": {
+    "head": "2a7c6f12bb66f44a04a9dbbc2a4e2e7a22e93758",
+    "nativeReport": "initial/afternoon/bake-report.json.gz",
+    "process": {
+      "code": 1,
+      "signal": null,
+      "completedAt": "2026-11-18T15:05:55.128Z"
+    },
+    "nativeOK": false,
+    "nativeTransportClean": false,
+    "strictTransportClean": false,
+    "rawCDPFailures": [
+      {
+        "errorText": "net::ERR_ABORTED",
+        "canceled": true,
+        "type": "Fetch",
+        "cdpResponse": null,
+        "path": "/assets/models/menhir.glb"
+      },
+      {
+        "errorText": "net::ERR_ABORTED",
+        "canceled": true,
+        "type": "Fetch",
+        "cdpResponse": null,
+        "path": "/mature-sakura/mature-sakura.glb"
+      },
+      {
+        "errorText": "net::ERR_ABORTED",
+        "canceled": true,
+        "type": "Fetch",
+        "cdpResponse": null,
+        "path": "/prop-assets/plastic_crate_02/plastic_crate_02_1k.gltf"
+      },
+      {
+        "errorText": "net::ERR_ABORTED",
+        "canceled": true,
+        "type": "Fetch",
+        "cdpResponse": null,
+        "path": "/station-art/station-exchange.glb"
+      }
+    ],
+    "httpErrors": [],
+    "jsExceptions": [],
+    "encodingValid": false,
+    "glErrors": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "restoreEqual": true,
+    "runtime": {
+      "timeOfDay": "afternoon",
+      "profileQuery": "?time=afternoon",
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "canvas": [
+        1440,
+        900
+      ],
+      "cubeFaces": [
+        [
+          256,
+          256
+        ],
+        [
+          256,
+          256
+        ],
+        [
+          256,
+          256
+        ],
+        [
+          256,
+          256
+        ],
+        [
+          256,
+          256
+        ],
+        [
+          256,
+          256
+        ]
+      ],
+      "flipY": false,
+      "colorSpace": "srgb",
+      "mipmaps": true,
+      "reflectionStats": {
+        "resolution": 256,
+        "panes": {
+          "W1": 8,
+          "E1": 4,
+          "W2": 5,
+          "E2": 5,
+          "E3": 5
+        },
+        "loadedFaces": 6,
+        "captures": 0,
+        "facesAtLoad": 0,
+        "passesPerFrame": 0,
+        "loadMs": 16
+      },
+      "wetStats": {
+        "maskSize": 512,
+        "maskChannels": 2,
+        "maskBaseBytes": 524288,
+        "bounds": {
+          "x0": -4,
+          "z0": 4,
+          "x1": 4,
+          "z1": 34
+        },
+        "patchGroups": 5,
+        "dryDecalTriangles": {
+          "alphaShaped": 409,
+          "solid": 0
+        },
+        "dryDilationM": 0.12,
+        "wetAreaM2": 64.37164306640625,
+        "puddleAreaM2": 40.9771728515625,
+        "wetEquivalentAreaM2": 38.61780862247282,
+        "puddleEquivalentAreaM2": 24.81718175551654,
+        "materials": 1,
+        "extraPasses": 0,
+        "extraRenderTargets": 0,
+        "reflection": "shared station street cube"
+      },
+      "glazedMeshes": 8,
+      "sharedGlass": 8,
+      "wetUniformAvailable": true,
+      "wetCubeShared": true,
+      "nominalSkyEnvironment": 0,
+      "eveningGlow": null,
+      "wetInitiallyEnabled": true
+    },
+    "profileFiles": [
+      "/src/street-env/px.png",
+      "/src/street-env/nx.png",
+      "/src/street-env/py.png",
+      "/src/street-env/ny.png",
+      "/src/street-env/pz.png",
+      "/src/street-env/nz.png"
+    ]
+  },
+  "final-afternoon": {
+    "head": "17c126adc9f8f053fab99479c92269e1460c3029",
+    "nativeReport": "afternoon/bake-report.json.gz",
+    "process": {
+      "code": 1,
+      "signal": null,
+      "completedAt": "2026-11-18T15:13:00.463Z"
+    },
+    "nativeOK": false,
+    "nativeTransportClean": false,
+    "strictTransportClean": false,
+    "rawCDPFailures": [
+      {
+        "errorText": "net::ERR_ABORTED",
+        "canceled": true,
+        "type": "Fetch",
+        "cdpResponse": null,
+        "path": "/assets/models/boulders.glb"
+      },
+      {
+        "errorText": "net::ERR_ABORTED",
+        "canceled": true,
+        "type": "Fetch",
+        "cdpResponse": null,
+        "path": "/mature-sakura/mature-sakura.glb"
+      }
+    ],
+    "httpErrors": [],
+    "jsExceptions": [],
+    "encodingValid": true,
+    "glErrors": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "restoreEqual": true,
+    "runtime": {
+      "timeOfDay": "afternoon",
+      "profileQuery": "?time=afternoon",
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "canvas": [
+        1440,
+        900
+      ],
+      "cubeFaces": [
+        [
+          256,
+          256
+        ],
+        [
+          256,
+          256
+        ],
+        [
+          256,
+          256
+        ],
+        [
+          256,
+          256
+        ],
+        [
+          256,
+          256
+        ],
+        [
+          256,
+          256
+        ]
+      ],
+      "flipY": false,
+      "colorSpace": "srgb",
+      "mipmaps": true,
+      "reflectionStats": {
+        "resolution": 256,
+        "panes": {
+          "W1": 8,
+          "E1": 4,
+          "W2": 5,
+          "E2": 5,
+          "E3": 5
+        },
+        "loadedFaces": 6,
+        "captures": 0,
+        "facesAtLoad": 0,
+        "passesPerFrame": 0,
+        "loadMs": 21
+      },
+      "wetStats": {
+        "maskSize": 512,
+        "maskChannels": 2,
+        "maskBaseBytes": 524288,
+        "bounds": {
+          "x0": -4,
+          "z0": 4,
+          "x1": 4,
+          "z1": 34
+        },
+        "patchGroups": 5,
+        "dryDecalTriangles": {
+          "alphaShaped": 409,
+          "solid": 0
+        },
+        "dryDilationM": 0.12,
+        "wetAreaM2": 64.37164306640625,
+        "puddleAreaM2": 40.9771728515625,
+        "wetEquivalentAreaM2": 38.61780862247282,
+        "puddleEquivalentAreaM2": 24.81718175551654,
+        "materials": 1,
+        "extraPasses": 0,
+        "extraRenderTargets": 0,
+        "reflection": "shared station street cube"
+      },
+      "glazedMeshes": 8,
+      "sharedGlass": 8,
+      "wetUniformAvailable": true,
+      "wetCubeShared": true,
+      "nominalSkyEnvironment": 0,
+      "eveningGlow": null,
+      "wetInitiallyEnabled": true
+    },
+    "profileFiles": [
+      "/src/street-env/px.png",
+      "/src/street-env/nx.png",
+      "/src/street-env/py.png",
+      "/src/street-env/ny.png",
+      "/src/street-env/pz.png",
+      "/src/street-env/nz.png"
+    ]
+  },
+  "initial-evening": {
+    "head": "2a7c6f12bb66f44a04a9dbbc2a4e2e7a22e93758",
+    "nativeReport": "initial/evening/bake-report.json.gz",
+    "process": {
+      "code": 1,
+      "signal": null,
+      "completedAt": "2026-11-18T15:08:14.804Z"
+    },
+    "nativeOK": false,
+    "nativeTransportClean": false,
+    "strictTransportClean": false,
+    "rawCDPFailures": [
+      {
+        "errorText": "net::ERR_ABORTED",
+        "canceled": true,
+        "type": "Fetch",
+        "cdpResponse": null,
+        "path": "/assets/models/boulders.glb"
+      },
+      {
+        "errorText": "net::ERR_ABORTED",
+        "canceled": true,
+        "type": "Fetch",
+        "cdpResponse": null,
+        "path": "/mature-sakura/mature-sakura.glb"
+      },
+      {
+        "errorText": "net::ERR_ABORTED",
+        "canceled": true,
+        "type": "Fetch",
+        "cdpResponse": null,
+        "path": "/prop-assets/plastic_crate_02/plastic_crate_02_1k.gltf"
+      },
+      {
+        "errorText": "net::ERR_ABORTED",
+        "canceled": true,
+        "type": "Fetch",
+        "cdpResponse": null,
+        "path": "/prop-assets/plastic_crate_02/plastic_crate_02.bin"
+      }
+    ],
+    "httpErrors": [],
+    "jsExceptions": [],
+    "encodingValid": false,
+    "glErrors": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "restoreEqual": true,
+    "runtime": {
+      "timeOfDay": "evening",
+      "profileQuery": "",
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "canvas": [
+        1440,
+        900
+      ],
+      "cubeFaces": [
+        [
+          256,
+          256
+        ],
+        [
+          256,
+          256
+        ],
+        [
+          256,
+          256
+        ],
+        [
+          256,
+          256
+        ],
+        [
+          256,
+          256
+        ],
+        [
+          256,
+          256
+        ]
+      ],
+      "flipY": false,
+      "colorSpace": "srgb",
+      "mipmaps": true,
+      "reflectionStats": {
+        "resolution": 256,
+        "panes": {
+          "W1": 8,
+          "E1": 4,
+          "W2": 5,
+          "E2": 5,
+          "E3": 5
+        },
+        "loadedFaces": 6,
+        "captures": 0,
+        "facesAtLoad": 0,
+        "passesPerFrame": 0,
+        "loadMs": 17
+      },
+      "wetStats": {
+        "maskSize": 512,
+        "maskChannels": 2,
+        "maskBaseBytes": 524288,
+        "bounds": {
+          "x0": -4,
+          "z0": 4,
+          "x1": 4,
+          "z1": 34
+        },
+        "patchGroups": 5,
+        "dryDecalTriangles": {
+          "alphaShaped": 409,
+          "solid": 0
+        },
+        "dryDilationM": 0.12,
+        "wetAreaM2": 64.37164306640625,
+        "puddleAreaM2": 40.9771728515625,
+        "wetEquivalentAreaM2": 38.61780862247282,
+        "puddleEquivalentAreaM2": 24.81718175551654,
+        "materials": 1,
+        "extraPasses": 0,
+        "extraRenderTargets": 0,
+        "reflection": "shared station street cube"
+      },
+      "glazedMeshes": 8,
+      "sharedGlass": 8,
+      "wetUniformAvailable": true,
+      "wetCubeShared": true,
+      "nominalSkyEnvironment": 0,
+      "eveningGlow": {
+        "lamps": 6,
+        "prints": 1
+      },
+      "wetInitiallyEnabled": true
+    },
+    "profileFiles": [
+      "/src/street-env-evening/px.png",
+      "/src/street-env-evening/nx.png",
+      "/src/street-env-evening/py.png",
+      "/src/street-env-evening/ny.png",
+      "/src/street-env-evening/pz.png",
+      "/src/street-env-evening/nz.png"
+    ]
+  },
+  "final-evening": {
+    "head": "17c126adc9f8f053fab99479c92269e1460c3029",
+    "nativeReport": "evening/bake-report.json.gz",
+    "process": {
+      "code": 0,
+      "signal": null,
+      "completedAt": "2026-11-18T15:14:59.736Z"
+    },
+    "nativeOK": true,
+    "nativeTransportClean": true,
+    "strictTransportClean": false,
+    "rawCDPFailures": [
+      {
+        "errorText": "net::ERR_ABORTED",
+        "canceled": true,
+        "type": "Fetch",
+        "cdpResponse": {
+          "status": 200,
+          "mimeType": "model/gltf-binary"
+        },
+        "path": "/mature-sakura/mature-sakura.glb"
+      },
+      {
+        "errorText": "net::ERR_ABORTED",
+        "canceled": true,
+        "type": "Fetch",
+        "cdpResponse": {
+          "status": 200,
+          "mimeType": "model/gltf+json"
+        },
+        "path": "/prop-assets/plastic_crate_02/plastic_crate_02_1k.gltf"
+      },
+      {
+        "errorText": "net::ERR_ABORTED",
+        "canceled": true,
+        "type": "Fetch",
+        "cdpResponse": {
+          "status": 200,
+          "mimeType": "application/octet-stream"
+        },
+        "path": "/prop-assets/plastic_crate_02/plastic_crate_02.bin"
+      }
+    ],
+    "httpErrors": [],
+    "jsExceptions": [],
+    "encodingValid": true,
+    "glErrors": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "restoreEqual": true,
+    "runtime": {
+      "timeOfDay": "evening",
+      "profileQuery": "",
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "canvas": [
+        1440,
+        900
+      ],
+      "cubeFaces": [
+        [
+          256,
+          256
+        ],
+        [
+          256,
+          256
+        ],
+        [
+          256,
+          256
+        ],
+        [
+          256,
+          256
+        ],
+        [
+          256,
+          256
+        ],
+        [
+          256,
+          256
+        ]
+      ],
+      "flipY": false,
+      "colorSpace": "srgb",
+      "mipmaps": true,
+      "reflectionStats": {
+        "resolution": 256,
+        "panes": {
+          "W1": 8,
+          "E1": 4,
+          "W2": 5,
+          "E2": 5,
+          "E3": 5
+        },
+        "loadedFaces": 6,
+        "captures": 0,
+        "facesAtLoad": 0,
+        "passesPerFrame": 0,
+        "loadMs": 15
+      },
+      "wetStats": {
+        "maskSize": 512,
+        "maskChannels": 2,
+        "maskBaseBytes": 524288,
+        "bounds": {
+          "x0": -4,
+          "z0": 4,
+          "x1": 4,
+          "z1": 34
+        },
+        "patchGroups": 5,
+        "dryDecalTriangles": {
+          "alphaShaped": 409,
+          "solid": 0
+        },
+        "dryDilationM": 0.12,
+        "wetAreaM2": 64.37164306640625,
+        "puddleAreaM2": 40.9771728515625,
+        "wetEquivalentAreaM2": 38.61780862247282,
+        "puddleEquivalentAreaM2": 24.81718175551654,
+        "materials": 1,
+        "extraPasses": 0,
+        "extraRenderTargets": 0,
+        "reflection": "shared station street cube"
+      },
+      "glazedMeshes": 8,
+      "sharedGlass": 8,
+      "wetUniformAvailable": true,
+      "wetCubeShared": true,
+      "nominalSkyEnvironment": 0,
+      "eveningGlow": {
+        "lamps": 6,
+        "prints": 1
+      },
+      "wetInitiallyEnabled": true
+    },
+    "profileFiles": [
+      "/src/street-env-evening/px.png",
+      "/src/street-env-evening/nx.png",
+      "/src/street-env-evening/py.png",
+      "/src/street-env-evening/ny.png",
+      "/src/street-env-evening/pz.png",
+      "/src/street-env-evening/nz.png"
+    ]
+  }
+}

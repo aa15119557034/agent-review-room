@@ -1,0 +1,20 @@
+{
+  "before": "0d97731bd7cb4f4634f4c9fdc0e1033ae7585f2a",
+  "after": "6b0e9c4c7453bdd612e77c03cde9f81112ae9cc3",
+  "changes": [
+    {
+      "file": "src/streetscape.js",
+      "beforeSha256": "80506146d9ef8633de99bbd3be40e5b917da8673d3ed1f2141d1fb444f58a9c7",
+      "afterSha256": "28fe675f8ff59e9ff1c2e73eb60f9f6a6bb0374e68014a04970fe149a5f4942e"
+    }
+  ],
+  "manifestCoverageOnly": [
+    {
+      "file": "scripts/diagnose-wet-road.cjs",
+      "diagnosticIncluded": true,
+      "baselineIncluded": false,
+      "bothCommitSha256": "e1e48247aaba93ca40415ddfbbacf7b0d3334d2fbcdfbd666498ed3636574991"
+    }
+  ],
+  "scope": "Among inputs present in both manifests, only streetscape bytes differ. The diagnostic additionally records diagnose-wet-road.cjs, whose exact Git bytes match both commits; absence from normal manifest is not a source deletion. This is not proof of geometry or visual identity."
+}

@@ -1,0 +1,161 @@
+{
+  "prior": "47a5c12eba910682ccbf8bc9138510bc01737bf3",
+  "source": "ffbcfa3e091bdb2d4a7cf94367d40868101c2ddc",
+  "views": {
+    "art-c-alley": {
+      "size": [
+        1440,
+        900
+      ],
+      "eye": [
+        287.65,
+        14.384808464050293,
+        767.3199999999999
+      ],
+      "quaternion": [
+        0.00512201791291099,
+        0.8012252009590126,
+        -0.006859231737600546,
+        0.5983016740914732
+      ],
+      "fov": 45,
+      "time": 14,
+      "islandTime": 14,
+      "sha256": [
+        "63cc140ad85b3215092307eec34a54baaa81c85777f21f30fbd48961468e709b",
+        "cad6923a1f0b726c8dec94e3cb2dc7ef408009f1f6500e51497e05f6dfc0f6b3"
+      ],
+      "pixelsChanged": 248,
+      "deltaGt8": 112,
+      "changedBounds": [
+        1007,
+        337,
+        1103,
+        417
+      ],
+      "maxRGB": 59,
+      "regions": {
+        "near": {
+          "box": [
+            331,
+            128,
+            413,
+            181
+          ],
+          "changed": 0
+        },
+        "middle": {
+          "box": [
+            750,
+            329,
+            772,
+            345
+          ],
+          "changed": 0
+        },
+        "far": {
+          "box": [
+            858,
+            381,
+            870,
+            390
+          ],
+          "changed": 0
+        }
+      },
+      "extraCorridorProjection": {
+        "R3-3": {
+          "depthRangeM": [
+            18.975267438226666,
+            28.390036086957828
+          ],
+          "projectedBounds": [
+            1034,
+            364,
+            1040,
+            407
+          ],
+          "overlapChanged": 109
+        },
+        "R3b-3": {
+          "depthRangeM": [
+            18.972870553885233,
+            28.387639202616395
+          ],
+          "projectedBounds": [
+            1034,
+            372,
+            1040,
+            412
+          ],
+          "overlapChanged": 110
+        },
+        "R3-5": {
+          "depthRangeM": [
+            -18.478109512852285,
+            -8.104662372220671
+          ],
+          "behindCamera": true
+        },
+        "R3b-5": {
+          "depthRangeM": [
+            -18.480506397193718,
+            -8.107059256562104
+          ],
+          "behindCamera": true
+        },
+        "within0px": 119,
+        "within1px": 170,
+        "within2px": 199
+      }
+    },
+    "art-d-laundry": {
+      "size": [
+        1440,
+        900
+      ],
+      "eye": [
+        283.5,
+        12.520055181715234,
+        783.8
+      ],
+      "quaternion": [
+        0.1297258927986663,
+        0.0767626424061459,
+        -0.010073721024303532,
+        0.9885227410703001
+      ],
+      "fov": 48,
+      "time": 14,
+      "islandTime": 14,
+      "sha256": [
+        "239d42400a94bbda14db29e49845f0211a66c27d3bcef732c6e55f346d14bd46",
+        "239d42400a94bbda14db29e49845f0211a66c27d3bcef732c6e55f346d14bd46"
+      ],
+      "pixelsChanged": 0,
+      "deltaGt8": 0,
+      "changedBounds": null,
+      "maxRGB": 0,
+      "regions": {
+        "fascia": {
+          "box": [
+            302,
+            204,
+            1136,
+            341
+          ],
+          "changed": 0
+        },
+        "side": {
+          "box": [
+            1105,
+            336,
+            1255,
+            665
+          ],
+          "changed": 0
+        }
+      }
+    }
+  }
+}

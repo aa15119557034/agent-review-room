@@ -1,0 +1,1152 @@
+{
+  "report": "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base/artifacts/gpu-shutter-c8-cause-v1/shutter-report.json",
+  "status": {
+    "exitCode": 1,
+    "renderOk": true,
+    "transportClean": false,
+    "sourceUnchanged": true,
+    "driverUnchanged": true,
+    "assetsUnchanged": true,
+    "head": "5cf3ef7d784ff069b87fef9b8051de63b6695e48"
+  },
+  "sequence": [
+    {
+      "name": "00-original",
+      "kind": "original",
+      "candidate": false,
+      "framesIdentical": false,
+      "equalsOriginalPNG": true,
+      "cameraEqualsOriginal": true,
+      "lightsEqualOriginal": true,
+      "lookEqualsOriginal": true,
+      "time": 14,
+      "receiveShadow": [
+        true
+      ],
+      "materials": [
+        {
+          "type": "MeshStandardMaterial",
+          "colorRGB": [
+            1,
+            1,
+            1
+          ],
+          "normalMap": "2dee73df-9c4b-44b2-a546-37dc46f5225a"
+        }
+      ],
+      "gpuUniforms": [
+        {
+          "mesh": "160ffbb9-c660-44fa-8947-5eac72ece205",
+          "material": "f747009a-b879-4abc-abd5-0e274b9c6e8b",
+          "type": "MeshStandardMaterial",
+          "uniforms": {
+            "diffuse": [
+              1,
+              1,
+              1
+            ],
+            "opacity": 1,
+            "normalScale": [
+              1,
+              1
+            ],
+            "normalMatrix": [
+              0.6527090072631836,
+              -0.2150634080171585,
+              0.7264424562454224,
+              -2.7755575615628914e-17,
+              0.9588623642921448,
+              0.2838713526725769,
+              -0.7576087117195129,
+              -0.18528540432453156,
+              0.6258581280708313
+            ],
+            "modelMatrix": [
+              1,
+              0,
+              0,
+              0,
+              0,
+              1,
+              0,
+              0,
+              0,
+              0,
+              1,
+              0,
+              280,
+              8,
+              900,
+              1
+            ],
+            "modelViewMatrix": [
+              0.6527090072631836,
+              -0.2150634080171585,
+              0.7264424562454224,
+              0,
+              -2.7755575615628914e-17,
+              0.9588623642921448,
+              0.2838713526725769,
+              0,
+              -0.7576087117195129,
+              -0.18528540432453156,
+              0.6258581280708313,
+              0,
+              -37.730079650878906,
+              -0.8999996185302734,
+              -2.6386044025421143,
+              1
+            ],
+            "viewMatrix": [
+              0.6527090072631836,
+              -0.2150634080171585,
+              0.7264424562454224,
+              0,
+              -2.7755575615628914e-17,
+              0.9588623642921448,
+              0.2838713526725769,
+              0,
+              -0.7576087117195129,
+              -0.18528540432453156,
+              0.6258581280708313,
+              0,
+              461.3592224121094,
+              218.40371704101562,
+              -771.5857543945312,
+              1
+            ],
+            "ambientLightColor": [
+              0,
+              0,
+              0
+            ],
+            "receiveShadow": true,
+            "directionalLights[0].direction": [
+              0.16179165244102478,
+              0.7670040130615234,
+              -0.6209092736244202
+            ],
+            "directionalLights[0].color": [
+              2.0999999046325684,
+              1.6292266845703125,
+              1.1592239141464233
+            ],
+            "hemisphereLights[0].direction": [
+              -2.7755575615628914e-17,
+              0.9588623642921448,
+              0.2838713526725769
+            ],
+            "hemisphereLights[0].skyColor": [
+              0.6551584005355835,
+              0.7826744318008423,
+              1.0499999523162842
+            ],
+            "hemisphereLights[0].groundColor": [
+              0.41115111112594604,
+              0.349074125289917,
+              0.31094518303871155
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "01-normal-off",
+      "kind": "normal-off",
+      "candidate": false,
+      "framesIdentical": true,
+      "equalsOriginalPNG": false,
+      "cameraEqualsOriginal": true,
+      "lightsEqualOriginal": true,
+      "lookEqualsOriginal": true,
+      "time": 14,
+      "receiveShadow": [
+        true
+      ],
+      "materials": [
+        {
+          "type": "MeshStandardMaterial",
+          "colorRGB": [
+            1,
+            1,
+            1
+          ],
+          "normalMap": null
+        }
+      ],
+      "gpuUniforms": [
+        {
+          "mesh": "160ffbb9-c660-44fa-8947-5eac72ece205",
+          "material": "f747009a-b879-4abc-abd5-0e274b9c6e8b",
+          "type": "MeshStandardMaterial",
+          "uniforms": {
+            "diffuse": [
+              1,
+              1,
+              1
+            ],
+            "opacity": 1,
+            "normalScale": null,
+            "normalMatrix": [
+              0.6527090072631836,
+              -0.2150634080171585,
+              0.7264424562454224,
+              -2.7755575615628914e-17,
+              0.9588623642921448,
+              0.2838713526725769,
+              -0.7576087117195129,
+              -0.18528540432453156,
+              0.6258581280708313
+            ],
+            "modelMatrix": [
+              1,
+              0,
+              0,
+              0,
+              0,
+              1,
+              0,
+              0,
+              0,
+              0,
+              1,
+              0,
+              280,
+              8,
+              900,
+              1
+            ],
+            "modelViewMatrix": [
+              0.6527090072631836,
+              -0.2150634080171585,
+              0.7264424562454224,
+              0,
+              -2.7755575615628914e-17,
+              0.9588623642921448,
+              0.2838713526725769,
+              0,
+              -0.7576087117195129,
+              -0.18528540432453156,
+              0.6258581280708313,
+              0,
+              -37.730079650878906,
+              -0.8999996185302734,
+              -2.6386044025421143,
+              1
+            ],
+            "viewMatrix": [
+              0.6527090072631836,
+              -0.2150634080171585,
+              0.7264424562454224,
+              0,
+              -2.7755575615628914e-17,
+              0.9588623642921448,
+              0.2838713526725769,
+              0,
+              -0.7576087117195129,
+              -0.18528540432453156,
+              0.6258581280708313,
+              0,
+              461.3592224121094,
+              218.40371704101562,
+              -771.5857543945312,
+              1
+            ],
+            "ambientLightColor": [
+              0,
+              0,
+              0
+            ],
+            "receiveShadow": true,
+            "directionalLights[0].direction": [
+              0.16179165244102478,
+              0.7670040130615234,
+              -0.6209092736244202
+            ],
+            "directionalLights[0].color": [
+              2.0999999046325684,
+              1.6292266845703125,
+              1.1592239141464233
+            ],
+            "hemisphereLights[0].direction": [
+              -2.7755575615628914e-17,
+              0.9588623642921448,
+              0.2838713526725769
+            ],
+            "hemisphereLights[0].skyColor": [
+              0.6551584005355835,
+              0.7826744318008423,
+              1.0499999523162842
+            ],
+            "hemisphereLights[0].groundColor": [
+              0.41115111112594604,
+              0.349074125289917,
+              0.31094518303871155
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "02-restored-normal",
+      "kind": "original",
+      "candidate": false,
+      "framesIdentical": true,
+      "equalsOriginalPNG": false,
+      "cameraEqualsOriginal": true,
+      "lightsEqualOriginal": true,
+      "lookEqualsOriginal": true,
+      "time": 14,
+      "receiveShadow": [
+        true
+      ],
+      "materials": [
+        {
+          "type": "MeshStandardMaterial",
+          "colorRGB": [
+            1,
+            1,
+            1
+          ],
+          "normalMap": "2dee73df-9c4b-44b2-a546-37dc46f5225a"
+        }
+      ],
+      "gpuUniforms": [
+        {
+          "mesh": "160ffbb9-c660-44fa-8947-5eac72ece205",
+          "material": "f747009a-b879-4abc-abd5-0e274b9c6e8b",
+          "type": "MeshStandardMaterial",
+          "uniforms": {
+            "diffuse": [
+              1,
+              1,
+              1
+            ],
+            "opacity": 1,
+            "normalScale": [
+              1,
+              1
+            ],
+            "normalMatrix": [
+              0.6527090072631836,
+              -0.2150634080171585,
+              0.7264424562454224,
+              -2.7755575615628914e-17,
+              0.9588623642921448,
+              0.2838713526725769,
+              -0.7576087117195129,
+              -0.18528540432453156,
+              0.6258581280708313
+            ],
+            "modelMatrix": [
+              1,
+              0,
+              0,
+              0,
+              0,
+              1,
+              0,
+              0,
+              0,
+              0,
+              1,
+              0,
+              280,
+              8,
+              900,
+              1
+            ],
+            "modelViewMatrix": [
+              0.6527090072631836,
+              -0.2150634080171585,
+              0.7264424562454224,
+              0,
+              -2.7755575615628914e-17,
+              0.9588623642921448,
+              0.2838713526725769,
+              0,
+              -0.7576087117195129,
+              -0.18528540432453156,
+              0.6258581280708313,
+              0,
+              -37.730079650878906,
+              -0.8999996185302734,
+              -2.6386044025421143,
+              1
+            ],
+            "viewMatrix": [
+              0.6527090072631836,
+              -0.2150634080171585,
+              0.7264424562454224,
+              0,
+              -2.7755575615628914e-17,
+              0.9588623642921448,
+              0.2838713526725769,
+              0,
+              -0.7576087117195129,
+              -0.18528540432453156,
+              0.6258581280708313,
+              0,
+              461.3592224121094,
+              218.40371704101562,
+              -771.5857543945312,
+              1
+            ],
+            "ambientLightColor": [
+              0,
+              0,
+              0
+            ],
+            "receiveShadow": true,
+            "directionalLights[0].direction": [
+              0.16179165244102478,
+              0.7670040130615234,
+              -0.6209092736244202
+            ],
+            "directionalLights[0].color": [
+              2.0999999046325684,
+              1.6292266845703125,
+              1.1592239141464233
+            ],
+            "hemisphereLights[0].direction": [
+              -2.7755575615628914e-17,
+              0.9588623642921448,
+              0.2838713526725769
+            ],
+            "hemisphereLights[0].skyColor": [
+              0.6551584005355835,
+              0.7826744318008423,
+              1.0499999523162842
+            ],
+            "hemisphereLights[0].groundColor": [
+              0.41115111112594604,
+              0.349074125289917,
+              0.31094518303871155
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "03-shadow-off",
+      "kind": "shadow-off",
+      "candidate": false,
+      "framesIdentical": true,
+      "equalsOriginalPNG": false,
+      "cameraEqualsOriginal": true,
+      "lightsEqualOriginal": true,
+      "lookEqualsOriginal": true,
+      "time": 14,
+      "receiveShadow": [
+        false
+      ],
+      "materials": [
+        {
+          "type": "MeshStandardMaterial",
+          "colorRGB": [
+            1,
+            1,
+            1
+          ],
+          "normalMap": "2dee73df-9c4b-44b2-a546-37dc46f5225a"
+        }
+      ],
+      "gpuUniforms": [
+        {
+          "mesh": "160ffbb9-c660-44fa-8947-5eac72ece205",
+          "material": "f747009a-b879-4abc-abd5-0e274b9c6e8b",
+          "type": "MeshStandardMaterial",
+          "uniforms": {
+            "diffuse": [
+              1,
+              1,
+              1
+            ],
+            "opacity": 1,
+            "normalScale": [
+              1,
+              1
+            ],
+            "normalMatrix": [
+              0.6527090072631836,
+              -0.2150634080171585,
+              0.7264424562454224,
+              -2.7755575615628914e-17,
+              0.9588623642921448,
+              0.2838713526725769,
+              -0.7576087117195129,
+              -0.18528540432453156,
+              0.6258581280708313
+            ],
+            "modelMatrix": [
+              1,
+              0,
+              0,
+              0,
+              0,
+              1,
+              0,
+              0,
+              0,
+              0,
+              1,
+              0,
+              280,
+              8,
+              900,
+              1
+            ],
+            "modelViewMatrix": [
+              0.6527090072631836,
+              -0.2150634080171585,
+              0.7264424562454224,
+              0,
+              -2.7755575615628914e-17,
+              0.9588623642921448,
+              0.2838713526725769,
+              0,
+              -0.7576087117195129,
+              -0.18528540432453156,
+              0.6258581280708313,
+              0,
+              -37.730079650878906,
+              -0.8999996185302734,
+              -2.6386044025421143,
+              1
+            ],
+            "viewMatrix": [
+              0.6527090072631836,
+              -0.2150634080171585,
+              0.7264424562454224,
+              0,
+              -2.7755575615628914e-17,
+              0.9588623642921448,
+              0.2838713526725769,
+              0,
+              -0.7576087117195129,
+              -0.18528540432453156,
+              0.6258581280708313,
+              0,
+              461.3592224121094,
+              218.40371704101562,
+              -771.5857543945312,
+              1
+            ],
+            "ambientLightColor": [
+              0,
+              0,
+              0
+            ],
+            "receiveShadow": false,
+            "directionalLights[0].direction": [
+              0.16179165244102478,
+              0.7670040130615234,
+              -0.6209092736244202
+            ],
+            "directionalLights[0].color": [
+              2.0999999046325684,
+              1.6292266845703125,
+              1.1592239141464233
+            ],
+            "hemisphereLights[0].direction": [
+              -2.7755575615628914e-17,
+              0.9588623642921448,
+              0.2838713526725769
+            ],
+            "hemisphereLights[0].skyColor": [
+              0.6551584005355835,
+              0.7826744318008423,
+              1.0499999523162842
+            ],
+            "hemisphereLights[0].groundColor": [
+              0.41115111112594604,
+              0.349074125289917,
+              0.31094518303871155
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "04-restored-shadow",
+      "kind": "original",
+      "candidate": false,
+      "framesIdentical": true,
+      "equalsOriginalPNG": false,
+      "cameraEqualsOriginal": true,
+      "lightsEqualOriginal": true,
+      "lookEqualsOriginal": true,
+      "time": 14,
+      "receiveShadow": [
+        true
+      ],
+      "materials": [
+        {
+          "type": "MeshStandardMaterial",
+          "colorRGB": [
+            1,
+            1,
+            1
+          ],
+          "normalMap": "2dee73df-9c4b-44b2-a546-37dc46f5225a"
+        }
+      ],
+      "gpuUniforms": [
+        {
+          "mesh": "160ffbb9-c660-44fa-8947-5eac72ece205",
+          "material": "f747009a-b879-4abc-abd5-0e274b9c6e8b",
+          "type": "MeshStandardMaterial",
+          "uniforms": {
+            "diffuse": [
+              1,
+              1,
+              1
+            ],
+            "opacity": 1,
+            "normalScale": [
+              1,
+              1
+            ],
+            "normalMatrix": [
+              0.6527090072631836,
+              -0.2150634080171585,
+              0.7264424562454224,
+              -2.7755575615628914e-17,
+              0.9588623642921448,
+              0.2838713526725769,
+              -0.7576087117195129,
+              -0.18528540432453156,
+              0.6258581280708313
+            ],
+            "modelMatrix": [
+              1,
+              0,
+              0,
+              0,
+              0,
+              1,
+              0,
+              0,
+              0,
+              0,
+              1,
+              0,
+              280,
+              8,
+              900,
+              1
+            ],
+            "modelViewMatrix": [
+              0.6527090072631836,
+              -0.2150634080171585,
+              0.7264424562454224,
+              0,
+              -2.7755575615628914e-17,
+              0.9588623642921448,
+              0.2838713526725769,
+              0,
+              -0.7576087117195129,
+              -0.18528540432453156,
+              0.6258581280708313,
+              0,
+              -37.730079650878906,
+              -0.8999996185302734,
+              -2.6386044025421143,
+              1
+            ],
+            "viewMatrix": [
+              0.6527090072631836,
+              -0.2150634080171585,
+              0.7264424562454224,
+              0,
+              -2.7755575615628914e-17,
+              0.9588623642921448,
+              0.2838713526725769,
+              0,
+              -0.7576087117195129,
+              -0.18528540432453156,
+              0.6258581280708313,
+              0,
+              461.3592224121094,
+              218.40371704101562,
+              -771.5857543945312,
+              1
+            ],
+            "ambientLightColor": [
+              0,
+              0,
+              0
+            ],
+            "receiveShadow": true,
+            "directionalLights[0].direction": [
+              0.16179165244102478,
+              0.7670040130615234,
+              -0.6209092736244202
+            ],
+            "directionalLights[0].color": [
+              2.0999999046325684,
+              1.6292266845703125,
+              1.1592239141464233
+            ],
+            "hemisphereLights[0].direction": [
+              -2.7755575615628914e-17,
+              0.9588623642921448,
+              0.2838713526725769
+            ],
+            "hemisphereLights[0].skyColor": [
+              0.6551584005355835,
+              0.7826744318008423,
+              1.0499999523162842
+            ],
+            "hemisphereLights[0].groundColor": [
+              0.41115111112594604,
+              0.349074125289917,
+              0.31094518303871155
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "05-basic-map-only",
+      "kind": "basic",
+      "candidate": false,
+      "framesIdentical": true,
+      "equalsOriginalPNG": false,
+      "cameraEqualsOriginal": true,
+      "lightsEqualOriginal": true,
+      "lookEqualsOriginal": true,
+      "time": 14,
+      "receiveShadow": [
+        true
+      ],
+      "materials": [
+        {
+          "type": "MeshBasicMaterial",
+          "colorRGB": [
+            1,
+            1,
+            1
+          ],
+          "normalMap": null
+        }
+      ],
+      "gpuUniforms": [
+        {
+          "mesh": "160ffbb9-c660-44fa-8947-5eac72ece205",
+          "material": "c148bad0-253b-409f-8cf3-9a2b5bcb5b1f",
+          "type": "MeshBasicMaterial",
+          "uniforms": {
+            "diffuse": [
+              1,
+              1,
+              1
+            ],
+            "opacity": 1,
+            "normalScale": null,
+            "normalMatrix": null,
+            "modelMatrix": [
+              1,
+              0,
+              0,
+              0,
+              0,
+              1,
+              0,
+              0,
+              0,
+              0,
+              1,
+              0,
+              280,
+              8,
+              900,
+              1
+            ],
+            "modelViewMatrix": [
+              0.6527090072631836,
+              -0.2150634080171585,
+              0.7264424562454224,
+              0,
+              -2.7755575615628914e-17,
+              0.9588623642921448,
+              0.2838713526725769,
+              0,
+              -0.7576087117195129,
+              -0.18528540432453156,
+              0.6258581280708313,
+              0,
+              -37.730079650878906,
+              -0.8999996185302734,
+              -2.6386044025421143,
+              1
+            ],
+            "viewMatrix": null,
+            "ambientLightColor": null,
+            "receiveShadow": null,
+            "directionalLights[0].direction": null,
+            "directionalLights[0].color": null,
+            "hemisphereLights[0].direction": null,
+            "hemisphereLights[0].skyColor": null,
+            "hemisphereLights[0].groundColor": null
+          }
+        }
+      ]
+    },
+    {
+      "name": "06-restored-basic",
+      "kind": "original",
+      "candidate": false,
+      "framesIdentical": true,
+      "equalsOriginalPNG": false,
+      "cameraEqualsOriginal": true,
+      "lightsEqualOriginal": true,
+      "lookEqualsOriginal": true,
+      "time": 14,
+      "receiveShadow": [
+        true
+      ],
+      "materials": [
+        {
+          "type": "MeshStandardMaterial",
+          "colorRGB": [
+            1,
+            1,
+            1
+          ],
+          "normalMap": "2dee73df-9c4b-44b2-a546-37dc46f5225a"
+        }
+      ],
+      "gpuUniforms": [
+        {
+          "mesh": "160ffbb9-c660-44fa-8947-5eac72ece205",
+          "material": "f747009a-b879-4abc-abd5-0e274b9c6e8b",
+          "type": "MeshStandardMaterial",
+          "uniforms": {
+            "diffuse": [
+              1,
+              1,
+              1
+            ],
+            "opacity": 1,
+            "normalScale": [
+              1,
+              1
+            ],
+            "normalMatrix": [
+              0.6527090072631836,
+              -0.2150634080171585,
+              0.7264424562454224,
+              -2.7755575615628914e-17,
+              0.9588623642921448,
+              0.2838713526725769,
+              -0.7576087117195129,
+              -0.18528540432453156,
+              0.6258581280708313
+            ],
+            "modelMatrix": [
+              1,
+              0,
+              0,
+              0,
+              0,
+              1,
+              0,
+              0,
+              0,
+              0,
+              1,
+              0,
+              280,
+              8,
+              900,
+              1
+            ],
+            "modelViewMatrix": [
+              0.6527090072631836,
+              -0.2150634080171585,
+              0.7264424562454224,
+              0,
+              -2.7755575615628914e-17,
+              0.9588623642921448,
+              0.2838713526725769,
+              0,
+              -0.7576087117195129,
+              -0.18528540432453156,
+              0.6258581280708313,
+              0,
+              -37.730079650878906,
+              -0.8999996185302734,
+              -2.6386044025421143,
+              1
+            ],
+            "viewMatrix": [
+              0.6527090072631836,
+              -0.2150634080171585,
+              0.7264424562454224,
+              0,
+              -2.7755575615628914e-17,
+              0.9588623642921448,
+              0.2838713526725769,
+              0,
+              -0.7576087117195129,
+              -0.18528540432453156,
+              0.6258581280708313,
+              0,
+              461.3592224121094,
+              218.40371704101562,
+              -771.5857543945312,
+              1
+            ],
+            "ambientLightColor": [
+              0,
+              0,
+              0
+            ],
+            "receiveShadow": true,
+            "directionalLights[0].direction": [
+              0.16179165244102478,
+              0.7670040130615234,
+              -0.6209092736244202
+            ],
+            "directionalLights[0].color": [
+              2.0999999046325684,
+              1.6292266845703125,
+              1.1592239141464233
+            ],
+            "hemisphereLights[0].direction": [
+              -2.7755575615628914e-17,
+              0.9588623642921448,
+              0.2838713526725769
+            ],
+            "hemisphereLights[0].skyColor": [
+              0.6551584005355835,
+              0.7826744318008423,
+              1.0499999523162842
+            ],
+            "hemisphereLights[0].groundColor": [
+              0.41115111112594604,
+              0.349074125289917,
+              0.31094518303871155
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "07-service-candidate",
+      "kind": "original",
+      "candidate": true,
+      "framesIdentical": true,
+      "equalsOriginalPNG": false,
+      "cameraEqualsOriginal": false,
+      "lightsEqualOriginal": true,
+      "lookEqualsOriginal": true,
+      "time": 14,
+      "receiveShadow": [
+        true
+      ],
+      "materials": [
+        {
+          "type": "MeshStandardMaterial",
+          "colorRGB": [
+            1,
+            1,
+            1
+          ],
+          "normalMap": "2dee73df-9c4b-44b2-a546-37dc46f5225a"
+        }
+      ],
+      "gpuUniforms": [
+        {
+          "mesh": "160ffbb9-c660-44fa-8947-5eac72ece205",
+          "material": "f747009a-b879-4abc-abd5-0e274b9c6e8b",
+          "type": "MeshStandardMaterial",
+          "uniforms": {
+            "diffuse": [
+              1,
+              1,
+              1
+            ],
+            "opacity": 1,
+            "normalScale": [
+              1,
+              1
+            ],
+            "normalMatrix": [
+              0.4257970452308655,
+              -0.17982429265975952,
+              0.8867694735527039,
+              2.7755575615628914e-17,
+              0.98005211353302,
+              0.19874069094657898,
+              -0.9048187136650085,
+              -0.08462319523096085,
+              0.41730329394340515
+            ],
+            "modelMatrix": [
+              1,
+              0,
+              0,
+              0,
+              0,
+              1,
+              0,
+              0,
+              0,
+              0,
+              1,
+              0,
+              280,
+              8,
+              900,
+              1
+            ],
+            "modelViewMatrix": [
+              0.4257970452308655,
+              -0.17982429265975952,
+              0.8867694735527039,
+              0,
+              2.7755575615628914e-17,
+              0.98005211353302,
+              0.19874069094657898,
+              0,
+              -0.9048187136650085,
+              -0.08462319523096085,
+              0.41730329394340515,
+              0,
+              -36.613224029541016,
+              1.2338773012161255,
+              -14.195704460144043,
+              1
+            ],
+            "viewMatrix": [
+              0.4257970452308655,
+              -0.17982429265975952,
+              0.8867694735527039,
+              0,
+              2.7755575615628914e-17,
+              0.98005211353302,
+              0.19874069094657898,
+              0,
+              -0.9048187136650085,
+              -0.08462319523096085,
+              0.41730329394340515,
+              0,
+              658.5004272460938,
+              119.90513610839844,
+              -639.654052734375,
+              1
+            ],
+            "ambientLightColor": [
+              0,
+              0,
+              0
+            ],
+            "receiveShadow": true,
+            "directionalLights[0].direction": [
+              0.37377992272377014,
+              0.6951051950454712,
+              -0.6140987873077393
+            ],
+            "directionalLights[0].color": [
+              2.0999999046325684,
+              1.6292266845703125,
+              1.1592239141464233
+            ],
+            "hemisphereLights[0].direction": [
+              2.7755575615628914e-17,
+              0.98005211353302,
+              0.19874069094657898
+            ],
+            "hemisphereLights[0].skyColor": [
+              0.6551584005355835,
+              0.7826744318008423,
+              1.0499999523162842
+            ],
+            "hemisphereLights[0].groundColor": [
+              0.41115111112594604,
+              0.349074125289917,
+              0.31094518303871155
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "08-laundry-candidate",
+      "kind": "original",
+      "candidate": true,
+      "framesIdentical": false,
+      "equalsOriginalPNG": false,
+      "cameraEqualsOriginal": false,
+      "lightsEqualOriginal": true,
+      "lookEqualsOriginal": true,
+      "time": 14,
+      "receiveShadow": [
+        true
+      ],
+      "materials": [
+        {
+          "type": "MeshStandardMaterial",
+          "colorRGB": [
+            1,
+            1,
+            1
+          ],
+          "normalMap": "2dee73df-9c4b-44b2-a546-37dc46f5225a"
+        }
+      ],
+      "gpuUniforms": []
+    }
+  ],
+  "conclusions": [
+    "Normal-map removal alone leaves the shutter nearly black; receiveShadow=false alone also leaves it nearly black. Prior independent aoMap=null diagnosis similarly remained black. These single-variable outcomes do not prove absence of interactions.",
+    "MeshBasic using the same source map, original white color/side/clipping/opacity with unchanged scene post-processing reveals clear shutter texture. This narrows the issue to the lit PBR shading path in combination with the dark source map/current grading; it does not identify a single faulty formula or justify shipping Basic.",
+    "CPU material color and actual after-draw GPU diffuse are both white. Hemisphere and directional GPU uniforms are populated with expected nonzero colors; no missing-light or zero-color uniform was observed.",
+    "Both runtime camera candidates visually include their intended props: service crate/carton and laundry crate/pot/sign. These are candidate compositions, not changes to source presets."
+  ],
+  "uncertainties": [
+    "No pre-tonemap HDR pixels or GPU fragment intermediate readback was captured. Texture/color/lighting/grading contribution cannot be split quantitatively from this experiment.",
+    "Source normals and matrices are preserved in report. Removing normalMap does not by itself validate all tangent/normal calculations.",
+    "Lighting uniforms queried immediately after actual shutter draw; null entries represent inactive uniforms. No performance conclusions from synchronous uniform queries."
+  ],
+  "restore": {
+    "restored": true,
+    "materials": true,
+    "normalMaps": true,
+    "temporaryMaterialsDisposed": 1,
+    "view": "station-street",
+    "fov": 58,
+    "time": 34.174800000000005,
+    "frozen": false
+  },
+  "networkFailures": [
+    {
+      "stage": "loading",
+      "url": "http://127.0.0.1:59876/prop-assets/plastic_crate_02/plastic_crate_02_1k.gltf",
+      "canceled": true,
+      "errorText": "net::ERR_ABORTED",
+      "requestId": "52608.235",
+      "timestamp": 1909484.031525,
+      "type": "Fetch"
+    },
+    {
+      "stage": "loading",
+      "url": "http://127.0.0.1:59876/prop-assets/plastic_crate_02/plastic_crate_02.bin",
+      "canceled": true,
+      "errorText": "net::ERR_ABORTED",
+      "requestId": "52608.240",
+      "timestamp": 1909484.046233,
+      "type": "Fetch"
+    }
+  ],
+  "images": {
+    "original": "00-original-capture-2.jpg",
+    "normalOff": "01-normal-off-capture-2.jpg",
+    "shadowOff": "03-shadow-off-capture-2.jpg",
+    "basicMapOnly": "05-basic-map-only-capture-2.jpg",
+    "serviceCandidate": "07-service-candidate-capture-2.jpg",
+    "laundryCandidate": "08-laundry-candidate-capture-2.jpg"
+  }
+}

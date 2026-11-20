@@ -1,0 +1,669 @@
+{
+  "artifact": "gpu-town-c16",
+  "head": "50e190b092fb2b30ab9ed19a28302d5638f947f4",
+  "session": 5028,
+  "pid": 63284,
+  "actualExit": 1,
+  "stage": "complete",
+  "renderOk": true,
+  "transportClean": false,
+  "source": {
+    "head": "50e190b092fb2b30ab9ed19a28302d5638f947f4",
+    "sha256": "d005281bb75f65bdb9ee506462661b6b9e77b361164778f2a4340fcc371103ed",
+    "trackedFilesVerified": 203,
+    "pinnedIgnoredFilesVerified": 9,
+    "receipt": "embedded"
+  },
+  "networkFailures": [
+    {
+      "url": "http://127.0.0.1:65400/assets/models/boulders.glb",
+      "type": "Fetch",
+      "canceled": true,
+      "errorText": "net::ERR_ABORTED",
+      "requestId": "65108.121",
+      "timestamp": 1944494.263438,
+      "stage": "waiting-for-ready-frame",
+      "receivedWallTime": 1794934315.209
+    }
+  ],
+  "exceptions": [],
+  "performance": {
+    "method": "RAF intervals with WebGL2 submission counters across all passes; instrumentation overhead included",
+    "unsupportedDrawPaths": [
+      "ANGLE_instanced_arrays",
+      "WEBGL_multi_draw"
+    ],
+    "frameCount": 921,
+    "sampleMs": 15138.5,
+    "fps": 60.83826006539618,
+    "p95FrameMs": 30.700000000004366,
+    "drawCalls": {
+      "mean": 1571.0380021715528,
+      "min": 1569,
+      "max": 1574
+    },
+    "triangles": {
+      "mean": 8311674.0640608035,
+      "min": 8311549,
+      "max": 8311869
+    },
+    "framesWithoutDraws": 0,
+    "samplesFile": "frame-samples.json"
+  },
+  "views": [
+    {
+      "name": "station-street",
+      "method": "RAF intervals with WebGL2 submission counters across all passes; instrumentation overhead included",
+      "unsupportedDrawPaths": [
+        "ANGLE_instanced_arrays",
+        "WEBGL_multi_draw"
+      ],
+      "frameCount": 200,
+      "sampleMs": 3123.0999999999985,
+      "fps": 64.03893567288915,
+      "p95FrameMs": 15.5,
+      "drawCalls": {
+        "mean": 1568.815,
+        "min": 1568,
+        "max": 1569
+      },
+      "triangles": {
+        "mean": 8311540.12,
+        "min": 8311501,
+        "max": 8311549
+      },
+      "framesWithoutDraws": 0,
+      "samplesFile": "frame-samples-station-street.json",
+      "capture": {
+        "file": "01-station-street.png",
+        "jpeg": "01-station-street.jpg",
+        "jpegWidth": 960,
+        "pixels": {
+          "width": 1440,
+          "height": 900,
+          "samples": 39816,
+          "meanRgb": 100.595405532117,
+          "nonBlackFraction": 1,
+          "notBlack": true
+        }
+      }
+    },
+    {
+      "name": "station-port",
+      "method": "RAF intervals with WebGL2 submission counters across all passes; instrumentation overhead included",
+      "unsupportedDrawPaths": [
+        "ANGLE_instanced_arrays",
+        "WEBGL_multi_draw"
+      ],
+      "frameCount": 202,
+      "sampleMs": 3107.699999999997,
+      "fps": 64.99983910930919,
+      "p95FrameMs": 15.5,
+      "drawCalls": {
+        "mean": 856.009900990099,
+        "min": 856,
+        "max": 857
+      },
+      "triangles": {
+        "mean": 7956222.475247525,
+        "min": 7956222,
+        "max": 7956270
+      },
+      "framesWithoutDraws": 0,
+      "samplesFile": "frame-samples-station-port.json",
+      "capture": {
+        "file": "02-station-port.png",
+        "jpeg": "02-station-port.jpg",
+        "jpegWidth": 960,
+        "pixels": {
+          "width": 1440,
+          "height": 900,
+          "samples": 39816,
+          "meanRgb": 172.25346594334025,
+          "nonBlackFraction": 1,
+          "notBlack": true
+        }
+      }
+    },
+    {
+      "name": "island-aerial",
+      "method": "RAF intervals with WebGL2 submission counters across all passes; instrumentation overhead included",
+      "unsupportedDrawPaths": [
+        "ANGLE_instanced_arrays",
+        "WEBGL_multi_draw"
+      ],
+      "frameCount": 202,
+      "sampleMs": 3123,
+      "fps": 64.68139609349984,
+      "p95FrameMs": 15.5,
+      "drawCalls": {
+        "mean": 1806,
+        "min": 1806,
+        "max": 1806
+      },
+      "triangles": {
+        "mean": 7782279,
+        "min": 7782279,
+        "max": 7782279
+      },
+      "framesWithoutDraws": 0,
+      "samplesFile": "frame-samples-island-aerial.json",
+      "capture": {
+        "file": "03-island-aerial.png",
+        "jpeg": "03-island-aerial.jpg",
+        "jpegWidth": 960,
+        "pixels": {
+          "width": 1440,
+          "height": 900,
+          "samples": 39816,
+          "meanRgb": 108.76131873283794,
+          "nonBlackFraction": 1,
+          "notBlack": true
+        }
+      }
+    },
+    {
+      "name": "shop-interior",
+      "method": "RAF intervals with WebGL2 submission counters across all passes; instrumentation overhead included",
+      "unsupportedDrawPaths": [
+        "ANGLE_instanced_arrays",
+        "WEBGL_multi_draw"
+      ],
+      "frameCount": 203,
+      "sampleMs": 3123.100000000006,
+      "fps": 64.99951970798233,
+      "p95FrameMs": 15.5,
+      "drawCalls": {
+        "mean": 925.3152709359606,
+        "min": 925,
+        "max": 929
+      },
+      "triangles": {
+        "mean": 7547352.507389163,
+        "min": 7542941,
+        "max": 7605605
+      },
+      "framesWithoutDraws": 0,
+      "samplesFile": "frame-samples-shop-interior.json",
+      "capture": {
+        "file": "04-shop-interior.png",
+        "jpeg": "04-shop-interior.jpg",
+        "jpegWidth": 960,
+        "pixels": {
+          "width": 1440,
+          "height": 900,
+          "samples": 39816,
+          "meanRgb": 150.00860625544115,
+          "nonBlackFraction": 1,
+          "notBlack": true
+        }
+      }
+    }
+  ],
+  "walkingValidation": {
+    "ok": true,
+    "method": "Electron sendInputEvent holds W for each measured segment; positions come from the live walker, with no per-frame pose overrides.",
+    "segments": [
+      {
+        "mode": "third",
+        "before": {
+          "feet": [
+            281.6,
+            8.812,
+            934
+          ],
+          "mode": "third",
+          "timeMs": 91878.90000009537
+        },
+        "after": {
+          "feet": [
+            280.94294336865164,
+            8.548902267293162,
+            924.6036524033271
+          ],
+          "mode": "third",
+          "timeMs": 95016.60000014305
+        },
+        "distance": 9.422966199199385,
+        "horizontalDistance": 9.419292519839194,
+        "method": "RAF intervals with WebGL2 submission counters across all passes; instrumentation overhead included",
+        "unsupportedDrawPaths": [
+          "ANGLE_instanced_arrays",
+          "WEBGL_multi_draw"
+        ],
+        "frameCount": 203,
+        "sampleMs": 3123.100000000006,
+        "fps": 64.99951970798233,
+        "p95FrameMs": 15.5,
+        "drawCalls": {
+          "mean": 1550.8374384236454,
+          "min": 1531,
+          "max": 1558
+        },
+        "triangles": {
+          "mean": 8259553.665024631,
+          "min": 8235856,
+          "max": 8324542
+        },
+        "framesWithoutDraws": 0,
+        "samplesFile": "frame-samples-walking-third.json",
+        "capture": {
+          "file": "walking-third.png",
+          "jpeg": "walking-third.jpg",
+          "jpegWidth": 960,
+          "pixels": {
+            "width": 1440,
+            "height": 900,
+            "samples": 39816,
+            "meanRgb": 112.66253934766863,
+            "nonBlackFraction": 1,
+            "notBlack": true
+          }
+        },
+        "ok": true
+      },
+      {
+        "mode": "first",
+        "before": {
+          "feet": [
+            280.9246494471151,
+            8.541577039833381,
+            924.3420371369065
+          ],
+          "mode": "first",
+          "timeMs": 95784.60000014305
+        },
+        "after": {
+          "feet": [
+            280.27091754898055,
+            8.27981059232891,
+            914.9932354403182
+          ],
+          "mode": "first",
+          "timeMs": 98891.30000019073
+        },
+        "distance": 9.375285607905958,
+        "horizontalDistance": 9.371630517512386,
+        "method": "RAF intervals with WebGL2 submission counters across all passes; instrumentation overhead included",
+        "unsupportedDrawPaths": [
+          "ANGLE_instanced_arrays",
+          "WEBGL_multi_draw"
+        ],
+        "frameCount": 202,
+        "sampleMs": 3107.699999999997,
+        "fps": 64.99983910930919,
+        "p95FrameMs": 15.5,
+        "drawCalls": {
+          "mean": 1410.4257425742574,
+          "min": 1339,
+          "max": 1477
+        },
+        "triangles": {
+          "mean": 8194616.495049505,
+          "min": 8047554,
+          "max": 8290696
+        },
+        "framesWithoutDraws": 0,
+        "samplesFile": "frame-samples-walking-first.json",
+        "capture": {
+          "file": "walking-first.png",
+          "jpeg": "walking-first.jpg",
+          "jpegWidth": 960,
+          "pixels": {
+            "width": 1440,
+            "height": 900,
+            "samples": 39816,
+            "meanRgb": 115.03772352822904,
+            "nonBlackFraction": 1,
+            "notBlack": true
+          }
+        },
+        "ok": true
+      }
+    ],
+    "viewSwitch": {
+      "before": [
+        280.92465023758706,
+        8.541577356353113,
+        924.3420484411826
+      ],
+      "after": [
+        280.92465023758706,
+        8.541577356353113,
+        924.3420484411826
+      ],
+      "distance": 0,
+      "mode": "first"
+    },
+    "inputEvents": [
+      {
+        "type": "keydown",
+        "code": "KeyW",
+        "key": "w",
+        "trusted": true,
+        "timeMs": 91893
+      },
+      {
+        "type": "keyup",
+        "code": "KeyW",
+        "key": "w",
+        "trusted": true,
+        "timeMs": 95016.5
+      },
+      {
+        "type": "keydown",
+        "code": "KeyW",
+        "key": "w",
+        "trusted": true,
+        "timeMs": 95785.10000014305
+      },
+      {
+        "type": "keyup",
+        "code": "KeyW",
+        "key": "w",
+        "trusted": true,
+        "timeMs": 98891.20000004768
+      }
+    ]
+  },
+  "behaviorValidation": {
+    "ok": true,
+    "checks": [
+      {
+        "name": "closed shop door blocks the walking capsule",
+        "passed": true,
+        "evidence": {
+          "displacement": 0.34999999999999964,
+          "candidate": {
+            "x": -7.23,
+            "z": 8
+          }
+        }
+      },
+      {
+        "name": "approaching opens the real shop door collider",
+        "passed": true,
+        "evidence": {
+          "displacement": 0,
+          "candidate": {
+            "x": -7.58,
+            "z": 8
+          }
+        }
+      },
+      {
+        "name": "adjacent storefront wall remains solid",
+        "passed": true,
+        "evidence": {
+          "displacement": 0.40000000000000036,
+          "candidate": {
+            "x": -7.1,
+            "z": 12
+          }
+        }
+      },
+      {
+        "name": "open entrance provides a continuous capsule-width passage",
+        "passed": true,
+        "evidence": {
+          "maxCorrection": 0
+        }
+      },
+      {
+        "name": "interior floor uses its raised walkable surface",
+        "passed": true,
+        "evidence": {
+          "expectedFloor": 0.4134,
+          "maxHeightError": 0
+        }
+      },
+      {
+        "name": "W3 sidewalk walking clears existing furniture and new planters",
+        "passed": true,
+        "evidence": {
+          "endLotX": 3.9674163653903243,
+          "minLotZ": 1.061816375746971,
+          "maxLotZ": 1.1500000000000001,
+          "radius": 0.3,
+          "step": 0.1,
+          "inputDistance": 8
+        }
+      },
+      {
+        "name": "W3 planters leave the existing garden gate approach clear",
+        "passed": true,
+        "evidence": {
+          "maxCorrection": 0
+        }
+      },
+      {
+        "name": "low planter tops support approaching feet and release them on exit",
+        "passed": true,
+        "evidence": [
+          {
+            "id": "w3-planter-south",
+            "expectedTop": 1.1152975042415103,
+            "onTop": 1.1152975042415103,
+            "initialFeet": 0.8553631994889643,
+            "finalFeet": 0.8553631994889643,
+            "supported": true,
+            "returnedToSidewalk": true
+          },
+          {
+            "id": "w3-planter-north",
+            "expectedTop": 1.00881568627451,
+            "onTop": 1.00881568627451,
+            "initialFeet": 0.7488156862745098,
+            "finalFeet": 0.7488156862745098,
+            "supported": true,
+            "returnedToSidewalk": true
+          }
+        ]
+      },
+      {
+        "name": "first person camera is 1.52m above world-space feet",
+        "passed": true,
+        "evidence": {
+          "feet": [
+            281.6,
+            8.812,
+            934
+          ],
+          "camera": [
+            281.6,
+            10.331999999999999,
+            934
+          ],
+          "error": 0
+        }
+      },
+      {
+        "name": "third person camera follows within its obstruction-limited boom",
+        "passed": true,
+        "evidence": {
+          "followDistance": 4.224038352098614,
+          "maximum": 4.224038352098617
+        }
+      },
+      {
+        "name": "view switching preserves the body and collision position",
+        "passed": true,
+        "evidence": {
+          "feet": [
+            281.6,
+            8.812,
+            934
+          ],
+          "initialFeet": [
+            281.6,
+            8.812,
+            934
+          ]
+        }
+      },
+      {
+        "name": "station local/world coordinates round-trip at its nonzero placement",
+        "passed": true,
+        "evidence": {
+          "local": [
+            1.6000000000000227,
+            0.8119999999999994,
+            34
+          ],
+          "world": [
+            281.6,
+            8.812,
+            934
+          ]
+        }
+      },
+      {
+        "name": "real shop wall shortens third-person boom with near-plane clearance",
+        "passed": true,
+        "evidence": {
+          "shortened": 0.7951227548559752,
+          "cameraLotZ": -2.290597833643244,
+          "streetSideWallZ": -2.6,
+          "clearance": 0.30940216635678375,
+          "raycastCalls": 0
+        }
+      },
+      {
+        "name": "camera collision never scans rendered triangles",
+        "passed": true,
+        "evidence": {
+          "raycastCalls": 0
+        }
+      }
+    ]
+  },
+  "lookValidation": {
+    "ok": true,
+    "method": "Actual pipeline uniforms/parameters and UI state; central-pixel nonblack smoke checks. Images retain animation.",
+    "toon": {
+      "on": {
+        "state": {
+          "toon": 1,
+          "blur": 0,
+          "rays": 0,
+          "toonCheckbox": true,
+          "effectsCheckbox": false,
+          "currentView": "station-street"
+        },
+        "capture": {
+          "file": "05-street-toon-on.png",
+          "jpeg": "05-street-toon-on.jpg",
+          "jpegWidth": 960,
+          "pixels": {
+            "width": 1440,
+            "height": 900,
+            "samples": 39816,
+            "meanRgb": 100.65158060411473,
+            "nonBlackFraction": 1,
+            "notBlack": true
+          }
+        }
+      },
+      "off": {
+        "state": {
+          "toon": 0,
+          "blur": 0,
+          "rays": 0,
+          "toonCheckbox": false,
+          "effectsCheckbox": false,
+          "currentView": "station-street"
+        },
+        "capture": {
+          "file": "06-street-toon-off.png",
+          "jpeg": "06-street-toon-off.jpg",
+          "jpegWidth": 960,
+          "pixels": {
+            "width": 1440,
+            "height": 900,
+            "samples": 39816,
+            "meanRgb": 64.47145201258996,
+            "nonBlackFraction": 0.9177968655816757,
+            "notBlack": true
+          }
+        }
+      },
+      "difference": {
+        "meanAbsoluteRgbDifference": 36.10087757201646,
+        "isolatedFromAnimation": false
+      }
+    },
+    "flightEffects": {
+      "on": {
+        "state": {
+          "toon": 1,
+          "blur": 1,
+          "rays": 0.55,
+          "toonCheckbox": true,
+          "effectsCheckbox": true,
+          "currentView": "station-street"
+        },
+        "capture": {
+          "file": "07-flight-effects-on.png",
+          "jpeg": "07-flight-effects-on.jpg",
+          "jpegWidth": 960,
+          "pixels": {
+            "width": 1440,
+            "height": 900,
+            "samples": 39816,
+            "meanRgb": 100.63866284910735,
+            "nonBlackFraction": 1,
+            "notBlack": true
+          }
+        }
+      },
+      "off": {
+        "state": {
+          "toon": 1,
+          "blur": 0,
+          "rays": 0,
+          "toonCheckbox": true,
+          "effectsCheckbox": false,
+          "currentView": "station-street"
+        },
+        "capture": {
+          "file": "08-flight-effects-off.png",
+          "jpeg": "08-flight-effects-off.jpg",
+          "jpegWidth": 960,
+          "pixels": {
+            "width": 1440,
+            "height": 900,
+            "samples": 39816,
+            "meanRgb": 100.60808050365243,
+            "nonBlackFraction": 1,
+            "notBlack": true
+          }
+        }
+      },
+      "difference": {
+        "meanAbsoluteRgbDifference": 1.6382098765432098,
+        "isolatedFromAnimation": false
+      }
+    }
+  },
+  "selectedImages": [
+    "01-station-street.jpg",
+    "02-station-port.jpg",
+    "03-island-aerial.jpg",
+    "04-shop-interior.jpg",
+    "18-town-shop-balconies.jpg",
+    "19-town-rear-stairs.jpg",
+    "23-service-corner.jpg",
+    "24-laundry-details.jpg",
+    "walking-first.jpg",
+    "walking-third.jpg"
+  ],
+  "frameSamples": [
+    "frame-samples-island-aerial.json",
+    "frame-samples-shop-interior.json",
+    "frame-samples-station-port.json",
+    "frame-samples-station-street.json",
+    "frame-samples-walking-first.json",
+    "frame-samples-walking-third.json",
+    "frame-samples.json"
+  ]
+}

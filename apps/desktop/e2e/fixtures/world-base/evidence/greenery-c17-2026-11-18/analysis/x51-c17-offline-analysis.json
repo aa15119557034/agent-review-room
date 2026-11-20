@@ -1,0 +1,6183 @@
+{
+  "sourceHead": "0184c79d94094c7d76378302592572bf367be6c7",
+  "method": "Offline exact-camera/time/default-AO PNG comparison with C16; preplanned C17 town strength ABA; all original frame samples. No rerun or image editing.",
+  "reports": {
+    "diagnostic": {
+      "path": "D:\\codex\\2026-11-16\\world-implementation\\world-base\\apps\\desktop\\e2e\\fixtures\\world-base\\artifacts\\gpu-look-c17-v1\\look-report.json",
+      "sha256": "0d711b43afd4a29ae9f8c17384d5323d968e781896b9a68515bf4a4809ffbb46"
+    },
+    "normal": {
+      "path": "D:\\codex\\2026-11-16\\world-implementation\\world-base\\apps\\desktop\\e2e\\fixtures\\world-base\\artifacts\\gpu-town-c17\\render-report.json",
+      "sha256": "155a9f72ce33c1258180a3c9fa1a9cde70131e8b19a2fd940871691365069a47"
+    }
+  },
+  "comparisons": [
+    {
+      "view": "service-corner",
+      "a": "service-corner-ao-on-capture-2",
+      "b": "service-corner-ao-on-capture-2",
+      "cameraEqual": true,
+      "timeEqual": true,
+      "paramsEqual": true,
+      "pngEqual": true,
+      "pixels": {
+        "changedPixels": 0,
+        "meanAbsRGB": 0,
+        "maxAbsRGB": 0,
+        "bounds": null
+      }
+    },
+    {
+      "view": "laundry-details",
+      "a": "laundry-details-ao-on-capture-2",
+      "b": "laundry-details-ao-on-capture-2",
+      "cameraEqual": true,
+      "timeEqual": true,
+      "paramsEqual": true,
+      "pngEqual": false,
+      "pixels": {
+        "changedPixels": 1411,
+        "meanAbsRGB": 0.006674125514403292,
+        "maxAbsRGB": 32,
+        "bounds": [
+          0,
+          3,
+          510,
+          509
+        ]
+      }
+    },
+    {
+      "view": "shop-interior",
+      "a": "shop-interior-ao-on-capture-2",
+      "b": "shop-interior-ao-on-capture-2",
+      "cameraEqual": true,
+      "timeEqual": true,
+      "paramsEqual": true,
+      "pngEqual": true,
+      "pixels": {
+        "changedPixels": 0,
+        "meanAbsRGB": 0,
+        "maxAbsRGB": 0,
+        "bounds": null
+      }
+    },
+    {
+      "view": "20-rear-eye",
+      "a": "20-rear-eye-ao-on-capture-2",
+      "b": "20-rear-eye-ao-on-capture-2",
+      "cameraEqual": true,
+      "timeEqual": true,
+      "paramsEqual": true,
+      "pngEqual": false,
+      "pixels": {
+        "changedPixels": 243,
+        "meanAbsRGB": 0.0007914094650205762,
+        "maxAbsRGB": 28,
+        "bounds": [
+          1141,
+          287,
+          1433,
+          722
+        ]
+      }
+    },
+    {
+      "view": "21-front-eye",
+      "a": "21-front-eye-ao-on-capture-2",
+      "b": "21-front-eye-ao-on-capture-2",
+      "cameraEqual": true,
+      "timeEqual": true,
+      "paramsEqual": true,
+      "pngEqual": false,
+      "pixels": {
+        "changedPixels": 234,
+        "meanAbsRGB": 0.00022633744855967078,
+        "maxAbsRGB": 7,
+        "bounds": [
+          1357,
+          616,
+          1439,
+          669
+        ]
+      }
+    },
+    {
+      "view": "station-street",
+      "a": "station-street-ao-on-capture-2",
+      "b": "station-street-ao-on-capture-2",
+      "cameraEqual": true,
+      "timeEqual": true,
+      "paramsEqual": true,
+      "pngEqual": false,
+      "pixels": {
+        "changedPixels": 255,
+        "meanAbsRGB": 0.0003631687242798354,
+        "maxAbsRGB": 9,
+        "bounds": [
+          384,
+          20,
+          1371,
+          577
+        ]
+      }
+    },
+    {
+      "view": "street-detail",
+      "a": "street-detail-ao-on-capture-2",
+      "b": "street-detail-ao-on-capture-2",
+      "cameraEqual": true,
+      "timeEqual": true,
+      "paramsEqual": true,
+      "pngEqual": true,
+      "pixels": {
+        "changedPixels": 0,
+        "meanAbsRGB": 0,
+        "maxAbsRGB": 0,
+        "bounds": null
+      }
+    }
+  ],
+  "repeats": [
+    {
+      "view": "service-corner",
+      "a": "service-corner-ao-on-capture-1",
+      "b": "service-corner-ao-on-capture-2",
+      "cameraEqual": true,
+      "timeEqual": true,
+      "paramsEqual": true,
+      "pngEqual": true,
+      "pixels": {
+        "changedPixels": 0,
+        "meanAbsRGB": 0,
+        "maxAbsRGB": 0,
+        "bounds": null
+      }
+    },
+    {
+      "view": "laundry-details",
+      "a": "laundry-details-ao-on-capture-1",
+      "b": "laundry-details-ao-on-capture-2",
+      "cameraEqual": true,
+      "timeEqual": true,
+      "paramsEqual": true,
+      "pngEqual": true,
+      "pixels": {
+        "changedPixels": 0,
+        "meanAbsRGB": 0,
+        "maxAbsRGB": 0,
+        "bounds": null
+      }
+    },
+    {
+      "view": "shop-interior",
+      "a": "shop-interior-ao-on-capture-1",
+      "b": "shop-interior-ao-on-capture-2",
+      "cameraEqual": true,
+      "timeEqual": true,
+      "paramsEqual": true,
+      "pngEqual": true,
+      "pixels": {
+        "changedPixels": 0,
+        "meanAbsRGB": 0,
+        "maxAbsRGB": 0,
+        "bounds": null
+      }
+    },
+    {
+      "view": "20-rear-eye",
+      "a": "20-rear-eye-ao-on-capture-1",
+      "b": "20-rear-eye-ao-on-capture-2",
+      "cameraEqual": true,
+      "timeEqual": true,
+      "paramsEqual": true,
+      "pngEqual": true,
+      "pixels": {
+        "changedPixels": 0,
+        "meanAbsRGB": 0,
+        "maxAbsRGB": 0,
+        "bounds": null
+      }
+    },
+    {
+      "view": "21-front-eye",
+      "a": "21-front-eye-ao-on-capture-1",
+      "b": "21-front-eye-ao-on-capture-2",
+      "cameraEqual": true,
+      "timeEqual": true,
+      "paramsEqual": true,
+      "pngEqual": true,
+      "pixels": {
+        "changedPixels": 0,
+        "meanAbsRGB": 0,
+        "maxAbsRGB": 0,
+        "bounds": null
+      }
+    },
+    {
+      "view": "station-street",
+      "a": "station-street-ao-on-capture-1",
+      "b": "station-street-ao-on-capture-2",
+      "cameraEqual": true,
+      "timeEqual": true,
+      "paramsEqual": true,
+      "pngEqual": false,
+      "pixels": {
+        "changedPixels": 24,
+        "meanAbsRGB": 0.000006172839506172839,
+        "maxAbsRGB": 1,
+        "bounds": [
+          573,
+          20,
+          1371,
+          643
+        ]
+      }
+    },
+    {
+      "view": "street-detail",
+      "a": "street-detail-ao-on-capture-1",
+      "b": "street-detail-ao-on-capture-2",
+      "cameraEqual": true,
+      "timeEqual": true,
+      "paramsEqual": true,
+      "pngEqual": true,
+      "pixels": {
+        "changedPixels": 0,
+        "meanAbsRGB": 0,
+        "maxAbsRGB": 0,
+        "bounds": null
+      }
+    },
+    {
+      "view": "20-rear-eye",
+      "a": "20-rear-eye-town-B-capture-1",
+      "b": "20-rear-eye-town-B-capture-2",
+      "cameraEqual": true,
+      "timeEqual": true,
+      "paramsEqual": true,
+      "pngEqual": false,
+      "pixels": {
+        "changedPixels": 1,
+        "meanAbsRGB": 2.57201646090535e-7,
+        "maxAbsRGB": 1,
+        "bounds": [
+          914,
+          447,
+          914,
+          447
+        ]
+      }
+    },
+    {
+      "view": "20-rear-eye",
+      "a": "20-rear-eye-town-A2-capture-1",
+      "b": "20-rear-eye-town-A2-capture-2",
+      "cameraEqual": true,
+      "timeEqual": true,
+      "paramsEqual": true,
+      "pngEqual": true,
+      "pixels": {
+        "changedPixels": 0,
+        "meanAbsRGB": 0,
+        "maxAbsRGB": 0,
+        "bounds": null
+      }
+    },
+    {
+      "view": "21-front-eye",
+      "a": "21-front-eye-town-B-capture-1",
+      "b": "21-front-eye-town-B-capture-2",
+      "cameraEqual": true,
+      "timeEqual": true,
+      "paramsEqual": true,
+      "pngEqual": true,
+      "pixels": {
+        "changedPixels": 0,
+        "meanAbsRGB": 0,
+        "maxAbsRGB": 0,
+        "bounds": null
+      }
+    },
+    {
+      "view": "21-front-eye",
+      "a": "21-front-eye-town-A2-capture-1",
+      "b": "21-front-eye-town-A2-capture-2",
+      "cameraEqual": true,
+      "timeEqual": true,
+      "paramsEqual": true,
+      "pngEqual": true,
+      "pixels": {
+        "changedPixels": 0,
+        "meanAbsRGB": 0,
+        "maxAbsRGB": 0,
+        "bounds": null
+      }
+    },
+    {
+      "view": "north-seam-central",
+      "a": "north-seam-central-town-A1-capture-1",
+      "b": "north-seam-central-town-A1-capture-2",
+      "cameraEqual": true,
+      "timeEqual": true,
+      "paramsEqual": true,
+      "pngEqual": true,
+      "pixels": {
+        "changedPixels": 0,
+        "meanAbsRGB": 0,
+        "maxAbsRGB": 0,
+        "bounds": null
+      }
+    },
+    {
+      "view": "north-seam-central",
+      "a": "north-seam-central-town-B-capture-1",
+      "b": "north-seam-central-town-B-capture-2",
+      "cameraEqual": true,
+      "timeEqual": true,
+      "paramsEqual": true,
+      "pngEqual": true,
+      "pixels": {
+        "changedPixels": 0,
+        "meanAbsRGB": 0,
+        "maxAbsRGB": 0,
+        "bounds": null
+      }
+    },
+    {
+      "view": "north-seam-central",
+      "a": "north-seam-central-town-A2-capture-1",
+      "b": "north-seam-central-town-A2-capture-2",
+      "cameraEqual": true,
+      "timeEqual": true,
+      "paramsEqual": true,
+      "pngEqual": true,
+      "pixels": {
+        "changedPixels": 0,
+        "meanAbsRGB": 0,
+        "maxAbsRGB": 0,
+        "bounds": null
+      }
+    },
+    {
+      "view": "north-seam-oblique",
+      "a": "north-seam-oblique-town-A1-capture-1",
+      "b": "north-seam-oblique-town-A1-capture-2",
+      "cameraEqual": true,
+      "timeEqual": true,
+      "paramsEqual": true,
+      "pngEqual": true,
+      "pixels": {
+        "changedPixels": 0,
+        "meanAbsRGB": 0,
+        "maxAbsRGB": 0,
+        "bounds": null
+      }
+    },
+    {
+      "view": "north-seam-oblique",
+      "a": "north-seam-oblique-town-B-capture-1",
+      "b": "north-seam-oblique-town-B-capture-2",
+      "cameraEqual": true,
+      "timeEqual": true,
+      "paramsEqual": true,
+      "pngEqual": true,
+      "pixels": {
+        "changedPixels": 0,
+        "meanAbsRGB": 0,
+        "maxAbsRGB": 0,
+        "bounds": null
+      }
+    },
+    {
+      "view": "north-seam-oblique",
+      "a": "north-seam-oblique-town-A2-capture-1",
+      "b": "north-seam-oblique-town-A2-capture-2",
+      "cameraEqual": true,
+      "timeEqual": true,
+      "paramsEqual": true,
+      "pngEqual": true,
+      "pixels": {
+        "changedPixels": 0,
+        "meanAbsRGB": 0,
+        "maxAbsRGB": 0,
+        "bounds": null
+      }
+    }
+  ],
+  "aba": [
+    {
+      "view": "20-rear-eye",
+      "onOff": {
+        "a": "20-rear-eye-ao-on-capture-2",
+        "b": "20-rear-eye-town-B-capture-2",
+        "cameraEqual": true,
+        "timeEqual": true,
+        "paramsEqual": true,
+        "pngEqual": false,
+        "pixels": {
+          "changedPixels": 466151,
+          "meanAbsRGB": 9.27922890946502,
+          "maxAbsRGB": 246,
+          "bounds": [
+            0,
+            26,
+            1439,
+            899
+          ]
+        }
+      },
+      "restoration": {
+        "a": "20-rear-eye-ao-on-capture-2",
+        "b": "20-rear-eye-town-A2-capture-2",
+        "cameraEqual": true,
+        "timeEqual": true,
+        "paramsEqual": true,
+        "pngEqual": true,
+        "pixels": {
+          "changedPixels": 0,
+          "meanAbsRGB": 0,
+          "maxAbsRGB": 0,
+          "bounds": null
+        }
+      },
+      "aTownState": {
+        "rect": [
+          221.6,
+          763.15,
+          317,
+          805.47
+        ],
+        "green": [
+          1,
+          12,
+          55
+        ],
+        "shells": [
+          {
+            "kind": "grass",
+            "poolSize": 8,
+            "visible": 8,
+            "uniqueMaterials": 8,
+            "allTownUniformsShared": true
+          },
+          {
+            "kind": "grass",
+            "poolSize": 17,
+            "visible": 15,
+            "uniqueMaterials": 17,
+            "allTownUniformsShared": true
+          },
+          {
+            "kind": "grass",
+            "poolSize": 24,
+            "visible": 17,
+            "uniqueMaterials": 24,
+            "allTownUniformsShared": true
+          },
+          {
+            "kind": "flower",
+            "poolSize": 11,
+            "visible": 11,
+            "uniqueMaterials": 11,
+            "allTownUniformsShared": true
+          },
+          {
+            "kind": "flower",
+            "poolSize": 13,
+            "visible": 10,
+            "uniqueMaterials": 13,
+            "allTownUniformsShared": true
+          },
+          {
+            "kind": "flower",
+            "poolSize": 15,
+            "visible": 11,
+            "uniqueMaterials": 15,
+            "allTownUniformsShared": true
+          },
+          {
+            "kind": "flower",
+            "poolSize": 15,
+            "visible": 9,
+            "uniqueMaterials": 15,
+            "allTownUniformsShared": true
+          }
+        ],
+        "rendererPrograms": 117,
+        "memory": {
+          "geometries": 1122,
+          "textures": 224
+        },
+        "gravel": {
+          "uuid": "e5f56a69-dd45-49b9-9466-5241abcd609c",
+          "name": "",
+          "type": 1009,
+          "colorSpace": "srgb",
+          "width": 256,
+          "height": 256,
+          "repeat": [
+            1.9,
+            1.9
+          ],
+          "offset": [
+            0,
+            0
+          ],
+          "matrix": [
+            1.9,
+            0,
+            0,
+            0,
+            1.9,
+            0,
+            0,
+            0,
+            1
+          ],
+          "wrapS": 1000,
+          "wrapT": 1000,
+          "channel": 0
+        },
+        "limit": "Pool/program counts within one live scene and fixed views only; growth does not alone prove a leak, and stable counts do not prove create/dispose lifecycle safety."
+      },
+      "bTownState": {
+        "rect": [
+          221.6,
+          763.15,
+          317,
+          805.47
+        ],
+        "green": [
+          0,
+          12,
+          55
+        ],
+        "shells": [
+          {
+            "kind": "grass",
+            "poolSize": 10,
+            "visible": 8,
+            "uniqueMaterials": 10,
+            "allTownUniformsShared": true
+          },
+          {
+            "kind": "grass",
+            "poolSize": 17,
+            "visible": 15,
+            "uniqueMaterials": 17,
+            "allTownUniformsShared": true
+          },
+          {
+            "kind": "grass",
+            "poolSize": 27,
+            "visible": 17,
+            "uniqueMaterials": 27,
+            "allTownUniformsShared": true
+          },
+          {
+            "kind": "flower",
+            "poolSize": 11,
+            "visible": 11,
+            "uniqueMaterials": 11,
+            "allTownUniformsShared": true
+          },
+          {
+            "kind": "flower",
+            "poolSize": 14,
+            "visible": 10,
+            "uniqueMaterials": 14,
+            "allTownUniformsShared": true
+          },
+          {
+            "kind": "flower",
+            "poolSize": 17,
+            "visible": 11,
+            "uniqueMaterials": 17,
+            "allTownUniformsShared": true
+          },
+          {
+            "kind": "flower",
+            "poolSize": 15,
+            "visible": 9,
+            "uniqueMaterials": 15,
+            "allTownUniformsShared": true
+          }
+        ],
+        "rendererPrograms": 117,
+        "memory": {
+          "geometries": 1122,
+          "textures": 224
+        },
+        "gravel": {
+          "uuid": "e5f56a69-dd45-49b9-9466-5241abcd609c",
+          "name": "",
+          "type": 1009,
+          "colorSpace": "srgb",
+          "width": 256,
+          "height": 256,
+          "repeat": [
+            1.9,
+            1.9
+          ],
+          "offset": [
+            0,
+            0
+          ],
+          "matrix": [
+            1.9,
+            0,
+            0,
+            0,
+            1.9,
+            0,
+            0,
+            0,
+            1
+          ],
+          "wrapS": 1000,
+          "wrapT": 1000,
+          "channel": 0
+        },
+        "limit": "Pool/program counts within one live scene and fixed views only; growth does not alone prove a leak, and stable counts do not prove create/dispose lifecycle safety."
+      },
+      "a2TownState": {
+        "rect": [
+          221.6,
+          763.15,
+          317,
+          805.47
+        ],
+        "green": [
+          1,
+          12,
+          55
+        ],
+        "shells": [
+          {
+            "kind": "grass",
+            "poolSize": 10,
+            "visible": 8,
+            "uniqueMaterials": 10,
+            "allTownUniformsShared": true
+          },
+          {
+            "kind": "grass",
+            "poolSize": 17,
+            "visible": 15,
+            "uniqueMaterials": 17,
+            "allTownUniformsShared": true
+          },
+          {
+            "kind": "grass",
+            "poolSize": 27,
+            "visible": 17,
+            "uniqueMaterials": 27,
+            "allTownUniformsShared": true
+          },
+          {
+            "kind": "flower",
+            "poolSize": 11,
+            "visible": 11,
+            "uniqueMaterials": 11,
+            "allTownUniformsShared": true
+          },
+          {
+            "kind": "flower",
+            "poolSize": 14,
+            "visible": 10,
+            "uniqueMaterials": 14,
+            "allTownUniformsShared": true
+          },
+          {
+            "kind": "flower",
+            "poolSize": 17,
+            "visible": 11,
+            "uniqueMaterials": 17,
+            "allTownUniformsShared": true
+          },
+          {
+            "kind": "flower",
+            "poolSize": 15,
+            "visible": 9,
+            "uniqueMaterials": 15,
+            "allTownUniformsShared": true
+          }
+        ],
+        "rendererPrograms": 117,
+        "memory": {
+          "geometries": 1122,
+          "textures": 224
+        },
+        "gravel": {
+          "uuid": "e5f56a69-dd45-49b9-9466-5241abcd609c",
+          "name": "",
+          "type": 1009,
+          "colorSpace": "srgb",
+          "width": 256,
+          "height": 256,
+          "repeat": [
+            1.9,
+            1.9
+          ],
+          "offset": [
+            0,
+            0
+          ],
+          "matrix": [
+            1.9,
+            0,
+            0,
+            0,
+            1.9,
+            0,
+            0,
+            0,
+            1
+          ],
+          "wrapS": 1000,
+          "wrapT": 1000,
+          "channel": 0
+        },
+        "limit": "Pool/program counts within one live scene and fixed views only; growth does not alone prove a leak, and stable counts do not prove create/dispose lifecycle safety."
+      },
+      "seamEvidence": null
+    },
+    {
+      "view": "21-front-eye",
+      "onOff": {
+        "a": "21-front-eye-ao-on-capture-2",
+        "b": "21-front-eye-town-B-capture-2",
+        "cameraEqual": true,
+        "timeEqual": true,
+        "paramsEqual": true,
+        "pngEqual": false,
+        "pixels": {
+          "changedPixels": 203785,
+          "meanAbsRGB": 2.324551697530864,
+          "maxAbsRGB": 249,
+          "bounds": [
+            0,
+            181,
+            1439,
+            899
+          ]
+        }
+      },
+      "restoration": {
+        "a": "21-front-eye-ao-on-capture-2",
+        "b": "21-front-eye-town-A2-capture-2",
+        "cameraEqual": true,
+        "timeEqual": true,
+        "paramsEqual": true,
+        "pngEqual": true,
+        "pixels": {
+          "changedPixels": 0,
+          "meanAbsRGB": 0,
+          "maxAbsRGB": 0,
+          "bounds": null
+        }
+      },
+      "aTownState": {
+        "rect": [
+          221.6,
+          763.15,
+          317,
+          805.47
+        ],
+        "green": [
+          1,
+          12,
+          55
+        ],
+        "shells": [
+          {
+            "kind": "grass",
+            "poolSize": 10,
+            "visible": 10,
+            "uniqueMaterials": 10,
+            "allTownUniformsShared": true
+          },
+          {
+            "kind": "grass",
+            "poolSize": 17,
+            "visible": 17,
+            "uniqueMaterials": 17,
+            "allTownUniformsShared": true
+          },
+          {
+            "kind": "grass",
+            "poolSize": 27,
+            "visible": 27,
+            "uniqueMaterials": 27,
+            "allTownUniformsShared": true
+          },
+          {
+            "kind": "flower",
+            "poolSize": 11,
+            "visible": 10,
+            "uniqueMaterials": 11,
+            "allTownUniformsShared": true
+          },
+          {
+            "kind": "flower",
+            "poolSize": 14,
+            "visible": 14,
+            "uniqueMaterials": 14,
+            "allTownUniformsShared": true
+          },
+          {
+            "kind": "flower",
+            "poolSize": 17,
+            "visible": 17,
+            "uniqueMaterials": 17,
+            "allTownUniformsShared": true
+          },
+          {
+            "kind": "flower",
+            "poolSize": 15,
+            "visible": 15,
+            "uniqueMaterials": 15,
+            "allTownUniformsShared": true
+          }
+        ],
+        "rendererPrograms": 117,
+        "memory": {
+          "geometries": 1122,
+          "textures": 224
+        },
+        "gravel": {
+          "uuid": "e5f56a69-dd45-49b9-9466-5241abcd609c",
+          "name": "",
+          "type": 1009,
+          "colorSpace": "srgb",
+          "width": 256,
+          "height": 256,
+          "repeat": [
+            1.9,
+            1.9
+          ],
+          "offset": [
+            0,
+            0
+          ],
+          "matrix": [
+            1.9,
+            0,
+            0,
+            0,
+            1.9,
+            0,
+            0,
+            0,
+            1
+          ],
+          "wrapS": 1000,
+          "wrapT": 1000,
+          "channel": 0
+        },
+        "limit": "Pool/program counts within one live scene and fixed views only; growth does not alone prove a leak, and stable counts do not prove create/dispose lifecycle safety."
+      },
+      "bTownState": {
+        "rect": [
+          221.6,
+          763.15,
+          317,
+          805.47
+        ],
+        "green": [
+          0,
+          12,
+          55
+        ],
+        "shells": [
+          {
+            "kind": "grass",
+            "poolSize": 10,
+            "visible": 10,
+            "uniqueMaterials": 10,
+            "allTownUniformsShared": true
+          },
+          {
+            "kind": "grass",
+            "poolSize": 17,
+            "visible": 17,
+            "uniqueMaterials": 17,
+            "allTownUniformsShared": true
+          },
+          {
+            "kind": "grass",
+            "poolSize": 27,
+            "visible": 27,
+            "uniqueMaterials": 27,
+            "allTownUniformsShared": true
+          },
+          {
+            "kind": "flower",
+            "poolSize": 11,
+            "visible": 10,
+            "uniqueMaterials": 11,
+            "allTownUniformsShared": true
+          },
+          {
+            "kind": "flower",
+            "poolSize": 14,
+            "visible": 14,
+            "uniqueMaterials": 14,
+            "allTownUniformsShared": true
+          },
+          {
+            "kind": "flower",
+            "poolSize": 17,
+            "visible": 17,
+            "uniqueMaterials": 17,
+            "allTownUniformsShared": true
+          },
+          {
+            "kind": "flower",
+            "poolSize": 15,
+            "visible": 15,
+            "uniqueMaterials": 15,
+            "allTownUniformsShared": true
+          }
+        ],
+        "rendererPrograms": 117,
+        "memory": {
+          "geometries": 1122,
+          "textures": 224
+        },
+        "gravel": {
+          "uuid": "e5f56a69-dd45-49b9-9466-5241abcd609c",
+          "name": "",
+          "type": 1009,
+          "colorSpace": "srgb",
+          "width": 256,
+          "height": 256,
+          "repeat": [
+            1.9,
+            1.9
+          ],
+          "offset": [
+            0,
+            0
+          ],
+          "matrix": [
+            1.9,
+            0,
+            0,
+            0,
+            1.9,
+            0,
+            0,
+            0,
+            1
+          ],
+          "wrapS": 1000,
+          "wrapT": 1000,
+          "channel": 0
+        },
+        "limit": "Pool/program counts within one live scene and fixed views only; growth does not alone prove a leak, and stable counts do not prove create/dispose lifecycle safety."
+      },
+      "a2TownState": {
+        "rect": [
+          221.6,
+          763.15,
+          317,
+          805.47
+        ],
+        "green": [
+          1,
+          12,
+          55
+        ],
+        "shells": [
+          {
+            "kind": "grass",
+            "poolSize": 10,
+            "visible": 10,
+            "uniqueMaterials": 10,
+            "allTownUniformsShared": true
+          },
+          {
+            "kind": "grass",
+            "poolSize": 17,
+            "visible": 17,
+            "uniqueMaterials": 17,
+            "allTownUniformsShared": true
+          },
+          {
+            "kind": "grass",
+            "poolSize": 27,
+            "visible": 27,
+            "uniqueMaterials": 27,
+            "allTownUniformsShared": true
+          },
+          {
+            "kind": "flower",
+            "poolSize": 11,
+            "visible": 10,
+            "uniqueMaterials": 11,
+            "allTownUniformsShared": true
+          },
+          {
+            "kind": "flower",
+            "poolSize": 14,
+            "visible": 14,
+            "uniqueMaterials": 14,
+            "allTownUniformsShared": true
+          },
+          {
+            "kind": "flower",
+            "poolSize": 17,
+            "visible": 17,
+            "uniqueMaterials": 17,
+            "allTownUniformsShared": true
+          },
+          {
+            "kind": "flower",
+            "poolSize": 15,
+            "visible": 15,
+            "uniqueMaterials": 15,
+            "allTownUniformsShared": true
+          }
+        ],
+        "rendererPrograms": 117,
+        "memory": {
+          "geometries": 1122,
+          "textures": 224
+        },
+        "gravel": {
+          "uuid": "e5f56a69-dd45-49b9-9466-5241abcd609c",
+          "name": "",
+          "type": 1009,
+          "colorSpace": "srgb",
+          "width": 256,
+          "height": 256,
+          "repeat": [
+            1.9,
+            1.9
+          ],
+          "offset": [
+            0,
+            0
+          ],
+          "matrix": [
+            1.9,
+            0,
+            0,
+            0,
+            1.9,
+            0,
+            0,
+            0,
+            1
+          ],
+          "wrapS": 1000,
+          "wrapT": 1000,
+          "channel": 0
+        },
+        "limit": "Pool/program counts within one live scene and fixed views only; growth does not alone prove a leak, and stable counts do not prove create/dispose lifecycle safety."
+      },
+      "seamEvidence": null
+    },
+    {
+      "view": "north-seam-central",
+      "onOff": {
+        "a": "north-seam-central-town-A1-capture-2",
+        "b": "north-seam-central-town-B-capture-2",
+        "cameraEqual": true,
+        "timeEqual": true,
+        "paramsEqual": true,
+        "pngEqual": false,
+        "pixels": {
+          "changedPixels": 889864,
+          "meanAbsRGB": 9.698732767489712,
+          "maxAbsRGB": 121,
+          "bounds": [
+            0,
+            0,
+            1439,
+            899
+          ]
+        }
+      },
+      "restoration": {
+        "a": "north-seam-central-town-A1-capture-2",
+        "b": "north-seam-central-town-A2-capture-2",
+        "cameraEqual": true,
+        "timeEqual": true,
+        "paramsEqual": true,
+        "pngEqual": true,
+        "pixels": {
+          "changedPixels": 0,
+          "meanAbsRGB": 0,
+          "maxAbsRGB": 0,
+          "bounds": null
+        }
+      },
+      "aTownState": {
+        "rect": [
+          221.6,
+          763.15,
+          317,
+          805.47
+        ],
+        "green": [
+          1,
+          12,
+          55
+        ],
+        "shells": [
+          {
+            "kind": "grass",
+            "poolSize": 10,
+            "visible": 7,
+            "uniqueMaterials": 10,
+            "allTownUniformsShared": true
+          },
+          {
+            "kind": "grass",
+            "poolSize": 17,
+            "visible": 5,
+            "uniqueMaterials": 17,
+            "allTownUniformsShared": true
+          },
+          {
+            "kind": "grass",
+            "poolSize": 27,
+            "visible": 9,
+            "uniqueMaterials": 27,
+            "allTownUniformsShared": true
+          },
+          {
+            "kind": "flower",
+            "poolSize": 11,
+            "visible": 4,
+            "uniqueMaterials": 11,
+            "allTownUniformsShared": true
+          },
+          {
+            "kind": "flower",
+            "poolSize": 14,
+            "visible": 4,
+            "uniqueMaterials": 14,
+            "allTownUniformsShared": true
+          },
+          {
+            "kind": "flower",
+            "poolSize": 17,
+            "visible": 7,
+            "uniqueMaterials": 17,
+            "allTownUniformsShared": true
+          },
+          {
+            "kind": "flower",
+            "poolSize": 15,
+            "visible": 10,
+            "uniqueMaterials": 15,
+            "allTownUniformsShared": true
+          }
+        ],
+        "rendererPrograms": 117,
+        "memory": {
+          "geometries": 1159,
+          "textures": 228
+        },
+        "gravel": {
+          "uuid": "e5f56a69-dd45-49b9-9466-5241abcd609c",
+          "name": "",
+          "type": 1009,
+          "colorSpace": "srgb",
+          "width": 256,
+          "height": 256,
+          "repeat": [
+            1.9,
+            1.9
+          ],
+          "offset": [
+            0,
+            0
+          ],
+          "matrix": [
+            1.9,
+            0,
+            0,
+            0,
+            1.9,
+            0,
+            0,
+            0,
+            1
+          ],
+          "wrapS": 1000,
+          "wrapT": 1000,
+          "channel": 0
+        },
+        "limit": "Pool/program counts within one live scene and fixed views only; growth does not alone prove a leak, and stable counts do not prove create/dispose lifecycle safety."
+      },
+      "bTownState": {
+        "rect": [
+          221.6,
+          763.15,
+          317,
+          805.47
+        ],
+        "green": [
+          0,
+          12,
+          55
+        ],
+        "shells": [
+          {
+            "kind": "grass",
+            "poolSize": 10,
+            "visible": 7,
+            "uniqueMaterials": 10,
+            "allTownUniformsShared": true
+          },
+          {
+            "kind": "grass",
+            "poolSize": 17,
+            "visible": 5,
+            "uniqueMaterials": 17,
+            "allTownUniformsShared": true
+          },
+          {
+            "kind": "grass",
+            "poolSize": 27,
+            "visible": 9,
+            "uniqueMaterials": 27,
+            "allTownUniformsShared": true
+          },
+          {
+            "kind": "flower",
+            "poolSize": 11,
+            "visible": 4,
+            "uniqueMaterials": 11,
+            "allTownUniformsShared": true
+          },
+          {
+            "kind": "flower",
+            "poolSize": 14,
+            "visible": 4,
+            "uniqueMaterials": 14,
+            "allTownUniformsShared": true
+          },
+          {
+            "kind": "flower",
+            "poolSize": 17,
+            "visible": 7,
+            "uniqueMaterials": 17,
+            "allTownUniformsShared": true
+          },
+          {
+            "kind": "flower",
+            "poolSize": 15,
+            "visible": 10,
+            "uniqueMaterials": 15,
+            "allTownUniformsShared": true
+          }
+        ],
+        "rendererPrograms": 117,
+        "memory": {
+          "geometries": 1159,
+          "textures": 228
+        },
+        "gravel": {
+          "uuid": "e5f56a69-dd45-49b9-9466-5241abcd609c",
+          "name": "",
+          "type": 1009,
+          "colorSpace": "srgb",
+          "width": 256,
+          "height": 256,
+          "repeat": [
+            1.9,
+            1.9
+          ],
+          "offset": [
+            0,
+            0
+          ],
+          "matrix": [
+            1.9,
+            0,
+            0,
+            0,
+            1.9,
+            0,
+            0,
+            0,
+            1
+          ],
+          "wrapS": 1000,
+          "wrapT": 1000,
+          "channel": 0
+        },
+        "limit": "Pool/program counts within one live scene and fixed views only; growth does not alone prove a leak, and stable counts do not prove create/dispose lifecycle safety."
+      },
+      "a2TownState": {
+        "rect": [
+          221.6,
+          763.15,
+          317,
+          805.47
+        ],
+        "green": [
+          1,
+          12,
+          55
+        ],
+        "shells": [
+          {
+            "kind": "grass",
+            "poolSize": 10,
+            "visible": 7,
+            "uniqueMaterials": 10,
+            "allTownUniformsShared": true
+          },
+          {
+            "kind": "grass",
+            "poolSize": 17,
+            "visible": 5,
+            "uniqueMaterials": 17,
+            "allTownUniformsShared": true
+          },
+          {
+            "kind": "grass",
+            "poolSize": 27,
+            "visible": 9,
+            "uniqueMaterials": 27,
+            "allTownUniformsShared": true
+          },
+          {
+            "kind": "flower",
+            "poolSize": 11,
+            "visible": 4,
+            "uniqueMaterials": 11,
+            "allTownUniformsShared": true
+          },
+          {
+            "kind": "flower",
+            "poolSize": 14,
+            "visible": 4,
+            "uniqueMaterials": 14,
+            "allTownUniformsShared": true
+          },
+          {
+            "kind": "flower",
+            "poolSize": 17,
+            "visible": 7,
+            "uniqueMaterials": 17,
+            "allTownUniformsShared": true
+          },
+          {
+            "kind": "flower",
+            "poolSize": 15,
+            "visible": 10,
+            "uniqueMaterials": 15,
+            "allTownUniformsShared": true
+          }
+        ],
+        "rendererPrograms": 117,
+        "memory": {
+          "geometries": 1159,
+          "textures": 228
+        },
+        "gravel": {
+          "uuid": "e5f56a69-dd45-49b9-9466-5241abcd609c",
+          "name": "",
+          "type": 1009,
+          "colorSpace": "srgb",
+          "width": 256,
+          "height": 256,
+          "repeat": [
+            1.9,
+            1.9
+          ],
+          "offset": [
+            0,
+            0
+          ],
+          "matrix": [
+            1.9,
+            0,
+            0,
+            0,
+            1.9,
+            0,
+            0,
+            0,
+            1
+          ],
+          "wrapS": 1000,
+          "wrapT": 1000,
+          "channel": 0
+        },
+        "limit": "Pool/program counts within one live scene and fixed views only; growth does not alone prove a leak, and stable counts do not prove create/dispose lifecycle safety."
+      },
+      "seamEvidence": {
+        "candidate": {
+          "name": "north-seam-central",
+          "x": 5,
+          "z": -105,
+          "tx": 5,
+          "tz": -97.7,
+          "position": [
+            5,
+            3.2366846561431886,
+            -105
+          ],
+          "target": [
+            5,
+            1.5048261889179049,
+            -97.7
+          ],
+          "worldPosition": [
+            285,
+            11.236684656143188,
+            795
+          ],
+          "worldTarget": [
+            285,
+            9.504826188917905,
+            802.3
+          ],
+          "eyeAboveTerrain": 1.6,
+          "fov": 55,
+          "minCenterRayAboveVisibleTerrainExcludingLast1Percent": 0.12010229034514563,
+          "samples": [
+            {
+              "local": [
+                5,
+                1.3765083312988278,
+                -99.05
+              ],
+              "world": [
+                285,
+                9.376508331298828,
+                800.95
+              ]
+            },
+            {
+              "local": [
+                5,
+                1.3761658668518066,
+                -99
+              ],
+              "world": [
+                285,
+                9.376165866851807,
+                801
+              ]
+            },
+            {
+              "local": [
+                5,
+                1.3780357693918006,
+                -98.95
+              ],
+              "world": [
+                285,
+                9.3780357693918,
+                801.05
+              ]
+            },
+            {
+              "local": [
+                5,
+                1.4135964882316472,
+                -98
+              ],
+              "world": [
+                285,
+                9.413596488231647,
+                802
+              ]
+            },
+            {
+              "local": [
+                5,
+                1.4491572070714938,
+                -97.05
+              ],
+              "world": [
+                285,
+                9.449157207071494,
+                802.95
+              ]
+            },
+            {
+              "local": [
+                5,
+                1.4510288065843622,
+                -97
+              ],
+              "world": [
+                285,
+                9.451028806584363,
+                803
+              ]
+            },
+            {
+              "local": [
+                5,
+                1.5005267489711909,
+                -96.95
+              ],
+              "world": [
+                285,
+                9.500526748971192,
+                803.05
+              ]
+            }
+          ]
+        },
+        "centreRay": {
+          "triangle": {
+            "faceIndices": [
+              245,
+              591,
+              592
+            ],
+            "worldVertices": [
+              [
+                285,
+                8.578600823879242,
+                802
+              ],
+              [
+                284,
+                9.451028823852539,
+                803
+              ],
+              [
+                285,
+                9.451028823852539,
+                803
+              ]
+            ],
+            "uv": [
+              [
+                0.8928571343421936,
+                17.5
+              ],
+              [
+                0.7142857313156128,
+                17.321428298950195
+              ],
+              [
+                0.8928571343421936,
+                17.321428298950195
+              ]
+            ],
+            "vertexColors": [
+              [
+                0.3139382302761078,
+                0.5394248962402344,
+                0.17142118513584137
+              ],
+              [
+                0.3139837384223938,
+                0.5394741296768188,
+                0.17143914103507996
+              ],
+              [
+                0.31398871541023254,
+                0.5394794940948486,
+                0.17144110798835754
+              ]
+            ],
+            "metric": {
+              "worldMetresPerRawU": 5.600000801086541,
+              "worldMetresPerRawV": 7.431614060578728,
+              "worldDPdu": [
+                5.600000801086541,
+                0,
+                0
+              ],
+              "worldDPdv": [
+                0,
+                -4.885589345032738,
+                -5.599991455091163
+              ]
+            },
+            "limit": "Geometric raw UV metric before material repeat/transform. Triangle ray ignores fragment clipping/alpha; not a proof of visible fragment identity."
+          },
+          "uv": [
+            0.8920189891543205,
+            17.3402716492425
+          ],
+          "mesh": "env-terrain-levee",
+          "uuid": "da7ae8ef-29f9-40b9-b645-4767e47d6a56",
+          "distance": 8.11471598139232,
+          "point": [
+            284.99530638627647,
+            9.358967952439734,
+            802.8944773993778
+          ],
+          "stationLocal": [
+            4.995306386276468,
+            1.358967952439734,
+            -97.10552260062218
+          ],
+          "viewPosition": [
+            0.004693613723588896,
+            -0.004693613723503631,
+            -8.11471326656988
+          ],
+          "faceNormalLocal": [
+            0,
+            0.7535363663186609,
+            -0.6574062249745352
+          ],
+          "faceNormalWorld": [
+            0,
+            0.7535363663186609,
+            -0.6574062249745352
+          ],
+          "faceNormalView": [
+            0,
+            0.58143420501038,
+            0.813593427483253
+          ],
+          "material": {
+            "uuid": "11eb252b-4bbd-4277-b7b0-e2d393aae2fd",
+            "name": "env-levee",
+            "type": "MeshToonMaterial",
+            "colorRGB": [
+              1,
+              1,
+              1
+            ],
+            "emissiveRGB": [
+              0,
+              0,
+              0
+            ],
+            "emissiveIntensity": 1,
+            "toneMapped": true,
+            "vertexColors": true,
+            "opacity": 1,
+            "transparent": false,
+            "side": 0,
+            "depthWrite": true,
+            "fog": true,
+            "map": {
+              "uuid": "5b93abe3-4fd3-4f69-b144-52f3e07e7ef1",
+              "name": "",
+              "type": 1009,
+              "colorSpace": "srgb",
+              "width": 512,
+              "height": 512,
+              "repeat": [
+                1,
+                1
+              ],
+              "offset": [
+                0,
+                0
+              ],
+              "matrix": [
+                1,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                0,
+                1
+              ],
+              "wrapS": 1000,
+              "wrapT": 1000,
+              "channel": 0
+            },
+            "normalMap": null,
+            "roughnessMap": null,
+            "normalScale": [
+              1,
+              1
+            ],
+            "shaderUniforms": null,
+            "clipPlanes": 4,
+            "clipIntersection": false,
+            "clipShadows": true,
+            "softClip": null
+          }
+        },
+        "projections": [
+          {
+            "local": [
+              5,
+              1.3765083312988278,
+              -99.05
+            ],
+            "world": [
+              285,
+              9.376508331298828,
+              800.95
+            ],
+            "ndc": [
+              1.0974477481834067e-14,
+              -0.13482983215504202,
+              0.9357020820774647
+            ],
+            "pixel": [
+              720,
+              510
+            ],
+            "ray": {
+              "triangle": {
+                "faceIndices": [
+                  245,
+                  591,
+                  592
+                ],
+                "worldVertices": [
+                  [
+                    285,
+                    8.578600823879242,
+                    802
+                  ],
+                  [
+                    284,
+                    9.451028823852539,
+                    803
+                  ],
+                  [
+                    285,
+                    9.451028823852539,
+                    803
+                  ]
+                ],
+                "uv": [
+                  [
+                    0.8928571343421936,
+                    17.5
+                  ],
+                  [
+                    0.7142857313156128,
+                    17.321428298950195
+                  ],
+                  [
+                    0.8928571343421936,
+                    17.321428298950195
+                  ]
+                ],
+                "vertexColors": [
+                  [
+                    0.3139382302761078,
+                    0.5394248962402344,
+                    0.17142118513584137
+                  ],
+                  [
+                    0.3139837384223938,
+                    0.5394741296768188,
+                    0.17143914103507996
+                  ],
+                  [
+                    0.31398871541023254,
+                    0.5394794940948486,
+                    0.17144110798835754
+                  ]
+                ],
+                "metric": {
+                  "worldMetresPerRawU": 5.600000801086541,
+                  "worldMetresPerRawV": 7.431614060578728,
+                  "worldDPdu": [
+                    5.600000801086541,
+                    0,
+                    0
+                  ],
+                  "worldDPdv": [
+                    0,
+                    -4.885589345032738,
+                    -5.599991455091163
+                  ]
+                },
+                "limit": "Geometric raw UV metric before material repeat/transform. Triangle ray ignores fragment clipping/alpha; not a proof of visible fragment identity."
+              },
+              "uv": [
+                0.8920585833677381,
+                17.428987642142705
+              ],
+              "mesh": "env-terrain-levee",
+              "uuid": "da7ae8ef-29f9-40b9-b645-4767e47d6a56",
+              "distance": 7.7502851134824216,
+              "point": [
+                284.99552811390333,
+                8.925538042792512,
+                802.3976685972068
+              ],
+              "stationLocal": [
+                4.995528113903333,
+                0.9255380427925122,
+                -97.6023314027932
+              ],
+              "viewPosition": [
+                0.004471886096723665,
+                -0.541098217706832,
+                -7.731371939138398
+              ],
+              "faceNormalLocal": [
+                0,
+                0.7535363663186609,
+                -0.6574062249745352
+              ],
+              "faceNormalWorld": [
+                0,
+                0.7535363663186609,
+                -0.6574062249745352
+              ],
+              "faceNormalView": [
+                0,
+                0.58143420501038,
+                0.813593427483253
+              ],
+              "material": {
+                "uuid": "11eb252b-4bbd-4277-b7b0-e2d393aae2fd",
+                "name": "env-levee",
+                "type": "MeshToonMaterial",
+                "colorRGB": [
+                  1,
+                  1,
+                  1
+                ],
+                "emissiveRGB": [
+                  0,
+                  0,
+                  0
+                ],
+                "emissiveIntensity": 1,
+                "toneMapped": true,
+                "vertexColors": true,
+                "opacity": 1,
+                "transparent": false,
+                "side": 0,
+                "depthWrite": true,
+                "fog": true,
+                "map": {
+                  "uuid": "5b93abe3-4fd3-4f69-b144-52f3e07e7ef1",
+                  "name": "",
+                  "type": 1009,
+                  "colorSpace": "srgb",
+                  "width": 512,
+                  "height": 512,
+                  "repeat": [
+                    1,
+                    1
+                  ],
+                  "offset": [
+                    0,
+                    0
+                  ],
+                  "matrix": [
+                    1,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    1
+                  ],
+                  "wrapS": 1000,
+                  "wrapT": 1000,
+                  "channel": 0
+                },
+                "normalMap": null,
+                "roughnessMap": null,
+                "normalScale": [
+                  1,
+                  1
+                ],
+                "shaderUniforms": null,
+                "clipPlanes": 4,
+                "clipIntersection": false,
+                "clipShadows": true,
+                "softClip": null
+              }
+            }
+          },
+          {
+            "local": [
+              5,
+              1.3761658668518066,
+              -99
+            ],
+            "world": [
+              285,
+              9.376165866851807,
+              801
+            ],
+            "ndc": [
+              1.0889151889583486e-14,
+              -0.13034611854334938,
+              0.9362021870804388
+            ],
+            "pixel": [
+              720,
+              508
+            ],
+            "ray": {
+              "triangle": {
+                "faceIndices": [
+                  245,
+                  591,
+                  592
+                ],
+                "worldVertices": [
+                  [
+                    285,
+                    8.578600823879242,
+                    802
+                  ],
+                  [
+                    284,
+                    9.451028823852539,
+                    803
+                  ],
+                  [
+                    285,
+                    9.451028823852539,
+                    803
+                  ]
+                ],
+                "uv": [
+                  [
+                    0.8928571343421936,
+                    17.5
+                  ],
+                  [
+                    0.7142857313156128,
+                    17.321428298950195
+                  ],
+                  [
+                    0.8928571343421936,
+                    17.321428298950195
+                  ]
+                ],
+                "vertexColors": [
+                  [
+                    0.3139382302761078,
+                    0.5394248962402344,
+                    0.17142118513584137
+                  ],
+                  [
+                    0.3139837384223938,
+                    0.5394741296768188,
+                    0.17143914103507996
+                  ],
+                  [
+                    0.31398871541023254,
+                    0.5394794940948486,
+                    0.17144110798835754
+                  ]
+                ],
+                "metric": {
+                  "worldMetresPerRawU": 5.600000801086541,
+                  "worldMetresPerRawV": 7.431614060578728,
+                  "worldDPdu": [
+                    5.600000801086541,
+                    0,
+                    0
+                  ],
+                  "worldDPdv": [
+                    0,
+                    -4.885589345032738,
+                    -5.599991455091163
+                  ]
+                },
+                "limit": "Geometric raw UV metric before material repeat/transform. Triangle ray ignores fragment clipping/alpha; not a proof of visible fragment identity."
+              },
+              "uv": [
+                0.8920573239254683,
+                17.426165697676165
+              ],
+              "mesh": "env-terrain-levee",
+              "uuid": "da7ae8ef-29f9-40b9-b645-4767e47d6a56",
+              "distance": 7.761278310196003,
+              "point": [
+                284.9955210610256,
+                8.939324904610494,
+                802.4134714621061
+              ],
+              "stationLocal": [
+                4.995521061025613,
+                0.9393249046104941,
+                -97.58652853789386
+              ],
+              "viewPosition": [
+                0.004478938974443736,
+                -0.5240358600129014,
+                -7.743565545977276
+              ],
+              "faceNormalLocal": [
+                0,
+                0.7535363663186609,
+                -0.6574062249745352
+              ],
+              "faceNormalWorld": [
+                0,
+                0.7535363663186609,
+                -0.6574062249745352
+              ],
+              "faceNormalView": [
+                0,
+                0.58143420501038,
+                0.813593427483253
+              ],
+              "material": {
+                "uuid": "11eb252b-4bbd-4277-b7b0-e2d393aae2fd",
+                "name": "env-levee",
+                "type": "MeshToonMaterial",
+                "colorRGB": [
+                  1,
+                  1,
+                  1
+                ],
+                "emissiveRGB": [
+                  0,
+                  0,
+                  0
+                ],
+                "emissiveIntensity": 1,
+                "toneMapped": true,
+                "vertexColors": true,
+                "opacity": 1,
+                "transparent": false,
+                "side": 0,
+                "depthWrite": true,
+                "fog": true,
+                "map": {
+                  "uuid": "5b93abe3-4fd3-4f69-b144-52f3e07e7ef1",
+                  "name": "",
+                  "type": 1009,
+                  "colorSpace": "srgb",
+                  "width": 512,
+                  "height": 512,
+                  "repeat": [
+                    1,
+                    1
+                  ],
+                  "offset": [
+                    0,
+                    0
+                  ],
+                  "matrix": [
+                    1,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    1
+                  ],
+                  "wrapS": 1000,
+                  "wrapT": 1000,
+                  "channel": 0
+                },
+                "normalMap": null,
+                "roughnessMap": null,
+                "normalScale": [
+                  1,
+                  1
+                ],
+                "shaderUniforms": null,
+                "clipPlanes": 4,
+                "clipIntersection": false,
+                "clipShadows": true,
+                "softClip": null
+              }
+            }
+          },
+          {
+            "local": [
+              5,
+              1.3780357693918006,
+              -98.95
+            ],
+            "world": [
+              285,
+              9.3780357693918,
+              801.05
+            ],
+            "ndc": [
+              1.0806016572709016e-14,
+              -0.12528702562556623,
+              0.9366894545789245
+            ],
+            "pixel": [
+              720,
+              506
+            ],
+            "ray": {
+              "triangle": {
+                "faceIndices": [
+                  245,
+                  591,
+                  592
+                ],
+                "worldVertices": [
+                  [
+                    285,
+                    8.578600823879242,
+                    802
+                  ],
+                  [
+                    284,
+                    9.451028823852539,
+                    803
+                  ],
+                  [
+                    285,
+                    9.451028823852539,
+                    803
+                  ]
+                ],
+                "uv": [
+                  [
+                    0.8928571343421936,
+                    17.5
+                  ],
+                  [
+                    0.7142857313156128,
+                    17.321428298950195
+                  ],
+                  [
+                    0.8928571343421936,
+                    17.321428298950195
+                  ]
+                ],
+                "vertexColors": [
+                  [
+                    0.3139382302761078,
+                    0.5394248962402344,
+                    0.17142118513584137
+                  ],
+                  [
+                    0.3139837384223938,
+                    0.5394741296768188,
+                    0.17143914103507996
+                  ],
+                  [
+                    0.31398871541023254,
+                    0.5394794940948486,
+                    0.17144110798835754
+                  ]
+                ],
+                "metric": {
+                  "worldMetresPerRawU": 5.600000801086541,
+                  "worldMetresPerRawV": 7.431614060578728,
+                  "worldDPdu": [
+                    5.600000801086541,
+                    0,
+                    0
+                  ],
+                  "worldDPdv": [
+                    0,
+                    -4.885589345032738,
+                    -5.599991455091163
+                  ]
+                },
+                "limit": "Geometric raw UV metric before material repeat/transform. Triangle ray ignores fragment clipping/alpha; not a proof of visible fragment identity."
+              },
+              "uv": [
+                0.8920560605042405,
+                17.42333483783557
+              ],
+              "mesh": "env-terrain-levee",
+              "uuid": "da7ae8ef-29f9-40b9-b645-4767e47d6a56",
+              "distance": 7.772347470032275,
+              "point": [
+                284.9955139858657,
+                8.953155323284992,
+                802.429324253024
+              ],
+              "stationLocal": [
+                4.995513985865728,
+                0.9531553232849923,
+                -97.57067574697601
+              ],
+              "viewPosition": [
+                0.0044860141343292526,
+                -0.506919597182673,
+                -7.7557976760992915
+              ],
+              "faceNormalLocal": [
+                0,
+                0.7535363663186609,
+                -0.6574062249745352
+              ],
+              "faceNormalWorld": [
+                0,
+                0.7535363663186609,
+                -0.6574062249745352
+              ],
+              "faceNormalView": [
+                0,
+                0.58143420501038,
+                0.813593427483253
+              ],
+              "material": {
+                "uuid": "11eb252b-4bbd-4277-b7b0-e2d393aae2fd",
+                "name": "env-levee",
+                "type": "MeshToonMaterial",
+                "colorRGB": [
+                  1,
+                  1,
+                  1
+                ],
+                "emissiveRGB": [
+                  0,
+                  0,
+                  0
+                ],
+                "emissiveIntensity": 1,
+                "toneMapped": true,
+                "vertexColors": true,
+                "opacity": 1,
+                "transparent": false,
+                "side": 0,
+                "depthWrite": true,
+                "fog": true,
+                "map": {
+                  "uuid": "5b93abe3-4fd3-4f69-b144-52f3e07e7ef1",
+                  "name": "",
+                  "type": 1009,
+                  "colorSpace": "srgb",
+                  "width": 512,
+                  "height": 512,
+                  "repeat": [
+                    1,
+                    1
+                  ],
+                  "offset": [
+                    0,
+                    0
+                  ],
+                  "matrix": [
+                    1,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    1
+                  ],
+                  "wrapS": 1000,
+                  "wrapT": 1000,
+                  "channel": 0
+                },
+                "normalMap": null,
+                "roughnessMap": null,
+                "normalScale": [
+                  1,
+                  1
+                ],
+                "shaderUniforms": null,
+                "clipPlanes": 4,
+                "clipIntersection": false,
+                "clipShadows": true,
+                "softClip": null
+              }
+            }
+          },
+          {
+            "local": [
+              5,
+              1.4135964882316472,
+              -98
+            ],
+            "world": [
+              285,
+              9.413596488231647,
+              802
+            ],
+            "ndc": [
+              9.437091429554191e-15,
+              -0.04197387299853803,
+              0.9447129126614427
+            ],
+            "pixel": [
+              720,
+              468
+            ],
+            "ray": {
+              "triangle": {
+                "faceIndices": [
+                  245,
+                  591,
+                  592
+                ],
+                "worldVertices": [
+                  [
+                    285,
+                    8.578600823879242,
+                    802
+                  ],
+                  [
+                    284,
+                    9.451028823852539,
+                    803
+                  ],
+                  [
+                    285,
+                    9.451028823852539,
+                    803
+                  ]
+                ],
+                "uv": [
+                  [
+                    0.8928571343421936,
+                    17.5
+                  ],
+                  [
+                    0.7142857313156128,
+                    17.321428298950195
+                  ],
+                  [
+                    0.8928571343421936,
+                    17.321428298950195
+                  ]
+                ],
+                "vertexColors": [
+                  [
+                    0.3139382302761078,
+                    0.5394248962402344,
+                    0.17142118513584137
+                  ],
+                  [
+                    0.3139837384223938,
+                    0.5394741296768188,
+                    0.17143914103507996
+                  ],
+                  [
+                    0.31398871541023254,
+                    0.5394794940948486,
+                    0.17144110798835754
+                  ]
+                ],
+                "metric": {
+                  "worldMetresPerRawU": 5.600000801086541,
+                  "worldMetresPerRawV": 7.431614060578728,
+                  "worldDPdu": [
+                    5.600000801086541,
+                    0,
+                    0
+                  ],
+                  "worldDPdv": [
+                    0,
+                    -4.885589345032738,
+                    -5.599991455091163
+                  ]
+                },
+                "limit": "Geometric raw UV metric before material repeat/transform. Triangle ray ignores fragment clipping/alpha; not a proof of visible fragment identity."
+              },
+              "uv": [
+                0.8920312736442677,
+                17.36779664920773
+              ],
+              "mesh": "env-terrain-levee",
+              "uuid": "da7ae8ef-29f9-40b9-b645-4767e47d6a56",
+              "distance": 7.997610077299547,
+              "point": [
+                284.99537517943,
+                9.224492105887576,
+                802.7403376347711
+              ],
+              "stationLocal": [
+                4.995375179430027,
+                1.2244921058875757,
+                -97.2596623652289
+              ],
+              "viewPosition": [
+                0.004624820570029442,
+                -0.17111836109236833,
+                -7.995777889990109
+              ],
+              "faceNormalLocal": [
+                0,
+                0.7535363663186609,
+                -0.6574062249745352
+              ],
+              "faceNormalWorld": [
+                0,
+                0.7535363663186609,
+                -0.6574062249745352
+              ],
+              "faceNormalView": [
+                0,
+                0.58143420501038,
+                0.813593427483253
+              ],
+              "material": {
+                "uuid": "11eb252b-4bbd-4277-b7b0-e2d393aae2fd",
+                "name": "env-levee",
+                "type": "MeshToonMaterial",
+                "colorRGB": [
+                  1,
+                  1,
+                  1
+                ],
+                "emissiveRGB": [
+                  0,
+                  0,
+                  0
+                ],
+                "emissiveIntensity": 1,
+                "toneMapped": true,
+                "vertexColors": true,
+                "opacity": 1,
+                "transparent": false,
+                "side": 0,
+                "depthWrite": true,
+                "fog": true,
+                "map": {
+                  "uuid": "5b93abe3-4fd3-4f69-b144-52f3e07e7ef1",
+                  "name": "",
+                  "type": 1009,
+                  "colorSpace": "srgb",
+                  "width": 512,
+                  "height": 512,
+                  "repeat": [
+                    1,
+                    1
+                  ],
+                  "offset": [
+                    0,
+                    0
+                  ],
+                  "matrix": [
+                    1,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    1
+                  ],
+                  "wrapS": 1000,
+                  "wrapT": 1000,
+                  "channel": 0
+                },
+                "normalMap": null,
+                "roughnessMap": null,
+                "normalScale": [
+                  1,
+                  1
+                ],
+                "shaderUniforms": null,
+                "clipPlanes": 4,
+                "clipIntersection": false,
+                "clipShadows": true,
+                "softClip": null
+              }
+            }
+          },
+          {
+            "local": [
+              5,
+              1.4491572070714938,
+              -97.05
+            ],
+            "world": [
+              285,
+              9.449157207071494,
+              802.95
+            ],
+            "ndc": [
+              8.376004482473918e-15,
+              0.022604164167850705,
+              0.9509320888409272
+            ],
+            "pixel": [
+              720,
+              439
+            ],
+            "ray": {
+              "triangle": {
+                "faceIndices": [
+                  245,
+                  591,
+                  592
+                ],
+                "worldVertices": [
+                  [
+                    285,
+                    8.578600823879242,
+                    802
+                  ],
+                  [
+                    284,
+                    9.451028823852539,
+                    803
+                  ],
+                  [
+                    285,
+                    9.451028823852539,
+                    803
+                  ]
+                ],
+                "uv": [
+                  [
+                    0.8928571343421936,
+                    17.5
+                  ],
+                  [
+                    0.7142857313156128,
+                    17.321428298950195
+                  ],
+                  [
+                    0.8928571343421936,
+                    17.321428298950195
+                  ]
+                ],
+                "vertexColors": [
+                  [
+                    0.3139382302761078,
+                    0.5394248962402344,
+                    0.17142118513584137
+                  ],
+                  [
+                    0.3139837384223938,
+                    0.5394741296768188,
+                    0.17143914103507996
+                  ],
+                  [
+                    0.31398871541023254,
+                    0.5394794940948486,
+                    0.17144110798835754
+                  ]
+                ],
+                "metric": {
+                  "worldMetresPerRawU": 5.600000801086541,
+                  "worldMetresPerRawV": 7.431614060578728,
+                  "worldDPdu": [
+                    5.600000801086541,
+                    0,
+                    0
+                  ],
+                  "worldDPdv": [
+                    0,
+                    -4.885589345032738,
+                    -5.599991455091163
+                  ]
+                },
+                "limit": "Geometric raw UV metric before material repeat/transform. Triangle ray ignores fragment clipping/alpha; not a proof of visible fragment identity."
+              },
+              "uv": [
+                0.8920113004065175,
+                17.32304400821607
+              ],
+              "mesh": "env-terrain-levee",
+              "uuid": "da7ae8ef-29f9-40b9-b645-4767e47d6a56",
+              "distance": 8.189759268028519,
+              "point": [
+                284.99526332928264,
+                9.443135131878508,
+                802.9909520419171
+              ],
+              "stationLocal": [
+                4.995263329282636,
+                1.443135131878508,
+                -97.00904795808287
+              ],
+              "viewPosition": [
+                0.004736670717420566,
+                0.09947008506688348,
+                -8.18915381064403
+              ],
+              "faceNormalLocal": [
+                0,
+                0.7535363663186609,
+                -0.6574062249745352
+              ],
+              "faceNormalWorld": [
+                0,
+                0.7535363663186609,
+                -0.6574062249745352
+              ],
+              "faceNormalView": [
+                0,
+                0.58143420501038,
+                0.813593427483253
+              ],
+              "material": {
+                "uuid": "11eb252b-4bbd-4277-b7b0-e2d393aae2fd",
+                "name": "env-levee",
+                "type": "MeshToonMaterial",
+                "colorRGB": [
+                  1,
+                  1,
+                  1
+                ],
+                "emissiveRGB": [
+                  0,
+                  0,
+                  0
+                ],
+                "emissiveIntensity": 1,
+                "toneMapped": true,
+                "vertexColors": true,
+                "opacity": 1,
+                "transparent": false,
+                "side": 0,
+                "depthWrite": true,
+                "fog": true,
+                "map": {
+                  "uuid": "5b93abe3-4fd3-4f69-b144-52f3e07e7ef1",
+                  "name": "",
+                  "type": 1009,
+                  "colorSpace": "srgb",
+                  "width": 512,
+                  "height": 512,
+                  "repeat": [
+                    1,
+                    1
+                  ],
+                  "offset": [
+                    0,
+                    0
+                  ],
+                  "matrix": [
+                    1,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    1
+                  ],
+                  "wrapS": 1000,
+                  "wrapT": 1000,
+                  "channel": 0
+                },
+                "normalMap": null,
+                "roughnessMap": null,
+                "normalScale": [
+                  1,
+                  1
+                ],
+                "shaderUniforms": null,
+                "clipPlanes": 4,
+                "clipIntersection": false,
+                "clipShadows": true,
+                "softClip": null
+              }
+            }
+          },
+          {
+            "local": [
+              5,
+              1.4510288065843622,
+              -97
+            ],
+            "world": [
+              285,
+              9.451028806584363,
+              803
+            ],
+            "ndc": [
+              8.32672868535791e-15,
+              0.025603098244915225,
+              0.9512209010485341
+            ],
+            "pixel": [
+              720,
+              438
+            ],
+            "ray": {
+              "triangle": {
+                "faceIndices": [
+                  245,
+                  591,
+                  592
+                ],
+                "worldVertices": [
+                  [
+                    285,
+                    8.578600823879242,
+                    802
+                  ],
+                  [
+                    284,
+                    9.451028823852539,
+                    803
+                  ],
+                  [
+                    285,
+                    9.451028823852539,
+                    803
+                  ]
+                ],
+                "uv": [
+                  [
+                    0.8928571343421936,
+                    17.5
+                  ],
+                  [
+                    0.7142857313156128,
+                    17.321428298950195
+                  ],
+                  [
+                    0.8928571343421936,
+                    17.321428298950195
+                  ]
+                ],
+                "vertexColors": [
+                  [
+                    0.3139382302761078,
+                    0.5394248962402344,
+                    0.17142118513584137
+                  ],
+                  [
+                    0.3139837384223938,
+                    0.5394741296768188,
+                    0.17143914103507996
+                  ],
+                  [
+                    0.31398871541023254,
+                    0.5394794940948486,
+                    0.17144110798835754
+                  ]
+                ],
+                "metric": {
+                  "worldMetresPerRawU": 5.600000801086541,
+                  "worldMetresPerRawV": 7.431614060578728,
+                  "worldDPdu": [
+                    5.600000801086541,
+                    0,
+                    0
+                  ],
+                  "worldDPdv": [
+                    0,
+                    -4.885589345032738,
+                    -5.599991455091163
+                  ]
+                },
+                "limit": "Geometric raw UV metric before material repeat/transform. Triangle ray ignores fragment clipping/alpha; not a proof of visible fragment identity."
+              },
+              "uv": [
+                0.892010594428604,
+                17.321462172736695
+              ],
+              "mesh": "env-terrain-levee",
+              "uuid": "da7ae8ef-29f9-40b9-b645-4767e47d6a56",
+              "distance": 8.19671551477734,
+              "point": [
+                284.99525937580574,
+                9.450863330442159,
+                802.9998103070851
+              ],
+              "stationLocal": [
+                4.995259375805745,
+                1.450863330442159,
+                -97.00018969291489
+              ],
+              "viewPosition": [
+                0.004740624194312204,
+                0.10903435646989124,
+                -8.195988913229598
+              ],
+              "faceNormalLocal": [
+                0,
+                0.7535363663186609,
+                -0.6574062249745352
+              ],
+              "faceNormalWorld": [
+                0,
+                0.7535363663186609,
+                -0.6574062249745352
+              ],
+              "faceNormalView": [
+                0,
+                0.58143420501038,
+                0.813593427483253
+              ],
+              "material": {
+                "uuid": "11eb252b-4bbd-4277-b7b0-e2d393aae2fd",
+                "name": "env-levee",
+                "type": "MeshToonMaterial",
+                "colorRGB": [
+                  1,
+                  1,
+                  1
+                ],
+                "emissiveRGB": [
+                  0,
+                  0,
+                  0
+                ],
+                "emissiveIntensity": 1,
+                "toneMapped": true,
+                "vertexColors": true,
+                "opacity": 1,
+                "transparent": false,
+                "side": 0,
+                "depthWrite": true,
+                "fog": true,
+                "map": {
+                  "uuid": "5b93abe3-4fd3-4f69-b144-52f3e07e7ef1",
+                  "name": "",
+                  "type": 1009,
+                  "colorSpace": "srgb",
+                  "width": 512,
+                  "height": 512,
+                  "repeat": [
+                    1,
+                    1
+                  ],
+                  "offset": [
+                    0,
+                    0
+                  ],
+                  "matrix": [
+                    1,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    1
+                  ],
+                  "wrapS": 1000,
+                  "wrapT": 1000,
+                  "channel": 0
+                },
+                "normalMap": null,
+                "roughnessMap": null,
+                "normalScale": [
+                  1,
+                  1
+                ],
+                "shaderUniforms": null,
+                "clipPlanes": 4,
+                "clipIntersection": false,
+                "clipShadows": true,
+                "softClip": null
+              }
+            }
+          },
+          {
+            "local": [
+              5,
+              1.5005267489711909,
+              -96.95
+            ],
+            "world": [
+              285,
+              9.500526748971192,
+              803.05
+            ],
+            "ndc": [
+              8.289082688595617e-15,
+              0.03941702999705819,
+              0.9514415494006424
+            ],
+            "pixel": [
+              720,
+              432
+            ],
+            "ray": {
+              "triangle": {
+                "faceIndices": [
+                  592,
+                  826,
+                  827
+                ],
+                "worldVertices": [
+                  [
+                    285,
+                    9.451028823852539,
+                    803
+                  ],
+                  [
+                    284,
+                    10.422222137451172,
+                    804
+                  ],
+                  [
+                    285,
+                    10.422222137451172,
+                    804
+                  ]
+                ],
+                "uv": [
+                  [
+                    0.8928571343421936,
+                    17.321428298950195
+                  ],
+                  [
+                    0.7142857313156128,
+                    17.14285659790039
+                  ],
+                  [
+                    0.8928571343421936,
+                    17.14285659790039
+                  ]
+                ],
+                "vertexColors": [
+                  [
+                    0.31398871541023254,
+                    0.5394794940948486,
+                    0.17144110798835754
+                  ],
+                  [
+                    0.3133406639099121,
+                    0.5387781262397766,
+                    0.17118534445762634
+                  ],
+                  [
+                    0.31398871541023254,
+                    0.5394794940948486,
+                    0.17144110798835754
+                  ]
+                ],
+                "metric": {
+                  "worldMetresPerRawU": 5.600000801086541,
+                  "worldMetresPerRawV": 7.80634882484343,
+                  "worldDPdu": [
+                    5.600000801086541,
+                    0,
+                    0
+                  ],
+                  "worldDPdv": [
+                    0,
+                    -5.438674257394016,
+                    -5.599991455091163
+                  ]
+                },
+                "limit": "Geometric raw UV metric before material repeat/transform. Triangle ray ignores fragment clipping/alpha; not a proof of visible fragment identity."
+              },
+              "uv": [
+                0.8920068019106524,
+                17.312706853214728
+              ],
+              "mesh": "env-terrain-levee",
+              "uuid": "da7ae8ef-29f9-40b9-b645-4767e47d6a56",
+              "distance": 8.234395340717743,
+              "point": [
+                284.9952381377022,
+                9.498461926261276,
+                803.0488400215946
+              ],
+              "stationLocal": [
+                4.995238137702188,
+                1.4984619262612764,
+                -96.95115997840537
+              ],
+              "viewPosition": [
+                0.004761862297868902,
+                0.16666518042694634,
+                -8.2327071288571
+              ],
+              "faceNormalLocal": [
+                0,
+                0.7173637228802008,
+                -0.6966988510794736
+              ],
+              "faceNormalWorld": [
+                0,
+                0.7173637228802008,
+                -0.6966988510794736
+              ],
+              "faceNormalView": [
+                0,
+                0.5371684038628457,
+                0.8434750179415172
+              ],
+              "material": {
+                "uuid": "11eb252b-4bbd-4277-b7b0-e2d393aae2fd",
+                "name": "env-levee",
+                "type": "MeshToonMaterial",
+                "colorRGB": [
+                  1,
+                  1,
+                  1
+                ],
+                "emissiveRGB": [
+                  0,
+                  0,
+                  0
+                ],
+                "emissiveIntensity": 1,
+                "toneMapped": true,
+                "vertexColors": true,
+                "opacity": 1,
+                "transparent": false,
+                "side": 0,
+                "depthWrite": true,
+                "fog": true,
+                "map": {
+                  "uuid": "5b93abe3-4fd3-4f69-b144-52f3e07e7ef1",
+                  "name": "",
+                  "type": 1009,
+                  "colorSpace": "srgb",
+                  "width": 512,
+                  "height": 512,
+                  "repeat": [
+                    1,
+                    1
+                  ],
+                  "offset": [
+                    0,
+                    0
+                  ],
+                  "matrix": [
+                    1,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    1
+                  ],
+                  "wrapS": 1000,
+                  "wrapT": 1000,
+                  "channel": 0
+                },
+                "normalMap": null,
+                "roughnessMap": null,
+                "normalScale": [
+                  1,
+                  1
+                ],
+                "shaderUniforms": null,
+                "clipPlanes": 4,
+                "clipIntersection": false,
+                "clipShadows": true,
+                "softClip": null
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "view": "north-seam-oblique",
+      "onOff": {
+        "a": "north-seam-oblique-town-A1-capture-2",
+        "b": "north-seam-oblique-town-B-capture-2",
+        "cameraEqual": true,
+        "timeEqual": true,
+        "paramsEqual": true,
+        "pngEqual": false,
+        "pixels": {
+          "changedPixels": 822489,
+          "meanAbsRGB": 8.63336445473251,
+          "maxAbsRGB": 122,
+          "bounds": [
+            0,
+            0,
+            1439,
+            899
+          ]
+        }
+      },
+      "restoration": {
+        "a": "north-seam-oblique-town-A1-capture-2",
+        "b": "north-seam-oblique-town-A2-capture-2",
+        "cameraEqual": true,
+        "timeEqual": true,
+        "paramsEqual": true,
+        "pngEqual": true,
+        "pixels": {
+          "changedPixels": 0,
+          "meanAbsRGB": 0,
+          "maxAbsRGB": 0,
+          "bounds": null
+        }
+      },
+      "aTownState": {
+        "rect": [
+          221.6,
+          763.15,
+          317,
+          805.47
+        ],
+        "green": [
+          1,
+          12,
+          55
+        ],
+        "shells": [
+          {
+            "kind": "grass",
+            "poolSize": 10,
+            "visible": 6,
+            "uniqueMaterials": 10,
+            "allTownUniformsShared": true
+          },
+          {
+            "kind": "grass",
+            "poolSize": 17,
+            "visible": 5,
+            "uniqueMaterials": 17,
+            "allTownUniformsShared": true
+          },
+          {
+            "kind": "grass",
+            "poolSize": 27,
+            "visible": 11,
+            "uniqueMaterials": 27,
+            "allTownUniformsShared": true
+          },
+          {
+            "kind": "flower",
+            "poolSize": 11,
+            "visible": 3,
+            "uniqueMaterials": 11,
+            "allTownUniformsShared": true
+          },
+          {
+            "kind": "flower",
+            "poolSize": 14,
+            "visible": 4,
+            "uniqueMaterials": 14,
+            "allTownUniformsShared": true
+          },
+          {
+            "kind": "flower",
+            "poolSize": 17,
+            "visible": 8,
+            "uniqueMaterials": 17,
+            "allTownUniformsShared": true
+          },
+          {
+            "kind": "flower",
+            "poolSize": 15,
+            "visible": 11,
+            "uniqueMaterials": 15,
+            "allTownUniformsShared": true
+          }
+        ],
+        "rendererPrograms": 117,
+        "memory": {
+          "geometries": 1159,
+          "textures": 228
+        },
+        "gravel": {
+          "uuid": "e5f56a69-dd45-49b9-9466-5241abcd609c",
+          "name": "",
+          "type": 1009,
+          "colorSpace": "srgb",
+          "width": 256,
+          "height": 256,
+          "repeat": [
+            1.9,
+            1.9
+          ],
+          "offset": [
+            0,
+            0
+          ],
+          "matrix": [
+            1.9,
+            0,
+            0,
+            0,
+            1.9,
+            0,
+            0,
+            0,
+            1
+          ],
+          "wrapS": 1000,
+          "wrapT": 1000,
+          "channel": 0
+        },
+        "limit": "Pool/program counts within one live scene and fixed views only; growth does not alone prove a leak, and stable counts do not prove create/dispose lifecycle safety."
+      },
+      "bTownState": {
+        "rect": [
+          221.6,
+          763.15,
+          317,
+          805.47
+        ],
+        "green": [
+          0,
+          12,
+          55
+        ],
+        "shells": [
+          {
+            "kind": "grass",
+            "poolSize": 10,
+            "visible": 6,
+            "uniqueMaterials": 10,
+            "allTownUniformsShared": true
+          },
+          {
+            "kind": "grass",
+            "poolSize": 17,
+            "visible": 5,
+            "uniqueMaterials": 17,
+            "allTownUniformsShared": true
+          },
+          {
+            "kind": "grass",
+            "poolSize": 27,
+            "visible": 11,
+            "uniqueMaterials": 27,
+            "allTownUniformsShared": true
+          },
+          {
+            "kind": "flower",
+            "poolSize": 11,
+            "visible": 3,
+            "uniqueMaterials": 11,
+            "allTownUniformsShared": true
+          },
+          {
+            "kind": "flower",
+            "poolSize": 14,
+            "visible": 4,
+            "uniqueMaterials": 14,
+            "allTownUniformsShared": true
+          },
+          {
+            "kind": "flower",
+            "poolSize": 17,
+            "visible": 8,
+            "uniqueMaterials": 17,
+            "allTownUniformsShared": true
+          },
+          {
+            "kind": "flower",
+            "poolSize": 15,
+            "visible": 11,
+            "uniqueMaterials": 15,
+            "allTownUniformsShared": true
+          }
+        ],
+        "rendererPrograms": 117,
+        "memory": {
+          "geometries": 1159,
+          "textures": 228
+        },
+        "gravel": {
+          "uuid": "e5f56a69-dd45-49b9-9466-5241abcd609c",
+          "name": "",
+          "type": 1009,
+          "colorSpace": "srgb",
+          "width": 256,
+          "height": 256,
+          "repeat": [
+            1.9,
+            1.9
+          ],
+          "offset": [
+            0,
+            0
+          ],
+          "matrix": [
+            1.9,
+            0,
+            0,
+            0,
+            1.9,
+            0,
+            0,
+            0,
+            1
+          ],
+          "wrapS": 1000,
+          "wrapT": 1000,
+          "channel": 0
+        },
+        "limit": "Pool/program counts within one live scene and fixed views only; growth does not alone prove a leak, and stable counts do not prove create/dispose lifecycle safety."
+      },
+      "a2TownState": {
+        "rect": [
+          221.6,
+          763.15,
+          317,
+          805.47
+        ],
+        "green": [
+          1,
+          12,
+          55
+        ],
+        "shells": [
+          {
+            "kind": "grass",
+            "poolSize": 10,
+            "visible": 6,
+            "uniqueMaterials": 10,
+            "allTownUniformsShared": true
+          },
+          {
+            "kind": "grass",
+            "poolSize": 17,
+            "visible": 5,
+            "uniqueMaterials": 17,
+            "allTownUniformsShared": true
+          },
+          {
+            "kind": "grass",
+            "poolSize": 27,
+            "visible": 11,
+            "uniqueMaterials": 27,
+            "allTownUniformsShared": true
+          },
+          {
+            "kind": "flower",
+            "poolSize": 11,
+            "visible": 3,
+            "uniqueMaterials": 11,
+            "allTownUniformsShared": true
+          },
+          {
+            "kind": "flower",
+            "poolSize": 14,
+            "visible": 4,
+            "uniqueMaterials": 14,
+            "allTownUniformsShared": true
+          },
+          {
+            "kind": "flower",
+            "poolSize": 17,
+            "visible": 8,
+            "uniqueMaterials": 17,
+            "allTownUniformsShared": true
+          },
+          {
+            "kind": "flower",
+            "poolSize": 15,
+            "visible": 11,
+            "uniqueMaterials": 15,
+            "allTownUniformsShared": true
+          }
+        ],
+        "rendererPrograms": 117,
+        "memory": {
+          "geometries": 1159,
+          "textures": 228
+        },
+        "gravel": {
+          "uuid": "e5f56a69-dd45-49b9-9466-5241abcd609c",
+          "name": "",
+          "type": 1009,
+          "colorSpace": "srgb",
+          "width": 256,
+          "height": 256,
+          "repeat": [
+            1.9,
+            1.9
+          ],
+          "offset": [
+            0,
+            0
+          ],
+          "matrix": [
+            1.9,
+            0,
+            0,
+            0,
+            1.9,
+            0,
+            0,
+            0,
+            1
+          ],
+          "wrapS": 1000,
+          "wrapT": 1000,
+          "channel": 0
+        },
+        "limit": "Pool/program counts within one live scene and fixed views only; growth does not alone prove a leak, and stable counts do not prove create/dispose lifecycle safety."
+      },
+      "seamEvidence": {
+        "candidate": {
+          "name": "north-seam-oblique",
+          "x": 25,
+          "z": -105,
+          "tx": 18,
+          "tz": -97.7,
+          "position": [
+            25,
+            3.2205841700235998,
+            -105
+          ],
+          "target": [
+            18,
+            1.5045947187946798,
+            -97.7
+          ],
+          "worldPosition": [
+            305,
+            11.2205841700236,
+            795
+          ],
+          "worldTarget": [
+            298,
+            9.50459471879468,
+            802.3
+          ],
+          "eyeAboveTerrain": 1.6,
+          "fov": 55,
+          "minCenterRayAboveVisibleTerrainExcludingLast1Percent": 0.11983906845587566,
+          "samples": [
+            {
+              "local": [
+                18,
+                1.3757933722601994,
+                -99.05
+              ],
+              "world": [
+                298,
+                9.3757933722602,
+                800.95
+              ]
+            },
+            {
+              "local": [
+                18,
+                1.3754955927530936,
+                -99
+              ],
+              "world": [
+                298,
+                9.375495592753094,
+                801
+              ]
+            },
+            {
+              "local": [
+                18,
+                1.3773909597627636,
+                -98.95
+              ],
+              "world": [
+                298,
+                9.377390959762764,
+                801.05
+              ]
+            },
+            {
+              "local": [
+                18,
+                1.4132658166270033,
+                -98
+              ],
+              "world": [
+                298,
+                9.413265816627003,
+                802
+              ]
+            },
+            {
+              "local": [
+                18,
+                1.4491406734912573,
+                -97.05
+              ],
+              "world": [
+                298,
+                9.449140673491257,
+                802.95
+              ]
+            },
+            {
+              "local": [
+                18,
+                1.4510288065843622,
+                -97
+              ],
+              "world": [
+                298,
+                9.451028806584363,
+                803
+              ]
+            },
+            {
+              "local": [
+                18,
+                1.5005267489711909,
+                -96.95
+              ],
+              "world": [
+                298,
+                9.500526748971192,
+                803.05
+              ]
+            }
+          ]
+        },
+        "centreRay": {
+          "triangle": {
+            "faceIndices": [
+              271,
+              604,
+              605
+            ],
+            "worldVertices": [
+              [
+                298,
+                8.578600823879242,
+                802
+              ],
+              [
+                297,
+                9.451028823852539,
+                803
+              ],
+              [
+                298,
+                9.451028823852539,
+                803
+              ]
+            ],
+            "uv": [
+              [
+                3.2142856121063232,
+                17.5
+              ],
+              [
+                3.0357143878936768,
+                17.321428298950195
+              ],
+              [
+                3.2142856121063232,
+                17.321428298950195
+              ]
+            ],
+            "vertexColors": [
+              [
+                0.2783166170120239,
+                0.5008717775344849,
+                0.15736275911331177
+              ],
+              [
+                0.27963918447494507,
+                0.5023031830787659,
+                0.15788471698760986
+              ],
+              [
+                0.27561914920806885,
+                0.49795234203338623,
+                0.1562981754541397
+              ]
+            ],
+            "metric": {
+              "worldMetresPerRawU": 5.60000640869874,
+              "worldMetresPerRawV": 7.431614060578729,
+              "worldDPdu": [
+                5.60000640869874,
+                0,
+                0
+              ],
+              "worldDPdv": [
+                0,
+                -4.885589345032738,
+                -5.599991455091164
+              ]
+            },
+            "limit": "Geometric raw UV metric before material repeat/transform. Triangle ray ignores fragment clipping/alpha; not a proof of visible fragment identity."
+          },
+          "uv": [
+            3.11116178142692,
+            17.34054111800625
+          ],
+          "mesh": "env-terrain-levee",
+          "uuid": "da7ae8ef-29f9-40b9-b645-4767e47d6a56",
+          "distance": 11.09900379238357,
+          "point": [
+            297.42250588730576,
+            9.357651438718747,
+            802.8929683766034
+          ],
+          "stationLocal": [
+            17.42250588730576,
+            1.3576514387187473,
+            -97.10703162339655
+          ],
+          "viewPosition": [
+            0.0064197485950217015,
+            -0.006419748594765906,
+            -11.09900007915138
+          ],
+          "faceNormalLocal": [
+            0,
+            0.7535363663186609,
+            -0.6574062249745352
+          ],
+          "faceNormalWorld": [
+            0,
+            0.7535363663186609,
+            -0.6574062249745352
+          ],
+          "faceNormalView": [
+            0.4550040504904726,
+            0.6635455659303362,
+            0.593867490246312
+          ],
+          "material": {
+            "uuid": "11eb252b-4bbd-4277-b7b0-e2d393aae2fd",
+            "name": "env-levee",
+            "type": "MeshToonMaterial",
+            "colorRGB": [
+              1,
+              1,
+              1
+            ],
+            "emissiveRGB": [
+              0,
+              0,
+              0
+            ],
+            "emissiveIntensity": 1,
+            "toneMapped": true,
+            "vertexColors": true,
+            "opacity": 1,
+            "transparent": false,
+            "side": 0,
+            "depthWrite": true,
+            "fog": true,
+            "map": {
+              "uuid": "5b93abe3-4fd3-4f69-b144-52f3e07e7ef1",
+              "name": "",
+              "type": 1009,
+              "colorSpace": "srgb",
+              "width": 512,
+              "height": 512,
+              "repeat": [
+                1,
+                1
+              ],
+              "offset": [
+                0,
+                0
+              ],
+              "matrix": [
+                1,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                0,
+                1
+              ],
+              "wrapS": 1000,
+              "wrapT": 1000,
+              "channel": 0
+            },
+            "normalMap": null,
+            "roughnessMap": null,
+            "normalScale": [
+              1,
+              1
+            ],
+            "shaderUniforms": null,
+            "clipPlanes": 4,
+            "clipIntersection": false,
+            "clipShadows": true,
+            "softClip": null
+          }
+        },
+        "projections": [
+          {
+            "local": [
+              18,
+              1.3757933722601994,
+              -99.05
+            ],
+            "world": [
+              298,
+              9.3757933722602,
+              800.95
+            ],
+            "ndc": [
+              0.12037521398571562,
+              -0.05977406236205922,
+              0.9571026068346311
+            ],
+            "pixel": [
+              806,
+              476
+            ],
+            "ray": {
+              "triangle": {
+                "faceIndices": [
+                  267,
+                  603,
+                  269
+                ],
+                "worldVertices": [
+                  [
+                    296,
+                    8.578600823879242,
+                    802
+                  ],
+                  [
+                    296,
+                    9.451028823852539,
+                    803
+                  ],
+                  [
+                    297,
+                    8.578600823879242,
+                    802
+                  ]
+                ],
+                "uv": [
+                  [
+                    2.857142925262451,
+                    17.5
+                  ],
+                  [
+                    2.857142925262451,
+                    17.321428298950195
+                  ],
+                  [
+                    3.0357143878936768,
+                    17.5
+                  ]
+                ],
+                "vertexColors": [
+                  [
+                    0.2845771908760071,
+                    0.5076475739479065,
+                    0.15983355045318604
+                  ],
+                  [
+                    0.2801840603351593,
+                    0.5028929114341736,
+                    0.15809975564479828
+                  ],
+                  [
+                    0.2865059971809387,
+                    0.509735107421875,
+                    0.16059477627277374
+                  ]
+                ],
+                "metric": {
+                  "worldMetresPerRawU": 5.5999989318849694,
+                  "worldMetresPerRawV": 7.431614060578728,
+                  "worldDPdu": [
+                    5.5999989318849694,
+                    0,
+                    0
+                  ],
+                  "worldDPdv": [
+                    0,
+                    -4.885589345032738,
+                    -5.599991455091163
+                  ]
+                },
+                "limit": "Geometric raw UV metric before material repeat/transform. Triangle ray ignores fragment clipping/alpha; not a proof of visible fragment identity."
+              },
+              "uv": [
+                2.9094964506925503,
+                17.427875622109923
+              ],
+              "mesh": "env-terrain-levee",
+              "uuid": "da7ae8ef-29f9-40b9-b645-4767e47d6a56",
+              "distance": 11.656273989619361,
+              "point": [
+                296.29317968648894,
+                8.93097091601611,
+                802.4038958998882
+              ],
+              "stationLocal": [
+                16.29317968648894,
+                0.9309709160161095,
+                -97.5961041001118
+              ],
+              "viewPosition": [
+                1.1600443747892086,
+                -0.3553893171318663,
+                -11.592959881016839
+              ],
+              "faceNormalLocal": [
+                0,
+                0.7535363663186609,
+                -0.6574062249745352
+              ],
+              "faceNormalWorld": [
+                0,
+                0.7535363663186609,
+                -0.6574062249745352
+              ],
+              "faceNormalView": [
+                0.4550040504904726,
+                0.6635455659303362,
+                0.593867490246312
+              ],
+              "material": {
+                "uuid": "11eb252b-4bbd-4277-b7b0-e2d393aae2fd",
+                "name": "env-levee",
+                "type": "MeshToonMaterial",
+                "colorRGB": [
+                  1,
+                  1,
+                  1
+                ],
+                "emissiveRGB": [
+                  0,
+                  0,
+                  0
+                ],
+                "emissiveIntensity": 1,
+                "toneMapped": true,
+                "vertexColors": true,
+                "opacity": 1,
+                "transparent": false,
+                "side": 0,
+                "depthWrite": true,
+                "fog": true,
+                "map": {
+                  "uuid": "5b93abe3-4fd3-4f69-b144-52f3e07e7ef1",
+                  "name": "",
+                  "type": 1009,
+                  "colorSpace": "srgb",
+                  "width": 512,
+                  "height": 512,
+                  "repeat": [
+                    1,
+                    1
+                  ],
+                  "offset": [
+                    0,
+                    0
+                  ],
+                  "matrix": [
+                    1,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    1
+                  ],
+                  "wrapS": 1000,
+                  "wrapT": 1000,
+                  "channel": 0
+                },
+                "normalMap": null,
+                "roughnessMap": null,
+                "normalScale": [
+                  1,
+                  1
+                ],
+                "shaderUniforms": null,
+                "clipPlanes": 4,
+                "clipIntersection": false,
+                "clipShadows": true,
+                "softClip": null
+              }
+            }
+          },
+          {
+            "local": [
+              18,
+              1.3754955927530936,
+              -99
+            ],
+            "world": [
+              298,
+              9.375495592753094,
+              801
+            ],
+            "ndc": [
+              0.11547537445512798,
+              -0.058367042420785296,
+              0.9572660874574161
+            ],
+            "pixel": [
+              803,
+              476
+            ],
+            "ray": {
+              "triangle": {
+                "faceIndices": [
+                  267,
+                  603,
+                  269
+                ],
+                "worldVertices": [
+                  [
+                    296,
+                    8.578600823879242,
+                    802
+                  ],
+                  [
+                    296,
+                    9.451028823852539,
+                    803
+                  ],
+                  [
+                    297,
+                    8.578600823879242,
+                    802
+                  ]
+                ],
+                "uv": [
+                  [
+                    2.857142925262451,
+                    17.5
+                  ],
+                  [
+                    2.857142925262451,
+                    17.321428298950195
+                  ],
+                  [
+                    3.0357143878936768,
+                    17.5
+                  ]
+                ],
+                "vertexColors": [
+                  [
+                    0.2845771908760071,
+                    0.5076475739479065,
+                    0.15983355045318604
+                  ],
+                  [
+                    0.2801840603351593,
+                    0.5028929114341736,
+                    0.15809975564479828
+                  ],
+                  [
+                    0.2865059971809387,
+                    0.509735107421875,
+                    0.16059477627277374
+                  ]
+                ],
+                "metric": {
+                  "worldMetresPerRawU": 5.5999989318849694,
+                  "worldMetresPerRawV": 7.431614060578728,
+                  "worldDPdu": [
+                    5.5999989318849694,
+                    0,
+                    0
+                  ],
+                  "worldDPdv": [
+                    0,
+                    -4.885589345032738,
+                    -5.599991455091163
+                  ]
+                },
+                "limit": "Geometric raw UV metric before material repeat/transform. Triangle ray ignores fragment clipping/alpha; not a proof of visible fragment identity."
+              },
+              "uv": [
+                2.9189729543927507,
+                17.426577922038252
+              ],
+              "mesh": "env-terrain-levee",
+              "uuid": "da7ae8ef-29f9-40b9-b645-4767e47d6a56",
+              "distance": 11.620072967206259,
+              "point": [
+                296.3462480970881,
+                8.937310945659323,
+                802.4111630092009
+              ],
+              "stationLocal": [
+                16.346248097088107,
+                0.9373109456593234,
+                -97.58883699079911
+              ],
+              "viewPosition": [
+                1.1167108192415753,
+                -0.35440523005874525,
+                -11.56085851666279
+              ],
+              "faceNormalLocal": [
+                0,
+                0.7535363663186609,
+                -0.6574062249745352
+              ],
+              "faceNormalWorld": [
+                0,
+                0.7535363663186609,
+                -0.6574062249745352
+              ],
+              "faceNormalView": [
+                0.4550040504904726,
+                0.6635455659303362,
+                0.593867490246312
+              ],
+              "material": {
+                "uuid": "11eb252b-4bbd-4277-b7b0-e2d393aae2fd",
+                "name": "env-levee",
+                "type": "MeshToonMaterial",
+                "colorRGB": [
+                  1,
+                  1,
+                  1
+                ],
+                "emissiveRGB": [
+                  0,
+                  0,
+                  0
+                ],
+                "emissiveIntensity": 1,
+                "toneMapped": true,
+                "vertexColors": true,
+                "opacity": 1,
+                "transparent": false,
+                "side": 0,
+                "depthWrite": true,
+                "fog": true,
+                "map": {
+                  "uuid": "5b93abe3-4fd3-4f69-b144-52f3e07e7ef1",
+                  "name": "",
+                  "type": 1009,
+                  "colorSpace": "srgb",
+                  "width": 512,
+                  "height": 512,
+                  "repeat": [
+                    1,
+                    1
+                  ],
+                  "offset": [
+                    0,
+                    0
+                  ],
+                  "matrix": [
+                    1,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    1
+                  ],
+                  "wrapS": 1000,
+                  "wrapT": 1000,
+                  "channel": 0
+                },
+                "normalMap": null,
+                "roughnessMap": null,
+                "normalScale": [
+                  1,
+                  1
+                ],
+                "shaderUniforms": null,
+                "clipPlanes": 4,
+                "clipIntersection": false,
+                "clipShadows": true,
+                "softClip": null
+              }
+            }
+          },
+          {
+            "local": [
+              18,
+              1.3773909597627636,
+              -98.95
+            ],
+            "world": [
+              298,
+              9.377390959762764,
+              801.05
+            ],
+            "ndc": [
+              0.11061703932903687,
+              -0.05653058632184258,
+              0.9574266632907207
+            ],
+            "pixel": [
+              799,
+              475
+            ],
+            "ray": {
+              "triangle": {
+                "faceIndices": [
+                  267,
+                  603,
+                  269
+                ],
+                "worldVertices": [
+                  [
+                    296,
+                    8.578600823879242,
+                    802
+                  ],
+                  [
+                    296,
+                    9.451028823852539,
+                    803
+                  ],
+                  [
+                    297,
+                    8.578600823879242,
+                    802
+                  ]
+                ],
+                "uv": [
+                  [
+                    2.857142925262451,
+                    17.5
+                  ],
+                  [
+                    2.857142925262451,
+                    17.321428298950195
+                  ],
+                  [
+                    3.0357143878936768,
+                    17.5
+                  ]
+                ],
+                "vertexColors": [
+                  [
+                    0.2845771908760071,
+                    0.5076475739479065,
+                    0.15983355045318604
+                  ],
+                  [
+                    0.2801840603351593,
+                    0.5028929114341736,
+                    0.15809975564479828
+                  ],
+                  [
+                    0.2865059971809387,
+                    0.509735107421875,
+                    0.16059477627277374
+                  ]
+                ],
+                "metric": {
+                  "worldMetresPerRawU": 5.5999989318849694,
+                  "worldMetresPerRawV": 7.431614060578728,
+                  "worldDPdu": [
+                    5.5999989318849694,
+                    0,
+                    0
+                  ],
+                  "worldDPdv": [
+                    0,
+                    -4.885589345032738,
+                    -5.599991455091163
+                  ]
+                },
+                "limit": "Geometric raw UV metric before material repeat/transform. Triangle ray ignores fragment clipping/alpha; not a proof of visible fragment identity."
+              },
+              "uv": [
+                2.92919275770621,
+                17.422791582950644
+              ],
+              "mesh": "env-terrain-levee",
+              "uuid": "da7ae8ef-29f9-40b9-b645-4767e47d6a56",
+              "distance": 11.587469506208182,
+              "point": [
+                296.40347898472754,
+                8.955809443562423,
+                802.4323664757375
+              ],
+              "stationLocal": [
+                16.403478984727542,
+                0.9558094435624227,
+                -97.56763352426253
+              ],
+              "viewPosition": [
+                1.06072722843669,
+                -0.34023326195145387,
+                -11.533800268411994
+              ],
+              "faceNormalLocal": [
+                0,
+                0.7535363663186609,
+                -0.6574062249745352
+              ],
+              "faceNormalWorld": [
+                0,
+                0.7535363663186609,
+                -0.6574062249745352
+              ],
+              "faceNormalView": [
+                0.4550040504904726,
+                0.6635455659303362,
+                0.593867490246312
+              ],
+              "material": {
+                "uuid": "11eb252b-4bbd-4277-b7b0-e2d393aae2fd",
+                "name": "env-levee",
+                "type": "MeshToonMaterial",
+                "colorRGB": [
+                  1,
+                  1,
+                  1
+                ],
+                "emissiveRGB": [
+                  0,
+                  0,
+                  0
+                ],
+                "emissiveIntensity": 1,
+                "toneMapped": true,
+                "vertexColors": true,
+                "opacity": 1,
+                "transparent": false,
+                "side": 0,
+                "depthWrite": true,
+                "fog": true,
+                "map": {
+                  "uuid": "5b93abe3-4fd3-4f69-b144-52f3e07e7ef1",
+                  "name": "",
+                  "type": 1009,
+                  "colorSpace": "srgb",
+                  "width": 512,
+                  "height": 512,
+                  "repeat": [
+                    1,
+                    1
+                  ],
+                  "offset": [
+                    0,
+                    0
+                  ],
+                  "matrix": [
+                    1,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    1
+                  ],
+                  "wrapS": 1000,
+                  "wrapT": 1000,
+                  "channel": 0
+                },
+                "normalMap": null,
+                "roughnessMap": null,
+                "normalScale": [
+                  1,
+                  1
+                ],
+                "shaderUniforms": null,
+                "clipPlanes": 4,
+                "clipIntersection": false,
+                "clipShadows": true,
+                "softClip": null
+              }
+            }
+          },
+          {
+            "local": [
+              18,
+              1.4132658166270033,
+              -98
+            ],
+            "world": [
+              298,
+              9.413265816627003,
+              802
+            ],
+            "ndc": [
+              0.024779927533505688,
+              -0.024109842037741486,
+              0.9602638074449681
+            ],
+            "pixel": [
+              737,
+              460
+            ],
+            "ray": {
+              "triangle": {
+                "faceIndices": [
+                  271,
+                  604,
+                  605
+                ],
+                "worldVertices": [
+                  [
+                    298,
+                    8.578600823879242,
+                    802
+                  ],
+                  [
+                    297,
+                    9.451028823852539,
+                    803
+                  ],
+                  [
+                    298,
+                    9.451028823852539,
+                    803
+                  ]
+                ],
+                "uv": [
+                  [
+                    3.2142856121063232,
+                    17.5
+                  ],
+                  [
+                    3.0357143878936768,
+                    17.321428298950195
+                  ],
+                  [
+                    3.2142856121063232,
+                    17.321428298950195
+                  ]
+                ],
+                "vertexColors": [
+                  [
+                    0.2783166170120239,
+                    0.5008717775344849,
+                    0.15736275911331177
+                  ],
+                  [
+                    0.27963918447494507,
+                    0.5023031830787659,
+                    0.15788471698760986
+                  ],
+                  [
+                    0.27561914920806885,
+                    0.49795234203338623,
+                    0.1562981754541397
+                  ]
+                ],
+                "metric": {
+                  "worldMetresPerRawU": 5.60000640869874,
+                  "worldMetresPerRawV": 7.431614060578729,
+                  "worldDPdu": [
+                    5.60000640869874,
+                    0,
+                    0
+                  ],
+                  "worldDPdv": [
+                    0,
+                    -4.885589345032738,
+                    -5.599991455091164
+                  ]
+                },
+                "limit": "Geometric raw UV metric before material repeat/transform. Triangle ray ignores fragment clipping/alpha; not a proof of visible fragment identity."
+              },
+              "uv": [
+                3.082724663872829,
+                17.36732512635211
+              ],
+              "mesh": "env-terrain-levee",
+              "uuid": "da7ae8ef-29f9-40b9-b645-4767e47d6a56",
+              "distance": 11.125919381551025,
+              "point": [
+                297.26325784675794,
+                9.226795772926932,
+                802.7429781587334
+              ],
+              "stationLocal": [
+                17.263257846757938,
+                1.2267957729269323,
+                -97.25702184126658
+              ],
+              "viewPosition": [
+                0.22517341888055853,
+                -0.13510405132804237,
+                -11.122820052105396
+              ],
+              "faceNormalLocal": [
+                0,
+                0.7535363663186609,
+                -0.6574062249745352
+              ],
+              "faceNormalWorld": [
+                0,
+                0.7535363663186609,
+                -0.6574062249745352
+              ],
+              "faceNormalView": [
+                0.4550040504904726,
+                0.6635455659303362,
+                0.593867490246312
+              ],
+              "material": {
+                "uuid": "11eb252b-4bbd-4277-b7b0-e2d393aae2fd",
+                "name": "env-levee",
+                "type": "MeshToonMaterial",
+                "colorRGB": [
+                  1,
+                  1,
+                  1
+                ],
+                "emissiveRGB": [
+                  0,
+                  0,
+                  0
+                ],
+                "emissiveIntensity": 1,
+                "toneMapped": true,
+                "vertexColors": true,
+                "opacity": 1,
+                "transparent": false,
+                "side": 0,
+                "depthWrite": true,
+                "fog": true,
+                "map": {
+                  "uuid": "5b93abe3-4fd3-4f69-b144-52f3e07e7ef1",
+                  "name": "",
+                  "type": 1009,
+                  "colorSpace": "srgb",
+                  "width": 512,
+                  "height": 512,
+                  "repeat": [
+                    1,
+                    1
+                  ],
+                  "offset": [
+                    0,
+                    0
+                  ],
+                  "matrix": [
+                    1,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    1
+                  ],
+                  "wrapS": 1000,
+                  "wrapT": 1000,
+                  "channel": 0
+                },
+                "normalMap": null,
+                "roughnessMap": null,
+                "normalScale": [
+                  1,
+                  1
+                ],
+                "shaderUniforms": null,
+                "clipPlanes": 4,
+                "clipIntersection": false,
+                "clipShadows": true,
+                "softClip": null
+              }
+            }
+          },
+          {
+            "local": [
+              18,
+              1.4491406734912573,
+              -97.05
+            ],
+            "world": [
+              298,
+              9.449140673491257,
+              802.95
+            ],
+            "ndc": [
+              -0.05033726874027984,
+              0.0042619817665451275,
+              0.9627466299658296
+            ],
+            "pixel": [
+              683,
+              448
+            ],
+            "ray": {
+              "triangle": {
+                "faceIndices": [
+                  271,
+                  604,
+                  605
+                ],
+                "worldVertices": [
+                  [
+                    298,
+                    8.578600823879242,
+                    802
+                  ],
+                  [
+                    297,
+                    9.451028823852539,
+                    803
+                  ],
+                  [
+                    298,
+                    9.451028823852539,
+                    803
+                  ]
+                ],
+                "uv": [
+                  [
+                    3.2142856121063232,
+                    17.5
+                  ],
+                  [
+                    3.0357143878936768,
+                    17.321428298950195
+                  ],
+                  [
+                    3.2142856121063232,
+                    17.321428298950195
+                  ]
+                ],
+                "vertexColors": [
+                  [
+                    0.2783166170120239,
+                    0.5008717775344849,
+                    0.15736275911331177
+                  ],
+                  [
+                    0.27963918447494507,
+                    0.5023031830787659,
+                    0.15788471698760986
+                  ],
+                  [
+                    0.27561914920806885,
+                    0.49795234203338623,
+                    0.1562981754541397
+                  ]
+                ],
+                "metric": {
+                  "worldMetresPerRawU": 5.60000640869874,
+                  "worldMetresPerRawV": 7.431614060578729,
+                  "worldDPdu": [
+                    5.60000640869874,
+                    0,
+                    0
+                  ],
+                  "worldDPdv": [
+                    0,
+                    -4.885589345032738,
+                    -5.599991455091164
+                  ]
+                },
+                "limit": "Geometric raw UV metric before material repeat/transform. Triangle ray ignores fragment clipping/alpha; not a proof of visible fragment identity."
+              },
+              "uv": [
+                3.2097514523606865,
+                17.324332067930403
+              ],
+              "mesh": "env-terrain-levee",
+              "uuid": "da7ae8ef-29f9-40b9-b645-4767e47d6a56",
+              "distance": 10.783225203118201,
+              "point": [
+                297.97460867636636,
+                9.436842201062403,
+                802.9837389185233
+              ],
+              "stationLocal": [
+                17.97460867636636,
+                1.4368422010624027,
+                -97.01626108147673
+              ],
+              "viewPosition": [
+                -0.4549024267276991,
+                0.018694620276548335,
+                -10.773609426487212
+              ],
+              "faceNormalLocal": [
+                0,
+                0.7535363663186609,
+                -0.6574062249745352
+              ],
+              "faceNormalWorld": [
+                0,
+                0.7535363663186609,
+                -0.6574062249745352
+              ],
+              "faceNormalView": [
+                0.4550040504904726,
+                0.6635455659303362,
+                0.593867490246312
+              ],
+              "material": {
+                "uuid": "11eb252b-4bbd-4277-b7b0-e2d393aae2fd",
+                "name": "env-levee",
+                "type": "MeshToonMaterial",
+                "colorRGB": [
+                  1,
+                  1,
+                  1
+                ],
+                "emissiveRGB": [
+                  0,
+                  0,
+                  0
+                ],
+                "emissiveIntensity": 1,
+                "toneMapped": true,
+                "vertexColors": true,
+                "opacity": 1,
+                "transparent": false,
+                "side": 0,
+                "depthWrite": true,
+                "fog": true,
+                "map": {
+                  "uuid": "5b93abe3-4fd3-4f69-b144-52f3e07e7ef1",
+                  "name": "",
+                  "type": 1009,
+                  "colorSpace": "srgb",
+                  "width": 512,
+                  "height": 512,
+                  "repeat": [
+                    1,
+                    1
+                  ],
+                  "offset": [
+                    0,
+                    0
+                  ],
+                  "matrix": [
+                    1,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    1
+                  ],
+                  "wrapS": 1000,
+                  "wrapT": 1000,
+                  "channel": 0
+                },
+                "normalMap": null,
+                "roughnessMap": null,
+                "normalScale": [
+                  1,
+                  1
+                ],
+                "shaderUniforms": null,
+                "clipPlanes": 4,
+                "clipIntersection": false,
+                "clipShadows": true,
+                "softClip": null
+              }
+            }
+          },
+          {
+            "local": [
+              18,
+              1.4510288065843622,
+              -97
+            ],
+            "world": [
+              298,
+              9.451028806584363,
+              803
+            ],
+            "ndc": [
+              -0.054031791234469814,
+              0.005657402769252943,
+              0.9628687437412675
+            ],
+            "pixel": [
+              681,
+              447
+            ],
+            "ray": {
+              "triangle": {
+                "faceIndices": [
+                  271,
+                  604,
+                  605
+                ],
+                "worldVertices": [
+                  [
+                    298,
+                    8.578600823879242,
+                    802
+                  ],
+                  [
+                    297,
+                    9.451028823852539,
+                    803
+                  ],
+                  [
+                    298,
+                    9.451028823852539,
+                    803
+                  ]
+                ],
+                "uv": [
+                  [
+                    3.2142856121063232,
+                    17.5
+                  ],
+                  [
+                    3.0357143878936768,
+                    17.321428298950195
+                  ],
+                  [
+                    3.2142856121063232,
+                    17.321428298950195
+                  ]
+                ],
+                "vertexColors": [
+                  [
+                    0.2783166170120239,
+                    0.5008717775344849,
+                    0.15736275911331177
+                  ],
+                  [
+                    0.27963918447494507,
+                    0.5023031830787659,
+                    0.15788471698760986
+                  ],
+                  [
+                    0.27561914920806885,
+                    0.49795234203338623,
+                    0.1562981754541397
+                  ]
+                ],
+                "metric": {
+                  "worldMetresPerRawU": 5.60000640869874,
+                  "worldMetresPerRawV": 7.431614060578729,
+                  "worldDPdu": [
+                    5.60000640869874,
+                    0,
+                    0
+                  ],
+                  "worldDPdv": [
+                    0,
+                    -4.885589345032738,
+                    -5.599991455091164
+                  ]
+                },
+                "limit": "Geometric raw UV metric before material repeat/transform. Triangle ray ignores fragment clipping/alpha; not a proof of visible fragment identity."
+              },
+              "uv": [
+                3.2132893783044585,
+                17.321648163801143
+              ],
+              "mesh": "env-terrain-levee",
+              "uuid": "da7ae8ef-29f9-40b9-b645-4767e47d6a56",
+              "distance": 10.779311966931637,
+              "point": [
+                297.994421084325,
+                9.44995465447941,
+                802.9987687587134
+              ],
+              "stationLocal": [
+                17.994421084324983,
+                1.4499546544794093,
+                -97.00123124128663
+              ],
+              "viewPosition": [
+                -0.4796051277569404,
+                0.031143190114065078,
+                -10.768592085485182
+              ],
+              "faceNormalLocal": [
+                0,
+                0.7535363663186609,
+                -0.6574062249745352
+              ],
+              "faceNormalWorld": [
+                0,
+                0.7535363663186609,
+                -0.6574062249745352
+              ],
+              "faceNormalView": [
+                0.4550040504904726,
+                0.6635455659303362,
+                0.593867490246312
+              ],
+              "material": {
+                "uuid": "11eb252b-4bbd-4277-b7b0-e2d393aae2fd",
+                "name": "env-levee",
+                "type": "MeshToonMaterial",
+                "colorRGB": [
+                  1,
+                  1,
+                  1
+                ],
+                "emissiveRGB": [
+                  0,
+                  0,
+                  0
+                ],
+                "emissiveIntensity": 1,
+                "toneMapped": true,
+                "vertexColors": true,
+                "opacity": 1,
+                "transparent": false,
+                "side": 0,
+                "depthWrite": true,
+                "fog": true,
+                "map": {
+                  "uuid": "5b93abe3-4fd3-4f69-b144-52f3e07e7ef1",
+                  "name": "",
+                  "type": 1009,
+                  "colorSpace": "srgb",
+                  "width": 512,
+                  "height": 512,
+                  "repeat": [
+                    1,
+                    1
+                  ],
+                  "offset": [
+                    0,
+                    0
+                  ],
+                  "matrix": [
+                    1,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    1
+                  ],
+                  "wrapS": 1000,
+                  "wrapT": 1000,
+                  "channel": 0
+                },
+                "normalMap": null,
+                "roughnessMap": null,
+                "normalScale": [
+                  1,
+                  1
+                ],
+                "shaderUniforms": null,
+                "clipPlanes": 4,
+                "clipIntersection": false,
+                "clipShadows": true,
+                "softClip": null
+              }
+            }
+          },
+          {
+            "local": [
+              18,
+              1.5005267489711909,
+              -96.95
+            ],
+            "world": [
+              298,
+              9.500526748971192,
+              803.05
+            ],
+            "ndc": [
+              -0.05774476678420247,
+              0.015403469742449835,
+              0.9629627319730294
+            ],
+            "pixel": [
+              678,
+              443
+            ],
+            "ray": {
+              "triangle": {
+                "faceIndices": [
+                  605,
+                  840,
+                  606
+                ],
+                "worldVertices": [
+                  [
+                    298,
+                    9.451028823852539,
+                    803
+                  ],
+                  [
+                    298,
+                    10.422222137451172,
+                    804
+                  ],
+                  [
+                    299,
+                    9.451028823852539,
+                    803
+                  ]
+                ],
+                "uv": [
+                  [
+                    3.2142856121063232,
+                    17.321428298950195
+                  ],
+                  [
+                    3.2142856121063232,
+                    17.14285659790039
+                  ],
+                  [
+                    3.392857074737549,
+                    17.321428298950195
+                  ]
+                ],
+                "vertexColors": [
+                  [
+                    0.27561914920806885,
+                    0.49795234203338623,
+                    0.1562981754541397
+                  ],
+                  [
+                    0.2746773064136505,
+                    0.4969329833984375,
+                    0.15592646598815918
+                  ],
+                  [
+                    0.2746773064136505,
+                    0.4969329833984375,
+                    0.15592646598815918
+                  ]
+                ],
+                "metric": {
+                  "worldMetresPerRawU": 5.5999989318849694,
+                  "worldMetresPerRawV": 7.80634882484343,
+                  "worldDPdu": [
+                    5.5999989318849694,
+                    0,
+                    0
+                  ],
+                  "worldDPdv": [
+                    0,
+                    -5.438674257394016,
+                    -5.599991455091163
+                  ]
+                },
+                "limit": "Geometric raw UV metric before material repeat/transform. Triangle ray ignores fragment clipping/alpha; not a proof of visible fragment identity."
+              },
+              "uv": [
+                3.214680742159578,
+                17.313200807301754
+              ],
+              "mesh": "env-terrain-levee",
+              "uuid": "da7ae8ef-29f9-40b9-b645-4767e47d6a56",
+              "distance": 10.802004290133556,
+              "point": [
+                298.0022127278762,
+                9.495775470883832,
+                803.0460738829281
+              ],
+              "stationLocal": [
+                18.002212727876213,
+                1.4957754708838316,
+                -96.95392611707189
+              ],
+              "viewPosition": [
+                -0.5179698251786249,
+                0.08112780394368713,
+                -10.789273479882468
+              ],
+              "faceNormalLocal": [
+                0,
+                0.7173637228802008,
+                -0.6966988510794736
+              ],
+              "faceNormalWorld": [
+                0,
+                0.7173637228802008,
+                -0.6966988510794736
+              ],
+              "faceNormalView": [
+                0.4821992661014098,
+                0.623138508327913,
+                0.6157777742092724
+              ],
+              "material": {
+                "uuid": "11eb252b-4bbd-4277-b7b0-e2d393aae2fd",
+                "name": "env-levee",
+                "type": "MeshToonMaterial",
+                "colorRGB": [
+                  1,
+                  1,
+                  1
+                ],
+                "emissiveRGB": [
+                  0,
+                  0,
+                  0
+                ],
+                "emissiveIntensity": 1,
+                "toneMapped": true,
+                "vertexColors": true,
+                "opacity": 1,
+                "transparent": false,
+                "side": 0,
+                "depthWrite": true,
+                "fog": true,
+                "map": {
+                  "uuid": "5b93abe3-4fd3-4f69-b144-52f3e07e7ef1",
+                  "name": "",
+                  "type": 1009,
+                  "colorSpace": "srgb",
+                  "width": 512,
+                  "height": 512,
+                  "repeat": [
+                    1,
+                    1
+                  ],
+                  "offset": [
+                    0,
+                    0
+                  ],
+                  "matrix": [
+                    1,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    1
+                  ],
+                  "wrapS": 1000,
+                  "wrapT": 1000,
+                  "channel": 0
+                },
+                "normalMap": null,
+                "roughnessMap": null,
+                "normalScale": [
+                  1,
+                  1
+                ],
+                "shaderUniforms": null,
+                "clipPlanes": 4,
+                "clipIntersection": false,
+                "clipShadows": true,
+                "softClip": null
+              }
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "seamAcrossRounds": [
+    {
+      "view": "north-seam-central",
+      "a": "north-seam-central-town-A1-capture-2",
+      "b": "north-seam-central-town-A1-capture-2",
+      "cameraEqual": true,
+      "timeEqual": true,
+      "paramsEqual": true,
+      "pngEqual": false,
+      "pixels": {
+        "changedPixels": 291834,
+        "meanAbsRGB": 2.627016975308642,
+        "maxAbsRGB": 100,
+        "bounds": [
+          0,
+          0,
+          1439,
+          898
+        ]
+      }
+    },
+    {
+      "view": "north-seam-central",
+      "a": "north-seam-central-town-B-capture-2",
+      "b": "north-seam-central-town-B-capture-2",
+      "cameraEqual": true,
+      "timeEqual": true,
+      "paramsEqual": true,
+      "pngEqual": true,
+      "pixels": {
+        "changedPixels": 0,
+        "meanAbsRGB": 0,
+        "maxAbsRGB": 0,
+        "bounds": null
+      }
+    },
+    {
+      "view": "north-seam-central",
+      "a": "north-seam-central-town-A2-capture-2",
+      "b": "north-seam-central-town-A2-capture-2",
+      "cameraEqual": true,
+      "timeEqual": true,
+      "paramsEqual": true,
+      "pngEqual": false,
+      "pixels": {
+        "changedPixels": 291834,
+        "meanAbsRGB": 2.627016975308642,
+        "maxAbsRGB": 100,
+        "bounds": [
+          0,
+          0,
+          1439,
+          898
+        ]
+      }
+    },
+    {
+      "view": "north-seam-oblique",
+      "a": "north-seam-oblique-town-A1-capture-2",
+      "b": "north-seam-oblique-town-A1-capture-2",
+      "cameraEqual": true,
+      "timeEqual": true,
+      "paramsEqual": true,
+      "pngEqual": false,
+      "pixels": {
+        "changedPixels": 211326,
+        "meanAbsRGB": 1.7811453189300412,
+        "maxAbsRGB": 76,
+        "bounds": [
+          0,
+          0,
+          1439,
+          899
+        ]
+      }
+    },
+    {
+      "view": "north-seam-oblique",
+      "a": "north-seam-oblique-town-B-capture-2",
+      "b": "north-seam-oblique-town-B-capture-2",
+      "cameraEqual": true,
+      "timeEqual": true,
+      "paramsEqual": true,
+      "pngEqual": true,
+      "pixels": {
+        "changedPixels": 0,
+        "meanAbsRGB": 0,
+        "maxAbsRGB": 0,
+        "bounds": null
+      }
+    },
+    {
+      "view": "north-seam-oblique",
+      "a": "north-seam-oblique-town-A2-capture-2",
+      "b": "north-seam-oblique-town-A2-capture-2",
+      "cameraEqual": true,
+      "timeEqual": true,
+      "paramsEqual": true,
+      "pngEqual": false,
+      "pixels": {
+        "changedPixels": 211326,
+        "meanAbsRGB": 1.781145061728395,
+        "maxAbsRGB": 76,
+        "bounds": [
+          0,
+          0,
+          1439,
+          899
+        ]
+      }
+    }
+  ],
+  "normal": {
+    "renderOk": true,
+    "transportClean": false,
+    "behavior": {
+      "ok": true,
+      "checks": [
+        {
+          "name": "closed shop door blocks the walking capsule",
+          "passed": true,
+          "evidence": {
+            "displacement": 0.34999999999999964,
+            "candidate": {
+              "x": -7.23,
+              "z": 8
+            }
+          }
+        },
+        {
+          "name": "approaching opens the real shop door collider",
+          "passed": true,
+          "evidence": {
+            "displacement": 0,
+            "candidate": {
+              "x": -7.58,
+              "z": 8
+            }
+          }
+        },
+        {
+          "name": "adjacent storefront wall remains solid",
+          "passed": true,
+          "evidence": {
+            "displacement": 0.40000000000000036,
+            "candidate": {
+              "x": -7.1,
+              "z": 12
+            }
+          }
+        },
+        {
+          "name": "open entrance provides a continuous capsule-width passage",
+          "passed": true,
+          "evidence": {
+            "maxCorrection": 0
+          }
+        },
+        {
+          "name": "interior floor uses its raised walkable surface",
+          "passed": true,
+          "evidence": {
+            "expectedFloor": 0.4134,
+            "maxHeightError": 0
+          }
+        },
+        {
+          "name": "W3 sidewalk walking clears existing furniture and new planters",
+          "passed": true,
+          "evidence": {
+            "endLotX": 3.9674163653903243,
+            "minLotZ": 1.061816375746971,
+            "maxLotZ": 1.1500000000000001,
+            "radius": 0.3,
+            "step": 0.1,
+            "inputDistance": 8
+          }
+        },
+        {
+          "name": "W3 planters leave the existing garden gate approach clear",
+          "passed": true,
+          "evidence": {
+            "maxCorrection": 0
+          }
+        },
+        {
+          "name": "low planter tops support approaching feet and release them on exit",
+          "passed": true,
+          "evidence": [
+            {
+              "id": "w3-planter-south",
+              "expectedTop": 1.1152975042415103,
+              "onTop": 1.1152975042415103,
+              "initialFeet": 0.8553631994889643,
+              "finalFeet": 0.8553631994889643,
+              "supported": true,
+              "returnedToSidewalk": true
+            },
+            {
+              "id": "w3-planter-north",
+              "expectedTop": 1.00881568627451,
+              "onTop": 1.00881568627451,
+              "initialFeet": 0.7488156862745098,
+              "finalFeet": 0.7488156862745098,
+              "supported": true,
+              "returnedToSidewalk": true
+            }
+          ]
+        },
+        {
+          "name": "first person camera is 1.52m above world-space feet",
+          "passed": true,
+          "evidence": {
+            "feet": [
+              281.6,
+              8.812,
+              934
+            ],
+            "camera": [
+              281.6,
+              10.331999999999999,
+              934
+            ],
+            "error": 0
+          }
+        },
+        {
+          "name": "third person camera follows within its obstruction-limited boom",
+          "passed": true,
+          "evidence": {
+            "followDistance": 4.224038352098614,
+            "maximum": 4.224038352098617
+          }
+        },
+        {
+          "name": "view switching preserves the body and collision position",
+          "passed": true,
+          "evidence": {
+            "feet": [
+              281.6,
+              8.812,
+              934
+            ],
+            "initialFeet": [
+              281.6,
+              8.812,
+              934
+            ]
+          }
+        },
+        {
+          "name": "station local/world coordinates round-trip at its nonzero placement",
+          "passed": true,
+          "evidence": {
+            "local": [
+              1.6000000000000227,
+              0.8119999999999994,
+              34
+            ],
+            "world": [
+              281.6,
+              8.812,
+              934
+            ]
+          }
+        },
+        {
+          "name": "real shop wall shortens third-person boom with near-plane clearance",
+          "passed": true,
+          "evidence": {
+            "shortened": 0.7951227548559752,
+            "cameraLotZ": -2.290597833643244,
+            "streetSideWallZ": -2.6,
+            "clearance": 0.30940216635678375,
+            "raycastCalls": 0
+          }
+        },
+        {
+          "name": "camera collision never scans rendered triangles",
+          "passed": true,
+          "evidence": {
+            "raycastCalls": 0
+          }
+        }
+      ]
+    },
+    "look": {
+      "ok": true,
+      "method": "Actual pipeline uniforms/parameters and UI state; central-pixel nonblack smoke checks. Images retain animation.",
+      "toon": {
+        "on": {
+          "state": {
+            "toon": 1,
+            "blur": 0,
+            "rays": 0,
+            "toonCheckbox": true,
+            "effectsCheckbox": false,
+            "currentView": "station-street"
+          },
+          "capture": {
+            "file": "05-street-toon-on.png",
+            "jpeg": "05-street-toon-on.jpg",
+            "jpegWidth": 960,
+            "pixels": {
+              "width": 1440,
+              "height": 900,
+              "samples": 39816,
+              "meanRgb": 100.60911024044076,
+              "nonBlackFraction": 1,
+              "notBlack": true
+            }
+          }
+        },
+        "off": {
+          "state": {
+            "toon": 0,
+            "blur": 0,
+            "rays": 0,
+            "toonCheckbox": false,
+            "effectsCheckbox": false,
+            "currentView": "station-street"
+          },
+          "capture": {
+            "file": "06-street-toon-off.png",
+            "jpeg": "06-street-toon-off.jpg",
+            "jpegWidth": 960,
+            "pixels": {
+              "width": 1440,
+              "height": 900,
+              "samples": 39816,
+              "meanRgb": 64.41599691916045,
+              "nonBlackFraction": 0.9180731364275668,
+              "notBlack": true
+            }
+          }
+        },
+        "difference": {
+          "meanAbsoluteRgbDifference": 36.10847427983539,
+          "isolatedFromAnimation": false
+        }
+      },
+      "flightEffects": {
+        "on": {
+          "state": {
+            "toon": 1,
+            "blur": 1,
+            "rays": 0.55,
+            "toonCheckbox": true,
+            "effectsCheckbox": true,
+            "currentView": "station-street"
+          },
+          "capture": {
+            "file": "07-flight-effects-on.png",
+            "jpeg": "07-flight-effects-on.jpg",
+            "jpegWidth": 960,
+            "pixels": {
+              "width": 1440,
+              "height": 900,
+              "samples": 39816,
+              "meanRgb": 100.76265822785052,
+              "nonBlackFraction": 1,
+              "notBlack": true
+            }
+          }
+        },
+        "off": {
+          "state": {
+            "toon": 1,
+            "blur": 0,
+            "rays": 0,
+            "toonCheckbox": true,
+            "effectsCheckbox": false,
+            "currentView": "station-street"
+          },
+          "capture": {
+            "file": "08-flight-effects-off.png",
+            "jpeg": "08-flight-effects-off.jpg",
+            "jpegWidth": 960,
+            "pixels": {
+              "width": 1440,
+              "height": 900,
+              "samples": 39816,
+              "meanRgb": 100.61584957471155,
+              "nonBlackFraction": 1,
+              "notBlack": true
+            }
+          }
+        },
+        "difference": {
+          "meanAbsoluteRgbDifference": 1.70534670781893,
+          "isolatedFromAnimation": false
+        }
+      }
+    },
+    "walkingOk": true,
+    "exceptions": [],
+    "networkFailures": [
+      {
+        "url": "http://127.0.0.1:55786/assets/models/boulders.glb",
+        "type": "Fetch",
+        "canceled": true,
+        "errorText": "net::ERR_ABORTED",
+        "requestId": "60460.121",
+        "timestamp": 1947639.407067,
+        "stage": "waiting-for-ready-frame",
+        "receivedWallTime": 1794937460.353
+      },
+      {
+        "url": "http://127.0.0.1:55786/assets/models/menhir.glb",
+        "type": "Fetch",
+        "canceled": true,
+        "errorText": "net::ERR_ABORTED",
+        "requestId": "60460.119",
+        "timestamp": 1947639.408064,
+        "stage": "waiting-for-ready-frame",
+        "receivedWallTime": 1794937460.354
+      },
+      {
+        "url": "http://127.0.0.1:55786/prop-assets/plastic_crate_02/plastic_crate_02_1k.gltf",
+        "type": "Fetch",
+        "canceled": true,
+        "errorText": "net::ERR_ABORTED",
+        "requestId": "60460.235",
+        "timestamp": 1947650.805576,
+        "stage": "waiting-for-ready-frame",
+        "receivedWallTime": 1794937471.751
+      },
+      {
+        "url": "http://127.0.0.1:55786/prop-assets/plastic_crate_02/plastic_crate_02.bin",
+        "type": "Fetch",
+        "canceled": true,
+        "errorText": "net::ERR_ABORTED",
+        "requestId": "60460.240",
+        "timestamp": 1947650.820722,
+        "stage": "waiting-for-ready-frame",
+        "receivedWallTime": 1794937471.766
+      }
+    ],
+    "segments": [
+      {
+        "name": "initial",
+        "frameCount": 975,
+        "fps": 64.47133505256893,
+        "p95FrameMs": 15.5,
+        "drawCalls": {
+          "mean": 1571.045128205128,
+          "min": 1569,
+          "max": 1574
+        },
+        "triangles": {
+          "mean": 8311674.538461538,
+          "min": 8311549,
+          "max": 8311869
+        },
+        "maxFrameMs": 30.80000000000291,
+        "longFramesOver20ms": [
+          {
+            "ms": 30.799999999995634,
+            "calls": 1571,
+            "triangles": 8311661,
+            "index": 126
+          },
+          {
+            "ms": 30.69999999999709,
+            "calls": 1571,
+            "triangles": 8311661,
+            "index": 308
+          },
+          {
+            "ms": 30.80000000000291,
+            "calls": 1570,
+            "triangles": 8311613,
+            "index": 577
+          },
+          {
+            "ms": 30.700000000004366,
+            "calls": 1574,
+            "triangles": 8311869,
+            "index": 580
+          },
+          {
+            "ms": 30.599999999998545,
+            "calls": 1573,
+            "triangles": 8311805,
+            "index": 652
+          },
+          {
+            "ms": 30.80000000000291,
+            "calls": 1573,
+            "triangles": 8311805,
+            "index": 833
+          },
+          {
+            "ms": 30.80000000000291,
+            "calls": 1573,
+            "triangles": 8311805,
+            "index": 842
+          },
+          {
+            "ms": 30.80000000000291,
+            "calls": 1569,
+            "triangles": 8311549,
+            "index": 846
+          }
+        ],
+        "samplesFile": "frame-samples.json",
+        "samplesSha256": "7571749f0b9d6425bdd94da414f645e9341c975efa8f0a898ce1e6747aa60d5e"
+      },
+      {
+        "name": "station-street",
+        "frameCount": 204,
+        "fps": 65.0033457604435,
+        "p95FrameMs": 15.5,
+        "drawCalls": {
+          "mean": 1568.9411764705883,
+          "min": 1568,
+          "max": 1569
+        },
+        "triangles": {
+          "mean": 8311546.176470588,
+          "min": 8311501,
+          "max": 8311549
+        },
+        "maxFrameMs": 15.700000000004366,
+        "longFramesOver20ms": [],
+        "samplesFile": "frame-samples-station-street.json",
+        "samplesSha256": "de869e0753148b3e7057d9da2746489baa3f60a2b07932b1ba59d1f470dc65c2"
+      },
+      {
+        "name": "station-port",
+        "frameCount": 203,
+        "fps": 65.00160102465578,
+        "p95FrameMs": 15.5,
+        "drawCalls": {
+          "mean": 856,
+          "min": 856,
+          "max": 856
+        },
+        "triangles": {
+          "mean": 7956222,
+          "min": 7956222,
+          "max": 7956222
+        },
+        "maxFrameMs": 15.60000000000582,
+        "longFramesOver20ms": [],
+        "samplesFile": "frame-samples-station-port.json",
+        "samplesSha256": "f28adaeb041707aa45179b034c6af727587b9479dcce1d090a446d60f1b6cd55"
+      },
+      {
+        "name": "island-aerial",
+        "frameCount": 203,
+        "fps": 65.00160102465578,
+        "p95FrameMs": 15.5,
+        "drawCalls": {
+          "mean": 1806,
+          "min": 1806,
+          "max": 1806
+        },
+        "triangles": {
+          "mean": 7782279,
+          "min": 7782279,
+          "max": 7782279
+        },
+        "maxFrameMs": 15.60000000000582,
+        "longFramesOver20ms": [],
+        "samplesFile": "frame-samples-island-aerial.json",
+        "samplesSha256": "e04132037eab026302c7c0ee7b67462be4f4bd8b7e3f69e8a79028c5bc5f0906"
+      },
+      {
+        "name": "shop-interior",
+        "frameCount": 202,
+        "fps": 64.99983910930919,
+        "p95FrameMs": 15.5,
+        "drawCalls": {
+          "mean": 925.7574257425742,
+          "min": 925,
+          "max": 930
+        },
+        "triangles": {
+          "mean": 7554297.594059406,
+          "min": 7542941,
+          "max": 7606613
+        },
+        "maxFrameMs": 15.69999999999709,
+        "longFramesOver20ms": [],
+        "samplesFile": "frame-samples-shop-interior.json",
+        "samplesSha256": "c0f33e5725abf85c1401080ab198343b9bd73b46df245179049e58a98edd796e"
+      },
+      {
+        "name": "walking-third",
+        "frameCount": 202,
+        "fps": 65.00193075041821,
+        "p95FrameMs": 15.5,
+        "drawCalls": {
+          "mean": 1548.2227722772277,
+          "min": 910,
+          "max": 1562
+        },
+        "triangles": {
+          "mean": 8255821.727722772,
+          "min": 7475601,
+          "max": 8324542
+        },
+        "maxFrameMs": 15.60000000000582,
+        "longFramesOver20ms": [],
+        "samplesFile": "frame-samples-walking-third.json",
+        "samplesSha256": "1cf324005857e218fba8ebe9a0949ca83cf539a43fbf6d91d660c456dfcc8a02"
+      },
+      {
+        "name": "walking-first",
+        "frameCount": 202,
+        "fps": 64.99983910930919,
+        "p95FrameMs": 15.5,
+        "drawCalls": {
+          "mean": 1410.6881188118812,
+          "min": 1339,
+          "max": 1528
+        },
+        "triangles": {
+          "mean": 8194602.336633664,
+          "min": 8047554,
+          "max": 8290696
+        },
+        "maxFrameMs": 15.60000000000582,
+        "longFramesOver20ms": [],
+        "samplesFile": "frame-samples-walking-first.json",
+        "samplesSha256": "b5185f7dbec3876e1c639fa9ffab5385a4e94c2a2ebc436ccd40e9f0927d1ae8"
+      }
+    ]
+  },
+  "diagnostic": {
+    "ok": false,
+    "renderOk": true,
+    "transportClean": false,
+    "exceptions": [],
+    "httpErrors": [],
+    "networkFailures": [
+      {
+        "stage": "loading",
+        "url": "http://127.0.0.1:56366/assets/models/menhir.glb",
+        "canceled": true,
+        "errorText": "net::ERR_ABORTED",
+        "requestId": "53460.119",
+        "timestamp": 1947760.5551,
+        "type": "Fetch"
+      },
+      {
+        "stage": "loading",
+        "url": "http://127.0.0.1:56366/assets/models/boulders.glb",
+        "canceled": true,
+        "errorText": "net::ERR_ABORTED",
+        "requestId": "53460.121",
+        "timestamp": 1947760.556868,
+        "type": "Fetch"
+      },
+      {
+        "stage": "loading",
+        "url": "http://127.0.0.1:56366/prop-assets/plastic_crate_02/plastic_crate_02_1k.gltf",
+        "canceled": true,
+        "errorText": "net::ERR_ABORTED",
+        "requestId": "53460.235",
+        "timestamp": 1947771.74199,
+        "type": "Fetch"
+      }
+    ],
+    "sourceUnchanged": true,
+    "driverUnchanged": true,
+    "assetsUnchanged": true,
+    "restoreUnchanged": true,
+    "restoration": {
+      "textObserver": {
+        "intact": true,
+        "restored": true
+      },
+      "state": {
+        "townRect": [
+          221.6,
+          763.15,
+          317,
+          805.47
+        ],
+        "townGreen": [
+          1,
+          12,
+          55
+        ],
+        "camera": {
+          "position": [
+            278.8,
+            10.4,
+            936
+          ],
+          "quaternion": [
+            -0.003277842930440423,
+            -0.009834585659995631,
+            -0.000032237959341941705,
+            0.9999462663720154
+          ],
+          "fov": 58
+        },
+        "view": "station-street",
+        "walking": false,
+        "time": 34.631800000000005,
+        "stationTime": 34.631800000000005,
+        "contrast": 1.05,
+        "ao": 0.55,
+        "hidden": false,
+        "ui": [
+          {
+            "text": "1 街道",
+            "className": "active"
+          },
+          {
+            "text": "2 港镇",
+            "className": ""
+          },
+          {
+            "text": "3 全岛",
+            "className": ""
+          },
+          {
+            "text": "4 店内",
+            "className": ""
+          },
+          {
+            "text": "5 服务角",
+            "className": ""
+          },
+          {
+            "text": "6 店前细节",
+            "className": ""
+          },
+          {
+            "text": "进入步行",
+            "className": ""
+          },
+          {
+            "text": "第三人称 · V",
+            "className": ""
+          },
+          {
+            "text": "车站区街道",
+            "className": ""
+          }
+        ]
+      },
+      "ao": 0.55,
+      "contrast": 1.05,
+      "uploadedContrast": 1.05,
+      "materialsUnchanged": true,
+      "view": "station-street",
+      "fov": 58,
+      "time": 34.631800000000005,
+      "frozen": false,
+      "lightMaterialsUnchanged": true,
+      "shadowState": {
+        "bins": [
+          {
+            "uuid": "2a052acb-6131-48e0-a842-8fbe108782af",
+            "name": "houses-far",
+            "type": "MeshToonMaterial",
+            "cast": true,
+            "receive": true,
+            "isDiagnosticBin": false
+          },
+          {
+            "uuid": "67d7363d-2780-4e05-b9ce-09fcbf6222db",
+            "name": "houses-far",
+            "type": "MeshToonMaterial",
+            "cast": true,
+            "receive": true,
+            "isDiagnosticBin": false
+          },
+          {
+            "uuid": "27f7e558-ea21-4146-82e0-4162e93e9169",
+            "name": "houses-far",
+            "type": "MeshToonMaterial",
+            "cast": true,
+            "receive": true,
+            "isDiagnosticBin": false
+          },
+          {
+            "uuid": "8d5bedc8-ff70-44dc-bac6-65ba3989295e",
+            "name": "houses-far",
+            "type": "MeshToonMaterial",
+            "cast": true,
+            "receive": true,
+            "isDiagnosticBin": false
+          },
+          {
+            "uuid": "1dcd2ddb-942f-432e-bffd-d8e219a1bb9f",
+            "name": "plastic_crate_02",
+            "type": "MeshStandardMaterial",
+            "cast": true,
+            "receive": true,
+            "isDiagnosticBin": false
+          },
+          {
+            "uuid": "2611530f-facd-4dc2-bc9c-5c965f0eccd4",
+            "name": "",
+            "type": "MeshToonMaterial",
+            "cast": true,
+            "receive": true,
+            "isDiagnosticBin": false
+          },
+          {
+            "uuid": "55799fa3-2a65-449f-968d-14268a48903d",
+            "name": "",
+            "type": "MeshToonMaterial",
+            "cast": true,
+            "receive": true,
+            "isDiagnosticBin": false
+          },
+          {
+            "uuid": "f6274c85-ef2d-48ff-a204-337f88f6a587",
+            "name": "",
+            "type": "MeshToonMaterial",
+            "cast": true,
+            "receive": true,
+            "isDiagnosticBin": false
+          },
+          {
+            "uuid": "7c29caf6-9dd0-46ba-97cf-ae05ea43a5f8",
+            "name": "",
+            "type": "MeshToonMaterial",
+            "cast": true,
+            "receive": true,
+            "isDiagnosticBin": false
+          },
+          {
+            "uuid": "4be60e66-7b30-486b-93c5-a527e5f6fe7d",
+            "name": "",
+            "type": "MeshToonMaterial",
+            "cast": true,
+            "receive": true,
+            "isDiagnosticBin": false
+          },
+          {
+            "uuid": "c72a3d40-bca5-48ae-a243-a312b005872b",
+            "name": "",
+            "type": "MeshToonMaterial",
+            "cast": false,
+            "receive": true,
+            "isDiagnosticBin": true
+          },
+          {
+            "uuid": "b1b2b299-063e-4f6f-a7b5-8a9eb352d532",
+            "name": "",
+            "type": "MeshToonMaterial",
+            "cast": true,
+            "receive": true,
+            "isDiagnosticBin": false
+          },
+          {
+            "uuid": "91f32960-1f1b-4f93-983e-dafb91168cd8",
+            "name": "",
+            "type": "MeshToonMaterial",
+            "cast": true,
+            "receive": true,
+            "isDiagnosticBin": false
+          },
+          {
+            "uuid": "3cc548e1-8d39-4c41-9006-1343945c62b8",
+            "name": "",
+            "type": "MeshToonMaterial",
+            "cast": true,
+            "receive": true,
+            "isDiagnosticBin": false
+          },
+          {
+            "uuid": "5e0faf7d-1ee2-4a7e-a96e-c453ce8212de",
+            "name": "",
+            "type": "MeshToonMaterial",
+            "cast": true,
+            "receive": true,
+            "isDiagnosticBin": false
+          },
+          {
+            "uuid": "164f3375-f8c5-4c3f-a286-8e3c597d1209",
+            "name": "",
+            "type": "MeshToonMaterial",
+            "cast": true,
+            "receive": true,
+            "isDiagnosticBin": false
+          },
+          {
+            "uuid": "0fe5c73b-22ff-46fd-84a6-9539290116ae",
+            "name": "",
+            "type": "MeshToonMaterial",
+            "cast": true,
+            "receive": true,
+            "isDiagnosticBin": false
+          },
+          {
+            "uuid": "568bede8-12a4-4184-8e40-bf0793c42f8d",
+            "name": "",
+            "type": "MeshToonMaterial",
+            "cast": true,
+            "receive": true,
+            "isDiagnosticBin": false
+          },
+          {
+            "uuid": "2d70f86d-f284-48aa-81be-41589086d933",
+            "name": "",
+            "type": "MeshToonMaterial",
+            "cast": true,
+            "receive": true,
+            "isDiagnosticBin": false
+          },
+          {
+            "uuid": "b46b66f4-11db-4f79-b2af-79bf32ddf8ba",
+            "name": "",
+            "type": "MeshToonMaterial",
+            "cast": true,
+            "receive": true,
+            "isDiagnosticBin": false
+          },
+          {
+            "uuid": "6daafec1-8bf9-4a61-a2da-80668f01453b",
+            "name": "",
+            "type": "MeshToonMaterial",
+            "cast": true,
+            "receive": true,
+            "isDiagnosticBin": false
+          },
+          {
+            "uuid": "eefb58e6-67fc-48cc-b30d-f17def2572a5",
+            "name": "",
+            "type": "MeshToonMaterial",
+            "cast": true,
+            "receive": true,
+            "isDiagnosticBin": false
+          },
+          {
+            "uuid": "2fbcc435-8f68-4d98-9055-fc3a1c9084da",
+            "name": "",
+            "type": "MeshToonMaterial",
+            "cast": true,
+            "receive": true,
+            "isDiagnosticBin": false
+          },
+          {
+            "uuid": "51511fe5-4d27-4a0e-8dec-cdd48e39a4f0",
+            "name": "",
+            "type": "MeshToonMaterial",
+            "cast": true,
+            "receive": true,
+            "isDiagnosticBin": false
+          },
+          {
+            "uuid": "a43530f5-fdbc-4a1c-ab51-fdfa905b535d",
+            "name": "",
+            "type": "MeshToonMaterial",
+            "cast": true,
+            "receive": true,
+            "isDiagnosticBin": false
+          },
+          {
+            "uuid": "7eea38c2-fc71-43f5-af95-6bf3eba614f8",
+            "name": "",
+            "type": "MeshToonMaterial",
+            "cast": true,
+            "receive": true,
+            "isDiagnosticBin": false
+          },
+          {
+            "uuid": "c6fbf83b-7a7a-49bd-99a6-3ca7cd3e4576",
+            "name": "",
+            "type": "MeshToonMaterial",
+            "cast": true,
+            "receive": true,
+            "isDiagnosticBin": false
+          },
+          {
+            "uuid": "26a2da99-0ea9-4c54-bbc0-11be3e0d4be2",
+            "name": "town-edge-kit",
+            "type": "MeshToonMaterial",
+            "cast": false,
+            "receive": true,
+            "isDiagnosticBin": true
+          },
+          {
+            "uuid": "9f0b3a74-5e35-4b73-885f-550f8296ca4a",
+            "name": "town-edge-kit",
+            "type": "MeshToonMaterial",
+            "cast": false,
+            "receive": true,
+            "isDiagnosticBin": true
+          },
+          {
+            "uuid": "08bb9728-d250-4492-ae04-74bd5bf389c4",
+            "name": "town-edge-kit",
+            "type": "MeshToonMaterial",
+            "cast": true,
+            "receive": true,
+            "isDiagnosticBin": false
+          },
+          {
+            "uuid": "cc4044e7-5e93-4101-a007-5cb87d5773ad",
+            "name": "town-edge-kit",
+            "type": "MeshToonMaterial",
+            "cast": true,
+            "receive": true,
+            "isDiagnosticBin": false
+          },
+          {
+            "uuid": "ea512535-df74-42a0-9d1b-3236358d2946",
+            "name": "town-edge-kit",
+            "type": "MeshToonMaterial",
+            "cast": true,
+            "receive": true,
+            "isDiagnosticBin": false
+          },
+          {
+            "uuid": "be1aa6bd-33ec-42d4-87c1-29f8fded270a",
+            "name": "town-edge-kit",
+            "type": "ShaderMaterial",
+            "cast": false,
+            "receive": true,
+            "isDiagnosticBin": false
+          },
+          {
+            "uuid": "4479a3bf-5929-4516-8a37-23f5137a1b49",
+            "name": "town-edge-kit",
+            "type": "MeshBasicMaterial",
+            "cast": false,
+            "receive": true,
+            "isDiagnosticBin": false
+          },
+          {
+            "uuid": "788aaf8c-09c7-4760-a9df-7a59ae7fdd75",
+            "name": "town-edge-kit",
+            "type": "MeshToonMaterial",
+            "cast": true,
+            "receive": true,
+            "isDiagnosticBin": false
+          },
+          {
+            "uuid": "602f791d-8e5c-400e-a2e1-52a0ef16ce51",
+            "name": "town-edge-kit",
+            "type": "MeshToonMaterial",
+            "cast": true,
+            "receive": true,
+            "isDiagnosticBin": false
+          },
+          {
+            "uuid": "95cffc2f-72a6-453a-a1a6-53b5eb4194bc",
+            "name": "town-edge-kit",
+            "type": "ShaderMaterial",
+            "cast": false,
+            "receive": true,
+            "isDiagnosticBin": false
+          },
+          {
+            "uuid": "b3af30e6-869e-454b-8bb5-abae4eac289f",
+            "name": "town-edge-kit",
+            "type": "MeshBasicMaterial",
+            "cast": false,
+            "receive": true,
+            "isDiagnosticBin": false
+          },
+          {
+            "uuid": "97c84743-6b97-42fe-b848-2c77e61198d2",
+            "name": "town-edge-kit",
+            "type": "MeshToonMaterial",
+            "cast": false,
+            "receive": true,
+            "isDiagnosticBin": true
+          },
+          {
+            "uuid": "1213cffc-d8d1-48fb-b4be-426cbc365b9d",
+            "name": "town-edge-kit",
+            "type": "MeshToonMaterial",
+            "cast": false,
+            "receive": true,
+            "isDiagnosticBin": true
+          },
+          {
+            "uuid": "f6b5c3b4-3dfa-43d2-b7d4-ec19083fd766",
+            "name": "town-edge-kit",
+            "type": "MeshToonMaterial",
+            "cast": true,
+            "receive": true,
+            "isDiagnosticBin": false
+          },
+          {
+            "uuid": "192ebd09-fa44-4ef1-8cb1-e2fc9c4da089",
+            "name": "town-edge-kit",
+            "type": "MeshToonMaterial",
+            "cast": false,
+            "receive": true,
+            "isDiagnosticBin": true
+          },
+          {
+            "uuid": "63fc85e3-63a6-4bbb-8755-992efe25b6e4",
+            "name": "town-edge-kit",
+            "type": "MeshToonMaterial",
+            "cast": true,
+            "receive": true,
+            "isDiagnosticBin": false
+          },
+          {
+            "uuid": "a4ed3d8b-2a91-4bf6-9b28-719c94633c50",
+            "name": "houses-laundry",
+            "type": "MeshToonMaterial",
+            "cast": true,
+            "receive": true,
+            "isDiagnosticBin": false
+          }
+        ],
+        "materialsAndGeometryUnchanged": true,
+        "originalFlags": true,
+        "lastRequestedRefresh": null,
+        "rendererNeedsUpdate": false
+      }
+    },
+    "townAuditSha256": "1e771a259a8f1a43e27bc2992982db16a52b4c7a7f119e32ad6c13db79b9a6e2"
+  },
+  "limits": [
+    "Town strength0 affects terrain/meadow only, not city foliage or gravel; not a full C15 restoration.",
+    "Pixel diffs are final encoded RGB; causal attribution additionally needs shader/object observations.",
+    "Fixed repeats are not performance or walking tests.",
+    "Normal startup long frames are preserved, without causal attribution or repeat-to-green.",
+    "CPU lifecycle isolation is tested separately in the same realm; this GPU session initializes one look and cannot establish cross-look GPU leak freedom."
+  ]
+}

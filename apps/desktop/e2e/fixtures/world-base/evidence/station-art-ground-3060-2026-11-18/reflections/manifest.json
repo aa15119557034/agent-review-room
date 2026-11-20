@@ -1,0 +1,234 @@
+{
+  "faces": [
+    "px",
+    "nx",
+    "py",
+    "ny",
+    "pz",
+    "nz"
+  ],
+  "files": {
+    "afternoon/TRANSPORT-STATUS.json": {
+      "bytes": 313,
+      "sha256": "0220709904689a66afd5539ee89843796634bbb80308653ebaf4975949fec568"
+    },
+    "afternoon/bake-report.json.gz": {
+      "bytes": 7311,
+      "sha256": "012f70f2f07b48140a3af1ed74a86d0fc829130f00cfbfb9d1a2b867de0c5018",
+      "uncompressedSHA256": "98571b47a9f2abda01dfaf1c30cf2fe7af0ad2b79d5a9ed72b0e723ac9374c00",
+      "preRedactionCompressedSHA256": "5b4a6292fc4cfe3289cfeaa19e8590610b584e7109bfe53a7725d22e48ff7e98",
+      "preRedactionUncompressedSHA256": "19be0a0924fb98a0e545cee2023a8c8d99719e60c7211c7db2575ec451ff3a69",
+      "pathNormalization": "Host-specific config paths only: fixture ., output/runtime fixture-relative, Electron basename."
+    },
+    "afternoon/nx.rgba16f.gz": {
+      "bytes": 311230,
+      "sha256": "74de89d3de2a2858aaba332845fa63be78d94f8d9415648d5882322bcf8aa520",
+      "uncompressedSHA256": "3366312558dc908f0dfd825af85e2b13b84dc125fa9149086cda0d839008547a"
+    },
+    "afternoon/ny.rgba16f.gz": {
+      "bytes": 273470,
+      "sha256": "c84f95eaf94b898d2b6ab76ffa17342a448614a19e54c9e6f512181bffca7795",
+      "uncompressedSHA256": "e9a14e71391e88f03b042c06bf0a09594d7975138b471e8aeab8a0d86c2b0655"
+    },
+    "afternoon/nz.rgba16f.gz": {
+      "bytes": 322637,
+      "sha256": "022cfc4151a028ba7c0f5eb04decf86ec966738b129705f738d35d0e642907f7",
+      "uncompressedSHA256": "5268d4f38888cef1ddd8d9b2baecce276550ff65a0a713bb84891975d444e53d"
+    },
+    "afternoon/physical-only.json": {
+      "bytes": 9579,
+      "sha256": "1f1a5c8dbc8b96c084446adf91a16f9dc253f42aa01825d4709de7cd424cca50",
+      "originalCaptureSHA256": "4f4b6a60963ed43e423449f8d06ce5eb6c5c7d8c14fec3461408da642fe3c8b3"
+    },
+    "afternoon/process-exit.json.gz": {
+      "bytes": 84,
+      "sha256": "860271db755cda6e5a4e2d332a26547e99e6f453cca13f67d4defba03e944151",
+      "uncompressedSHA256": "d004471d677fcdc97576a972cb8445ebaa27719d7c7a2561baeeefbfb807a880"
+    },
+    "afternoon/px.rgba16f.gz": {
+      "bytes": 301851,
+      "sha256": "d8ac55ec011c03f80dde93933f6620c10c2f83f391ec59c0f0670a5dc4d57019",
+      "uncompressedSHA256": "aca5f5fdad9fdcb912a0ebe92c233c639b62ee51ac807590734a82d366440160"
+    },
+    "afternoon/py.rgba16f.gz": {
+      "bytes": 214362,
+      "sha256": "fbef653b1eb498fc4875941f3d48a6a484f2e9fc4660b95db5774f398efca97a",
+      "uncompressedSHA256": "3025a62fedc425052ee0809908fc30cee9ce41285fb4228a9bbbe34320aa1d22"
+    },
+    "afternoon/pz.rgba16f.gz": {
+      "bytes": 327918,
+      "sha256": "4390a87bb54983ceb3c9e37d3cc2e8c62bd47cdd9a28142fb5611124b884455d",
+      "uncompressedSHA256": "b983925788ad23159c86e01235ff02ef78644f44fc3e239489132e200490daff"
+    },
+    "afternoon/six-faces.png": {
+      "bytes": 771043,
+      "sha256": "412560f08a3614ea0beb7337b6c66bbae12cb0a4fd6a852dd4f9d6e4e7f5b532"
+    },
+    "afternoon/source-manifest.json.gz": {
+      "bytes": 12366,
+      "sha256": "0c28456398a3fa172d61da75926de22c40b6d775833eb6e44bee80b05d7b89e4",
+      "uncompressedSHA256": "51b23622923cd945ae8eee7fa7dcef4f240cfa337f74a96e66ec11b175362597"
+    },
+    "evening/TRANSPORT-STATUS.json": {
+      "bytes": 311,
+      "sha256": "845f504c325e8b65e409b7c7d41159a5cba866a7d14a31d597b79b7aec071cd6"
+    },
+    "evening/bake-report.json.gz": {
+      "bytes": 8382,
+      "sha256": "727ca24d18db10860397e3b79a620485bc64d013d2ff2843baee5fcce639d787",
+      "uncompressedSHA256": "faeb42b42de841af3e3dd1c58dcdc7ab6991c0a4e26373bca208cc177f43024e",
+      "preRedactionCompressedSHA256": "0ea408715f98f6f84a592fdb3c5ff4a76f6b91a2526c7eb38e2e0d7e3c0a0236",
+      "preRedactionUncompressedSHA256": "16abe9237bf9cf31d59c90a61b2ebf8c86387c6ebb572934cbc861e078abacba",
+      "pathNormalization": "Host-specific config paths only: fixture ., output/runtime fixture-relative, Electron basename."
+    },
+    "evening/nx.rgba16f.gz": {
+      "bytes": 293175,
+      "sha256": "6a4b5c3dd7eb5e54ac37d5f0092997fece0b2306cb40225a6da5dd0b7ec34b0f",
+      "uncompressedSHA256": "cf698bd81f7e287da405a83e1b6b3096e9ed9af21aba9cb908a6dc1c5023d01d"
+    },
+    "evening/ny.rgba16f.gz": {
+      "bytes": 266677,
+      "sha256": "705ad117602fb294294c3e0dc81dd2dfd98f75934d7de9bf0cb22d41195faf9a",
+      "uncompressedSHA256": "7d2dc6bdbb51590b9302e3720a402e18559c1c488ae5beb0998b144b4d82e242"
+    },
+    "evening/nz.rgba16f.gz": {
+      "bytes": 301319,
+      "sha256": "97ce7c831b864d2fded008d22997d27fc7ea9bffd3d2029f3fe24cdfae93e188",
+      "uncompressedSHA256": "36c42a70165249ace0d6af7b9977ad6ec8b83eaeb0334e83af6a636c88322fba"
+    },
+    "evening/physical-only.json": {
+      "bytes": 10070,
+      "sha256": "5e53ca2e0f792e9dc9b880e786c5d200631a53c7e613299e39c43347985f90f7",
+      "originalCaptureSHA256": "4ec5100c0ce80d5440d721a3624e8a3225641fb7ca3a3645ec78aa23beea2c91"
+    },
+    "evening/process-exit.json.gz": {
+      "bytes": 84,
+      "sha256": "125ccedd795ae614e957f6ee1d618e3cb0c6d220e39bf251330d9f7a5e9030ef",
+      "uncompressedSHA256": "fd5e5c1ba0496745b3bbf0952ee3f730911b705b7049ea20502fbd6b1cf9aa4e"
+    },
+    "evening/px.rgba16f.gz": {
+      "bytes": 310228,
+      "sha256": "e3638a8174e47a9f78bd83a16f3ed5276b765c7021e2c0513149c90834b269fb",
+      "uncompressedSHA256": "4dbfb000b44235f254c1af87cdb744694864d1755558a3932a8d5ee800da4f9d"
+    },
+    "evening/py.rgba16f.gz": {
+      "bytes": 213608,
+      "sha256": "3f88a5b79e80a300821ca114618952110d53feb5ae8c0a5f7c9fe9bc34b96bb0",
+      "uncompressedSHA256": "85cf2e0f65e24086179c41da451aca57db2563f136a66768b0f84c7736a52600"
+    },
+    "evening/pz.rgba16f.gz": {
+      "bytes": 319181,
+      "sha256": "ac7f5962b160b8c733ca0f65e3369ddc1ad2705069f12b1db665bb9af0de62eb",
+      "uncompressedSHA256": "c9f81bacb5ab2c6ae2d7530e0907bf6bffc7cd6538ace95c943522208eb69e1d"
+    },
+    "evening/six-faces.png": {
+      "bytes": 689346,
+      "sha256": "1a3ea4d3be882beac4bf1ab99436547db7914bfc039932500ba28e6b4edb0b6b"
+    },
+    "evening/source-manifest.json.gz": {
+      "bytes": 12366,
+      "sha256": "aec24efb4c76385f76a3f4939362f3bca5c12ebf590dc47237349c3bc7f29f6e",
+      "uncompressedSHA256": "85ed9e323af7b1c18c00569eb7ba5e4ee26a6b9ce4958e1bf715e53628c29167"
+    },
+    "fault-and-fix.json": {
+      "bytes": 7878,
+      "sha256": "a0d66f9db9244bd4fab049c72f7dbe3ba65783c37e97371aad49b337489acfeb"
+    },
+    "initial/afternoon/bake-report.json.gz": {
+      "bytes": 7413,
+      "sha256": "83a5ca9a99b273e5014ee836876f6afb87cb3cdf3ef7a864fbb1c633f45588aa",
+      "uncompressedSHA256": "b9f0148422cb361b1af0d54a32fe987fbfea6e9ce1cbbef49de44f11e81070f8",
+      "preRedactionCompressedSHA256": "702e2950aab774b7775d864b7981f72646358834f264d1725a9fa8461567e04b",
+      "preRedactionUncompressedSHA256": "9839f9ff8d0851e7df8bdac3ee55e56e2210d5995720632edd2a7ebb94f22050",
+      "pathNormalization": "Host-specific config paths only: fixture ., output/runtime fixture-relative, Electron basename."
+    },
+    "initial/afternoon/nz.rgba16f.gz": {
+      "bytes": 322644,
+      "sha256": "60c680fb2d4ff2bb827d045e96255a5eba26e57e4c8aac29288b997a27b7a737",
+      "uncompressedSHA256": "dce0b42e8d2bcd20b7fe66f5b99f7c5059ce2d68c89d12c26cf4593545b8f8a7"
+    },
+    "initial/afternoon/process-exit.json.gz": {
+      "bytes": 84,
+      "sha256": "6ca983d5d733f77927394a71623a806ff6a74345f1b769cac9846daafb432604",
+      "uncompressedSHA256": "a3f628b737b87e17fe405dcb847894ba87dc2a1438cee52d25758c26d3f22403"
+    },
+    "initial/afternoon/source-manifest.json.gz": {
+      "bytes": 12367,
+      "sha256": "a47540bacc4b6b112cef8b5cc604882ae0f3d129341f350bdc33f0d8271c5ce8",
+      "uncompressedSHA256": "a60cc42435e4bfa28e4a55192946e37c9be197b6d5334d84425b5246b1f00e4a"
+    },
+    "initial/evening/bake-report.json.gz": {
+      "bytes": 7443,
+      "sha256": "ed02e481db7b755a0a4dd64e8d12eb92942461fc03fda291bfe8fce1e919acd8",
+      "uncompressedSHA256": "757c39e42c66d97eec9573656b5baaa76a50ced2505ee24067771b6ff266adea",
+      "preRedactionCompressedSHA256": "50910c61ee2e773de02f5e864e0271468813840d40f97af6a2187f2a1b36be1d",
+      "preRedactionUncompressedSHA256": "4a6c00e37ae4011f3998ff422e4e62a79515b2e3155a72255b77877fd87007c6",
+      "pathNormalization": "Host-specific config paths only: fixture ., output/runtime fixture-relative, Electron basename."
+    },
+    "initial/evening/nz.rgba16f.gz": {
+      "bytes": 301319,
+      "sha256": "d4c9e3cb777ff91a5b9232782dfd22657955e66352d911a8b04681c027c4ff74",
+      "uncompressedSHA256": "2e741668ef208b9afb7b57aefe5e71bd3a36842bc3475a12bc1e45f66c4944a5"
+    },
+    "initial/evening/process-exit.json.gz": {
+      "bytes": 84,
+      "sha256": "b6dd1fce05f097ce06409e07883d588747dff2ddeaafefdd285d497478471864",
+      "uncompressedSHA256": "94577479393bb1519b7fd4b325cd825bd4ac5195cb9025ba126c4de08bc876ae"
+    },
+    "initial/evening/source-manifest.json.gz": {
+      "bytes": 12365,
+      "sha256": "a8d016b197ce4f4961bde883c9d657946916dafe9fc20be6149a30d5b6a810d2",
+      "uncompressedSHA256": "6f832eaa62960df420873914ccf5d42d25641bb9707b0676735c5dab51009149"
+    },
+    "previous/afternoon/bake-report.json.gz": {
+      "bytes": 6598,
+      "sha256": "d040abab112d0f99d6a120f58aad993d6844321c30b604c1120f2537df591277",
+      "uncompressedSHA256": "f9a1d2dd9ced4f1b7f1bd36250c1257187f6a376ff50d945294c4e0f651fa56e",
+      "preRedactionCompressedSHA256": "c1b8259f6351f16c3ca6178bc80d75d3bee609f2fbeda281bfb443e313e70ccd",
+      "preRedactionUncompressedSHA256": "b9349646dbaf7678464a069608be71835d636079bd217238915ae6f11ad7e496",
+      "pathNormalization": "Host-specific config paths only: fixture ., output/runtime fixture-relative, Electron basename."
+    },
+    "previous/afternoon/nx.rgba16f.gz": {
+      "bytes": 292427,
+      "sha256": "f634a0667ed5ce421a5496d649bf7c80895ef3f4c5c0541fb3e0b11d456d7f9d"
+    },
+    "previous/afternoon/ny.rgba16f.gz": {
+      "bytes": 267872,
+      "sha256": "f05ab0b25ec5cc1ad59852fa7c8b338bbc141099b27c4669b90ccb64189e69fc"
+    },
+    "previous/afternoon/nz.rgba16f.gz": {
+      "bytes": 318287,
+      "sha256": "794b189f68e303b341c8ce53ce2e66f1ed0f0ea9d31a48d5f83bf9410d13c621"
+    },
+    "previous/afternoon/px.rgba16f.gz": {
+      "bytes": 292114,
+      "sha256": "80fc8b84bcfa03e5eca2793b4ac793cfa3d5dda4bd36885bc9ffd2d9b9df8024"
+    },
+    "previous/afternoon/py.rgba16f.gz": {
+      "bytes": 226889,
+      "sha256": "ebadf191848514f7ec2dc701837f8648b3a0b26d773bbbc5711c15b84e669195"
+    },
+    "previous/afternoon/pz.rgba16f.gz": {
+      "bytes": 330493,
+      "sha256": "750ef0f53119f047a987dba010e247196684f2fabae2a78a92752e63bb7c1603"
+    },
+    "previous/verified-history.json": {
+      "bytes": 15865,
+      "sha256": "204465a22d07869753988741566deb79bf1c22bdb08a100895eb6ab56107360b"
+    },
+    "runtime-and-transport.json": {
+      "bytes": 13521,
+      "sha256": "a6dca6e997ed80782f6f7e21112f4cda0c2064e9b1f9e519b411a48ccbd477ec"
+    }
+  },
+  "firstBake": "2a7c6f12bb66f44a04a9dbbc2a4e2e7a22e93758",
+  "fixturePath": "apps/desktop/e2e/fixtures/world-base",
+  "installedPNG": "2ae05c5b0715fba94a167fa103babb72ae0ef9cf",
+  "priorStored": "47a5c12eba910682ccbf8bc9138510bc01737bf3",
+  "profileDirectories": {
+    "afternoon": "street-env",
+    "evening": "street-env-evening"
+  },
+  "schema": 1,
+  "sourceFix": "17c126adc9f8f053fab99479c92269e1460c3029"
+}

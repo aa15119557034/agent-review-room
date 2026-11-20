@@ -1,0 +1,3408 @@
+{
+  "artifact": "gpu-town-c15",
+  "head": "96ddf39ce4ca6448acf1a59dcc49dbf4ca4908ac",
+  "pid": 59144,
+  "session": 87880,
+  "actualExit": 1,
+  "stage": "complete",
+  "renderOk": true,
+  "transportClean": false,
+  "source": {
+    "head": "96ddf39ce4ca6448acf1a59dcc49dbf4ca4908ac",
+    "sha256": "53a2e7d627a9fda6a75d606a5d6ff147d0866510d5de6d86d559258d4922802f",
+    "trackedFilesVerified": 203,
+    "pinnedIgnoredFilesVerified": 9,
+    "receipt": "embedded"
+  },
+  "networkFailures": [
+    {
+      "url": "http://127.0.0.1:53072/assets/models/boulders.glb",
+      "type": "Fetch",
+      "canceled": true,
+      "errorText": "net::ERR_ABORTED",
+      "requestId": "64216.121",
+      "timestamp": 1934309.921728,
+      "stage": "waiting-for-ready-frame",
+      "receivedWallTime": 1794924130.867
+    },
+    {
+      "url": "http://127.0.0.1:53072/assets/models/menhir.glb",
+      "type": "Fetch",
+      "canceled": true,
+      "errorText": "net::ERR_ABORTED",
+      "requestId": "64216.119",
+      "timestamp": 1934309.922688,
+      "stage": "waiting-for-ready-frame",
+      "receivedWallTime": 1794924130.868
+    }
+  ],
+  "failedRequestTiming": [
+    {
+      "name": "http://127.0.0.1:53072/assets/models/menhir.glb",
+      "entryType": "resource",
+      "startTime": 2760,
+      "duration": 30.5,
+      "navigationId": 5701,
+      "initiatorType": "fetch",
+      "deliveryType": "",
+      "nextHopProtocol": "http/1.1",
+      "renderBlockingStatus": "non-blocking",
+      "contentType": "",
+      "contentEncoding": "",
+      "workerStart": 0,
+      "workerRouterEvaluationStart": 0,
+      "workerCacheLookupStart": 0,
+      "workerMatchedSourceType": "",
+      "workerFinalSourceType": "",
+      "redirectStart": 0,
+      "redirectEnd": 0,
+      "fetchStart": 2760,
+      "domainLookupStart": 2760,
+      "domainLookupEnd": 2760,
+      "connectStart": 2760,
+      "secureConnectionStart": 0,
+      "connectEnd": 2760,
+      "requestStart": 2761.399999856949,
+      "responseStart": 2784.899999856949,
+      "firstInterimResponseStart": 0,
+      "finalResponseHeadersStart": 2784.899999856949,
+      "responseEnd": 2790.5,
+      "transferSize": 620888,
+      "encodedBodySize": 620588,
+      "decodedBodySize": 620588,
+      "responseStatus": 200,
+      "serverTiming": []
+    },
+    {
+      "name": "http://127.0.0.1:53072/assets/models/boulders.glb",
+      "entryType": "resource",
+      "startTime": 2760.2000000476837,
+      "duration": 29.699999809265137,
+      "navigationId": 5701,
+      "initiatorType": "fetch",
+      "deliveryType": "",
+      "nextHopProtocol": "http/1.1",
+      "renderBlockingStatus": "non-blocking",
+      "contentType": "",
+      "contentEncoding": "",
+      "workerStart": 0,
+      "workerRouterEvaluationStart": 0,
+      "workerCacheLookupStart": 0,
+      "workerMatchedSourceType": "",
+      "workerFinalSourceType": "",
+      "redirectStart": 0,
+      "redirectEnd": 0,
+      "fetchStart": 2760.2000000476837,
+      "domainLookupStart": 2760.2000000476837,
+      "domainLookupEnd": 2760.2000000476837,
+      "connectStart": 2760.2000000476837,
+      "secureConnectionStart": 0,
+      "connectEnd": 2760.2000000476837,
+      "requestStart": 2761.7999999523163,
+      "responseStart": 2778.0999999046326,
+      "firstInterimResponseStart": 0,
+      "finalResponseHeadersStart": 2778.0999999046326,
+      "responseEnd": 2789.899999856949,
+      "transferSize": 670120,
+      "encodedBodySize": 669820,
+      "decodedBodySize": 669820,
+      "responseStatus": 200,
+      "serverTiming": []
+    }
+  ],
+  "exceptions": [],
+  "performance": {
+    "method": "RAF intervals with WebGL2 submission counters across all passes; instrumentation overhead included",
+    "unsupportedDrawPaths": [
+      "ANGLE_instanced_arrays",
+      "WEBGL_multi_draw"
+    ],
+    "frameCount": 972,
+    "sampleMs": 15107.800000000003,
+    "fps": 64.33762692119302,
+    "p95FrameMs": 15.5,
+    "drawCalls": {
+      "mean": 1571.0720164609054,
+      "min": 1569,
+      "max": 1574
+    },
+    "triangles": {
+      "mean": 8311675.9794238685,
+      "min": 8311549,
+      "max": 8311869
+    },
+    "framesWithoutDraws": 0,
+    "samplesFile": "frame-samples.json"
+  },
+  "views": [
+    {
+      "name": "station-street",
+      "method": "RAF intervals with WebGL2 submission counters across all passes; instrumentation overhead included",
+      "unsupportedDrawPaths": [
+        "ANGLE_instanced_arrays",
+        "WEBGL_multi_draw"
+      ],
+      "frameCount": 197,
+      "sampleMs": 3123,
+      "fps": 63.08037143772014,
+      "p95FrameMs": 15.5,
+      "drawCalls": {
+        "mean": 1569,
+        "min": 1569,
+        "max": 1569
+      },
+      "triangles": {
+        "mean": 8311549,
+        "min": 8311549,
+        "max": 8311549
+      },
+      "framesWithoutDraws": 0,
+      "samplesFile": "frame-samples-station-street.json",
+      "capture": {
+        "file": "01-station-street.png",
+        "jpeg": "01-station-street.jpg",
+        "jpegWidth": 960,
+        "pixels": {
+          "width": 1440,
+          "height": 900,
+          "samples": 39816,
+          "meanRgb": 100.58766157658772,
+          "nonBlackFraction": 1,
+          "notBlack": true
+        }
+      }
+    },
+    {
+      "name": "station-port",
+      "method": "RAF intervals with WebGL2 submission counters across all passes; instrumentation overhead included",
+      "unsupportedDrawPaths": [
+        "ANGLE_instanced_arrays",
+        "WEBGL_multi_draw"
+      ],
+      "frameCount": 202,
+      "sampleMs": 3123.0999999999985,
+      "fps": 64.67932502961804,
+      "p95FrameMs": 15.5,
+      "drawCalls": {
+        "mean": 856,
+        "min": 856,
+        "max": 856
+      },
+      "triangles": {
+        "mean": 7956222,
+        "min": 7956222,
+        "max": 7956222
+      },
+      "framesWithoutDraws": 0,
+      "samplesFile": "frame-samples-station-port.json",
+      "capture": {
+        "file": "02-station-port.png",
+        "jpeg": "02-station-port.jpg",
+        "jpegWidth": 960,
+        "pixels": {
+          "width": 1440,
+          "height": 900,
+          "samples": 39816,
+          "meanRgb": 172.1127771080317,
+          "nonBlackFraction": 1,
+          "notBlack": true
+        }
+      }
+    },
+    {
+      "name": "island-aerial",
+      "method": "RAF intervals with WebGL2 submission counters across all passes; instrumentation overhead included",
+      "unsupportedDrawPaths": [
+        "ANGLE_instanced_arrays",
+        "WEBGL_multi_draw"
+      ],
+      "frameCount": 196,
+      "sampleMs": 3123,
+      "fps": 62.760166506564204,
+      "p95FrameMs": 15.5,
+      "drawCalls": {
+        "mean": 1806,
+        "min": 1806,
+        "max": 1806
+      },
+      "triangles": {
+        "mean": 7782279,
+        "min": 7782279,
+        "max": 7782279
+      },
+      "framesWithoutDraws": 0,
+      "samplesFile": "frame-samples-island-aerial.json",
+      "capture": {
+        "file": "03-island-aerial.png",
+        "jpeg": "03-island-aerial.jpg",
+        "jpegWidth": 960,
+        "pixels": {
+          "width": 1440,
+          "height": 900,
+          "samples": 39816,
+          "meanRgb": 108.76155314446382,
+          "nonBlackFraction": 1,
+          "notBlack": true
+        }
+      }
+    },
+    {
+      "name": "shop-interior",
+      "method": "RAF intervals with WebGL2 submission counters across all passes; instrumentation overhead included",
+      "unsupportedDrawPaths": [
+        "ANGLE_instanced_arrays",
+        "WEBGL_multi_draw"
+      ],
+      "frameCount": 202,
+      "sampleMs": 3107.699999999997,
+      "fps": 64.99983910930919,
+      "p95FrameMs": 15.5,
+      "drawCalls": {
+        "mean": 926.0841584158416,
+        "min": 925,
+        "max": 930
+      },
+      "triangles": {
+        "mean": 7558473.495049505,
+        "min": 7542941,
+        "max": 7606613
+      },
+      "framesWithoutDraws": 0,
+      "samplesFile": "frame-samples-shop-interior.json",
+      "capture": {
+        "file": "04-shop-interior.png",
+        "jpeg": "04-shop-interior.jpg",
+        "jpegWidth": 960,
+        "pixels": {
+          "width": 1440,
+          "height": 900,
+          "samples": 39816,
+          "meanRgb": 150.00831324090657,
+          "nonBlackFraction": 1,
+          "notBlack": true
+        }
+      }
+    }
+  ],
+  "walkingValidation": {
+    "ok": true,
+    "method": "Electron sendInputEvent holds W for each measured segment; positions come from the live walker, with no per-frame pose overrides.",
+    "segments": [
+      {
+        "mode": "third",
+        "before": {
+          "feet": [
+            281.6,
+            8.812,
+            934
+          ],
+          "mode": "third",
+          "timeMs": 90870.5
+        },
+        "after": {
+          "feet": [
+            280.9367793519838,
+            8.546434080028472,
+            924.5155028581597
+          ],
+          "mode": "third",
+          "timeMs": 94034.09999990463
+        },
+        "distance": 9.511365460299686,
+        "horizontalDistance": 9.507657317211823,
+        "method": "RAF intervals with WebGL2 submission counters across all passes; instrumentation overhead included",
+        "unsupportedDrawPaths": [
+          "ANGLE_instanced_arrays",
+          "WEBGL_multi_draw"
+        ],
+        "frameCount": 203,
+        "sampleMs": 3123,
+        "fps": 65.00160102465578,
+        "p95FrameMs": 15.5,
+        "drawCalls": {
+          "mean": 1548.1182266009853,
+          "min": 910,
+          "max": 1562
+        },
+        "triangles": {
+          "mean": 8255833.433497537,
+          "min": 7475601,
+          "max": 8324542
+        },
+        "framesWithoutDraws": 0,
+        "samplesFile": "frame-samples-walking-third.json",
+        "capture": {
+          "file": "walking-third.png",
+          "jpeg": "walking-third.jpg",
+          "jpegWidth": 960,
+          "pixels": {
+            "width": 1440,
+            "height": 900,
+            "samples": 39816,
+            "meanRgb": 112.47399705311234,
+            "nonBlackFraction": 1,
+            "notBlack": true
+          }
+        },
+        "ok": true
+      },
+      {
+        "mode": "first",
+        "before": {
+          "feet": [
+            280.92131607544496,
+            8.540242295631998,
+            924.2943677011427
+          ],
+          "mode": "first",
+          "timeMs": 94828.20000004768
+        },
+        "after": {
+          "feet": [
+            280.26425392707534,
+            8.277142353806942,
+            914.8979412073908
+          ],
+          "mode": "first",
+          "timeMs": 97962.39999985695
+        },
+        "distance": 9.423045319783418,
+        "horizontalDistance": 9.41937160957693,
+        "method": "RAF intervals with WebGL2 submission counters across all passes; instrumentation overhead included",
+        "unsupportedDrawPaths": [
+          "ANGLE_instanced_arrays",
+          "WEBGL_multi_draw"
+        ],
+        "frameCount": 202,
+        "sampleMs": 3107.699999999997,
+        "fps": 64.99983910930919,
+        "p95FrameMs": 15.5,
+        "drawCalls": {
+          "mean": 1409.0247524752476,
+          "min": 1337,
+          "max": 1476
+        },
+        "triangles": {
+          "mean": 8192345.178217822,
+          "min": 8046856,
+          "max": 8290612
+        },
+        "framesWithoutDraws": 0,
+        "samplesFile": "frame-samples-walking-first.json",
+        "capture": {
+          "file": "walking-first.png",
+          "jpeg": "walking-first.jpg",
+          "jpegWidth": 960,
+          "pixels": {
+            "width": 1440,
+            "height": 900,
+            "samples": 39816,
+            "meanRgb": 114.95305069988615,
+            "nonBlackFraction": 1,
+            "notBlack": true
+          }
+        },
+        "ok": true
+      }
+    ],
+    "viewSwitch": {
+      "before": [
+        280.9213165484616,
+        8.540242485036686,
+        924.2943744655959
+      ],
+      "after": [
+        280.9213165484616,
+        8.540242485036686,
+        924.2943744655959
+      ],
+      "distance": 0,
+      "mode": "first"
+    },
+    "inputEvents": [
+      {
+        "type": "keydown",
+        "code": "KeyW",
+        "key": "w",
+        "trusted": true,
+        "timeMs": 90871.39999985695
+      },
+      {
+        "type": "keyup",
+        "code": "KeyW",
+        "key": "w",
+        "trusted": true,
+        "timeMs": 94017.20000004768
+      },
+      {
+        "type": "keydown",
+        "code": "KeyW",
+        "key": "w",
+        "trusted": true,
+        "timeMs": 94843.20000004768
+      },
+      {
+        "type": "keyup",
+        "code": "KeyW",
+        "key": "w",
+        "trusted": true,
+        "timeMs": 97962.39999985695
+      }
+    ]
+  },
+  "behaviorValidation": {
+    "ok": true,
+    "checks": [
+      {
+        "name": "closed shop door blocks the walking capsule",
+        "passed": true,
+        "evidence": {
+          "displacement": 0.34999999999999964,
+          "candidate": {
+            "x": -7.23,
+            "z": 8
+          }
+        }
+      },
+      {
+        "name": "approaching opens the real shop door collider",
+        "passed": true,
+        "evidence": {
+          "displacement": 0,
+          "candidate": {
+            "x": -7.58,
+            "z": 8
+          }
+        }
+      },
+      {
+        "name": "adjacent storefront wall remains solid",
+        "passed": true,
+        "evidence": {
+          "displacement": 0.40000000000000036,
+          "candidate": {
+            "x": -7.1,
+            "z": 12
+          }
+        }
+      },
+      {
+        "name": "open entrance provides a continuous capsule-width passage",
+        "passed": true,
+        "evidence": {
+          "maxCorrection": 0
+        }
+      },
+      {
+        "name": "interior floor uses its raised walkable surface",
+        "passed": true,
+        "evidence": {
+          "expectedFloor": 0.4134,
+          "maxHeightError": 0
+        }
+      },
+      {
+        "name": "W3 sidewalk walking clears existing furniture and new planters",
+        "passed": true,
+        "evidence": {
+          "endLotX": 3.9674163653903243,
+          "minLotZ": 1.061816375746971,
+          "maxLotZ": 1.1500000000000001,
+          "radius": 0.3,
+          "step": 0.1,
+          "inputDistance": 8
+        }
+      },
+      {
+        "name": "W3 planters leave the existing garden gate approach clear",
+        "passed": true,
+        "evidence": {
+          "maxCorrection": 0
+        }
+      },
+      {
+        "name": "low planter tops support approaching feet and release them on exit",
+        "passed": true,
+        "evidence": [
+          {
+            "id": "w3-planter-south",
+            "expectedTop": 1.1152975042415103,
+            "onTop": 1.1152975042415103,
+            "initialFeet": 0.8553631994889643,
+            "finalFeet": 0.8553631994889643,
+            "supported": true,
+            "returnedToSidewalk": true
+          },
+          {
+            "id": "w3-planter-north",
+            "expectedTop": 1.00881568627451,
+            "onTop": 1.00881568627451,
+            "initialFeet": 0.7488156862745098,
+            "finalFeet": 0.7488156862745098,
+            "supported": true,
+            "returnedToSidewalk": true
+          }
+        ]
+      },
+      {
+        "name": "first person camera is 1.52m above world-space feet",
+        "passed": true,
+        "evidence": {
+          "feet": [
+            281.6,
+            8.812,
+            934
+          ],
+          "camera": [
+            281.6,
+            10.331999999999999,
+            934
+          ],
+          "error": 0
+        }
+      },
+      {
+        "name": "third person camera follows within its obstruction-limited boom",
+        "passed": true,
+        "evidence": {
+          "followDistance": 4.224038352098614,
+          "maximum": 4.224038352098617
+        }
+      },
+      {
+        "name": "view switching preserves the body and collision position",
+        "passed": true,
+        "evidence": {
+          "feet": [
+            281.6,
+            8.812,
+            934
+          ],
+          "initialFeet": [
+            281.6,
+            8.812,
+            934
+          ]
+        }
+      },
+      {
+        "name": "station local/world coordinates round-trip at its nonzero placement",
+        "passed": true,
+        "evidence": {
+          "local": [
+            1.6000000000000227,
+            0.8119999999999994,
+            34
+          ],
+          "world": [
+            281.6,
+            8.812,
+            934
+          ]
+        }
+      },
+      {
+        "name": "real shop wall shortens third-person boom with near-plane clearance",
+        "passed": true,
+        "evidence": {
+          "shortened": 0.7951227548559752,
+          "cameraLotZ": -2.290597833643244,
+          "streetSideWallZ": -2.6,
+          "clearance": 0.30940216635678375,
+          "raycastCalls": 0
+        }
+      },
+      {
+        "name": "camera collision never scans rendered triangles",
+        "passed": true,
+        "evidence": {
+          "raycastCalls": 0
+        }
+      }
+    ]
+  },
+  "lookValidation": {
+    "ok": true,
+    "method": "Actual pipeline uniforms/parameters and UI state; central-pixel nonblack smoke checks. Images retain animation.",
+    "toon": {
+      "on": {
+        "state": {
+          "toon": 1,
+          "blur": 0,
+          "rays": 0,
+          "toonCheckbox": true,
+          "effectsCheckbox": false,
+          "currentView": "station-street"
+        },
+        "capture": {
+          "file": "05-street-toon-on.png",
+          "jpeg": "05-street-toon-on.jpg",
+          "jpegWidth": 960,
+          "pixels": {
+            "width": 1440,
+            "height": 900,
+            "samples": 39816,
+            "meanRgb": 100.61476123501585,
+            "nonBlackFraction": 1,
+            "notBlack": true
+          }
+        }
+      },
+      "off": {
+        "state": {
+          "toon": 0,
+          "blur": 0,
+          "rays": 0,
+          "toonCheckbox": false,
+          "effectsCheckbox": false,
+          "currentView": "station-street"
+        },
+        "capture": {
+          "file": "06-street-toon-off.png",
+          "jpeg": "06-street-toon-off.jpg",
+          "jpegWidth": 960,
+          "pixels": {
+            "width": 1440,
+            "height": 900,
+            "samples": 39816,
+            "meanRgb": 64.41762105686043,
+            "nonBlackFraction": 0.9179977898332329,
+            "notBlack": true
+          }
+        }
+      },
+      "difference": {
+        "meanAbsoluteRgbDifference": 36.11616255144033,
+        "isolatedFromAnimation": false
+      }
+    },
+    "flightEffects": {
+      "on": {
+        "state": {
+          "toon": 1,
+          "blur": 1,
+          "rays": 0.55,
+          "toonCheckbox": true,
+          "effectsCheckbox": true,
+          "currentView": "station-street"
+        },
+        "capture": {
+          "file": "07-flight-effects-on.png",
+          "jpeg": "07-flight-effects-on.jpg",
+          "jpegWidth": 960,
+          "pixels": {
+            "width": 1440,
+            "height": 900,
+            "samples": 39816,
+            "meanRgb": 100.74208860759748,
+            "nonBlackFraction": 1,
+            "notBlack": true
+          }
+        }
+      },
+      "off": {
+        "state": {
+          "toon": 1,
+          "blur": 0,
+          "rays": 0,
+          "toonCheckbox": true,
+          "effectsCheckbox": false,
+          "currentView": "station-street"
+        },
+        "capture": {
+          "file": "08-flight-effects-off.png",
+          "jpeg": "08-flight-effects-off.jpg",
+          "jpegWidth": 960,
+          "pixels": {
+            "width": 1440,
+            "height": 900,
+            "samples": 39816,
+            "meanRgb": 100.58381890027619,
+            "nonBlackFraction": 1,
+            "notBlack": true
+          }
+        }
+      },
+      "difference": {
+        "meanAbsoluteRgbDifference": 1.727278806584362,
+        "isolatedFromAnimation": false
+      }
+    }
+  },
+  "firstReady": {
+    "ready": true,
+    "errors": [],
+    "revision": "187",
+    "camera": {
+      "position": [
+        278.8,
+        10.4,
+        936
+      ],
+      "currentView": "station-street",
+      "mode": "third"
+    },
+    "stages": [
+      {
+        "message": "正在读取岛屿地形、港镇和云层…",
+        "ms": 503.89999985694885
+      },
+      {
+        "message": "正在安放车站、店铺与碰撞体…",
+        "ms": 2964.5999999046326
+      },
+      {
+        "message": "environment",
+        "ms": 2965.2000000476837
+      },
+      {
+        "message": "street",
+        "ms": 4294.299999952316
+      },
+      {
+        "message": "poles",
+        "ms": 5004.399999856949
+      },
+      {
+        "message": "railway",
+        "ms": 5381.200000047684
+      },
+      {
+        "message": "station",
+        "ms": 6705.799999952316
+      },
+      {
+        "message": "plaza",
+        "ms": 7868.700000047684
+      },
+      {
+        "message": "shopsA",
+        "ms": 8579.399999856949
+      },
+      {
+        "message": "shopsB",
+        "ms": 9724.099999904633
+      },
+      {
+        "message": "houses",
+        "ms": 10354
+      },
+      {
+        "message": "sakura",
+        "ms": 10982
+      },
+      {
+        "message": "trains",
+        "ms": 12074.399999856949
+      },
+      {
+        "message": "crossing",
+        "ms": 12397.5
+      },
+      {
+        "message": "props",
+        "ms": 12585.099999904633
+      },
+      {
+        "message": "vehicles",
+        "ms": 13597.700000047684
+      },
+      {
+        "message": "textured-props",
+        "ms": 14063
+      },
+      {
+        "message": "正在安放站后建筑…",
+        "ms": 22324.599999904633
+      },
+      {
+        "message": "场景已就绪",
+        "ms": 22466.799999952316
+      }
+    ],
+    "dimensions": {
+      "viewport": [
+        1440,
+        900
+      ],
+      "canvas": [
+        1440,
+        900
+      ],
+      "pixelRatio": 1
+    },
+    "renderer": {
+      "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+      "shadingLanguage": "WebGL GLSL ES 3.00 (OpenGL ES GLSL ES 3.0 Chromium)",
+      "vendor": "Google Inc. (NVIDIA)",
+      "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "contextLost": false,
+      "info": {
+        "render": {
+          "frame": 170,
+          "calls": 1570,
+          "triangles": 8311597,
+          "points": 0,
+          "lines": 0
+        },
+        "memory": {
+          "geometries": 1056,
+          "textures": 222
+        },
+        "programs": 116
+      }
+    },
+    "originalStats": {
+      "fps": 0.1536039322601033,
+      "calls": 1570,
+      "triangles": 8311597
+    },
+    "loadedProps": {
+      "lighthouse": 1,
+      "menhir": 21,
+      "boulders": 87,
+      "tree": 53
+    },
+    "quality": null,
+    "timing": {
+      "timeOriginMs": 1794924128077.4,
+      "performanceNowMs": 35617.799999952316,
+      "firstWebGLDrawMs": 2317.399999856949,
+      "sceneReadyMs": 35501.700000047684,
+      "firstReadyFrameMs": 35539.59999990463,
+      "navigation": {
+        "name": "http://127.0.0.1:53072/",
+        "entryType": "navigation",
+        "startTime": 0,
+        "duration": 535,
+        "navigationId": 5701,
+        "initiatorType": "navigation",
+        "deliveryType": "",
+        "nextHopProtocol": "http/1.1",
+        "renderBlockingStatus": "non-blocking",
+        "contentType": "text/html",
+        "contentEncoding": "",
+        "workerStart": 0,
+        "workerRouterEvaluationStart": 0,
+        "workerCacheLookupStart": 0,
+        "workerMatchedSourceType": "",
+        "workerFinalSourceType": "",
+        "redirectStart": 0,
+        "redirectEnd": 0,
+        "fetchStart": 0.09999990463256836,
+        "domainLookupStart": 4.799999952316284,
+        "domainLookupEnd": 4.799999952316284,
+        "connectStart": 4.799999952316284,
+        "secureConnectionStart": 0,
+        "connectEnd": 5.099999904632568,
+        "requestStart": 5.200000047683716,
+        "responseStart": 34.700000047683716,
+        "firstInterimResponseStart": 0,
+        "finalResponseHeadersStart": 34.700000047683716,
+        "responseEnd": 35.09999990463257,
+        "transferSize": 2576,
+        "encodedBodySize": 2276,
+        "decodedBodySize": 2276,
+        "responseStatus": 200,
+        "serverTiming": [],
+        "unloadEventStart": 0,
+        "unloadEventEnd": 0,
+        "domInteractive": 47.299999952316284,
+        "domContentLoadedEventStart": 534.8999998569489,
+        "domContentLoadedEventEnd": 534.8999998569489,
+        "domComplete": 534.8999998569489,
+        "loadEventStart": 534.8999998569489,
+        "loadEventEnd": 535,
+        "type": "navigate",
+        "redirectCount": 0,
+        "activationStart": 0,
+        "criticalCHRestart": 0,
+        "notRestoredReasons": null,
+        "confidence": {}
+      }
+    },
+    "views": [
+      "station-street",
+      "station-port",
+      "island-aerial",
+      "shop-interior",
+      "service-corner",
+      "laundry-details"
+    ],
+    "streetscape": {
+      "addedColliders": 15,
+      "instances": [
+        {
+          "id": "w3-planter-south",
+          "kind": "planter",
+          "lot": "W3",
+          "lotPosition": [
+            -3.2,
+            0.23929750424151042,
+            0.17
+          ],
+          "size": [
+            1.4,
+            0.26,
+            0.28
+          ],
+          "footprint": {
+            "id": "w3-planter-south",
+            "type": "walk",
+            "x": -4.63,
+            "z": 30.2,
+            "width": 1.4,
+            "depth": 0.28,
+            "rotationY": 1.5707963267948966,
+            "y0": 0.8552975042415104,
+            "y1": 1.1152975042415103
+          }
+        },
+        {
+          "id": "w3-planter-north",
+          "kind": "planter",
+          "lot": "W3",
+          "lotPosition": [
+            0.6,
+            0.1328156862745098,
+            0.17
+          ],
+          "size": [
+            1.2,
+            0.26,
+            0.28
+          ],
+          "footprint": {
+            "id": "w3-planter-north",
+            "type": "walk",
+            "x": -4.63,
+            "z": 26.4,
+            "width": 1.2,
+            "depth": 0.28,
+            "rotationY": 1.5707963267948966,
+            "y0": 0.7488156862745098,
+            "y1": 1.00881568627451
+          }
+        },
+        {
+          "id": "w2-side-air-conditioner",
+          "kind": "acUnit",
+          "lot": "W2",
+          "lotPosition": [
+            -3.365,
+            3.24,
+            -4.35
+          ],
+          "size": [
+            0.8,
+            0.66,
+            0.316
+          ],
+          "footprint": {
+            "id": "w2-side-air-conditioner",
+            "type": "box",
+            "x": -9.149999999999999,
+            "z": 22.378,
+            "width": 0.8,
+            "depth": 0.316,
+            "rotationY": 0,
+            "y0": 3.632,
+            "y1": 4.292
+          }
+        },
+        {
+          "id": "service-sorting-bin-0",
+          "kind": "labelledBin",
+          "size": [
+            0.46,
+            0.68,
+            0.46
+          ],
+          "footprint": {
+            "id": "service-sorting-bin-0",
+            "type": "box",
+            "x": 26.15,
+            "z": -29.18,
+            "width": 0.46,
+            "depth": 0.46,
+            "rotationY": 0,
+            "y0": 0.012,
+            "y1": 0.6920000000000001
+          }
+        },
+        {
+          "id": "service-sorting-bin-1",
+          "kind": "labelledBin",
+          "size": [
+            0.46,
+            0.68,
+            0.46
+          ],
+          "footprint": {
+            "id": "service-sorting-bin-1",
+            "type": "box",
+            "x": 26.65,
+            "z": -29.18,
+            "width": 0.46,
+            "depth": 0.46,
+            "rotationY": 0,
+            "y0": 0.012,
+            "y1": 0.6920000000000001
+          }
+        },
+        {
+          "id": "service-dustpan",
+          "kind": "dustpan",
+          "footprint": {
+            "id": "service-dustpan-base",
+            "type": "walk",
+            "x": 25.72,
+            "z": -29.22,
+            "width": 0.26,
+            "depth": 0.22,
+            "rotationY": 0,
+            "y0": 0.012,
+            "y1": 0.052000000000000005
+          }
+        },
+        {
+          "id": "shed-east-vent",
+          "kind": "wallVent",
+          "footprint": {
+            "type": "decorative",
+            "x": 25.406,
+            "z": -29.65,
+            "width": 0.012,
+            "depth": 0.32,
+            "rotationY": 0,
+            "y0": 1.59,
+            "y1": 1.71
+          }
+        },
+        {
+          "id": "shed-east-staff-sticker",
+          "kind": "staffSticker",
+          "footprint": {
+            "type": "decorative",
+            "x": 25.402,
+            "z": -29.72,
+            "width": 0,
+            "depth": 0.22,
+            "rotationY": 0,
+            "y0": 1.208095238095238,
+            "y1": 1.291904761904762
+          }
+        },
+        {
+          "id": "toilet-east-short-covered-drain",
+          "kind": "coveredDrain",
+          "footprint": {
+            "type": "decorative",
+            "x": 21.98,
+            "z": -28.35,
+            "width": 0.22,
+            "depth": 0.6,
+            "rotationY": 0,
+            "y0": 0.017,
+            "y1": 0.017
+          }
+        },
+        {
+          "id": "e2-front-side-meter",
+          "kind": "elecMeter",
+          "lot": "E2",
+          "lotPosition": [
+            3.5,
+            1.05,
+            -1.8
+          ],
+          "footprint": {
+            "id": "e2-front-side-meter",
+            "type": "box",
+            "x": 6.6,
+            "z": 21.8125,
+            "width": 0.24,
+            "depth": 0.125,
+            "rotationY": 0,
+            "y0": 1.241,
+            "y1": 1.601
+          }
+        }
+      ]
+    },
+    "wetRoad": {
+      "maskSize": 512,
+      "maskChannels": 2,
+      "maskBaseBytes": 524288,
+      "bounds": {
+        "x0": -4,
+        "z0": 4,
+        "x1": 4,
+        "z1": 34
+      },
+      "patchGroups": 5,
+      "dryDecalTriangles": {
+        "alphaShaped": 409,
+        "solid": 0
+      },
+      "dryDilationM": 0.12,
+      "wetAreaM2": 49.40826416015625,
+      "puddleAreaM2": 19.7442626953125,
+      "wetEquivalentAreaM2": 30.34641400505398,
+      "puddleEquivalentAreaM2": 9.229115205652558,
+      "materials": 1,
+      "extraPasses": 0,
+      "extraRenderTargets": 0,
+      "reflection": "analytic sky only"
+    },
+    "wetProgram": {
+      "renderMeshReferences": 1,
+      "compiled": true,
+      "enabled": true,
+      "uWetEnabled": 1,
+      "uWetBounds": [
+        -4,
+        4,
+        8,
+        30
+      ],
+      "uWetWorldToLocal": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        -280,
+        -8,
+        -900,
+        1
+      ]
+    },
+    "skyline": {
+      "groups": 2,
+      "drawCalls": 20,
+      "triangles": 19491,
+      "castShadowDraws": 0,
+      "materials": 18,
+      "geometries": 20,
+      "laundryItems": 26,
+      "rejected": [],
+      "textureCacheEntriesAdded": 0,
+      "texturePixelsAdded": 0,
+      "maxAllowedTerrainRelief": 1.2,
+      "suppressedPhysicsCalls": 44,
+      "ownership": "Own GB output, laundry geometry and cloned/new materials. Borrow station maps/atlases/gradientMap; upstream raw/prototype caches stay module-owned. Dispose skyline before station.",
+      "limitation": "Original apartment proportions; <=1m site sampling, <=0.1m stair support checks. No physics/terrain edit; caller applies the returned local vegetation rectangles. GPU cost/composition require rendering.",
+      "placements": [
+        {
+          "name": "apartment-corridor",
+          "local": [
+            -18,
+            0,
+            -104
+          ],
+          "world": [
+            262,
+            9.52799333466425,
+            796
+          ],
+          "rotation": 0,
+          "scale": 1,
+          "footprint": {
+            "width": 18.4,
+            "depth": 12.2,
+            "lot": {
+              "width": 17,
+              "depth": 10.8
+            },
+            "localBounds": {
+              "minX": -27.2,
+              "maxX": -8.8,
+              "minZ": -110.1,
+              "maxZ": -97.9
+            },
+            "worldCorners": [
+              [
+                252.8,
+                789.9
+              ],
+              [
+                271.2,
+                789.9
+              ],
+              [
+                271.2,
+                802.1
+              ],
+              [
+                252.8,
+                802.1
+              ]
+            ]
+          },
+          "heights": {
+            "min": 9.37285187941331,
+            "max": 10.104561357832804,
+            "relief": 0.7317094784194929,
+            "samples": 280,
+            "maximumSampleSpacing": 0.9684210526315788,
+            "foundationTop": 10.217902088165241,
+            "foundationBottom": 9.259446216159395,
+            "foundationHeight": 0.958455872005846
+          },
+          "staticTriangles": 9100
+        },
+        {
+          "name": "apartment-balconies",
+          "local": [
+            -38,
+            0,
+            -109
+          ],
+          "world": [
+            242,
+            9.834353499942338,
+            791
+          ],
+          "rotation": 0,
+          "scale": 1,
+          "footprint": {
+            "width": 18.4,
+            "depth": 12.2,
+            "lot": {
+              "width": 17,
+              "depth": 10.8
+            },
+            "localBounds": {
+              "minX": -47.2,
+              "maxX": -28.8,
+              "minZ": -115.1,
+              "maxZ": -102.9
+            },
+            "worldCorners": [
+              [
+                232.8,
+                784.9
+              ],
+              [
+                251.2,
+                784.9
+              ],
+              [
+                251.2,
+                797.1
+              ],
+              [
+                232.8,
+                797.1
+              ]
+            ]
+          },
+          "heights": {
+            "min": 9.434615844760021,
+            "max": 10.611223271687773,
+            "relief": 1.1766074269277524,
+            "samples": 280,
+            "maximumSampleSpacing": 0.9684210526315788,
+            "foundationTop": 10.716087086995417,
+            "foundationBottom": 9.45270418485003,
+            "foundationHeight": 1.2633829021453877
+          },
+          "staticTriangles": 9171
+        }
+      ],
+      "approaches": [
+        {
+          "name": "apartment-corridor",
+          "bounds": {
+            "minX": -25.68,
+            "maxX": -23.479999999999997,
+            "minZ": -98.6,
+            "maxZ": -94.53
+          },
+          "stairs": {
+            "width": 2.2,
+            "steps": 11,
+            "rise": 0.16327497643632746,
+            "tread": 0.2818181818181813,
+            "upperY": 3.23,
+            "lowerY": 1.433975259200398,
+            "drop": 1.796024740799602,
+            "maxSupportHeight": 0.8208010972214173,
+            "supports": [
+              {
+                "southZ": -94.53,
+                "northZ": -95.25,
+                "top": 3.23,
+                "bottom": 2.897777777777778,
+                "groundMin": 2.977777777777778,
+                "groundMax": 3.199601777777778
+              },
+              {
+                "southZ": -95.25,
+                "northZ": -95.53181818181818,
+                "top": 3.0667250235636727,
+                "bottom": 2.7191535681269388,
+                "groundMin": 2.799153568126939,
+                "groundMax": 2.977777777777778
+              },
+              {
+                "southZ": -95.53181818181818,
+                "northZ": -95.81363636363636,
+                "top": 2.903450047127345,
+                "bottom": 2.5023072104578086,
+                "groundMin": 2.5823072104578086,
+                "groundMax": 2.799153568126939
+              },
+              {
+                "southZ": -95.81363636363636,
+                "northZ": -96.09545454545454,
+                "top": 2.7401750706910177,
+                "bottom": 2.256081141998499,
+                "groundMin": 2.3360811419984993,
+                "groundMax": 2.5823072104578086
+              },
+              {
+                "southZ": -96.09545454545454,
+                "northZ": -96.37727272727273,
+                "top": 2.57690009425469,
+                "bottom": 1.9893177999771225,
+                "groundMin": 2.0693177999771226,
+                "groundMax": 2.3360811419984993
+              },
+              {
+                "southZ": -96.37727272727273,
+                "northZ": -96.6590909090909,
+                "top": 2.4136251178183628,
+                "bottom": 1.7108596216217915,
+                "groundMin": 1.7908596216217916,
+                "groundMax": 2.0693177999771226
+              },
+              {
+                "southZ": -96.6590909090909,
+                "northZ": -96.94090909090909,
+                "top": 2.250350141382035,
+                "bottom": 1.4295490441606178,
+                "groundMin": 1.5095490441606179,
+                "groundMax": 1.7908596216217916
+              },
+              {
+                "southZ": -96.94090909090909,
+                "northZ": -97.22272727272727,
+                "top": 2.0870751649457078,
+                "bottom": 1.3623869523134982,
+                "groundMin": 1.4423869523134982,
+                "groundMax": 1.5095490441606179
+              },
+              {
+                "southZ": -97.22272727272727,
+                "northZ": -97.50454545454545,
+                "top": 1.9238001885093803,
+                "bottom": 1.3514523393457392,
+                "groundMin": 1.4314523393457392,
+                "groundMax": 1.4424256108023883
+              },
+              {
+                "southZ": -97.50454545454545,
+                "northZ": -97.78636363636363,
+                "top": 1.7605252120730528,
+                "bottom": 1.3405177263780228,
+                "groundMin": 1.4205177263780229,
+                "groundMax": 1.431539912657314
+              },
+              {
+                "southZ": -97.78636363636363,
+                "northZ": -98.06818181818181,
+                "top": 1.5972502356367253,
+                "bottom": 1.329604367647745,
+                "groundMin": 1.409604367647745,
+                "groundMax": 1.4206742040201874
+              },
+              {
+                "southZ": -98.06818181818181,
+                "northZ": -98.35,
+                "top": 1.4339752592003978,
+                "bottom": 1.3186998102003695,
+                "groundMin": 1.3986998102003696,
+                "groundMax": 1.4098247316102999
+              }
+            ]
+          },
+          "path": {
+            "length": 0.25,
+            "widthAtDoor": 1.4
+          },
+          "walkable": false
+        },
+        {
+          "name": "apartment-balconies",
+          "bounds": {
+            "minX": -45.68,
+            "maxX": -43.48,
+            "minZ": -103.6,
+            "maxZ": -94.53
+          },
+          "stairs": {
+            "width": 2.2,
+            "steps": 11,
+            "rise": 0.16319726265586867,
+            "tread": 0.2818181818181813,
+            "upperY": 3.23,
+            "lowerY": 1.4348301107854444,
+            "drop": 1.7951698892145556,
+            "maxSupportHeight": 0.8212673799041703,
+            "supports": [
+              {
+                "southZ": -94.53,
+                "northZ": -95.25,
+                "top": 3.23,
+                "bottom": 2.897777777777778,
+                "groundMin": 2.977777777777778,
+                "groundMax": 3.199601777777778
+              },
+              {
+                "southZ": -95.25,
+                "northZ": -95.53181818181818,
+                "top": 3.066802737344131,
+                "bottom": 2.7191535681269388,
+                "groundMin": 2.799153568126939,
+                "groundMax": 2.977777777777778
+              },
+              {
+                "southZ": -95.53181818181818,
+                "northZ": -95.81363636363636,
+                "top": 2.9036054746882627,
+                "bottom": 2.5023072104578086,
+                "groundMin": 2.5823072104578086,
+                "groundMax": 2.799153568126939
+              },
+              {
+                "southZ": -95.81363636363636,
+                "northZ": -96.09545454545454,
+                "top": 2.740408212032394,
+                "bottom": 2.256081141998499,
+                "groundMin": 2.3360811419984993,
+                "groundMax": 2.5823072104578086
+              },
+              {
+                "southZ": -96.09545454545454,
+                "northZ": -96.37727272727273,
+                "top": 2.5772109493765254,
+                "bottom": 1.9893177999771225,
+                "groundMin": 2.0693177999771226,
+                "groundMax": 2.3360811419984993
+              },
+              {
+                "southZ": -96.37727272727273,
+                "northZ": -96.6590909090909,
+                "top": 2.4140136867206565,
+                "bottom": 1.7108596216217915,
+                "groundMin": 1.7908596216217916,
+                "groundMax": 2.0693177999771226
+              },
+              {
+                "southZ": -96.6590909090909,
+                "northZ": -96.94090909090909,
+                "top": 2.250816424064788,
+                "bottom": 1.4295490441606178,
+                "groundMin": 1.5095490441606179,
+                "groundMax": 1.7908596216217916
+              },
+              {
+                "southZ": -96.94090909090909,
+                "northZ": -97.22272727272727,
+                "top": 2.0876191614089192,
+                "bottom": 1.362567181587222,
+                "groundMin": 1.442567181587222,
+                "groundMax": 1.5095490441606179
+              },
+              {
+                "southZ": -97.22272727272727,
+                "northZ": -97.50454545454545,
+                "top": 1.9244218987530506,
+                "bottom": 1.351857850898666,
+                "groundMin": 1.4318578508986661,
+                "groundMax": 1.4425911838358019
+              },
+              {
+                "southZ": -97.50454545454545,
+                "northZ": -97.78636363636363,
+                "top": 1.761224636097182,
+                "bottom": 1.3410951861395954,
+                "groundMin": 1.4210951861395955,
+                "groundMax": 1.431914986263621
+              },
+              {
+                "southZ": -97.78636363636363,
+                "northZ": -98.06818181818181,
+                "top": 1.5980273734413133,
+                "bottom": 1.3303364402597548,
+                "groundMin": 1.410336440259755,
+                "groundMax": 1.4212298537075583
+              },
+              {
+                "southZ": -98.06818181818181,
+                "northZ": -98.35,
+                "top": 1.4348301107854446,
+                "bottom": 1.3196005773544197,
+                "groundMin": 1.3996005773544198,
+                "groundMax": 1.4105299822465156
+              }
+            ]
+          },
+          "path": {
+            "length": 5.25,
+            "widthAtDoor": 1.4
+          },
+          "walkable": false
+        }
+      ],
+      "vegetationClear": {
+        "areas": [
+          {
+            "name": "apartment-corridor-yard",
+            "minX": -27.45,
+            "maxX": -8.55,
+            "minZ": -110.35,
+            "maxZ": -97.65,
+            "edge": 0.25
+          },
+          {
+            "name": "apartment-balconies-yard",
+            "minX": -47.45,
+            "maxX": -28.55,
+            "minZ": -115.35,
+            "maxZ": -102.65,
+            "edge": 0.25
+          },
+          {
+            "name": "apartment-corridor-approach",
+            "minX": -25.93,
+            "maxX": -23.229999999999997,
+            "minZ": -98.85,
+            "maxZ": -94.28,
+            "edge": 0.25
+          },
+          {
+            "name": "apartment-balconies-approach",
+            "minX": -45.93,
+            "maxX": -43.23,
+            "minZ": -103.85,
+            "maxZ": -94.28,
+            "edge": 0.25
+          }
+        ],
+        "changedTexels": 78,
+        "texelSizeM": 3,
+        "feather": null,
+        "channels": "R flowers / A grass; G species and B wetness retained"
+      }
+    },
+    "city": {
+      "buildings": 5,
+      "apartments": 3,
+      "lowHouses": 2,
+      "modelTriangles": 29933,
+      "modelPrimitives": 138,
+      "connections": {
+        "roads": [
+          {
+            "name": "town-front-lane",
+            "minX": -56,
+            "maxX": 37,
+            "minZ": -118.5,
+            "maxZ": -115.8,
+            "triangles": 558,
+            "groundOffset": 0.06
+          },
+          {
+            "name": "town-levee-lane",
+            "minX": 32,
+            "maxX": 37,
+            "minZ": -115.8,
+            "maxZ": -101,
+            "triangles": 150,
+            "groundOffset": 0.06
+          }
+        ],
+        "stairs": [
+          {
+            "name": "town-apartment-3f-entry",
+            "x": -17,
+            "width": 2.2,
+            "highZ": -123.5,
+            "lowZ": -118.51,
+            "steps": 12,
+            "rise": 0.16522699094701745,
+            "tread": 0.4158333333333329,
+            "top": 5.458040148417157,
+            "bottom": 3.4753162570529477,
+            "minClearance": 0.1520745146716722
+          },
+          {
+            "name": "town-apartment-4f-entry",
+            "x": 2,
+            "width": 2.2,
+            "highZ": -122,
+            "lowZ": -118.51,
+            "steps": 9,
+            "rise": 0.16519691556765836,
+            "tread": 0.3877777777777772,
+            "top": 4.904808464050293,
+            "bottom": 3.418036223941368,
+            "minClearance": 0.16489170203975156
+          },
+          {
+            "name": "town-apartment-5f-entry",
+            "x": 22,
+            "width": 2.2,
+            "highZ": -121,
+            "lowZ": -118.51,
+            "steps": 8,
+            "rise": 0.16888438367843667,
+            "tread": 0.31124999999999936,
+            "top": 4.783957901000977,
+            "bottom": 3.4328828315734836,
+            "minClearance": 0.19491120815277263
+          },
+          {
+            "name": "town-house-0-entry",
+            "x": -37,
+            "width": 2.2,
+            "highZ": -121.50032998154778,
+            "lowZ": -118.51,
+            "steps": 8,
+            "rise": 0.16701789847613763,
+            "tread": 0.3737912476934717,
+            "top": 4.265555652798646,
+            "bottom": 2.929412464989545,
+            "minClearance": 0.1903727568173812
+          },
+          {
+            "name": "town-house-1-entry",
+            "x": -50,
+            "width": 2.2,
+            "highZ": -122.16807376975453,
+            "lowZ": -118.51,
+            "steps": 9,
+            "rise": 0.1703773724573469,
+            "tread": 0.4064526410838359,
+            "top": 4.317841223382807,
+            "bottom": 2.7844448712666847,
+            "minClearance": 0.1884255007462241
+          },
+          {
+            "name": "town-levee-stairs",
+            "x": 34.5,
+            "width": 5,
+            "highZ": -94.53,
+            "lowZ": -101,
+            "steps": 10,
+            "rise": 0.17436214139726358,
+            "tread": 0.6469999999999999,
+            "top": 3.23,
+            "bottom": 1.4863785860273642,
+            "minClearance": 0.030398222222221882
+          }
+        ],
+        "walkable": false
+      },
+      "trees": [
+        {
+          "x": -57.5,
+          "y": 3.5195525222354185,
+          "z": -122.5,
+          "triangles": 364
+        },
+        {
+          "x": 30.5,
+          "y": 4.387975295384702,
+          "z": -127,
+          "triangles": 364
+        }
+      ],
+      "poles": [
+        {
+          "x": -28,
+          "z": -116.2,
+          "height": 7.4
+        },
+        {
+          "x": 30.4,
+          "z": -116.2,
+          "height": 7.4
+        }
+      ],
+      "laundrySignAtlas": {
+        "page": 4,
+        "before": {
+          "pages": 5,
+          "x": 624,
+          "y": 0,
+          "rowH": 368
+        },
+        "after": {
+          "pages": 5,
+          "x": 984,
+          "y": 368,
+          "rowH": 200
+        },
+        "regions": [
+          {
+            "key": "name",
+            "w": 512,
+            "h": 96,
+            "uv": [
+              0.00390625,
+              0.54296875,
+              0.50390625,
+              0.63671875
+            ]
+          },
+          {
+            "key": "function",
+            "w": 256,
+            "h": 96,
+            "uv": [
+              0.51171875,
+              0.54296875,
+              0.76171875,
+              0.63671875
+            ]
+          },
+          {
+            "key": "aframe",
+            "w": 192,
+            "h": 192,
+            "uv": [
+              0.76953125,
+              0.44921875,
+              0.95703125,
+              0.63671875
+            ]
+          }
+        ],
+        "reusedRegions": false,
+        "newTextures": 0,
+        "text": [
+          "さくら コインランドリー",
+          "洗濯・乾燥",
+          "セルフサービス"
+        ],
+        "owner": "station",
+        "pixelsUpdated": true
+      },
+      "planting": [
+        {
+          "name": "town-apartment-3f",
+          "hedgeZ": -122.8,
+          "triangles": 1538
+        },
+        {
+          "name": "town-apartment-4f",
+          "hedgeZ": -121.3,
+          "triangles": 1634
+        },
+        {
+          "name": "town-apartment-5f",
+          "hedgeZ": -120.3,
+          "triangles": 1636
+        },
+        {
+          "name": "town-house-0",
+          "hedgeZ": -120.95032998154778,
+          "triangles": 1274
+        },
+        {
+          "name": "town-house-1",
+          "hedgeZ": -121.61807376975453,
+          "triangles": 1132
+        }
+      ],
+      "densityProps": {
+        "gbTriangles": 252,
+        "umbrellaTriangles": 192,
+        "laundry": {
+          "umbrellaStand": [
+            3.65,
+            4.784808464050293,
+            -123
+          ],
+          "sortingBins": [
+            -0.4,
+            4.784808464050293,
+            -122.93
+          ],
+          "binCount": 2
+        },
+        "rear": {
+          "origin": [
+            2,
+            4.904808464050293,
+            -131
+          ],
+          "rotationY": 3.141592653589793,
+          "broom": [
+            -5.2,
+            0,
+            0.14
+          ],
+          "dustpan": [
+            -4.85,
+            0,
+            0.26
+          ],
+          "bucket": [
+            -5.15,
+            0,
+            0.74
+          ],
+          "meter": [
+            -3.15,
+            1.3
+          ],
+          "parcels": [
+            {
+              "center": [
+                -5.15,
+                2.85,
+                0.37
+              ],
+              "size": [
+                0.46,
+                0.27,
+                0.36
+              ]
+            },
+            {
+              "center": [
+                -5.12,
+                3.12,
+                0.37
+              ],
+              "size": [
+                0.34,
+                0.18,
+                0.3
+              ]
+            }
+          ]
+        },
+        "source": "Pinned Sakuragaoka MIT builders and existing house atlas; no new textures",
+        "walkable": false,
+        "totalTriangles": 444
+      },
+      "texturedProps": {
+        "crate": {
+          "position": [
+            5.55,
+            4.784824423193932,
+            -122.58
+          ],
+          "triangles": 5840
+        },
+        "sign": {
+          "position": [
+            4.55,
+            4.784808464050293,
+            -122.35
+          ],
+          "rotationY": 0.35,
+          "size": [
+            0.45,
+            0.68
+          ],
+          "blank": false,
+          "text": "さくら コインランドリー / 洗濯・乾燥 / セルフサービス"
+        },
+        "pot": {
+          "position": [
+            6.25,
+            4.784808464050293,
+            -122.7
+          ],
+          "triangles": 141
+        },
+        "view": {
+          "position": [
+            8,
+            6.384808464050293,
+            -122.1
+          ],
+          "target": [
+            5.15,
+            5.144808464050294,
+            -122.7
+          ]
+        },
+        "walkable": false,
+        "borrowedAssetTextures": 4
+      },
+      "facadeLife": {
+        "buildings": [
+          {
+            "name": "town-apartment-3f",
+            "origin": [
+              -17,
+              5.3180401484171576,
+              -123.5
+            ],
+            "items": [],
+            "gbTriangles": 0,
+            "clothTriangles": 0,
+            "totalTriangles": 0
+          },
+          {
+            "name": "town-apartment-4f",
+            "origin": [
+              2,
+              4.764808464050294,
+              -122
+            ],
+            "items": [
+              {
+                "kind": "ac",
+                "position": [
+                  -6.15,
+                  3.75,
+                  -3.475
+                ],
+                "triangles": 36,
+                "face": "west",
+                "floor": 2
+              },
+              {
+                "kind": "ac",
+                "position": [
+                  -6.15,
+                  6.6000000000000005,
+                  -3.475
+                ],
+                "triangles": 36,
+                "face": "west",
+                "floor": 3
+              },
+              {
+                "kind": "ac",
+                "position": [
+                  -2.9,
+                  4.25,
+                  -9.15
+                ],
+                "triangles": 36,
+                "face": "rear",
+                "floor": 2
+              },
+              {
+                "kind": "ac",
+                "position": [
+                  -2.9,
+                  7.1,
+                  -9.15
+                ],
+                "triangles": 36,
+                "face": "rear",
+                "floor": 3
+              },
+              {
+                "kind": "ac",
+                "position": [
+                  2.9,
+                  4.25,
+                  -9.15
+                ],
+                "triangles": 36,
+                "face": "rear",
+                "floor": 2
+              },
+              {
+                "kind": "rainpipe",
+                "position": [
+                  -6.045,
+                  0.16,
+                  -8.7
+                ],
+                "triangles": 60,
+                "top": 11.200000000000001,
+                "clips": 2
+              },
+              {
+                "kind": "gutter",
+                "position": [
+                  -6.23,
+                  11.48,
+                  -8.25
+                ],
+                "triangles": 12,
+                "length": 1.8
+              },
+              {
+                "kind": "rainpipe",
+                "position": [
+                  -6.045,
+                  0.16,
+                  -1.55
+                ],
+                "triangles": 60,
+                "top": 11.200000000000001,
+                "clips": 2
+              },
+              {
+                "kind": "gutter",
+                "position": [
+                  -6.23,
+                  11.48,
+                  -2
+                ],
+                "triangles": 12,
+                "length": 1.8
+              },
+              {
+                "kind": "balcony-top-rail",
+                "position": [
+                  0,
+                  4.29,
+                  -0.185
+                ],
+                "triangles": 36,
+                "floor": 2,
+                "length": 3.78
+              },
+              {
+                "kind": "balcony-top-rail",
+                "position": [
+                  0,
+                  7.140000000000001,
+                  -0.185
+                ],
+                "triangles": 36,
+                "floor": 3,
+                "length": 3.78
+              },
+              {
+                "kind": "laundry-pole",
+                "position": [
+                  0,
+                  5.07,
+                  -0.57
+                ],
+                "triangles": 36
+              },
+              {
+                "kind": "laundry",
+                "position": [
+                  0,
+                  5.0600000000000005,
+                  -0.57
+                ],
+                "triangles": 48,
+                "garments": 2
+              },
+              {
+                "kind": "electric-meter",
+                "position": [
+                  3,
+                  1.35,
+                  -9.07
+                ],
+                "triangles": 36
+              },
+              {
+                "kind": "nameplate",
+                "position": [
+                  4.72,
+                  1.65,
+                  -9.012
+                ],
+                "triangles": 12,
+                "atlas": "plateH0"
+              },
+              {
+                "kind": "nameplate",
+                "position": [
+                  -4.72,
+                  1.65,
+                  -9.012
+                ],
+                "triangles": 12,
+                "atlas": "plateH1"
+              }
+            ],
+            "gbTriangles": 492,
+            "clothTriangles": 48,
+            "totalTriangles": 540
+          },
+          {
+            "name": "town-apartment-5f",
+            "origin": [
+              22,
+              4.643957901000977,
+              -121
+            ],
+            "items": [
+              {
+                "kind": "ac",
+                "position": [
+                  -6.15,
+                  3.75,
+                  -2.725
+                ],
+                "triangles": 36,
+                "face": "west",
+                "floor": 2
+              },
+              {
+                "kind": "ac",
+                "position": [
+                  -6.15,
+                  6.6000000000000005,
+                  -2.725
+                ],
+                "triangles": 36,
+                "face": "west",
+                "floor": 3
+              },
+              {
+                "kind": "ac",
+                "position": [
+                  -6.15,
+                  9.450000000000001,
+                  -2.725
+                ],
+                "triangles": 36,
+                "face": "west",
+                "floor": 4
+              },
+              {
+                "kind": "ac",
+                "position": [
+                  -6.15,
+                  12.3,
+                  -2.725
+                ],
+                "triangles": 36,
+                "face": "west",
+                "floor": 5
+              },
+              {
+                "kind": "rainpipe",
+                "position": [
+                  -6.045,
+                  0.16,
+                  -1.55
+                ],
+                "triangles": 60,
+                "top": 14.05,
+                "clips": 2
+              },
+              {
+                "kind": "gutter",
+                "position": [
+                  -6.23,
+                  14.33,
+                  -2
+                ],
+                "triangles": 12,
+                "length": 1.8
+              },
+              {
+                "kind": "balcony-top-rail",
+                "position": [
+                  -4,
+                  4.29,
+                  -0.185
+                ],
+                "triangles": 36,
+                "floor": 2,
+                "length": 3.78
+              },
+              {
+                "kind": "laundry-pole",
+                "position": [
+                  0,
+                  5.07,
+                  -0.57
+                ],
+                "triangles": 36
+              },
+              {
+                "kind": "laundry",
+                "position": [
+                  0,
+                  5.0600000000000005,
+                  -0.57
+                ],
+                "triangles": 48,
+                "garments": 2
+              }
+            ],
+            "gbTriangles": 288,
+            "clothTriangles": 48,
+            "totalTriangles": 336
+          }
+        ],
+        "signTriangles": 20,
+        "signs": {
+          "horizontal": {
+            "position": [
+              2.45,
+              7.194808464050293,
+              -122.1745
+            ],
+            "size": [
+              4.56,
+              0.22
+            ]
+          },
+          "glass": [
+            {
+              "position": [
+                0.19999999999999996,
+                5.944808464050293,
+                -123.216
+              ],
+              "size": [
+                0.82,
+                0.3
+              ]
+            },
+            {
+              "position": [
+                3.8,
+                5.944808464050293,
+                -123.216
+              ],
+              "size": [
+                0.82,
+                0.3
+              ]
+            }
+          ],
+          "aFrame": {
+            "position": [
+              4.55,
+              4.784808464050293,
+              -122.35
+            ],
+            "rotationY": 0.35,
+            "size": [
+              0.45,
+              0.68
+            ],
+            "blank": false,
+            "text": "さくら コインランドリー / 洗濯・乾燥 / セルフサービス"
+          }
+        },
+        "totalTriangles": 896,
+        "walkable": false
+      },
+      "totalTriangles": 29933,
+      "materials": 31,
+      "geometries": 28,
+      "borrowedTextures": 14,
+      "uniqueTextures": 14,
+      "ownedTextures": 0,
+      "newTexturePixels": 0,
+      "ownedTextureRGBA8WithMipsEstimateBytes": 0,
+      "textureCacheEntriesAdded": 0,
+      "laundryItems": 12,
+      "suppressedPhysicsCalls": 0,
+      "ownership": "Own emitted geometry, far instances and material clones; borrow all station atlases, far facade textures and gradient maps. Dispose before station.",
+      "limitation": "Background only: no new physics or navigable interiors. Foundations and stairs are CPU checked; camera composition and visible CDLOD contacts need GPU acceptance.",
+      "placements": [
+        {
+          "name": "town-apartment-3f",
+          "type": "apartment",
+          "center": [
+            -17,
+            -123.5
+          ],
+          "frontage": [
+            -17,
+            -123.5
+          ],
+          "floors": 3,
+          "baseY": 5.3180401484171576,
+          "floorHeight": 2.85,
+          "height": 10.735000000000001,
+          "footprint": {
+            "minX": -24.7,
+            "maxX": -11.25,
+            "minZ": -134.95000000000002,
+            "maxZ": -123.35
+          },
+          "ground": {
+            "min": 11.911900393168086,
+            "max": 13.268040148417157,
+            "relief": 1.356139755249071,
+            "samples": 110,
+            "method": "All bilinear grid and footprint boundary intersections"
+          },
+          "foundation": {
+            "top": 13.318040148417158,
+            "bottom": 11.861900393168085,
+            "height": 1.4561397552490725
+          },
+          "model": {
+            "bounds": {
+              "minX": -7.55,
+              "maxX": 5.7,
+              "minZ": -11.3,
+              "maxZ": 0,
+              "minY": 0,
+              "maxY": 10.735000000000001
+            },
+            "groundSupportBounds": {
+              "minX": -7.55,
+              "maxX": 5.6,
+              "minZ": -11.3,
+              "maxZ": 0
+            },
+            "supportSamples": [
+              {
+                "x": -7.55,
+                "z": -11.3
+              },
+              {
+                "x": -7.55,
+                "z": -5.125
+              },
+              {
+                "x": -7.55,
+                "z": 0
+              },
+              {
+                "x": 0,
+                "z": -11.3
+              },
+              {
+                "x": 0,
+                "z": -5.125
+              },
+              {
+                "x": 0,
+                "z": 0
+              },
+              {
+                "x": 5.6,
+                "z": -11.3
+              },
+              {
+                "x": 5.6,
+                "z": -5.125
+              },
+              {
+                "x": 5.6,
+                "z": 0
+              }
+            ],
+            "floors": 3,
+            "floorHeight": 2.85,
+            "height": 10.735000000000001,
+            "entrances": [
+              {
+                "x": 0,
+                "y": 0.14,
+                "z": 0,
+                "width": 1.02
+              }
+            ],
+            "triangles": 2918,
+            "laundryTriangles": 48,
+            "garments": 2,
+            "facade": {
+              "items": [],
+              "gbTriangles": 0,
+              "clothTriangles": 0,
+              "totalTriangles": 0
+            },
+            "features": {
+              "balconies": 2,
+              "rearCorridor": true,
+              "stairFlights": 2,
+              "stairTreads": 32,
+              "roofTank": true,
+              "bicycleShelter": true,
+              "mailboxes": 3,
+              "shop": null,
+              "walkable": false
+            }
+          },
+          "scale": 1,
+          "staticTriangles": 2918,
+          "worldOrigin": [
+            263,
+            13.318040148417158,
+            776.5
+          ]
+        },
+        {
+          "name": "town-apartment-4f",
+          "type": "apartment",
+          "center": [
+            2,
+            -122
+          ],
+          "frontage": [
+            2,
+            -122
+          ],
+          "floors": 4,
+          "baseY": 4.764808464050294,
+          "floorHeight": 2.85,
+          "height": 13.585,
+          "footprint": {
+            "minX": -6.200000000000001,
+            "maxX": 8.25,
+            "minZ": -133.45000000000002,
+            "maxZ": -121.85
+          },
+          "ground": {
+            "min": 11.467428440517818,
+            "max": 12.714808464050293,
+            "relief": 1.2473800235324752,
+            "samples": 110,
+            "method": "All bilinear grid and footprint boundary intersections"
+          },
+          "foundation": {
+            "top": 12.764808464050294,
+            "bottom": 11.417428440517817,
+            "height": 1.3473800235324767
+          },
+          "model": {
+            "bounds": {
+              "minX": -8.05,
+              "maxX": 6.2,
+              "minZ": -11.3,
+              "maxZ": 0,
+              "minY": 0,
+              "maxY": 13.585
+            },
+            "groundSupportBounds": {
+              "minX": -8.05,
+              "maxX": 6.1,
+              "minZ": -11.3,
+              "maxZ": 0
+            },
+            "supportSamples": [
+              {
+                "x": -8.05,
+                "z": -11.3
+              },
+              {
+                "x": -8.05,
+                "z": -5.125
+              },
+              {
+                "x": -8.05,
+                "z": 0
+              },
+              {
+                "x": 0,
+                "z": -11.3
+              },
+              {
+                "x": 0,
+                "z": -5.125
+              },
+              {
+                "x": 0,
+                "z": 0
+              },
+              {
+                "x": 6.1,
+                "z": -11.3
+              },
+              {
+                "x": 6.1,
+                "z": -5.125
+              },
+              {
+                "x": 6.1,
+                "z": 0
+              }
+            ],
+            "floors": 4,
+            "floorHeight": 2.85,
+            "height": 13.585,
+            "entrances": [
+              {
+                "x": 0,
+                "y": 0.14,
+                "z": 0,
+                "width": 1.2
+              }
+            ],
+            "triangles": 5004,
+            "laundryTriangles": 96,
+            "garments": 4,
+            "facade": {
+              "items": [
+                {
+                  "kind": "ac",
+                  "position": [
+                    -6.15,
+                    3.75,
+                    -3.475
+                  ],
+                  "triangles": 36,
+                  "face": "west",
+                  "floor": 2
+                },
+                {
+                  "kind": "ac",
+                  "position": [
+                    -6.15,
+                    6.6000000000000005,
+                    -3.475
+                  ],
+                  "triangles": 36,
+                  "face": "west",
+                  "floor": 3
+                },
+                {
+                  "kind": "ac",
+                  "position": [
+                    -2.9,
+                    4.25,
+                    -9.15
+                  ],
+                  "triangles": 36,
+                  "face": "rear",
+                  "floor": 2
+                },
+                {
+                  "kind": "ac",
+                  "position": [
+                    -2.9,
+                    7.1,
+                    -9.15
+                  ],
+                  "triangles": 36,
+                  "face": "rear",
+                  "floor": 3
+                },
+                {
+                  "kind": "ac",
+                  "position": [
+                    2.9,
+                    4.25,
+                    -9.15
+                  ],
+                  "triangles": 36,
+                  "face": "rear",
+                  "floor": 2
+                },
+                {
+                  "kind": "rainpipe",
+                  "position": [
+                    -6.045,
+                    0.16,
+                    -8.7
+                  ],
+                  "triangles": 60,
+                  "top": 11.200000000000001,
+                  "clips": 2
+                },
+                {
+                  "kind": "gutter",
+                  "position": [
+                    -6.23,
+                    11.48,
+                    -8.25
+                  ],
+                  "triangles": 12,
+                  "length": 1.8
+                },
+                {
+                  "kind": "rainpipe",
+                  "position": [
+                    -6.045,
+                    0.16,
+                    -1.55
+                  ],
+                  "triangles": 60,
+                  "top": 11.200000000000001,
+                  "clips": 2
+                },
+                {
+                  "kind": "gutter",
+                  "position": [
+                    -6.23,
+                    11.48,
+                    -2
+                  ],
+                  "triangles": 12,
+                  "length": 1.8
+                },
+                {
+                  "kind": "balcony-top-rail",
+                  "position": [
+                    0,
+                    4.29,
+                    -0.185
+                  ],
+                  "triangles": 36,
+                  "floor": 2,
+                  "length": 3.78
+                },
+                {
+                  "kind": "balcony-top-rail",
+                  "position": [
+                    0,
+                    7.140000000000001,
+                    -0.185
+                  ],
+                  "triangles": 36,
+                  "floor": 3,
+                  "length": 3.78
+                },
+                {
+                  "kind": "laundry-pole",
+                  "position": [
+                    0,
+                    5.07,
+                    -0.57
+                  ],
+                  "triangles": 36
+                },
+                {
+                  "kind": "laundry",
+                  "position": [
+                    0,
+                    5.0600000000000005,
+                    -0.57
+                  ],
+                  "triangles": 48,
+                  "garments": 2
+                },
+                {
+                  "kind": "electric-meter",
+                  "position": [
+                    3,
+                    1.35,
+                    -9.07
+                  ],
+                  "triangles": 36
+                },
+                {
+                  "kind": "nameplate",
+                  "position": [
+                    4.72,
+                    1.65,
+                    -9.012
+                  ],
+                  "triangles": 12,
+                  "atlas": "plateH0"
+                },
+                {
+                  "kind": "nameplate",
+                  "position": [
+                    -4.72,
+                    1.65,
+                    -9.012
+                  ],
+                  "triangles": 12,
+                  "atlas": "plateH1"
+                }
+              ],
+              "gbTriangles": 492,
+              "clothTriangles": 48,
+              "totalTriangles": 540
+            },
+            "features": {
+              "balconies": 3,
+              "rearCorridor": true,
+              "stairFlights": 3,
+              "stairTreads": 48,
+              "roofTank": true,
+              "bicycleShelter": true,
+              "mailboxes": 3,
+              "shop": "laundromat",
+              "walkable": false
+            }
+          },
+          "scale": 1,
+          "staticTriangles": 5004,
+          "worldOrigin": [
+            282,
+            12.764808464050294,
+            778
+          ]
+        },
+        {
+          "name": "town-apartment-5f",
+          "type": "apartment",
+          "center": [
+            22,
+            -121
+          ],
+          "frontage": [
+            22,
+            -121
+          ],
+          "floors": 5,
+          "baseY": 4.643957901000977,
+          "floorHeight": 2.85,
+          "height": 16.435,
+          "footprint": {
+            "minX": 13.799999999999999,
+            "maxX": 28.25,
+            "minZ": -133.45000000000002,
+            "maxZ": -120.85
+          },
+          "ground": {
+            "min": 11.284379045698369,
+            "max": 12.593957901000977,
+            "relief": 1.3095788553026075,
+            "samples": 110,
+            "method": "All bilinear grid and footprint boundary intersections"
+          },
+          "foundation": {
+            "top": 12.643957901000977,
+            "bottom": 11.234379045698368,
+            "height": 1.409578855302609
+          },
+          "model": {
+            "bounds": {
+              "minX": -8.05,
+              "maxX": 6.2,
+              "minZ": -12.3,
+              "maxZ": 0,
+              "minY": 0,
+              "maxY": 16.435
+            },
+            "groundSupportBounds": {
+              "minX": -8.05,
+              "maxX": 6.1,
+              "minZ": -12.3,
+              "maxZ": 0
+            },
+            "supportSamples": [
+              {
+                "x": -8.05,
+                "z": -12.3
+              },
+              {
+                "x": -8.05,
+                "z": -5.625
+              },
+              {
+                "x": -8.05,
+                "z": 0
+              },
+              {
+                "x": 0,
+                "z": -12.3
+              },
+              {
+                "x": 0,
+                "z": -5.625
+              },
+              {
+                "x": 0,
+                "z": 0
+              },
+              {
+                "x": 6.1,
+                "z": -12.3
+              },
+              {
+                "x": 6.1,
+                "z": -5.625
+              },
+              {
+                "x": 6.1,
+                "z": 0
+              }
+            ],
+            "floors": 5,
+            "floorHeight": 2.85,
+            "height": 16.435,
+            "entrances": [
+              {
+                "x": 0,
+                "y": 0.14,
+                "z": 0,
+                "width": 1.02
+              }
+            ],
+            "triangles": 5104,
+            "laundryTriangles": 144,
+            "garments": 6,
+            "facade": {
+              "items": [
+                {
+                  "kind": "ac",
+                  "position": [
+                    -6.15,
+                    3.75,
+                    -2.725
+                  ],
+                  "triangles": 36,
+                  "face": "west",
+                  "floor": 2
+                },
+                {
+                  "kind": "ac",
+                  "position": [
+                    -6.15,
+                    6.6000000000000005,
+                    -2.725
+                  ],
+                  "triangles": 36,
+                  "face": "west",
+                  "floor": 3
+                },
+                {
+                  "kind": "ac",
+                  "position": [
+                    -6.15,
+                    9.450000000000001,
+                    -2.725
+                  ],
+                  "triangles": 36,
+                  "face": "west",
+                  "floor": 4
+                },
+                {
+                  "kind": "ac",
+                  "position": [
+                    -6.15,
+                    12.3,
+                    -2.725
+                  ],
+                  "triangles": 36,
+                  "face": "west",
+                  "floor": 5
+                },
+                {
+                  "kind": "rainpipe",
+                  "position": [
+                    -6.045,
+                    0.16,
+                    -1.55
+                  ],
+                  "triangles": 60,
+                  "top": 14.05,
+                  "clips": 2
+                },
+                {
+                  "kind": "gutter",
+                  "position": [
+                    -6.23,
+                    14.33,
+                    -2
+                  ],
+                  "triangles": 12,
+                  "length": 1.8
+                },
+                {
+                  "kind": "balcony-top-rail",
+                  "position": [
+                    -4,
+                    4.29,
+                    -0.185
+                  ],
+                  "triangles": 36,
+                  "floor": 2,
+                  "length": 3.78
+                },
+                {
+                  "kind": "laundry-pole",
+                  "position": [
+                    0,
+                    5.07,
+                    -0.57
+                  ],
+                  "triangles": 36
+                },
+                {
+                  "kind": "laundry",
+                  "position": [
+                    0,
+                    5.0600000000000005,
+                    -0.57
+                  ],
+                  "triangles": 48,
+                  "garments": 2
+                }
+              ],
+              "gbTriangles": 288,
+              "clothTriangles": 48,
+              "totalTriangles": 336
+            },
+            "features": {
+              "balconies": 4,
+              "rearCorridor": true,
+              "stairFlights": 4,
+              "stairTreads": 64,
+              "roofTank": true,
+              "bicycleShelter": true,
+              "mailboxes": 3,
+              "shop": null,
+              "walkable": false
+            }
+          },
+          "scale": 1,
+          "staticTriangles": 5104,
+          "worldOrigin": [
+            302,
+            12.643957901000977,
+            779
+          ]
+        },
+        {
+          "name": "town-house-0",
+          "type": "low-house",
+          "center": [
+            -37,
+            -126.5
+          ],
+          "floors": 2,
+          "footprint": {
+            "minX": -42.05023296657734,
+            "maxX": -31.94976703342266,
+            "minZ": -131.4996700184522,
+            "maxZ": -121.50032998154778
+          },
+          "ground": {
+            "min": 11.101207744342059,
+            "max": 12.215555652798646,
+            "relief": 1.1143479084565868,
+            "samples": 72,
+            "method": "All bilinear grid and footprint boundary intersections"
+          },
+          "foundation": {
+            "top": 12.265555652798646,
+            "bottom": 11.051207744342058,
+            "height": 1.2143479084565882
+          },
+          "sourceSize": [
+            9.80046593315468,
+            8.556545406579971,
+            9.699340036904427
+          ],
+          "scale": 1
+        },
+        {
+          "name": "town-house-1",
+          "type": "low-house",
+          "center": [
+            -50,
+            -127
+          ],
+          "floors": 2,
+          "footprint": {
+            "minX": -54.16661962163774,
+            "maxX": -45.83338037836226,
+            "minZ": -131.83192623024547,
+            "maxZ": -122.16807376975453
+          },
+          "ground": {
+            "min": 11.188034454869921,
+            "max": 12.267841223382806,
+            "relief": 1.079806768512885,
+            "samples": 63,
+            "method": "All bilinear grid and footprint boundary intersections"
+          },
+          "foundation": {
+            "top": 12.317841223382807,
+            "bottom": 11.13803445486992,
+            "height": 1.1798067685128864
+          },
+          "sourceSize": [
+            8.033239243275489,
+            8.24363163113594,
+            9.363852460490925
+          ],
+          "scale": 1
+        }
+      ],
+      "vegetationClear": {
+        "areas": [
+          {
+            "name": "town-apartment-3f",
+            "minX": -24.7,
+            "maxX": -11.25,
+            "minZ": -134.95000000000002,
+            "maxZ": -123.35
+          },
+          {
+            "name": "town-apartment-4f",
+            "minX": -6.200000000000001,
+            "maxX": 8.25,
+            "minZ": -133.45000000000002,
+            "maxZ": -121.85
+          },
+          {
+            "name": "town-apartment-5f",
+            "minX": 13.799999999999999,
+            "maxX": 28.25,
+            "minZ": -133.45000000000002,
+            "maxZ": -120.85
+          },
+          {
+            "name": "town-house-0",
+            "minX": -42.05023296657734,
+            "maxX": -31.94976703342266,
+            "minZ": -131.4996700184522,
+            "maxZ": -121.50032998154778
+          },
+          {
+            "name": "town-house-1",
+            "minX": -54.16661962163774,
+            "maxX": -45.83338037836226,
+            "minZ": -131.83192623024547,
+            "maxZ": -122.16807376975453
+          },
+          {
+            "name": "town-front-lane",
+            "minX": -56,
+            "maxX": 37,
+            "minZ": -118.5,
+            "maxZ": -115.8
+          },
+          {
+            "name": "town-levee-lane",
+            "minX": 32,
+            "maxX": 37,
+            "minZ": -115.8,
+            "maxZ": -101
+          },
+          {
+            "name": "town-apartment-3f-entry",
+            "minX": -18.1,
+            "maxX": -15.9,
+            "minZ": -123.5,
+            "maxZ": -118.51
+          },
+          {
+            "name": "town-apartment-4f-entry",
+            "minX": 0.8999999999999999,
+            "maxX": 3.1,
+            "minZ": -122,
+            "maxZ": -118.51
+          },
+          {
+            "name": "town-apartment-5f-entry",
+            "minX": 20.9,
+            "maxX": 23.1,
+            "minZ": -121,
+            "maxZ": -118.51
+          },
+          {
+            "name": "town-house-0-entry",
+            "minX": -38.1,
+            "maxX": -35.9,
+            "minZ": -121.50032998154778,
+            "maxZ": -118.51
+          },
+          {
+            "name": "town-house-1-entry",
+            "minX": -51.1,
+            "maxX": -48.9,
+            "minZ": -122.16807376975453,
+            "maxZ": -118.51
+          },
+          {
+            "name": "town-levee-stairs",
+            "minX": 32,
+            "maxX": 37,
+            "minZ": -101,
+            "maxZ": -94.53
+          },
+          {
+            "name": "town-tree--57.5",
+            "minX": -58.4,
+            "maxX": -56.6,
+            "minZ": -123.4,
+            "maxZ": -121.6
+          },
+          {
+            "name": "town-tree-30.5",
+            "minX": 29.6,
+            "maxX": 31.4,
+            "minZ": -127.9,
+            "maxZ": -126.1
+          },
+          {
+            "name": "town-apartment-3f-hedge--24.5",
+            "minX": -24.7,
+            "maxX": -18.3,
+            "minZ": -123.3,
+            "maxZ": -122.3
+          },
+          {
+            "name": "town-apartment-3f-hedge--15.5",
+            "minX": -15.7,
+            "maxX": -11.25,
+            "minZ": -123.3,
+            "maxZ": -122.3
+          },
+          {
+            "name": "town-apartment-3f-bush--24.4",
+            "minX": -25.7,
+            "maxX": -23.099999999999998,
+            "minZ": -136.85000000000002,
+            "maxZ": -134.25
+          },
+          {
+            "name": "town-apartment-3f-bush--11.55",
+            "minX": -12.850000000000001,
+            "maxX": -10.25,
+            "minZ": -136.85000000000002,
+            "maxZ": -134.25
+          },
+          {
+            "name": "town-apartment-4f-hedge--6.000000000000001",
+            "minX": -6.200000000000001,
+            "maxX": 0.7,
+            "minZ": -121.8,
+            "maxZ": -120.8
+          },
+          {
+            "name": "town-apartment-4f-hedge-3.5",
+            "minX": 3.3,
+            "maxX": 8.25,
+            "minZ": -121.8,
+            "maxZ": -120.8
+          },
+          {
+            "name": "town-apartment-4f-bush--5.900000000000001",
+            "minX": -7.200000000000001,
+            "maxX": -4.600000000000001,
+            "minZ": -135.35000000000002,
+            "maxZ": -132.75
+          },
+          {
+            "name": "town-apartment-4f-bush-7.95",
+            "minX": 6.65,
+            "maxX": 9.25,
+            "minZ": -135.35000000000002,
+            "maxZ": -132.75
+          },
+          {
+            "name": "town-apartment-5f-hedge-13.999999999999998",
+            "minX": 13.799999999999999,
+            "maxX": 20.7,
+            "minZ": -120.8,
+            "maxZ": -119.8
+          },
+          {
+            "name": "town-apartment-5f-hedge-23.5",
+            "minX": 23.3,
+            "maxX": 28.25,
+            "minZ": -120.8,
+            "maxZ": -119.8
+          },
+          {
+            "name": "town-apartment-5f-bush-14.1",
+            "minX": 12.799999999999999,
+            "maxX": 15.4,
+            "minZ": -135.35000000000002,
+            "maxZ": -132.75
+          },
+          {
+            "name": "town-apartment-5f-bush-27.95",
+            "minX": 26.65,
+            "maxX": 29.25,
+            "minZ": -135.35000000000002,
+            "maxZ": -132.75
+          },
+          {
+            "name": "town-house-0-hedge--41.85023296657734",
+            "minX": -42.05023296657734,
+            "maxX": -38.3,
+            "minZ": -121.45032998154778,
+            "maxZ": -120.45032998154778
+          },
+          {
+            "name": "town-house-0-hedge--35.5",
+            "minX": -35.7,
+            "maxX": -31.949767033422663,
+            "minZ": -121.45032998154778,
+            "maxZ": -120.45032998154778
+          },
+          {
+            "name": "town-house-0-bush--41.75023296657734",
+            "minX": -43.05023296657734,
+            "maxX": -40.450232966577346,
+            "minZ": -133.3996700184522,
+            "maxZ": -130.7996700184522
+          },
+          {
+            "name": "town-house-0-bush--32.24976703342266",
+            "minX": -33.549767033422654,
+            "maxX": -30.949767033422656,
+            "minZ": -133.3996700184522,
+            "maxZ": -130.7996700184522
+          },
+          {
+            "name": "town-house-1-hedge--53.96661962163774",
+            "minX": -54.16661962163774,
+            "maxX": -51.3,
+            "minZ": -122.11807376975453,
+            "maxZ": -121.11807376975453
+          },
+          {
+            "name": "town-house-1-hedge--48.5",
+            "minX": -48.7,
+            "maxX": -45.83338037836226,
+            "minZ": -122.11807376975453,
+            "maxZ": -121.11807376975453
+          },
+          {
+            "name": "town-house-1-bush--53.866619621637746",
+            "minX": -55.16661962163774,
+            "maxX": -52.56661962163775,
+            "minZ": -133.73192623024548,
+            "maxZ": -131.13192623024545
+          },
+          {
+            "name": "town-house-1-bush--46.133380378362254",
+            "minX": -47.43338037836225,
+            "maxX": -44.83338037836226,
+            "minZ": -133.73192623024548,
+            "maxZ": -131.13192623024545
+          }
+        ],
+        "changedTexels": 260,
+        "texelSizeM": 3,
+        "feather": {
+          "flowerFadeM": 8,
+          "jitterM": 2.5,
+          "texels": 193
+        },
+        "channels": "R flowers / A grass; G species and B wetness retained"
+      }
+    },
+    "texturedProps": {
+      "assets": [
+        "plastic_crate_02",
+        "worn_shutter"
+      ],
+      "source": "Poly Haven / CC0-1.0",
+      "crateTriangles": 5840,
+      "cratePrimitives": 1,
+      "ownedTextures": 7,
+      "alphaTest": 0.5,
+      "normalScale": [
+        1,
+        -1
+      ],
+      "shutterPanels": [
+        {
+          "center": [
+            23.65,
+            1.025,
+            -28.688
+          ],
+          "size": [
+            1.12,
+            1.65,
+            0.02
+          ]
+        },
+        {
+          "center": [
+            24.7,
+            1.025,
+            -28.67
+          ],
+          "size": [
+            1.12,
+            1.65,
+            0.02
+          ]
+        }
+      ],
+      "crate": {
+        "position": [
+          26.05,
+          0.012015959143638611,
+          -28.35
+        ],
+        "supportY": 0.012,
+        "bounds": {
+          "min": [
+            -0.2527506947517395,
+            -0.00001595914363861084,
+            -0.20275069773197174
+          ],
+          "max": [
+            0.2527506947517395,
+            0.25407320261001587,
+            0.20275069773197174
+          ],
+          "size": [
+            0.505501389503479,
+            0.2540891617536545,
+            0.4055013954639435
+          ]
+        }
+      },
+      "carton": {
+        "position": [
+          26.05,
+          0.2660891617536545,
+          -28.35
+        ],
+        "size": [
+          0.58,
+          0.28,
+          0.46
+        ]
+      },
+      "collision": {
+        "x": 26.05,
+        "z": -28.35,
+        "width": 0.58,
+        "depth": 0.46,
+        "y0": 0.012,
+        "y1": 0.5460891617536545
+      },
+      "view": {
+        "position": [
+          28.4,
+          1.612,
+          -27.1
+        ],
+        "target": [
+          25,
+          0.85,
+          -28.7
+        ]
+      },
+      "ownership": "Station owns source crate geometry, adapted materials and seven textures; city clones geometry/materials and borrows textures. Dispose city first."
+    }
+  },
+  "selectedImages": [
+    "01-station-street.jpg",
+    "02-station-port.jpg",
+    "03-island-aerial.jpg",
+    "04-shop-interior.jpg",
+    "18-town-shop-balconies.jpg",
+    "19-town-rear-stairs.jpg",
+    "23-service-corner.jpg",
+    "24-laundry-details.jpg",
+    "walking-first.jpg",
+    "walking-third.jpg"
+  ],
+  "frameSamples": [
+    "frame-samples-island-aerial.json",
+    "frame-samples-shop-interior.json",
+    "frame-samples-station-port.json",
+    "frame-samples-station-street.json",
+    "frame-samples-walking-first.json",
+    "frame-samples-walking-third.json",
+    "frame-samples.json"
+  ]
+}

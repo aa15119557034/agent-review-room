@@ -1,0 +1,212 @@
+diff --git "a/.local\\petalwake-25443cef0eba802052d9ef24c94ba3c4157b6f2e\\src\\world\\terrain.js" "b/upstream\\petalwake\\src\\world\\terrain.js"
+index 717b8f8..f68cecf 100644
+--- "a/.local\\petalwake-25443cef0eba802052d9ef24c94ba3c4157b6f2e\\src\\world\\terrain.js"
++++ "b/upstream\\petalwake\\src\\world\\terrain.js"
+@@ -163,6 +163,34 @@ export class Terrain {
+   }
+ 
+   // ------------------------------------------------------------------ CPU queries
++  /** Fixture integration: one heightfield drives the visible land and walking queries. */
++  flattenRect({ minX, maxX, minZ, maxZ, height, blend, surface }) {
++    const { cell, N, h } = this;
++    // Keep bilinear samples exactly flat up to the requested rectangle's edges.
++    minX -= cell; maxX += cell; minZ -= cell; maxZ += cell;
++    const x0 = Math.max(0, Math.floor((minX - blend + World.half) / cell));
++    const x1 = Math.min(N - 1, Math.ceil((maxX + blend + World.half) / cell));
++    const z0 = Math.max(0, Math.floor((minZ - blend + World.half) / cell));
++    const z1 = Math.min(N - 1, Math.ceil((maxZ + blend + World.half) / cell));
++    let changed = 0, originalMin = Infinity, originalMax = -Infinity;
++    for (let iz = z0; iz <= z1; iz++) for (let ix = x0; ix <= x1; ix++) {
++      const x = (ix + 0.5) * cell - World.half;
++      const z = (iz + 0.5) * cell - World.half;
++      const distance = Math.hypot(Math.max(minX - x, 0, x - maxX), Math.max(minZ - z, 0, z - maxZ));
++      if (distance >= blend) continue;
++      const index = iz * N + ix;
++      if (distance === 0) { originalMin = Math.min(originalMin, h[index]); originalMax = Math.max(originalMax, h[index]); }
++      const t = distance / blend;
++      const weight = 1 - t * t * (3 - 2 * t);
++      const target = surface ? surface(x, z) : height;
++      h[index] += (target - h[index]) * weight;
++      changed++;
++    }
++    this.heightTex.needsUpdate = true;
++    this._buildMinMax();
++    return { changed, originalMin, originalMax, height, blend, conformed: Boolean(surface) };
++  }
++
+   /** Bilinear terrain height at world xz. */
+   heightAt(x, z) {
+     const N = this.N;
+@@ -280,6 +308,7 @@ export class Terrain {
+         uMean: { value: mats.mean },
+         uGrassFade: { value: new THREE.Vector2(60, 150) },
+         uClipY: { value: 0 },
++        uStationCutout: { value: new THREE.Vector4() },
+       },
+       vertexShader: VERT,
+       fragmentShader: FRAG,
+@@ -405,6 +434,7 @@ uniform sampler2DArray uMatN;
+ uniform vec3 uMean[8];
+ uniform vec2 uGrassFade;
+ uniform float uClipY;      // 1 in the water-reflection pass: drop everything below sea level
++uniform vec4 uStationCutout; // fixture-owned ground: min xz, max xz; zero width disables it
+ uniform sampler2D uTintTex;
+ ${NOISE}
+ ${NOISE_TEX}
+@@ -471,6 +501,7 @@ ${TOWN_MASK}
+ 
+ void main(){
+   vec3 P = vWorld;
++  if (uStationCutout.z > uStationCutout.x && all(greaterThanEqual(P.xz, uStationCutout.xy)) && all(lessThanEqual(P.xz, uStationCutout.zw))) discard;
+   if (uClipY > 0.5 && P.y < -0.15) discard;
+   vec3 toCam = uCamPos - P;
+   float dist = length(toCam);
+diff --git "a/.local\\sakuragaoka-4112f57208b7e29998344ca71fef74202c2b2bdd\\src\\core\\physics.js" "b/upstream\\sakuragaoka\\src\\core\\physics.js"
+index 4426f25..f81baa3 100644
+--- "a/.local\\sakuragaoka-4112f57208b7e29998344ca71fef74202c2b2bdd\\src\\core\\physics.js"
++++ "b/upstream\\sakuragaoka\\src\\core\\physics.js"
+@@ -81,6 +81,79 @@ export class Physics {
+     return g;
+   }
+ 
++  /** Sweep the camera's bounding sphere through the existing collision world.
++   * Returns a segment fraction, including 0 if the start already overlaps.
++   * Expanded slabs are conservative at box/cylinder edges: they stop slightly
++   * early at corners, never let the near plane cross through them.
++   */
++  sweepSphere(from, to, radius) {
++    const dx = to.x - from.x, dy = to.y - from.y, dz = to.z - from.z;
++    let fraction = 1;
++    const candidates = this._query((from.x + to.x) / 2, (from.z + to.z) / 2,
++      Math.max(Math.abs(dx), Math.abs(dz)) / 2 + radius);
++    for (const it of candidates) {
++      let enter = 0, leave = fraction;
++      // Intersect the segment interval with a linear slab, including parallel
++      // segments and initial overlap. All coordinates remain district-local.
++      const slab = (start, delta, low, high) => {
++        if (Math.abs(delta) < 1e-12) return start >= low && start <= high;
++        let a = (low - start) / delta, b = (high - start) / delta;
++        if (a > b) [a, b] = [b, a];
++        enter = Math.max(enter, a); leave = Math.min(leave, b);
++        return enter <= leave;
++      };
++      if (it.type === 'cyl') {
++        if (!slab(from.y, dy, it.y0 - radius, it.y1 + radius)) continue;
++        const x = from.x - it.cx, z = from.z - it.cz, r = it.r + radius;
++        const a = dx * dx + dz * dz, b = 2 * (x * dx + z * dz), c = x * x + z * z - r * r;
++        if (a < 1e-12) { if (c > 0) continue; }
++        else {
++          const disc = b * b - 4 * a * c;
++          if (disc < 0) continue;
++          const root = Math.sqrt(disc);
++          enter = Math.max(enter, (-b - root) / (2 * a));
++          leave = Math.min(leave, (-b + root) / (2 * a));
++          if (enter > leave) continue;
++        }
++      } else {
++        const [x, z] = this._local(it, from.x, from.z);
++        const vx = dx * it.c - dz * it.s, vz = dx * it.s + dz * it.c;
++        if (!slab(x, vx, -it.hw - radius, it.hw + radius)
++          || !slab(z, vz, -it.hd - radius, it.hd + radius)) continue;
++        if (it.type === 'ramp') {
++          const slope = (it.yB - it.yA) / (2 * it.hd);
++          const mid = (it.yA + it.yB) / 2;
++          if (!slab(from.y, dy, it.y0 - radius, Infinity)
++            || !slab(from.y - slope * z, dy - slope * vz, -Infinity,
++              mid + radius * Math.hypot(1, slope))) continue;
++        } else {
++          const top = it.type === 'walk' ? it.top : it.y1;
++          if (!slab(from.y, dy, it.y0 - radius, top + radius)) continue;
++        }
++      }
++      fraction = Math.min(fraction, Math.max(0, enter));
++      if (fraction === 0) return 0;
++    }
++    // Analytic terrain has no triangles/colliders in the grid. Search only the
++    // short boom segment at 10cm spatial intervals, then refine first contact.
++    // This is per-query spatial subdivision, not skipped frames or a cache.
++    const length = Math.hypot(dx, dy, dz);
++    const steps = Math.max(1, Math.ceil(length * fraction / 0.1));
++    const clear = t => from.y + dy * t - radius > this.heightAt(from.x + dx * t, from.z + dz * t);
++    if (!clear(0)) return 0;
++    let previous = 0;
++    for (let index = 1; index <= steps; index++) {
++      const t = fraction * index / steps;
++      if (!clear(t)) {
++        let low = previous, high = t;
++        for (let n = 0; n < 12; n++) { const mid = (low + high) / 2; if (clear(mid)) low = mid; else high = mid; }
++        return low;
++      }
++      previous = t;
++    }
++    return fraction;
++  }
++
+   /** Push circle (x,z,r) out of solids overlapping the vertical span [feetY, feetY+height]. Mutates p. */
+   resolve(p, r, feetY, height) {
+     for (let iter = 0; iter < 3; iter++) {
+diff --git "a/.local\\sakuragaoka-4112f57208b7e29998344ca71fef74202c2b2bdd\\src\\world\\trains\\car.js" "b/upstream\\sakuragaoka\\src\\world\\trains\\car.js"
+index 990b8f3..154bac2 100644
+--- "a/.local\\sakuragaoka-4112f57208b7e29998344ca71fef74202c2b2bdd\\src\\world\\trains\\car.js"
++++ "b/upstream\\sakuragaoka\\src\\world\\trains\\car.js"
+@@ -219,8 +219,8 @@ function buildNose(B, o) {
+   B.rbox('interior', 0.45, 0.1, 0.45, 0.04, [XS - 0.62, 1.95, -0.52], '#3f4758');
+   B.rbox('interior', 0.08, 0.55, 0.45, 0.04, [XS - 0.88, 2.28, -0.52], '#3f4758', [0, 0, 0.12]);
+   B.cyl('interior', 0.04, 0.04, 0.45, [XS - 0.62, 1.72, -0.52], '#2f3038', null, 8);
+-  if (o.crew === 'driver') person(B, 'interior', [XS - 0.6, 2.0, -0.52], Math.PI / 2, { pose: 'sit', outfit: 'staff', h: 1.7, hands: true, glove: '#f4f4f4', hair: '#3a3240' });
+-  else if (o.crew === 'conductor') person(B, 'interior', [XS - 0.45, FLOOR + 0.2, 0.62], Math.PI / 2 + 0.4, { pose: 'stand', outfit: 'staff', h: 1.66, hair: '#4a3a36' });
++  if (o.people !== false && o.crew === 'driver') person(B, 'interior', [XS - 0.6, 2.0, -0.52], Math.PI / 2, { pose: 'sit', outfit: 'staff', h: 1.7, hands: true, glove: '#f4f4f4', hair: '#3a3240' });
++  else if (o.people !== false && o.crew === 'conductor') person(B, 'interior', [XS - 0.45, FLOOR + 0.2, 0.62], Math.PI / 2 + 0.4, { pose: 'stand', outfit: 'staff', h: 1.66, hair: '#4a3a36' });
+   // partition wall between cab and saloon (3 windows)
+   {
+     const pb = colorByNormal(GEO.box().clone().scale(0.05, YS + 0.18 - FLOOR, 2.62), (nx) => nx > 0.5 ? COL.cabIn : nx < -0.5 ? COL.partition : COL.partition);
+@@ -591,6 +591,7 @@ function buildSaloon(B, o) {
+ 
+   B.tag = 'people';
+   // passengers (a few)
++  if (o.people === false) return;
+   const seatsX = [];
+   for (const [x0, x1, pri] of benches) { const n = Math.round((x1 - x0) / 0.46); for (let i = 0; i < n; i++) seatsX.push([x0 + (i + 0.5) * (x1 - x0) / n, pri]); }
+   const nSit = r.int(3, 5);
+diff --git "a/.local\\sakuragaoka-4112f57208b7e29998344ca71fef74202c2b2bdd\\src\\world\\trains.js" "b/upstream\\sakuragaoka\\src\\world\\trains.js"
+index eca91fe..45dc9b7 100644
+--- "a/.local\\sakuragaoka-4112f57208b7e29998344ca71fef74202c2b2bdd\\src\\world\\trains.js"
++++ "b/upstream\\sakuragaoka\\src\\world\\trains.js"
+@@ -81,7 +81,7 @@ function buildTrain(ctx, id, tex, MAT) {
+       uv: { dec: tex.dec, led: tex.ledUV },
+       numFront: 'num' + ((id === 'A' ? 0 : 2) + c), numSide: 'num' + ((id === 'A' ? 4 : 6) + c),
+       destKey: 'dest' + id, runKey: 'run' + id, lcdKey: 'lcd' + id, sideKey: 'side' + id,
+-      panto: c === 1, motor: c === 1, rng, crew: c === 0 ? 'driver' : 'conductor', jakurei: c === 1,
++      panto: c === 1, motor: c === 1, rng, people: ctx.people !== false, crew: c === 0 ? 'driver' : 'conductor', jakurei: c === 1,
+       wheelsets: ws, lamps: lp,
+     });
+     B.pop(); dNeg.pop(); dPos.pop();
+diff --git "a/.local\\sakuragaoka-4112f57208b7e29998344ca71fef74202c2b2bdd\\src\\world\\vehicles\\cars.js" "b/upstream\\sakuragaoka\\src\\world\\vehicles\\cars.js"
+index eb85acf..84f0bbf 100644
+--- "a/.local\\sakuragaoka-4112f57208b7e29998344ca71fef74202c2b2bdd\\src\\world\\vehicles\\cars.js"
++++ "b/upstream\\sakuragaoka\\src\\world\\vehicles\\cars.js"
+@@ -364,14 +364,16 @@ export function makeCompact(ctx, o = {}) {
+   V.rbox(1.2, 0.12, 0.46, 0.04, '#5f5c69', [0, 0.53, -0.95], null, 1);
+   V.rbox(1.2, 0.5, 0.12, 0.04, '#5f5c69', [0, 0.82, -1.2], [-0.15, 0, 0], 1);
+   V.rbox(1.50, 0.14, 0.40, 0.04, '#4f4c58', [0, 0.93, 0.92], null, 1);
+-  const JK = '#58627f', SKIN = '#f1d6c3', HAIR = '#4a3c48';
+-  V.rbox(0.36, 0.46, 0.22, 0.08, JK, [-0.37, 0.98, -0.03], [-0.12, 0, 0], 1);
+-  V.sph(0.105, SKIN, [-0.37, 1.30, 0.02], 10);
+-  V.sph(0.113, HAIR, [-0.37, 1.325, -0.008], 10, [1, 0.94, 1.02]);
+-  for (const sd of [-1, 1]) {
+-    V.rod([-0.37 + sd * 0.15, 1.14, 0.0], [-0.37 + sd * 0.13, 1.02, 0.26], 0.045, JK, 6);
+-    V.rod([-0.37 + sd * 0.13, 1.02, 0.26], [-0.37 + sd * 0.14, 1.08, 0.43], 0.04, JK, 6);
+-    V.sph(0.035, SKIN, [-0.37 + sd * 0.14, 1.09, 0.46], 6);
++  if (ctx.people !== false) {
++    const JK = '#58627f', SKIN = '#f1d6c3', HAIR = '#4a3c48';
++    V.rbox(0.36, 0.46, 0.22, 0.08, JK, [-0.37, 0.98, -0.03], [-0.12, 0, 0], 1);
++    V.sph(0.105, SKIN, [-0.37, 1.30, 0.02], 10);
++    V.sph(0.113, HAIR, [-0.37, 1.325, -0.008], 10, [1, 0.94, 1.02]);
++    for (const sd of [-1, 1]) {
++      V.rod([-0.37 + sd * 0.15, 1.14, 0.0], [-0.37 + sd * 0.13, 1.02, 0.26], 0.045, JK, 6);
++      V.rod([-0.37 + sd * 0.13, 1.02, 0.26], [-0.37 + sd * 0.14, 1.08, 0.43], 0.04, JK, 6);
++      V.sph(0.035, SKIN, [-0.37 + sd * 0.14, 1.09, 0.46], 6);
++    }
+   }
+   V.torus(0.18, 0.018, DARK, [-0.37, 1.06, 0.46], [-0.5, 0, 0], 5, 18);
+   V.box(0.22, 0.06, 0.03, DARK, [0, 1.38, 0.30]);                                          // rear-view mirror

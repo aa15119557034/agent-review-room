@@ -1,0 +1,522 @@
+{
+  "sourceHead": "41c4fa8e5e84cc2a9e0087deb2097059a4aa95d2",
+  "bakeHead": "41c4fa8e5e84cc2a9e0087deb2097059a4aa95d2",
+  "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "manifestFiles": 243,
+  "sourceManifestSha256": "3a02e2a33d8b69bb7e25e1dfbefb0f01ebf50c8eacb5e6a373116fa04674ac3c",
+  "failures": {
+    "fixed": {
+      "exit": 1,
+      "stage": "complete",
+      "renderOk": true,
+      "bakeValid": null,
+      "transportClean": false,
+      "exceptions": [],
+      "networkFailures": [
+        {
+          "stage": "loading",
+          "url": "http://127.0.0.1:61714/prop-assets/plastic_crate_02/plastic_crate_02_1k.gltf",
+          "canceled": true,
+          "errorText": "net::ERR_ABORTED",
+          "requestId": "1228.244",
+          "timestamp": 1961827.645825,
+          "type": "Fetch"
+        },
+        {
+          "stage": "loading",
+          "url": "http://127.0.0.1:61714/prop-assets/plastic_crate_02/plastic_crate_02.bin",
+          "canceled": true,
+          "errorText": "net::ERR_ABORTED",
+          "requestId": "1228.249",
+          "timestamp": 1961827.658431,
+          "type": "Fetch"
+        }
+      ],
+      "httpErrors": []
+    },
+    "day": {
+      "exit": 1,
+      "stage": "complete",
+      "renderOk": true,
+      "bakeValid": null,
+      "transportClean": false,
+      "exceptions": [],
+      "networkFailures": [
+        {
+          "stage": "loading",
+          "url": "http://127.0.0.1:62078/prop-assets/plastic_crate_02/plastic_crate_02.bin",
+          "canceled": true,
+          "errorText": "net::ERR_ABORTED",
+          "requestId": "24476.247",
+          "timestamp": 1962066.611417,
+          "type": "Fetch"
+        }
+      ],
+      "httpErrors": []
+    },
+    "normal": {
+      "exit": 1,
+      "stage": "complete",
+      "renderOk": true,
+      "bakeValid": null,
+      "transportClean": false,
+      "exceptions": [],
+      "networkFailures": [
+        {
+          "url": "http://127.0.0.1:61881/prop-assets/plastic_crate_02/plastic_crate_02.bin",
+          "type": "Fetch",
+          "canceled": true,
+          "errorText": "net::ERR_ABORTED",
+          "requestId": "68316.249",
+          "timestamp": 1961871.720284,
+          "stage": "waiting-for-ready-frame",
+          "receivedWallTime": 1794951692.666
+        }
+      ],
+      "httpErrors": []
+    },
+    "town": {
+      "exit": 1,
+      "stage": "complete",
+      "renderOk": true,
+      "bakeValid": null,
+      "transportClean": false,
+      "exceptions": [],
+      "networkFailures": [
+        {
+          "url": "http://127.0.0.1:61961/assets/models/menhir.glb",
+          "stage": "loading",
+          "canceled": true,
+          "errorText": "net::ERR_ABORTED",
+          "requestId": "68120.128",
+          "timestamp": 1961965.462442,
+          "type": "Fetch"
+        },
+        {
+          "url": "http://127.0.0.1:61961/assets/models/boulders.glb",
+          "stage": "loading",
+          "canceled": true,
+          "errorText": "net::ERR_ABORTED",
+          "requestId": "68120.130",
+          "timestamp": 1961965.463732,
+          "type": "Fetch"
+        },
+        {
+          "url": "http://127.0.0.1:61961/prop-assets/plastic_crate_02/plastic_crate_02_1k.gltf",
+          "stage": "loading",
+          "canceled": true,
+          "errorText": "net::ERR_ABORTED",
+          "requestId": "68120.244",
+          "timestamp": 1961977.220279,
+          "type": "Fetch"
+        },
+        {
+          "url": "http://127.0.0.1:61961/prop-assets/plastic_crate_02/plastic_crate_02.bin",
+          "stage": "loading",
+          "canceled": true,
+          "errorText": "net::ERR_ABORTED",
+          "requestId": "68120.249",
+          "timestamp": 1961977.234468,
+          "type": "Fetch"
+        }
+      ],
+      "httpErrors": []
+    },
+    "bake": {
+      "exit": 0,
+      "stage": "complete",
+      "renderOk": null,
+      "bakeValid": true,
+      "transportClean": true,
+      "exceptions": [],
+      "networkFailures": [],
+      "httpErrors": []
+    }
+  },
+  "runtime": {
+    "evening": {
+      "preset": "evening",
+      "reflectionFaces": [
+        "/src/street-env-evening/px.png",
+        "/src/street-env-evening/nx.png",
+        "/src/street-env-evening/py.png",
+        "/src/street-env-evening/ny.png",
+        "/src/street-env-evening/pz.png",
+        "/src/street-env-evening/nz.png"
+      ],
+      "reflectionStats": {
+        "resolution": 256,
+        "panes": {
+          "W1": 8,
+          "E1": 4,
+          "W2": 5,
+          "E2": 5,
+          "E3": 5
+        },
+        "loadedFaces": 6,
+        "captures": 0,
+        "facesAtLoad": 0,
+        "passesPerFrame": 0,
+        "loadMs": 17
+      },
+      "lightMapURL": "http://127.0.0.1:61714/assets/terrain/light-evening.png",
+      "dimensions": [
+        4096,
+        4096
+      ],
+      "sunDirection": [
+        -0.9632873407929416,
+        0.20791169081775934,
+        0.16985354835670516
+      ],
+      "bloom": 0.2,
+      "glow": {
+        "lamps": 13,
+        "prints": 1
+      },
+      "towns": [
+        {
+          "id": "cairnwick",
+          "mapSize": [
+            2048,
+            2048
+          ],
+          "shadowToSun": [
+            -0.9632873407929418,
+            0.20791169081775934,
+            0.16985354835670508
+          ],
+          "dotWithEveningSun": 1
+        },
+        {
+          "id": "larkhaven",
+          "mapSize": [
+            4096,
+            4096
+          ],
+          "shadowToSun": [
+            -0.9632873407929418,
+            0.20791169081775934,
+            0.16985354835670508
+          ],
+          "dotWithEveningSun": 1
+        }
+      ],
+      "townShadowParams": [
+        1,
+        1,
+        440.0664838152349,
+        239.86626294153353
+      ]
+    },
+    "afternoon": {
+      "preset": "afternoon",
+      "reflectionFaces": [
+        "/src/street-env/px.png",
+        "/src/street-env/nx.png",
+        "/src/street-env/py.png",
+        "/src/street-env/ny.png",
+        "/src/street-env/pz.png",
+        "/src/street-env/nz.png"
+      ],
+      "reflectionStats": {
+        "resolution": 256,
+        "panes": {
+          "W1": 8,
+          "E1": 4,
+          "W2": 5,
+          "E2": 5,
+          "E3": 5
+        },
+        "loadedFaces": 6,
+        "captures": 0,
+        "facesAtLoad": 0,
+        "passesPerFrame": 0,
+        "loadMs": 16
+      },
+      "dimensions": [
+        4096,
+        4096
+      ],
+      "sunDirection": [
+        -0.5104064950196394,
+        0.5591929034707469,
+        -0.6532905223173859
+      ],
+      "bloom": 0.12,
+      "towns": [
+        {
+          "id": "cairnwick",
+          "mapSize": [
+            2048,
+            2048
+          ],
+          "shadowToSun": [
+            -0.5104064950196393,
+            0.5591929034707468,
+            -0.653290522317386
+          ],
+          "dotWithEveningSun": 1.0000000000000002
+        },
+        {
+          "id": "larkhaven",
+          "mapSize": [
+            4096,
+            4096
+          ],
+          "shadowToSun": [
+            -0.5104064950196393,
+            0.5591929034707468,
+            -0.6532905223173862
+          ],
+          "dotWithEveningSun": 1.0000000000000002
+        }
+      ],
+      "townShadowParams": [
+        1,
+        1,
+        475.74876104621495,
+        278.02702587603096
+      ]
+    }
+  },
+  "commands": [
+    {
+      "key": "fixed",
+      "started": "2026-11-17T21:40:33.867Z",
+      "completed": "2026-11-17T21:41:17.491Z",
+      "args": [
+        "D:\\codex\\2026-11-16\\world-implementation\\handoff\\x51-hedge-fixed.cjs",
+        "gpu-modern-after-hedge-41c4fa8",
+        "41c4fa8e5e84cc2a9e0087deb2097059a4aa95d2"
+      ],
+      "exit": 1
+    },
+    {
+      "key": "normal",
+      "started": "2026-11-17T21:41:17.538Z",
+      "completed": "2026-11-17T21:43:02.681Z",
+      "args": [
+        "scripts/baseline.cjs",
+        "--scene=combined",
+        "--electron=D:/codex/2026-11-16/world-implementation/runtime-path-probe/electron.exe",
+        "--output=artifacts/gpu-hedge-normal-41c4fa8",
+        "--stills"
+      ],
+      "exit": 1
+    },
+    {
+      "key": "town",
+      "started": "2026-11-17T21:43:02.734Z",
+      "completed": "2026-11-17T21:44:32.839Z",
+      "args": [
+        "D:\\codex\\2026-11-16\\world-implementation\\world-base\\apps\\desktop\\e2e\\fixtures\\world-base\\evidence\\street-upgrade-2026-11-18\\town\\town-frame-times.cjs",
+        "D:\\codex\\2026-11-16\\world-implementation\\world-base\\apps\\desktop\\e2e\\fixtures\\world-base",
+        "D:/codex/2026-11-16/world-implementation/runtime-path-probe/electron.exe",
+        "D:\\codex\\2026-11-16\\world-implementation\\world-base\\apps\\desktop\\e2e\\fixtures\\world-base\\artifacts\\gpu-modern-after-hedge-41c4fa8\\c17-reference.json",
+        "D:\\codex\\2026-11-16\\world-implementation\\world-base\\apps\\desktop\\e2e\\fixtures\\world-base\\artifacts\\gpu-hedge-normal-41c4fa8\\source-manifest.json",
+        "D:\\codex\\2026-11-16\\world-implementation\\world-base\\apps\\desktop\\e2e\\fixtures\\world-base\\artifacts\\gpu-hedge-town-41c4fa8"
+      ],
+      "exit": 1
+    },
+    {
+      "key": "day",
+      "started": "2026-11-17T21:44:32.876Z",
+      "completed": "2026-11-17T21:45:13.980Z",
+      "args": [
+        "D:\\codex\\2026-11-16\\world-implementation\\handoff\\x51-hedge-afternoon.cjs",
+        "gpu-modern-after-hedge-afternoon-41c4fa8",
+        "41c4fa8e5e84cc2a9e0087deb2097059a4aa95d2",
+        "D:\\codex\\2026-11-16\\world-implementation\\world-base\\apps\\desktop\\e2e\\fixtures\\world-base",
+        "aerial-only"
+      ],
+      "exit": 1
+    }
+  ],
+  "normal": {
+    "behavior": {
+      "ok": true,
+      "checks": [
+        {
+          "name": "closed shop door blocks the walking capsule",
+          "passed": true,
+          "evidence": {
+            "displacement": 0.34999999999999964,
+            "candidate": {
+              "x": -7.23,
+              "z": 8
+            }
+          }
+        },
+        {
+          "name": "approaching opens the real shop door collider",
+          "passed": true,
+          "evidence": {
+            "displacement": 0,
+            "candidate": {
+              "x": -7.58,
+              "z": 8
+            }
+          }
+        },
+        {
+          "name": "adjacent storefront wall remains solid",
+          "passed": true,
+          "evidence": {
+            "displacement": 0.40000000000000036,
+            "candidate": {
+              "x": -7.1,
+              "z": 12
+            }
+          }
+        },
+        {
+          "name": "open entrance provides a continuous capsule-width passage",
+          "passed": true,
+          "evidence": {
+            "maxCorrection": 0
+          }
+        },
+        {
+          "name": "interior floor uses its raised walkable surface",
+          "passed": true,
+          "evidence": {
+            "expectedFloor": 0.4134,
+            "maxHeightError": 0
+          }
+        },
+        {
+          "name": "W3 sidewalk walking clears existing furniture and new planters",
+          "passed": true,
+          "evidence": {
+            "endLotX": 3.9674163653903243,
+            "minLotZ": 1.061816375746971,
+            "maxLotZ": 1.1500000000000001,
+            "radius": 0.3,
+            "step": 0.1,
+            "inputDistance": 8
+          }
+        },
+        {
+          "name": "W3 planters leave the existing garden gate approach clear",
+          "passed": true,
+          "evidence": {
+            "maxCorrection": 0
+          }
+        },
+        {
+          "name": "low planter tops support approaching feet and release them on exit",
+          "passed": true,
+          "evidence": [
+            {
+              "id": "w3-planter-south",
+              "expectedTop": 1.1152975042415103,
+              "onTop": 1.1152975042415103,
+              "initialFeet": 0.8553631994889643,
+              "finalFeet": 0.8553631994889643,
+              "supported": true,
+              "returnedToSidewalk": true
+            },
+            {
+              "id": "w3-planter-north",
+              "expectedTop": 1.00881568627451,
+              "onTop": 1.00881568627451,
+              "initialFeet": 0.7488156862745098,
+              "finalFeet": 0.7488156862745098,
+              "supported": true,
+              "returnedToSidewalk": true
+            }
+          ]
+        },
+        {
+          "name": "first person camera is 1.52m above world-space feet",
+          "passed": true,
+          "evidence": {
+            "feet": [
+              281.6,
+              8.812,
+              934
+            ],
+            "camera": [
+              281.6,
+              10.331999999999999,
+              934
+            ],
+            "error": 0
+          }
+        },
+        {
+          "name": "third person camera follows within its obstruction-limited boom",
+          "passed": true,
+          "evidence": {
+            "followDistance": 4.224038352098614,
+            "maximum": 4.224038352098617
+          }
+        },
+        {
+          "name": "view switching preserves the body and collision position",
+          "passed": true,
+          "evidence": {
+            "feet": [
+              281.6,
+              8.812,
+              934
+            ],
+            "initialFeet": [
+              281.6,
+              8.812,
+              934
+            ]
+          }
+        },
+        {
+          "name": "station local/world coordinates round-trip at its nonzero placement",
+          "passed": true,
+          "evidence": {
+            "local": [
+              1.6000000000000227,
+              0.8119999999999994,
+              34
+            ],
+            "world": [
+              281.6,
+              8.812,
+              934
+            ]
+          }
+        },
+        {
+          "name": "real shop wall shortens third-person boom with near-plane clearance",
+          "passed": true,
+          "evidence": {
+            "shortened": 0.7951227548559752,
+            "cameraLotZ": -2.290597833643244,
+            "streetSideWallZ": -2.6,
+            "clearance": 0.30940216635678375,
+            "raycastCalls": 0
+          }
+        },
+        {
+          "name": "camera collision never scans rendered triangles",
+          "passed": true,
+          "evidence": {
+            "raycastCalls": 0
+          }
+        }
+      ]
+    },
+    "look": true,
+    "walking": [
+      {
+        "mode": "third",
+        "ok": true,
+        "horizontalDistance": 9.507100617686639
+      },
+      {
+        "mode": "first",
+        "ok": true,
+        "horizontalDistance": 9.371666528980336
+      }
+    ]
+  }
+}

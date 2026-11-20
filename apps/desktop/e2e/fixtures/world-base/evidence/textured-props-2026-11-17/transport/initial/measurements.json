@@ -1,0 +1,9 @@
+{
+  "reportPresent": false,
+  "archivedFailure": true,
+  "rootReportedExitHex": "0x80000003",
+  "rootReportedExitSource": "Parent task handoff; artifact itself has no persisted native exit record",
+  "javascriptEntryGuardDefectConfirmed": true,
+  "nativeExitCauseEstablished": false,
+  "note": "Blank original log preserved; no rendering/transport success inferred. Probe demonstrates entry semantics, not native exit causality."
+}

@@ -1,0 +1,205 @@
+{
+  "art-a-street": {
+    "full": {
+      "pixels": 1296000,
+      "changed": 111181,
+      "over2": 69701,
+      "over8": 58191,
+      "maxRGB": [
+        50,
+        41,
+        35
+      ]
+    },
+    "gateText": {
+      "rect": [
+        618,
+        294,
+        872,
+        320
+      ],
+      "pixels": 6604,
+      "changed": 379,
+      "over2": 0,
+      "over8": 0,
+      "maxRGB": [
+        1,
+        1,
+        1
+      ]
+    },
+    "roadAndMarkings": {
+      "rect": [
+        430,
+        710,
+        840,
+        890
+      ],
+      "pixels": 73800,
+      "changed": 1,
+      "over2": 0,
+      "over8": 0,
+      "maxRGB": [
+        0,
+        0,
+        1
+      ]
+    }
+  },
+  "art-b-konbini": {
+    "full": {
+      "pixels": 1296000,
+      "changed": 0,
+      "over2": 0,
+      "over8": 0,
+      "maxRGB": [
+        0,
+        0,
+        0
+      ]
+    }
+  },
+  "art-c-alley": {
+    "full": {
+      "pixels": 1296000,
+      "changed": 423,
+      "over2": 16,
+      "over8": 0,
+      "maxRGB": [
+        5,
+        2,
+        4
+      ]
+    }
+  },
+  "art-d-laundry": {
+    "full": {
+      "pixels": 1296000,
+      "changed": 0,
+      "over2": 0,
+      "over8": 0,
+      "maxRGB": [
+        0,
+        0,
+        0
+      ]
+    }
+  },
+  "sample-e-harbour": {
+    "full": {
+      "pixels": 1296000,
+      "changed": 24160,
+      "over2": 14646,
+      "over8": 9750,
+      "maxRGB": [
+        224,
+        190,
+        189
+      ]
+    }
+  },
+  "sample-f-hillside": {
+    "full": {
+      "pixels": 1296000,
+      "changed": 213342,
+      "over2": 162959,
+      "over8": 130528,
+      "maxRGB": [
+        23,
+        20,
+        23
+      ]
+    }
+  },
+  "sample-g-rail": {
+    "full": {
+      "pixels": 1296000,
+      "changed": 607,
+      "over2": 184,
+      "over8": 157,
+      "maxRGB": [
+        30,
+        16,
+        14
+      ]
+    }
+  },
+  "sample-h-north": {
+    "full": {
+      "pixels": 1296000,
+      "changed": 0,
+      "over2": 0,
+      "over8": 0,
+      "maxRGB": [
+        0,
+        0,
+        0
+      ]
+    }
+  },
+  "01-station-street": {
+    "full": {
+      "pixels": 1296000,
+      "changed": 63016,
+      "over2": 34947,
+      "over8": 27801,
+      "maxRGB": [
+        38,
+        32,
+        34
+      ]
+    }
+  },
+  "20-rear-eye": {
+    "full": {
+      "pixels": 1296000,
+      "changed": 11295,
+      "over2": 5994,
+      "over8": 3958,
+      "maxRGB": [
+        34,
+        12,
+        23
+      ]
+    }
+  },
+  "21-front-eye": {
+    "full": {
+      "pixels": 1296000,
+      "changed": 11047,
+      "over2": 5865,
+      "over8": 4371,
+      "maxRGB": [
+        36,
+        14,
+        22
+      ]
+    }
+  },
+  "23-service-corner": {
+    "full": {
+      "pixels": 1296000,
+      "changed": 1,
+      "over2": 0,
+      "over8": 0,
+      "maxRGB": [
+        0,
+        0,
+        1
+      ]
+    }
+  },
+  "24-laundry-details": {
+    "full": {
+      "pixels": 1296000,
+      "changed": 424,
+      "over2": 93,
+      "over8": 73,
+      "maxRGB": [
+        41,
+        15,
+        18
+      ]
+    }
+  }
+}

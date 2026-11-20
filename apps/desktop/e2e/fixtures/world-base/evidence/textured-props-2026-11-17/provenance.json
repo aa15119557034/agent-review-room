@@ -1,0 +1,1293 @@
+{
+  "createdAt": "2026-11-17T07:26:05.209Z",
+  "files": [
+    {
+      "file": "source-map/pinned-prop-bytes.json",
+      "bytes": 3453,
+      "sha256": "7dbdc32b2e9b5810616792c417b9db8a8747e2a50fb2cc2833d484406dbb807b",
+      "generatedSummary": true
+    },
+    {
+      "file": "source-map/prop-assets.json",
+      "bytes": 6576,
+      "sha256": "6a4b86e144b50835b1152f4aa32ac4c5e50e352956979cd4ca5fc5f21561810a",
+      "exactCommit": "5cf3ef7d784ff069b87fef9b8051de63b6695e48"
+    },
+    {
+      "file": "original-c8/source-manifest.json",
+      "bytes": 24528,
+      "sha256": "210e979899e7581455bec3cbcc424cc3af56f1c85ba8057acc8517f9772f40dd",
+      "source": "artifacts/gpu-town-c8/source-manifest.json"
+    },
+    {
+      "file": "original-c8/run-config.json",
+      "bytes": 1075,
+      "sha256": "94942d2228f4b3d42edcfcf2642665b2ecc95fa736cee8d5a1d036b7cadab39b",
+      "source": "artifacts/gpu-town-c8/run-config.json"
+    },
+    {
+      "file": "original-c8/process.json",
+      "bytes": 135,
+      "sha256": "5d2b41fb9d3aa220c0ad2627317a925e2ca3bf2d0bbba109a33b7c808805a6ed",
+      "source": "artifacts/gpu-town-c8/process.json"
+    },
+    {
+      "file": "original-c8/electron.log",
+      "bytes": 1816,
+      "sha256": "c688da76c2e027cb49e236489899e0db2865d975fbfb549863047afe137168cf",
+      "source": "artifacts/gpu-town-c8/electron.log"
+    },
+    {
+      "file": "original-c8/render-report.json.gz",
+      "bytes": 66282,
+      "sha256": "c16296a7bca4478b661f9ec3bd935cd0da39443f835bd3bbfc58f3254be172bf",
+      "source": "artifacts/gpu-town-c8/render-report.json",
+      "originalBytes": 444234,
+      "originalSha256": "faa96b296aae1d48d7a7835b4e94a19513ee28650a6f21302fe2bdad076a017d",
+      "losslessGzip": true
+    },
+    {
+      "file": "original-c8/01-station-street.jpg",
+      "bytes": 119263,
+      "sha256": "f6d2a0edc522e427fd18f24554ca292cb8cd702f8fa574e592826715eed170fb",
+      "source": "artifacts/gpu-town-c8/01-station-street.jpg"
+    },
+    {
+      "file": "original-c8/02-station-port.jpg",
+      "bytes": 116378,
+      "sha256": "5cddddf5702373b137229aa0623fc02876079494ce6e9293515e8606fd9d327b",
+      "source": "artifacts/gpu-town-c8/02-station-port.jpg"
+    },
+    {
+      "file": "original-c8/03-island-aerial.jpg",
+      "bytes": 55277,
+      "sha256": "599f261f02c22f0af91ecd111e688bc14dd31126a64f311fad6534d41038faaf",
+      "source": "artifacts/gpu-town-c8/03-island-aerial.jpg"
+    },
+    {
+      "file": "original-c8/04-shop-interior.jpg",
+      "bytes": 107144,
+      "sha256": "8c49a1237da788ece15b1909c859fa32f5f5040df7b7e2f03bdd525c53e085b0",
+      "source": "artifacts/gpu-town-c8/04-shop-interior.jpg"
+    },
+    {
+      "file": "original-c8/16-city-context.jpg",
+      "bytes": 111118,
+      "sha256": "e75f45ed3e1f5f9d074ab8908255f16149164b1665cad5d914e3b8d9da39c3cd",
+      "source": "artifacts/gpu-town-c8/16-city-context.jpg"
+    },
+    {
+      "file": "original-c8/18-town-shop-balconies.jpg",
+      "bytes": 92659,
+      "sha256": "886252f6dcaf6babe15d6f8ac5369e6038b9f48f0fca6175d6b92a6966a7ffd1",
+      "source": "artifacts/gpu-town-c8/18-town-shop-balconies.jpg"
+    },
+    {
+      "file": "original-c8/19-town-rear-stairs.jpg",
+      "bytes": 124236,
+      "sha256": "27ade20af9445e776a584e3e341c491b2981879ac9ea6c88a3ee00655406044c",
+      "source": "artifacts/gpu-town-c8/19-town-rear-stairs.jpg"
+    },
+    {
+      "file": "original-c8/walking-third.jpg",
+      "bytes": 117045,
+      "sha256": "0a873836abb0944934af95b284efce5d52dd4c61b286ec1ffb17fc84eb833cba",
+      "source": "artifacts/gpu-town-c8/walking-third.jpg"
+    },
+    {
+      "file": "original-c8/walking-first.jpg",
+      "bytes": 110601,
+      "sha256": "a9e43c747b6ef5669cf392130536072c8af704f15f3b837aef203205bdc82ce5",
+      "source": "artifacts/gpu-town-c8/walking-first.jpg"
+    },
+    {
+      "file": "original-c8/frame-samples-island-aerial.json",
+      "bytes": 11266,
+      "sha256": "637ea4d95b1a670046956303e033aa7c5fb75a478f02ba53c6d8f76d6e51dbd1",
+      "source": "artifacts/gpu-town-c8/frame-samples-island-aerial.json"
+    },
+    {
+      "file": "original-c8/frame-samples-shop-interior.json",
+      "bytes": 11195,
+      "sha256": "0b0aee661411db0da4bd034f018e67566a609fa901d79ee1b4c00e5482b688a1",
+      "source": "artifacts/gpu-town-c8/frame-samples-shop-interior.json"
+    },
+    {
+      "file": "original-c8/frame-samples-station-port.json",
+      "bytes": 11241,
+      "sha256": "21140bd050da22c36b11c8e2ac22aeac3a5f8e30af97c4e86a9c3ddacc972298",
+      "source": "artifacts/gpu-town-c8/frame-samples-station-port.json"
+    },
+    {
+      "file": "original-c8/frame-samples-station-street.json",
+      "bytes": 11335,
+      "sha256": "2beb773a1d7dd7ce8a8fa56eed9a83b1f1b3b1920f35436c3c603288d46a7c2e",
+      "source": "artifacts/gpu-town-c8/frame-samples-station-street.json"
+    },
+    {
+      "file": "original-c8/frame-samples-walking-first.json",
+      "bytes": 11303,
+      "sha256": "3fd7de4b3cd953c3257afec5f5344c589888ec042e922d176dd8f34f2abc0656",
+      "source": "artifacts/gpu-town-c8/frame-samples-walking-first.json"
+    },
+    {
+      "file": "original-c8/frame-samples-walking-third.json",
+      "bytes": 11368,
+      "sha256": "622496e829d0159fa27859819a1895b38e431d24bd74d1832400d70759c2f37a",
+      "source": "artifacts/gpu-town-c8/frame-samples-walking-third.json"
+    },
+    {
+      "file": "original-c8/frame-samples.json",
+      "bytes": 55069,
+      "sha256": "f44920629d20fbba64d9d6384a7346e78137799c57f087aa4f2f23635281f058",
+      "source": "artifacts/gpu-town-c8/frame-samples.json"
+    },
+    {
+      "file": "original-c8/measurements.json",
+      "bytes": 53896,
+      "sha256": "fecc9e00fbe97d78b988dae15bcf02ad37d2a0e8fd22e43d0e61d61af08bd450",
+      "generatedSummary": true
+    },
+    {
+      "file": "meadow/source-manifest.json",
+      "bytes": 23639,
+      "sha256": "89f068f52dbdb8d8bc659ff9d850942bd08839e2f527857db72e87ad092e112c",
+      "source": "artifacts/gpu-meadow-c7-c8/source-manifest.json"
+    },
+    {
+      "file": "meadow/run-config.json",
+      "bytes": 560,
+      "sha256": "faa64b5b08d48f436480be4c8922196279ed5d3ff9f63c569b4ee56246ca9bda",
+      "source": "artifacts/gpu-meadow-c7-c8/run-config.json"
+    },
+    {
+      "file": "meadow/process.json",
+      "bytes": 13,
+      "sha256": "8793cd92388c94938229f22cff3545bb6d8769bd2476f400d39609118327f18a",
+      "source": "artifacts/gpu-meadow-c7-c8/process.json"
+    },
+    {
+      "file": "meadow/electron.log",
+      "bytes": 2,
+      "sha256": "7eb70257593da06f682a3ddda54a9d260d4fc514f645237f5ca74b08f8da61a6",
+      "source": "artifacts/gpu-meadow-c7-c8/electron.log"
+    },
+    {
+      "file": "meadow/meadow-report.json.gz",
+      "bytes": 43852,
+      "sha256": "fe774771fa40e3ae1331278ec2dc985148c5a1bbca7d9d11604ae2d2a956c8d7",
+      "source": "artifacts/gpu-meadow-c7-c8/meadow-report.json",
+      "originalBytes": 594920,
+      "originalSha256": "e8e80bdea8eab6ffe3a0e6d2322091304de00d323ed98ed1f5ae43542912d5ec",
+      "losslessGzip": true
+    },
+    {
+      "file": "meadow/x51-c7-meadow-gpu.cjs",
+      "bytes": 13018,
+      "sha256": "2028b4431faffe0c81af6380f49d468e19935bd4a2bae89644467a5f260774b3",
+      "source": "../../../../../../handoff/x51-c7-meadow-gpu.cjs"
+    },
+    {
+      "file": "meadow/19-rear-reference-capture.jpg",
+      "bytes": 159261,
+      "sha256": "3236c7c6a9172d5acc21350e105a269ce474641472466ca27dcfeb09fe00a04a",
+      "source": "artifacts/gpu-meadow-c7-c8/19-rear-reference-capture.jpg"
+    },
+    {
+      "file": "meadow/20-rear-eye-capture.jpg",
+      "bytes": 168968,
+      "sha256": "995d46945281b9ed9ca2f28917e00ed55303543ddbf778b1a98c3fad43780cb4",
+      "source": "artifacts/gpu-meadow-c7-c8/20-rear-eye-capture.jpg"
+    },
+    {
+      "file": "meadow/21-front-eye-capture.jpg",
+      "bytes": 90658,
+      "sha256": "ecf37b086c12bd6b306c6dfa4b7f9ff5670dae8fa2884ad0653379d6b94edb46",
+      "source": "artifacts/gpu-meadow-c7-c8/21-front-eye-capture.jpg"
+    },
+    {
+      "file": "meadow/22-low-house-entry-capture.jpg",
+      "bytes": 79491,
+      "sha256": "613382135f381ad69e9ab4b074a59881331e61437a63f4ea4b913f1c4666d9bb",
+      "source": "artifacts/gpu-meadow-c7-c8/22-low-house-entry-capture.jpg"
+    },
+    {
+      "file": "meadow/20-rear-eye-capture.png",
+      "bytes": 2684331,
+      "sha256": "b711a515fc8cc7e619e373a4a822ac1136148ee2f36cfea80515d7c1b587b3fa",
+      "source": "artifacts/gpu-meadow-c7-c8/20-rear-eye-capture.png"
+    },
+    {
+      "file": "meadow/21-front-eye-capture.png",
+      "bytes": 2088282,
+      "sha256": "ea58e8888df177ba37c9772637e728c9d5a8d81c2d4a09dd79c8e03a04ec9e68",
+      "source": "artifacts/gpu-meadow-c7-c8/21-front-eye-capture.png"
+    },
+    {
+      "file": "meadow/measurements.json",
+      "bytes": 299354,
+      "sha256": "2d321ecf7acf92b6357c5836750f9679f7430ad7d748a040dbfe33ec3f011a85",
+      "generatedSummary": true
+    },
+    {
+      "file": "ao/source-manifest.json",
+      "bytes": 23639,
+      "sha256": "0e6dc0f0ac7c6e55284b5e98c3bf4886e7c0e5ef9d6e9590aec5a28eab3402c8",
+      "source": "artifacts/gpu-ao-c8-v1/source-manifest.json"
+    },
+    {
+      "file": "ao/run-config.json",
+      "bytes": 552,
+      "sha256": "e3e6d1ef047019aed8ac9856a3f658e454ac2c6f6fa045b2ab146f3467168273",
+      "source": "artifacts/gpu-ao-c8-v1/run-config.json"
+    },
+    {
+      "file": "ao/process.json",
+      "bytes": 13,
+      "sha256": "20cf16b1dba1464319d223d82f030a5ad85c6ac1f60e342e8e2973e8ecbd9ac7",
+      "source": "artifacts/gpu-ao-c8-v1/process.json"
+    },
+    {
+      "file": "ao/electron.log",
+      "bytes": 148,
+      "sha256": "182a78621c32b8fb63fe80c9de526ccecde3a3c49052cfc9c8979aa8c1bc3511",
+      "source": "artifacts/gpu-ao-c8-v1/electron.log"
+    },
+    {
+      "file": "ao/ao-report.json.gz",
+      "bytes": 17882,
+      "sha256": "3a5ee49fa884490dd3a3c7f73a890f12ab2ae47373d4a028f0a57608ae9cd92e",
+      "source": "artifacts/gpu-ao-c8-v1/ao-report.json",
+      "originalBytes": 389562,
+      "originalSha256": "18e8d6fa7c94e67001c54c0d02cf393d005fd53b31729231c92341db482a2bbc",
+      "losslessGzip": true
+    },
+    {
+      "file": "ao/x51-c8-ao-gpu.cjs",
+      "bytes": 14648,
+      "sha256": "81d9760b27fee68d3a43c01d0228967efc60ed763b1ad70de306b16a2d24c783",
+      "source": "../../../../../../handoff/x51-c8-ao-gpu.cjs"
+    },
+    {
+      "file": "ao/20-rear-eye-ao-on-capture-2.jpg",
+      "bytes": 168968,
+      "sha256": "995d46945281b9ed9ca2f28917e00ed55303543ddbf778b1a98c3fad43780cb4",
+      "source": "artifacts/gpu-ao-c8-v1/20-rear-eye-ao-on-capture-2.jpg"
+    },
+    {
+      "file": "ao/20-rear-eye-ao-on-capture-2.png",
+      "bytes": 2684331,
+      "sha256": "b711a515fc8cc7e619e373a4a822ac1136148ee2f36cfea80515d7c1b587b3fa",
+      "source": "artifacts/gpu-ao-c8-v1/20-rear-eye-ao-on-capture-2.png"
+    },
+    {
+      "file": "ao/20-rear-eye-ao-off-capture-2.jpg",
+      "bytes": 163400,
+      "sha256": "9fd8b02387867553a73036a0a0860c02f9c161d69a17ba5679cb24ee8eeb09b9",
+      "source": "artifacts/gpu-ao-c8-v1/20-rear-eye-ao-off-capture-2.jpg"
+    },
+    {
+      "file": "ao/20-rear-eye-ao-off-capture-2.png",
+      "bytes": 2613816,
+      "sha256": "3f4e8ed6f6ece529dd60d42a98d8491dbf4be5ae52c6dc9b716cd805c6245473",
+      "source": "artifacts/gpu-ao-c8-v1/20-rear-eye-ao-off-capture-2.png"
+    },
+    {
+      "file": "ao/21-front-eye-ao-on-capture-2.jpg",
+      "bytes": 90658,
+      "sha256": "ecf37b086c12bd6b306c6dfa4b7f9ff5670dae8fa2884ad0653379d6b94edb46",
+      "source": "artifacts/gpu-ao-c8-v1/21-front-eye-ao-on-capture-2.jpg"
+    },
+    {
+      "file": "ao/21-front-eye-ao-on-capture-2.png",
+      "bytes": 2088282,
+      "sha256": "ea58e8888df177ba37c9772637e728c9d5a8d81c2d4a09dd79c8e03a04ec9e68",
+      "source": "artifacts/gpu-ao-c8-v1/21-front-eye-ao-on-capture-2.png"
+    },
+    {
+      "file": "ao/21-front-eye-ao-off-capture-2.jpg",
+      "bytes": 87317,
+      "sha256": "02aef650157000611ea33ad0b2d854f106dfce425c321333bc8a7cbfd88c7d67",
+      "source": "artifacts/gpu-ao-c8-v1/21-front-eye-ao-off-capture-2.jpg"
+    },
+    {
+      "file": "ao/21-front-eye-ao-off-capture-2.png",
+      "bytes": 2027602,
+      "sha256": "f2eede33b61b1ce1be5bae36cae7a79f3d0c5f2c5b808056bef2324be77db5f8",
+      "source": "artifacts/gpu-ao-c8-v1/21-front-eye-ao-off-capture-2.png"
+    },
+    {
+      "file": "ao/station-street-ao-on-capture-2.jpg",
+      "bytes": 153460,
+      "sha256": "7388a71be310816f98a52a27773a1cf35fcba6b0d47d92c32ee6434ae79cfd31",
+      "source": "artifacts/gpu-ao-c8-v1/station-street-ao-on-capture-2.jpg"
+    },
+    {
+      "file": "ao/station-street-ao-off-capture-2.jpg",
+      "bytes": 153292,
+      "sha256": "7baf36d6b0acafca79c0b9db035794fc3409c26d77ea61c1f61079adc18381bf",
+      "source": "artifacts/gpu-ao-c8-v1/station-street-ao-off-capture-2.jpg"
+    },
+    {
+      "file": "ao/measurements.json",
+      "bytes": 34761,
+      "sha256": "e5a3422a90bd253890b14c0a363c424c7d88300284aa2c1073f6580fd5ddb5a0",
+      "generatedSummary": true
+    },
+    {
+      "file": "integrated/source-manifest.json",
+      "bytes": 30609,
+      "sha256": "67a607e32e83a521df147dc4f080944e14eac6290be5117d0f05c493e20379b7",
+      "source": "artifacts/gpu-props-c8-v1/source-manifest.json"
+    },
+    {
+      "file": "integrated/run-config.json",
+      "bytes": 1083,
+      "sha256": "8751d56257f2b488812aec8f0603653b3e727f943322edee184fbd3b7c1c4e6c",
+      "source": "artifacts/gpu-props-c8-v1/run-config.json"
+    },
+    {
+      "file": "integrated/process.json",
+      "bytes": 135,
+      "sha256": "2b21e6082f17f65fccde77579af6b5100c2c2a5c8b36b49ff80ae42b08a710fd",
+      "source": "artifacts/gpu-props-c8-v1/process.json"
+    },
+    {
+      "file": "integrated/electron.log",
+      "bytes": 1847,
+      "sha256": "b04e1ef662a48376f3cfd5b0e7030db758b9e80ce872fc7383367d69d9fb6dbd",
+      "source": "artifacts/gpu-props-c8-v1/electron.log"
+    },
+    {
+      "file": "integrated/render-report.json.gz",
+      "bytes": 72287,
+      "sha256": "5bbb9a3efcaa3bf9e7ee73b1b9a7ce75837fa59e7ba5eef864a6a403d7cf614a",
+      "source": "artifacts/gpu-props-c8-v1/render-report.json",
+      "originalBytes": 485921,
+      "originalSha256": "00d93c39c506d654298e3df6733b5fa2f0b5adb8472c8db7f4dc49c72ac43689",
+      "losslessGzip": true
+    },
+    {
+      "file": "integrated/01-station-street.jpg",
+      "bytes": 119471,
+      "sha256": "35f292c1a6f0665254510cd2ddfd9bdd253c12f63b11b704522bbbd90d992a4f",
+      "source": "artifacts/gpu-props-c8-v1/01-station-street.jpg"
+    },
+    {
+      "file": "integrated/02-station-port.jpg",
+      "bytes": 117290,
+      "sha256": "96269fde522a5f6a49d3e8d89778b74b19fa14b83423f8e9eab6b933b78e8610",
+      "source": "artifacts/gpu-props-c8-v1/02-station-port.jpg"
+    },
+    {
+      "file": "integrated/03-island-aerial.jpg",
+      "bytes": 56091,
+      "sha256": "c4c803b7ba77ccf7541ee1db55894723ac17ab5528090b6b0567da6d0de59050",
+      "source": "artifacts/gpu-props-c8-v1/03-island-aerial.jpg"
+    },
+    {
+      "file": "integrated/04-shop-interior.jpg",
+      "bytes": 107792,
+      "sha256": "5cfc04fd1d8a35741047d96d9d5f5d804a4f69acd27d90873355d5cd6a943645",
+      "source": "artifacts/gpu-props-c8-v1/04-shop-interior.jpg"
+    },
+    {
+      "file": "integrated/16-city-context.jpg",
+      "bytes": 111553,
+      "sha256": "ac5c0108ac4f7fa3f2606de31601a4c82f85e1a6e4272032f9e4be14f4daa336",
+      "source": "artifacts/gpu-props-c8-v1/16-city-context.jpg"
+    },
+    {
+      "file": "integrated/18-town-shop-balconies.jpg",
+      "bytes": 93065,
+      "sha256": "8ad953cdc16b9a6edfa0aa75ca71ffa333dc5cd5f8a2dd4bdde00960e0acb9ae",
+      "source": "artifacts/gpu-props-c8-v1/18-town-shop-balconies.jpg"
+    },
+    {
+      "file": "integrated/19-town-rear-stairs.jpg",
+      "bytes": 125012,
+      "sha256": "8723abbcbd401a716286b59217b156e825c2363f5207b390c15281c3dbbf49ee",
+      "source": "artifacts/gpu-props-c8-v1/19-town-rear-stairs.jpg"
+    },
+    {
+      "file": "integrated/walking-third.jpg",
+      "bytes": 117332,
+      "sha256": "30a96aff7e9ded6e3c605950e42080fddc3cf661c2c90173e4fe9cb1c976f90a",
+      "source": "artifacts/gpu-props-c8-v1/walking-third.jpg"
+    },
+    {
+      "file": "integrated/walking-first.jpg",
+      "bytes": 111114,
+      "sha256": "84223e81b717a8dbc42e9d712086e6f36527011acd1aefd388b4328cf064de28",
+      "source": "artifacts/gpu-props-c8-v1/walking-first.jpg"
+    },
+    {
+      "file": "integrated/23-service-corner.jpg",
+      "bytes": 55837,
+      "sha256": "57069764b0c3f1290db707ebe0c6dc345d87da6f8f0fc6c2ada8433807275482",
+      "source": "artifacts/gpu-props-c8-v1/23-service-corner.jpg"
+    },
+    {
+      "file": "integrated/24-laundry-details.jpg",
+      "bytes": 46377,
+      "sha256": "d8a1ffb8af20d65ab6c6a84cf68ccbb4f2c635fbe085d30850657337844308b2",
+      "source": "artifacts/gpu-props-c8-v1/24-laundry-details.jpg"
+    },
+    {
+      "file": "integrated/23-service-corner.png",
+      "bytes": 926913,
+      "sha256": "ac402e33131becb91e15ce7956b9a1b1a323fc0dfaecc3ba1ac1cc4fc9677d68",
+      "source": "artifacts/gpu-props-c8-v1/23-service-corner.png"
+    },
+    {
+      "file": "integrated/24-laundry-details.png",
+      "bytes": 1052429,
+      "sha256": "2b18a2ea716710e324b9eb4914d9b03207bd75f01519f9c40bfcb9b55c86478a",
+      "source": "artifacts/gpu-props-c8-v1/24-laundry-details.png"
+    },
+    {
+      "file": "integrated/frame-samples-island-aerial.json",
+      "bytes": 11102,
+      "sha256": "2fcb6ad14dc8c592f6f0a7337ce5ffbcc5b551382be83447ed81452719338994",
+      "source": "artifacts/gpu-props-c8-v1/frame-samples-island-aerial.json"
+    },
+    {
+      "file": "integrated/frame-samples-shop-interior.json",
+      "bytes": 11122,
+      "sha256": "a9245672b9cdeb54f392473a998fd3eb5b5ebb9d091bcf1c1d52fc3aa632fafe",
+      "source": "artifacts/gpu-props-c8-v1/frame-samples-shop-interior.json"
+    },
+    {
+      "file": "integrated/frame-samples-station-port.json",
+      "bytes": 11184,
+      "sha256": "0c832bc4bf1c4546ead80d88cde83effc804be5b917a043c2c8cf06fdf486839",
+      "source": "artifacts/gpu-props-c8-v1/frame-samples-station-port.json"
+    },
+    {
+      "file": "integrated/frame-samples-station-street.json",
+      "bytes": 11526,
+      "sha256": "3d4c62e1610473492786f795d09ad2df04e6cb8f3c14659f7a507f347a1292ef",
+      "source": "artifacts/gpu-props-c8-v1/frame-samples-station-street.json"
+    },
+    {
+      "file": "integrated/frame-samples-walking-first.json",
+      "bytes": 11259,
+      "sha256": "b8b5eb9a269c9b4f9079d8923d65ccca8f1ce32ac90dfec25ca4ebfced55616c",
+      "source": "artifacts/gpu-props-c8-v1/frame-samples-walking-first.json"
+    },
+    {
+      "file": "integrated/frame-samples-walking-third.json",
+      "bytes": 11385,
+      "sha256": "cb9422a220d8e12e64b54451727b2cc94cb4a557cc85235ad9f3064cb09c97b3",
+      "source": "artifacts/gpu-props-c8-v1/frame-samples-walking-third.json"
+    },
+    {
+      "file": "integrated/frame-samples.json",
+      "bytes": 53496,
+      "sha256": "43d2cb6e0c5bf4047b29c1bd2411ad4eea67afab04cef6d824535cad8690b74e",
+      "source": "artifacts/gpu-props-c8-v1/frame-samples.json"
+    },
+    {
+      "file": "integrated/measurements.json",
+      "bytes": 61786,
+      "sha256": "19b28dc0e6dba75eeb3648647f031de107c9538613cf0fb0247dcede8c4258fe",
+      "generatedSummary": true
+    },
+    {
+      "file": "targeted/prop-assets-manifest.json",
+      "bytes": 3941,
+      "sha256": "dd8734fb67c85176d5061a76463eb61801dff175053a82b1c5bb0c22e2723ccc",
+      "source": "artifacts/gpu-props-c8-integration-v1/prop-assets-manifest.json"
+    },
+    {
+      "file": "targeted/source-manifest.json",
+      "bytes": 25541,
+      "sha256": "27df22b138e5cbb5de9392a9a5d0e17d338c9a8e69ab00ada802c834d290293a",
+      "source": "artifacts/gpu-props-c8-integration-v1/source-manifest.json"
+    },
+    {
+      "file": "targeted/run-config.json",
+      "bytes": 582,
+      "sha256": "b39d98471c8b42a8e6c41bd68677c781db061e2efcb40368910df01662aa0de8",
+      "source": "artifacts/gpu-props-c8-integration-v1/run-config.json"
+    },
+    {
+      "file": "targeted/process.json",
+      "bytes": 13,
+      "sha256": "4ba7d9d1aa89d2aa9b946e649196a182e30e884c75e7a79aab319c1382e70b67",
+      "source": "artifacts/gpu-props-c8-integration-v1/process.json"
+    },
+    {
+      "file": "targeted/electron.log",
+      "bytes": 148,
+      "sha256": "182a78621c32b8fb63fe80c9de526ccecde3a3c49052cfc9c8979aa8c1bc3511",
+      "source": "artifacts/gpu-props-c8-integration-v1/electron.log"
+    },
+    {
+      "file": "targeted/integration-report.json.gz",
+      "bytes": 26676,
+      "sha256": "7f0734e6e189d9b6ada184a77dc4170f64c6148697ce00682629f853c77ad413",
+      "source": "artifacts/gpu-props-c8-integration-v1/integration-report.json",
+      "originalBytes": 463607,
+      "originalSha256": "ac6cb9430c52b19ed4aac8cdb48585181240eaa718aed437aed30b878b3d376d",
+      "losslessGzip": true
+    },
+    {
+      "file": "targeted/x51-c8-props-integration-gpu.cjs",
+      "bytes": 27932,
+      "sha256": "4573bb8f3cea5cd636425eff8b68d78890499b379b05d448b3d2a25d92dbd5bc",
+      "source": "../../../../../../handoff/x51-c8-props-integration-gpu.cjs"
+    },
+    {
+      "file": "targeted/service-corner-capture-2.jpg",
+      "bytes": 69563,
+      "sha256": "cf00531d67a601125316be5c0b39567fc5de70de22f45b54c4b777b7b4e62e2d",
+      "source": "artifacts/gpu-props-c8-integration-v1/service-corner-capture-2.jpg"
+    },
+    {
+      "file": "targeted/service-corner-capture-2.png",
+      "bytes": 1681499,
+      "sha256": "b0fd5920f2556cd7af1a3de2ccdb70e3299efaaa03ae54d4ec1d3c8567f2b073",
+      "source": "artifacts/gpu-props-c8-integration-v1/service-corner-capture-2.png"
+    },
+    {
+      "file": "targeted/service-corner-shutter-ao-off-capture-2.jpg",
+      "bytes": 70501,
+      "sha256": "fcdb64b9a33c275ab380702fd4b6325f59eff9252b52ccc4fa6e135116b579ce",
+      "source": "artifacts/gpu-props-c8-integration-v1/service-corner-shutter-ao-off-capture-2.jpg"
+    },
+    {
+      "file": "targeted/service-corner-shutter-ao-off-capture-2.png",
+      "bytes": 1734270,
+      "sha256": "35847142f2e8e2123067e959506e80f0484a3d6153325f11186a2fb4f63e7104",
+      "source": "artifacts/gpu-props-c8-integration-v1/service-corner-shutter-ao-off-capture-2.png"
+    },
+    {
+      "file": "targeted/laundry-details-capture-2.jpg",
+      "bytes": 59343,
+      "sha256": "039f116d4febaed64c542d86fb0a2c82d3db928cbcb00221fab667b0d40dddf9",
+      "source": "artifacts/gpu-props-c8-integration-v1/laundry-details-capture-2.jpg"
+    },
+    {
+      "file": "targeted/laundry-details-capture-2.png",
+      "bytes": 1777316,
+      "sha256": "06845b3011ca70c2c52ad19c78222d0ef8e2e8ddc945d975ded845f8f934e079",
+      "source": "artifacts/gpu-props-c8-integration-v1/laundry-details-capture-2.png"
+    },
+    {
+      "file": "targeted/laundry-details-world-ao-off-capture-2.jpg",
+      "bytes": 57056,
+      "sha256": "5025a882decef11970a4351c7a2b422c490fa0001aa6b9a863f59dc98cd49175",
+      "source": "artifacts/gpu-props-c8-integration-v1/laundry-details-world-ao-off-capture-2.jpg"
+    },
+    {
+      "file": "targeted/laundry-details-world-ao-off-capture-2.png",
+      "bytes": 1733238,
+      "sha256": "9bf7a6d31685e98edf82f06c5216036784044c7c7ecf912b464c2f2f3603968a",
+      "source": "artifacts/gpu-props-c8-integration-v1/laundry-details-world-ao-off-capture-2.png"
+    },
+    {
+      "file": "targeted/frames-island-aerial-A1.json",
+      "bytes": 63492,
+      "sha256": "7d030bd8b6346c98b19ec08e15cfbdae54de1b469f7899372a4c5ae3560346f5",
+      "source": "artifacts/gpu-props-c8-integration-v1/frames-island-aerial-A1.json"
+    },
+    {
+      "file": "targeted/frames-island-aerial-A2.json",
+      "bytes": 62723,
+      "sha256": "3f86b9d16f31746d49d208dbce966a38ec21dfc4a0845d04a0a9bcb3304f5e62",
+      "source": "artifacts/gpu-props-c8-integration-v1/frames-island-aerial-A2.json"
+    },
+    {
+      "file": "targeted/frames-island-aerial-B.json",
+      "bytes": 63343,
+      "sha256": "e8438805fc3808f127680f1ea50baa20b6be8d819614fb3c645ad906ec04188d",
+      "source": "artifacts/gpu-props-c8-integration-v1/frames-island-aerial-B.json"
+    },
+    {
+      "file": "targeted/frames-station-street-A1.json",
+      "bytes": 63442,
+      "sha256": "3c8b8dcbe4d4a756df2c016606c8487f7834668679f0a6f4704bd0f603c0612f",
+      "source": "artifacts/gpu-props-c8-integration-v1/frames-station-street-A1.json"
+    },
+    {
+      "file": "targeted/frames-station-street-A2.json",
+      "bytes": 63773,
+      "sha256": "47bb0f63bacc2b28e11dd557b188591265a256ebfd0c3327d641ea817b6e5c8c",
+      "source": "artifacts/gpu-props-c8-integration-v1/frames-station-street-A2.json"
+    },
+    {
+      "file": "targeted/frames-station-street-B.json",
+      "bytes": 63596,
+      "sha256": "f068f791890fa2bf98d0feda34f7746d67acb1aa12d914574fbe8d46927b7f21",
+      "source": "artifacts/gpu-props-c8-integration-v1/frames-station-street-B.json"
+    },
+    {
+      "file": "targeted/measurements.json",
+      "bytes": 102088,
+      "sha256": "f8f603afd8839237327464cec47b18093d80371bcd2c3a1dafa6409f8aa731db",
+      "generatedSummary": true
+    },
+    {
+      "file": "shutter-cause/prop-assets-manifest.json",
+      "bytes": 3941,
+      "sha256": "dd8734fb67c85176d5061a76463eb61801dff175053a82b1c5bb0c22e2723ccc",
+      "source": "artifacts/gpu-shutter-c8-cause-v1/prop-assets-manifest.json"
+    },
+    {
+      "file": "shutter-cause/source-manifest.json",
+      "bytes": 25541,
+      "sha256": "03f1ffa420f3051e64a06aef0fc51444f73f209e4a9512681a5133fa6071d156",
+      "source": "artifacts/gpu-shutter-c8-cause-v1/source-manifest.json"
+    },
+    {
+      "file": "shutter-cause/run-config.json",
+      "bytes": 574,
+      "sha256": "1a6d8e345efcf322eeb2f076b17a5e69237526cf5731edc1ed272a9ecc70e5d8",
+      "source": "artifacts/gpu-shutter-c8-cause-v1/run-config.json"
+    },
+    {
+      "file": "shutter-cause/process.json",
+      "bytes": 13,
+      "sha256": "7b693ce25ab4669dc8a7fdd645600be4c51b2da3fde6c3a952db7572ab8c7823",
+      "source": "artifacts/gpu-shutter-c8-cause-v1/process.json"
+    },
+    {
+      "file": "shutter-cause/electron.log",
+      "bytes": 148,
+      "sha256": "182a78621c32b8fb63fe80c9de526ccecde3a3c49052cfc9c8979aa8c1bc3511",
+      "source": "artifacts/gpu-shutter-c8-cause-v1/electron.log"
+    },
+    {
+      "file": "shutter-cause/shutter-report.json.gz",
+      "bytes": 22821,
+      "sha256": "a539197f9e3a9733aec9736efd8867a2b45ffbc385a7e890b53d682eb09d2619",
+      "source": "artifacts/gpu-shutter-c8-cause-v1/shutter-report.json",
+      "originalBytes": 575513,
+      "originalSha256": "3480d7b1f3288000419e892b0430d71ddf7c4250ed02b64fa82e687a2135c447",
+      "losslessGzip": true
+    },
+    {
+      "file": "shutter-cause/x51-c8-shutter-cause-gpu.cjs",
+      "bytes": 18086,
+      "sha256": "221bc616b7aceaf24212ba8d20f65dcd2d47abbb561c9871cda551fe0145bf3f",
+      "source": "../../../../../../handoff/x51-c8-shutter-cause-gpu.cjs"
+    },
+    {
+      "file": "shutter-cause/00-original-capture-2.jpg",
+      "bytes": 69563,
+      "sha256": "cf00531d67a601125316be5c0b39567fc5de70de22f45b54c4b777b7b4e62e2d",
+      "source": "artifacts/gpu-shutter-c8-cause-v1/00-original-capture-2.jpg"
+    },
+    {
+      "file": "shutter-cause/01-normal-off-capture-2.jpg",
+      "bytes": 69775,
+      "sha256": "fd9d62f8fc6c75a423291b5f0ff155d8c6d49b46ec7f6a9abea3c4501d8206b3",
+      "source": "artifacts/gpu-shutter-c8-cause-v1/01-normal-off-capture-2.jpg"
+    },
+    {
+      "file": "shutter-cause/03-shadow-off-capture-2.jpg",
+      "bytes": 69563,
+      "sha256": "cf00531d67a601125316be5c0b39567fc5de70de22f45b54c4b777b7b4e62e2d",
+      "source": "artifacts/gpu-shutter-c8-cause-v1/03-shadow-off-capture-2.jpg"
+    },
+    {
+      "file": "shutter-cause/05-basic-map-only-capture-2.jpg",
+      "bytes": 82138,
+      "sha256": "7badba65d47033aa847efb2de57fa0133c822ee31ca3d5b7015d378ac1fc38a1",
+      "source": "artifacts/gpu-shutter-c8-cause-v1/05-basic-map-only-capture-2.jpg"
+    },
+    {
+      "file": "shutter-cause/07-service-candidate-capture-2.jpg",
+      "bytes": 105700,
+      "sha256": "c63ffff9439a14fb7f2278823b01f4b0277dc42b7ea508d1d7aedf3a321153eb",
+      "source": "artifacts/gpu-shutter-c8-cause-v1/07-service-candidate-capture-2.jpg"
+    },
+    {
+      "file": "shutter-cause/08-laundry-candidate-capture-2.jpg",
+      "bytes": 69746,
+      "sha256": "b9a9c6639d270a95e90f0e72d366317ca92132d6a09ee555ef63b1b818f1564a",
+      "source": "artifacts/gpu-shutter-c8-cause-v1/08-laundry-candidate-capture-2.jpg"
+    },
+    {
+      "file": "shutter-cause/measurements.json",
+      "bytes": 63625,
+      "sha256": "f28e461455c0b7a25bc9628c8378519e5d1420ef9940cdb92c095e62888642e8",
+      "generatedSummary": true
+    },
+    {
+      "file": "shutter-grade-driver-failed/prop-assets-manifest.json",
+      "bytes": 3941,
+      "sha256": "dd8734fb67c85176d5061a76463eb61801dff175053a82b1c5bb0c22e2723ccc",
+      "source": "artifacts/gpu-shutter-c8-grade-v1/prop-assets-manifest.json"
+    },
+    {
+      "file": "shutter-grade-driver-failed/source-manifest.json",
+      "bytes": 25541,
+      "sha256": "24861da97b59de252ed92916b06e8891919e5e2ae11542c005b6a9c9715181b9",
+      "source": "artifacts/gpu-shutter-c8-grade-v1/source-manifest.json"
+    },
+    {
+      "file": "shutter-grade-driver-failed/run-config.json",
+      "bytes": 573,
+      "sha256": "f6232f561ca07d9e8eff76af46f664c084405f0c93dfa75e14cf1def5be1ee6b",
+      "source": "artifacts/gpu-shutter-c8-grade-v1/run-config.json"
+    },
+    {
+      "file": "shutter-grade-driver-failed/process.json",
+      "bytes": 13,
+      "sha256": "b055ae346f374dcd899e55a4f16a58b6e6dafb5c6bddf26e08467a519fb8f5c6",
+      "source": "artifacts/gpu-shutter-c8-grade-v1/process.json"
+    },
+    {
+      "file": "shutter-grade-driver-failed/electron.log",
+      "bytes": 410,
+      "sha256": "82523f775633963b390d621c1331731a72ebd654d264cee48794d6402d2a318c",
+      "source": "artifacts/gpu-shutter-c8-grade-v1/electron.log"
+    },
+    {
+      "file": "shutter-grade-driver-failed/grade-report.json.gz",
+      "bytes": 15730,
+      "sha256": "f7b8825bdde2dba67b3938a6256c41c4a83c50174e41fea49322f9b402f07f17",
+      "source": "artifacts/gpu-shutter-c8-grade-v1/grade-report.json",
+      "originalBytes": 316228,
+      "originalSha256": "d540a2f6e6e8d5b13e6664304baa309bd730f9f86c26795bbb6b95a627b43763",
+      "losslessGzip": true
+    },
+    {
+      "file": "shutter-grade-driver-failed/source-manifest.json.gz",
+      "bytes": 9633,
+      "sha256": "a730ffcaccaceaa0b4cdc01ccd87a7f07a3030b0e37aa064fdf0d7f5e5e833c6",
+      "source": "artifacts/gpu-shutter-c8-grade-v1/source-manifest.json",
+      "originalBytes": 25541,
+      "originalSha256": "24861da97b59de252ed92916b06e8891919e5e2ae11542c005b6a9c9715181b9",
+      "losslessGzip": true
+    },
+    {
+      "file": "shutter-grade-driver-failed/prop-assets-manifest.json.gz",
+      "bytes": 1058,
+      "sha256": "5c7b5effc3c99960f2f14cbbba17391fc30da771dbddd23e50364eed68934db2",
+      "source": "artifacts/gpu-shutter-c8-grade-v1/prop-assets-manifest.json",
+      "originalBytes": 3941,
+      "originalSha256": "dd8734fb67c85176d5061a76463eb61801dff175053a82b1c5bb0c22e2723ccc",
+      "losslessGzip": true
+    },
+    {
+      "file": "shutter-grade-driver-failed/run-config.json.gz",
+      "bytes": 293,
+      "sha256": "89666704b94fc3f47171541c1cae51f7accb814706a18f45ef4c5446f6fe605f",
+      "source": "artifacts/gpu-shutter-c8-grade-v1/run-config.json",
+      "originalBytes": 573,
+      "originalSha256": "f6232f561ca07d9e8eff76af46f664c084405f0c93dfa75e14cf1def5be1ee6b",
+      "losslessGzip": true
+    },
+    {
+      "file": "shutter-grade-driver-failed/x51-c8-shutter-grade-gpu.cjs",
+      "bytes": 15528,
+      "sha256": "24e4c8f3863fb8431d4ea5cdc8d9837d0ac8384c3b5ae729d450fc733e888006",
+      "source": "../../../../../../handoff/x51-c8-shutter-grade-gpu.cjs"
+    },
+    {
+      "file": "shutter-grade-driver-failed/measurements.json",
+      "bytes": 3837,
+      "sha256": "08fc8edc1498365a10b59bf37afe4c693a72ea9fdbe1c6c4b1dfd9724f140b39",
+      "generatedSummary": true
+    },
+    {
+      "file": "shutter-grade/prop-assets-manifest.json",
+      "bytes": 3941,
+      "sha256": "dd8734fb67c85176d5061a76463eb61801dff175053a82b1c5bb0c22e2723ccc",
+      "source": "artifacts/gpu-shutter-c8-grade-v2/prop-assets-manifest.json"
+    },
+    {
+      "file": "shutter-grade/source-manifest.json",
+      "bytes": 25541,
+      "sha256": "86691f5785fa103af0885088192a6b92035d85a7804871e737ffab74b7f5ee13",
+      "source": "artifacts/gpu-shutter-c8-grade-v2/source-manifest.json"
+    },
+    {
+      "file": "shutter-grade/run-config.json",
+      "bytes": 573,
+      "sha256": "b8b86cc082489d2962b885666ba116cf53d8e483ea2b5a110ef4081b0ae061a9",
+      "source": "artifacts/gpu-shutter-c8-grade-v2/run-config.json"
+    },
+    {
+      "file": "shutter-grade/process.json",
+      "bytes": 13,
+      "sha256": "055f2e819c3770a3fd858e1d1a30e8e3577edde09d66c6d2ba59b329ecd60442",
+      "source": "artifacts/gpu-shutter-c8-grade-v2/process.json"
+    },
+    {
+      "file": "shutter-grade/electron.log",
+      "bytes": 148,
+      "sha256": "182a78621c32b8fb63fe80c9de526ccecde3a3c49052cfc9c8979aa8c1bc3511",
+      "source": "artifacts/gpu-shutter-c8-grade-v2/electron.log"
+    },
+    {
+      "file": "shutter-grade/grade-report.json.gz",
+      "bytes": 204827,
+      "sha256": "8936fea87afe0f52a495be8cfad3477a4d7bf4d4d4b46dfcdad13619ddbfb243",
+      "source": "artifacts/gpu-shutter-c8-grade-v2/grade-report.json",
+      "originalBytes": 2200165,
+      "originalSha256": "82826c4ac349f1d565a44f045c67fa22205e3833b45608e9fa225f9af2f474e1",
+      "losslessGzip": true
+    },
+    {
+      "file": "shutter-grade/x51-c8-shutter-grade-gpu-v2.cjs",
+      "bytes": 15561,
+      "sha256": "bf39bda306f189325ea14d898064f19cc1399c26ada259d6c612fcecfc2060d1",
+      "source": "../../../../../../handoff/x51-c8-shutter-grade-gpu-v2.cjs"
+    },
+    {
+      "file": "shutter-grade/00-contrast-original-capture-2.jpg",
+      "bytes": 69563,
+      "sha256": "cf00531d67a601125316be5c0b39567fc5de70de22f45b54c4b777b7b4e62e2d",
+      "source": "artifacts/gpu-shutter-c8-grade-v2/00-contrast-original-capture-2.jpg"
+    },
+    {
+      "file": "shutter-grade/00-contrast-original-capture-2.png",
+      "bytes": 1681499,
+      "sha256": "b0fd5920f2556cd7af1a3de2ccdb70e3299efaaa03ae54d4ec1d3c8567f2b073",
+      "source": "artifacts/gpu-shutter-c8-grade-v2/00-contrast-original-capture-2.png"
+    },
+    {
+      "file": "shutter-grade/01-contrast-neutral-capture-2.jpg",
+      "bytes": 64739,
+      "sha256": "34be7a20a2e995977ae33c7bf4fa2f1509d5b827d1b41f586cee44363529c2e3",
+      "source": "artifacts/gpu-shutter-c8-grade-v2/01-contrast-neutral-capture-2.jpg"
+    },
+    {
+      "file": "shutter-grade/01-contrast-neutral-capture-2.png",
+      "bytes": 1751056,
+      "sha256": "c86a2c42c1b564c2c84617f2a0f47c00ab469d5c7e8dedd239a8236aea0160f9",
+      "source": "artifacts/gpu-shutter-c8-grade-v2/01-contrast-neutral-capture-2.png"
+    },
+    {
+      "file": "shutter-grade/02-contrast-restored-capture-2.jpg",
+      "bytes": 69563,
+      "sha256": "cf00531d67a601125316be5c0b39567fc5de70de22f45b54c4b777b7b4e62e2d",
+      "source": "artifacts/gpu-shutter-c8-grade-v2/02-contrast-restored-capture-2.jpg"
+    },
+    {
+      "file": "shutter-grade/02-contrast-restored-capture-2.png",
+      "bytes": 1681499,
+      "sha256": "b0fd5920f2556cd7af1a3de2ccdb70e3299efaaa03ae54d4ec1d3c8567f2b073",
+      "source": "artifacts/gpu-shutter-c8-grade-v2/02-contrast-restored-capture-2.png"
+    },
+    {
+      "file": "shutter-grade/measurements.json",
+      "bytes": 632108,
+      "sha256": "67addacfd32c449e1cf846eda8c7243a0d485910173c87fb675231b26ce130e7",
+      "generatedSummary": true
+    },
+    {
+      "file": "source-map/final-pinned-prop-bytes.json",
+      "bytes": 3453,
+      "sha256": "c3ff947e2c053b6dc6cbc814143a4f3cab6ff604a98638a3e8a21794f20a9709",
+      "generatedSummary": true
+    },
+    {
+      "file": "source-map/final-prop-assets.json",
+      "bytes": 6576,
+      "sha256": "6a4b86e144b50835b1152f4aa32ac4c5e50e352956979cd4ca5fc5f21561810a",
+      "exactCommit": "38087c701e41279b1d4c5721ba4d7b1e16eef0e9"
+    },
+    {
+      "file": "final/source-manifest.json",
+      "bytes": 30609,
+      "sha256": "ab41932ae51c0cd0a589e0a142fcc43d7a1d963a79879d41499126be3a4be787",
+      "source": "artifacts/gpu-props-c8-framing-fixed/source-manifest.json"
+    },
+    {
+      "file": "final/run-config.json",
+      "bytes": 1105,
+      "sha256": "88a8108cfe16b7a60495ce7bad9273af66f89842cad011e932ae2e2c97a470ee",
+      "source": "artifacts/gpu-props-c8-framing-fixed/run-config.json"
+    },
+    {
+      "file": "final/process.json",
+      "bytes": 135,
+      "sha256": "e1a8d22b0af371bf9af7ffc8c091c08dab542e399c41b91f0abe05a242e010d2",
+      "source": "artifacts/gpu-props-c8-framing-fixed/process.json"
+    },
+    {
+      "file": "final/electron.log",
+      "bytes": 1843,
+      "sha256": "eaee49d8921dd186b8a194790e4f4e293d43c943109cd64303aa10e3510ae7f4",
+      "source": "artifacts/gpu-props-c8-framing-fixed/electron.log"
+    },
+    {
+      "file": "final/render-report.json.gz",
+      "bytes": 71302,
+      "sha256": "7c3e88e4b522c1afc5463e22c6daec0f4161124c82e54f6882915af53f807a5c",
+      "source": "artifacts/gpu-props-c8-framing-fixed/render-report.json",
+      "originalBytes": 481251,
+      "originalSha256": "096cc982ecbc6478cf27feb9cf9554cb0aaf3eaf8eaa0b82a787083af717d38b",
+      "losslessGzip": true
+    },
+    {
+      "file": "final/01-station-street.jpg",
+      "bytes": 119508,
+      "sha256": "2e895205682234d7d9bc15c265b583a385ffb7d775e1220ba1e25d4ad42fe4be",
+      "source": "artifacts/gpu-props-c8-framing-fixed/01-station-street.jpg"
+    },
+    {
+      "file": "final/02-station-port.jpg",
+      "bytes": 117298,
+      "sha256": "1fa1be07dbd44cb7c1490ce2dd6f51d9a134095e87643804786ce99d5c282fad",
+      "source": "artifacts/gpu-props-c8-framing-fixed/02-station-port.jpg"
+    },
+    {
+      "file": "final/03-island-aerial.jpg",
+      "bytes": 56148,
+      "sha256": "19c61d18e4191d7ffb81a08ca4ec461182397c2ebd9bc2a75622c5937e3f3e85",
+      "source": "artifacts/gpu-props-c8-framing-fixed/03-island-aerial.jpg"
+    },
+    {
+      "file": "final/04-shop-interior.jpg",
+      "bytes": 107701,
+      "sha256": "e06ec0a15007e2df3588426003fc2a7f0ba60918ac28f3965d080b0ffc5b0680",
+      "source": "artifacts/gpu-props-c8-framing-fixed/04-shop-interior.jpg"
+    },
+    {
+      "file": "final/16-city-context.jpg",
+      "bytes": 111538,
+      "sha256": "cbf3a1a27dffd225ae7a3a7e29577a13fcc61929f0234f9e74d1c0249f762cac",
+      "source": "artifacts/gpu-props-c8-framing-fixed/16-city-context.jpg"
+    },
+    {
+      "file": "final/18-town-shop-balconies.jpg",
+      "bytes": 92974,
+      "sha256": "c5ccacc41a2f87bedf30c9797829c2234f4d9e5a12c1cd0815ebc765179248c0",
+      "source": "artifacts/gpu-props-c8-framing-fixed/18-town-shop-balconies.jpg"
+    },
+    {
+      "file": "final/19-town-rear-stairs.jpg",
+      "bytes": 124407,
+      "sha256": "49155fab3d45bf2e11031628059f7945b5217637c975f459684ed21e5b89f35a",
+      "source": "artifacts/gpu-props-c8-framing-fixed/19-town-rear-stairs.jpg"
+    },
+    {
+      "file": "final/walking-third.jpg",
+      "bytes": 117272,
+      "sha256": "94d9444e3b60daff0b6482a1ed7c50b42f6a49a55506adc07626e082dd699614",
+      "source": "artifacts/gpu-props-c8-framing-fixed/walking-third.jpg"
+    },
+    {
+      "file": "final/walking-first.jpg",
+      "bytes": 111063,
+      "sha256": "3229ae41c67f360909fa6fe3e54d61c232e49264f53305da09547c4a6b549881",
+      "source": "artifacts/gpu-props-c8-framing-fixed/walking-first.jpg"
+    },
+    {
+      "file": "final/23-service-corner.jpg",
+      "bytes": 84943,
+      "sha256": "09bde6b7e62a44670e694145d91b8b0274c418450c0e820afb6c7fad9118fd67",
+      "source": "artifacts/gpu-props-c8-framing-fixed/23-service-corner.jpg"
+    },
+    {
+      "file": "final/24-laundry-details.jpg",
+      "bytes": 54572,
+      "sha256": "0c163440dab77034f907c8403cc3f08b71286314d151c95c0374b3d8b89bd3cb",
+      "source": "artifacts/gpu-props-c8-framing-fixed/24-laundry-details.jpg"
+    },
+    {
+      "file": "final/23-service-corner.png",
+      "bytes": 1241058,
+      "sha256": "a2661b9524ef543b59041a65772345b3eddd4b0383799e0a66121d38709e6a9d",
+      "source": "artifacts/gpu-props-c8-framing-fixed/23-service-corner.png"
+    },
+    {
+      "file": "final/24-laundry-details.png",
+      "bytes": 1201075,
+      "sha256": "953e37e36134c7b6e85572967f261b667f863dce0466f1d7ab47cbbdc362fd64",
+      "source": "artifacts/gpu-props-c8-framing-fixed/24-laundry-details.png"
+    },
+    {
+      "file": "final/frame-samples-island-aerial.json",
+      "bytes": 10777,
+      "sha256": "05865b0744cb0696f4a69481c311aab8ee499c274eae2e98dc70b617724a652e",
+      "source": "artifacts/gpu-props-c8-framing-fixed/frame-samples-island-aerial.json"
+    },
+    {
+      "file": "final/frame-samples-shop-interior.json",
+      "bytes": 11111,
+      "sha256": "f57222dc65d360fa9e26c1dd37b143b1e993339c953a5cd4e15a52e4287523ad",
+      "source": "artifacts/gpu-props-c8-framing-fixed/frame-samples-shop-interior.json"
+    },
+    {
+      "file": "final/frame-samples-station-port.json",
+      "bytes": 11286,
+      "sha256": "895f606e2a9b69789c591514ed903fd19fa64b5740855a4740a97c660ab18f1b",
+      "source": "artifacts/gpu-props-c8-framing-fixed/frame-samples-station-port.json"
+    },
+    {
+      "file": "final/frame-samples-station-street.json",
+      "bytes": 11521,
+      "sha256": "5571364e38ae03d3a436e7efcd25a79196fb684c23ab0a419a8a64717641e5d6",
+      "source": "artifacts/gpu-props-c8-framing-fixed/frame-samples-station-street.json"
+    },
+    {
+      "file": "final/frame-samples-walking-first.json",
+      "bytes": 11408,
+      "sha256": "3e070fd06ffe266c2a0e285d22f90b589301e80a07a66e0b77f0e84ee47d74e7",
+      "source": "artifacts/gpu-props-c8-framing-fixed/frame-samples-walking-first.json"
+    },
+    {
+      "file": "final/frame-samples-walking-third.json",
+      "bytes": 11355,
+      "sha256": "ab3196083d0becac9f7d44fbaf10bc71802b4963c48188e7ba4c50ebb2ae8ec2",
+      "source": "artifacts/gpu-props-c8-framing-fixed/frame-samples-walking-third.json"
+    },
+    {
+      "file": "final/frame-samples.json",
+      "bytes": 55267,
+      "sha256": "8efe6e6aa0a61c4d15892460219b8a3156cdaf97d8cf02ef6099473514702ee1",
+      "source": "artifacts/gpu-props-c8-framing-fixed/frame-samples.json"
+    },
+    {
+      "file": "final/measurements.json",
+      "bytes": 56823,
+      "sha256": "5c752ff5628d1752e8103db3d17b98862cac91f23abc2d962cd964257fdcbdc5",
+      "generatedSummary": true
+    },
+    {
+      "file": "transport/initial/run-config.json",
+      "bytes": 10332,
+      "sha256": "0af9e88b97104f31ab12267fe4f206615895d473d20b240f401874975f22e1d3",
+      "source": "artifacts/asset-transport-props-c8/run-config.json"
+    },
+    {
+      "file": "transport/initial/process.json",
+      "bytes": 13,
+      "sha256": "aa8fb4dd12975db28f2c50c48354951c7a0303227451cad912a89f3d348a4330",
+      "source": "artifacts/asset-transport-props-c8/process.json"
+    },
+    {
+      "file": "transport/initial/electron.log",
+      "bytes": 2,
+      "sha256": "7eb70257593da06f682a3ddda54a9d260d4fc514f645237f5ca74b08f8da61a6",
+      "source": "artifacts/asset-transport-props-c8/electron.log"
+    },
+    {
+      "file": "transport/initial/source-map.json",
+      "bytes": 1888,
+      "sha256": "d76ab1fab7c1c31c3379354bb1c66edfe40ee5ebf96af60f2f437d4c01f9ce9c",
+      "generatedSummary": true
+    },
+    {
+      "file": "transport/initial/measurements.json",
+      "bytes": 432,
+      "sha256": "ed4e3fb93a67e4bd98e9f0e9b6f0e7caf0c300c9ce7a4f406af425959a41581c",
+      "generatedSummary": true
+    },
+    {
+      "file": "transport/entry-fixed/run-config.json",
+      "bytes": 10356,
+      "sha256": "66bb4816b8d77d2691b30e9989e9ce10cfc7c55fb97b7c99d875d5a76c59550d",
+      "source": "artifacts/asset-transport-props-c8-entry-fixed/run-config.json"
+    },
+    {
+      "file": "transport/entry-fixed/process.json",
+      "bytes": 13,
+      "sha256": "b2994924b7e9bcc6eb51c5d586d0259cddd92b4ea7a5e2c487ef61e9d8e23cee",
+      "source": "artifacts/asset-transport-props-c8-entry-fixed/process.json"
+    },
+    {
+      "file": "transport/entry-fixed/electron.log",
+      "bytes": 4059,
+      "sha256": "af9f848589d5cc336424b15bf1d756393f56e33655c0af41056601f17836fe7c",
+      "source": "artifacts/asset-transport-props-c8-entry-fixed/electron.log"
+    },
+    {
+      "file": "transport/entry-fixed/source-map.json",
+      "bytes": 1724,
+      "sha256": "e2e17a9794bf2fac77612fe67da26098e9b9320481f2e4478462442e9544f4f4",
+      "generatedSummary": true
+    },
+    {
+      "file": "transport/entry-fixed/asset-transport-report.json.gz",
+      "bytes": 26936,
+      "sha256": "7b9cbfd4a34a13603e915627a4105817f6d369d733a9079f11340fc12e5b1321",
+      "source": "artifacts/asset-transport-props-c8-entry-fixed/asset-transport-report.json",
+      "originalBytes": 716367,
+      "originalSha256": "82a47c1e241d8e934c976116e82ee0bd4837e0c8509d72329357e342f84d81e0",
+      "losslessGzip": true
+    },
+    {
+      "file": "transport/entry-fixed/measurements.json",
+      "bytes": 30832,
+      "sha256": "7aff3435425dc87f48edea960a50ef387a9848ff1589a7bee3c66cf1fb4e11b6",
+      "generatedSummary": true
+    },
+    {
+      "file": "transport/entry-probe/conclusion.json",
+      "bytes": 1845,
+      "sha256": "4c8259ea78480fc9f729305b634fdd369ae18bfaee8a11e71cf8ff1f973ee2e2",
+      "source": "../../../../../../handoff/x51-c8-transport-entry-probe/conclusion.json"
+    },
+    {
+      "file": "transport/entry-probe/entry-evidence.json",
+      "bytes": 732,
+      "sha256": "8d5b7af2818fce2237e6f5673628a7322f63d974faacc22499b8c86aa02cb265",
+      "source": "../../../../../../handoff/x51-c8-transport-entry-probe/entry-evidence.json"
+    },
+    {
+      "file": "transport/entry-probe/entry.cjs",
+      "bytes": 1206,
+      "sha256": "f4897a462e444bbb1b9d522263a35db7291ac626f690bf5f3c89b853456e34bb",
+      "source": "../../../../../../handoff/x51-c8-transport-entry-probe/entry.cjs"
+    },
+    {
+      "file": "transport/entry-probe/launch.json",
+      "bytes": 1576,
+      "sha256": "4898a8a1c43dde6b9bb7bcf81e5db731ac8022d8288e82a306f003da0afac57e",
+      "source": "../../../../../../handoff/x51-c8-transport-entry-probe/launch.json"
+    },
+    {
+      "file": "transport/entry-probe/process-result.json",
+      "bytes": 160,
+      "sha256": "f8721eabe76fd9b096040ea9828f0daa11b2bbd3fcb40dc45926f3a0dbcdc4d9",
+      "source": "../../../../../../handoff/x51-c8-transport-entry-probe/process-result.json"
+    },
+    {
+      "file": "transport/root-summary.json",
+      "bytes": 3408,
+      "sha256": "8f0e6a33c7389e6319f28f6ae23c0984381e167aec07123f1ebf44b632ce216d",
+      "source": "../../../../../../handoff/x51-c8-transport-summary.json"
+    },
+    {
+      "file": "source-map/early-cpu-audit.json",
+      "bytes": 1630,
+      "sha256": "d06f0896f2806b0005cac5b81249ea1882fee287554b943a079a3ebf0e96c687",
+      "generatedSummary": true
+    },
+    {
+      "file": "cpu/x51-textured-props-cpu-audit.json",
+      "bytes": 31383,
+      "sha256": "8e87a7560bc6fff68bf75a6a5f9c6a0565b6b64df8ec75e23fe2aa3d74ebd019",
+      "source": "../../../../../../handoff/x51-textured-props-cpu-audit.json"
+    },
+    {
+      "file": "cpu/x51-textured-props-cpu-driver.mjs",
+      "bytes": 14411,
+      "sha256": "5961874529a0a0a750dd9402d9c4e8939d3f66bbf83cef9e668cd5200a4a9ed0",
+      "source": "../../../../../../handoff/x51-textured-props-cpu-driver.mjs"
+    },
+    {
+      "file": "cpu/x51-textured-props-cpu-result.jsonl",
+      "bytes": 34752,
+      "sha256": "fcd437a64e2525f9c28bca507a4aa3bf3d397c35d589869309afb8d16e440ec4",
+      "source": "../../../../../../handoff/x51-textured-props-cpu-result.jsonl"
+    },
+    {
+      "file": "cpu/x51-prop-preparation-checks.json",
+      "bytes": 4262,
+      "sha256": "3ead1a51a622a0e9260755c2ceb98529b8a025ddad7dd114e22d7fd3c43712cf",
+      "source": "../../../../../../handoff/x51-prop-preparation-checks.json"
+    },
+    {
+      "file": "cpu/x51-check-prop-preparation.cjs",
+      "bytes": 10481,
+      "sha256": "e88327f583ea52a6a7f645cb5611a85d45a32f24d0d23438d59cda8fb740532b",
+      "source": "../../../../../../handoff/x51-check-prop-preparation.cjs"
+    },
+    {
+      "file": "cpu/x51-c8-ao-plane-fixed-proof.json",
+      "bytes": 2595,
+      "sha256": "9ce285fc591a4af09ed4f715a1d8c9b9b824325c7865b0b672735ab9a864fd6e",
+      "source": "../../../../../../handoff/x51-c8-ao-plane-fixed-proof.json"
+    },
+    {
+      "file": "cpu/x51-c8-ao-plane-fixed-proof.mjs",
+      "bytes": 1737,
+      "sha256": "e7edc77067678f0cd768719de18b3955e2eb60b7569c59bd033336503e5e2c72",
+      "source": "../../../../../../handoff/x51-c8-ao-plane-fixed-proof.mjs"
+    },
+    {
+      "file": "cpu/x51-c8-shutter-normal-cpu-pixels.json",
+      "bytes": 1680,
+      "sha256": "cde7a0a3283ad4fc3a145c7f9cf2accf7c1500475b22c92908781876da9af7ee",
+      "source": "../../../../../../handoff/x51-c8-shutter-normal-cpu-pixels.json"
+    },
+    {
+      "file": "analysis/x51-c8-ao-gpu-v1-readback.json",
+      "bytes": 4854,
+      "sha256": "4d44becb521d5ef93c7ff38aeb14c84cdb1df541da5bb751d0b6b683fa85b7d0",
+      "source": "../../../../../../handoff/x51-c8-ao-gpu-v1-readback.json"
+    },
+    {
+      "file": "analysis/x51-props-v1-readonly-diagnosis.json",
+      "bytes": 3412,
+      "sha256": "01ae43b811507e280c139ed45543e64e6439862e0a688384c209d32e721b228c",
+      "source": "../../../../../../handoff/x51-props-v1-readonly-diagnosis.json"
+    },
+    {
+      "file": "analysis/x51-c8-props-integration-v1-analysis.json",
+      "bytes": 15919,
+      "sha256": "3da0d43e8f261539ad75a1fda9dff24d5b9a5f6ae430c9fccd327ab55690c52e",
+      "source": "../../../../../../handoff/x51-c8-props-integration-v1-analysis.json"
+    },
+    {
+      "file": "analysis/x51-c8-shutter-cause-v1-analysis.json",
+      "bytes": 31736,
+      "sha256": "d410ebb8f70179ba7049fc2b088f096169b5e1080dbefb8581c1ff2761951954",
+      "source": "../../../../../../handoff/x51-c8-shutter-cause-v1-analysis.json"
+    },
+    {
+      "file": "analysis/x51-c8-shutter-grade-v2-analysis.json",
+      "bytes": 142260,
+      "sha256": "9b0cdd57a37f348594201cb39947efb9864ab104141e2a4e43e5c99186d8c1dc",
+      "source": "../../../../../../handoff/x51-c8-shutter-grade-v2-analysis.json"
+    },
+    {
+      "file": "ci/original-c8.json",
+      "bytes": 6165,
+      "sha256": "5b11185efb51351870695b38521d91d047a5052baef7851a9102216310b18a44",
+      "source": "../../../../../../handoff/x51-c8-ci-summary.json"
+    },
+    {
+      "file": "ci/initial-props.json",
+      "bytes": 6167,
+      "sha256": "34f026a92c2067c1291bc93d39fdcd0323c9ca7c7d80e2fd3e998bda3bc4a00b",
+      "source": "../../../../../../handoff/x51-c8-props-ci-summary.json"
+    },
+    {
+      "file": "ci/final.json",
+      "bytes": 6166,
+      "sha256": "e06d8fbb3345669bb77c8854f7df90fac00d8cf34aa8e1246d3909f0cc17b5d3",
+      "source": "../../../../../../handoff/x51-c8-framing-ci-summary.json"
+    },
+    {
+      "file": "curate-c8.cjs",
+      "bytes": 29030,
+      "sha256": "e07b1ce45245af7db0e605f619058b437ac5e6fd35da20de12d7ccb701261578",
+      "source": "../../../../../../handoff/x51-curate-c8.cjs"
+    },
+    {
+      "file": "summary.json",
+      "bytes": 8731,
+      "sha256": "4d217ffc2cccc7429e5a4b294be3ea698e60948235e11b9bb8ffa3c30dd206cf",
+      "generatedSummary": true
+    },
+    {
+      "file": "README.md",
+      "bytes": 9434,
+      "sha256": "8586040fe04f57dcd73755e30e3e8024b8bb1669c0759876c583c155eac226d1",
+      "source": "Root-reviewed narrative, written after source and artifact verification"
+    },
+    {
+      "file": "observed-exits.json",
+      "bytes": 1661,
+      "sha256": "dede6d99267a06bf161c896eef7e876cd3b6f48a246a0c45d9f202b5ae2b2d7e",
+      "source": "Task execution transcript"
+    },
+    {
+      "file": ".gitattributes",
+      "bytes": 85,
+      "sha256": "02a1583405f87bf7dd45aba48083c0bce942d97fc614e662b45250a667668a10",
+      "source": "Scoped archive rule preserving original captured log line endings; no global Git change"
+    }
+  ],
+  "countExcludesThisInventory": true
+}
