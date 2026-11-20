@@ -1,0 +1,14 @@
+{
+  "label": "dynamic",
+  "target": "http://127.0.0.1:4181/?time=evening&grade=off&shadow=dynamic",
+  "at": "2026-11-20T01:50:31.136Z",
+  "result": {
+    "frames": 90,
+    "minCalls": 1645,
+    "maxCalls": 1645,
+    "shadowFrames": 0,
+    "histogram": {
+      "1645": 90
+    }
+  }
+}
