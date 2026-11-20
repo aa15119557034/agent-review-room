@@ -109,9 +109,13 @@ export function createStationWalker(station, dom) {
         physics.resolve(next, radius, position.y, height);
         if (physics.groundHeight(next.x, next.z, position.y) - position.y > STEP_HEIGHT) { next.x = x; next.z = z; }
       }
-      const bounds = station.bounds;
-      position.x = THREE.MathUtils.clamp(next.x, bounds.x0 + radius, bounds.x1 - radius);
-      position.z = THREE.MathUtils.clamp(next.z, bounds.z0 + radius, bounds.z1 - radius);
+      position.x = next.x; position.z = next.z;
+      if (station.clampWalkable) station.clampWalkable(position, radius);
+      else {
+        const bounds = station.bounds;
+        position.x = THREE.MathUtils.clamp(next.x, bounds.x0 + radius, bounds.x1 - radius);
+        position.z = THREE.MathUtils.clamp(next.z, bounds.z0 + radius, bounds.z1 - radius);
+      }
       const ground = physics.groundHeight(position.x, position.z, position.y);
       verticalSpeed -= 12 * dt; position.y += verticalSpeed * dt;
       grounded = position.y <= ground || position.y - ground < 0.06 && verticalSpeed <= 0;
@@ -125,3 +129,4 @@ export function createStationWalker(station, dom) {
   };
   return walker;
 }
+

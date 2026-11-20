@@ -154,7 +154,7 @@ export async function createCity({ scene, station, island, skyline }) {
       const ground = checkLot(site.name, lot), base = foundation(site.name, lot, ground);
       const before = gb.tris;
       const metadata = buildTownApartment(H, Frame.at(gb, site.x, base.top - root.position.y, site.z), site);
-      if (metadata.shopRoom) (station.ctx.services.shopInteriors ||= []).push({ name: site.name, kind: 'laundry', frame: { x: site.x, y: base.top - root.position.y, z: site.z, rotY: 0 }, box: metadata.shopRoom });
+      if (metadata.shopRoom) (station.ctx.services.shopInteriors ||= []).push({ name: site.name, kind: 'laundry', frame: { x: site.x, y: base.top - root.position.y, z: site.z, rotY: 0 }, box: metadata.shopRoom, entrances: metadata.entrances });
       placements.push({ name: site.name, type: 'apartment', center: [site.x, site.z], frontage: [site.x, site.z],
         floors: site.floors, baseY: base.top - root.position.y, floorHeight: metadata.floorHeight, height: metadata.height, footprint: lot, ground, foundation: base, model: metadata, scale: 1,
         staticTriangles: gb.tris - before, worldOrigin: [site.x + root.position.x, base.top, site.z + root.position.z] });
@@ -520,3 +520,4 @@ function terrainRange(terrain, lot, offset) {
   }
   return { min, max, relief: max - min, samples: xs.length * zs.length, method: 'All bilinear grid and footprint boundary intersections' };
 }
+
