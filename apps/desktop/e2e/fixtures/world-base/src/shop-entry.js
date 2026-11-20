@@ -110,14 +110,26 @@ export function planShopEntry(room, placement, stair, mainBounds) {
 }
 
 /** 把所有店铺的附加区算出来（写进 station.walkExtra） */
-export function walkExtrasFromRooms(station, city) {
+export function walkExtrasFromRooms(station, city, layout = null) {
   const rooms = station.ctx?.services?.shopInteriors ?? [];
   const placements = city?.placements ?? [];
   const stairs = city?.stats?.connections?.stairs ?? [];
   const out = [];
   const plans = [];
+  const lotPlans = [];
   const skipped = [];
   for (const room of rooms) {
+    // 上游 8 家店：只有 { lot, box }，用 layout.lotFrame 现算 frame
+    if (!room.frame && room.lot && layout?.lotFrame && layout?.lotById) {
+      const lot = layout.lotById(room.lot);
+      if (!lot) { skipped.push({ name: room.lot, why:'lot not found' }); continue; }
+      const frame = layout.lotFrame(lot);
+      const geom = lotRoomGeom(frame, room.box);
+      const plan = planLotShopEntry(geom, room.lot);
+      out.push(...plan.areas);
+      lotPlans.push({ geom, plan, name: room.lot });
+      continue;
+    }
     if (!room.frame || !Array.isArray(room.box)) continue;
     const placement = placements.find(p => p.name === room.name);
     const stair = stairs.find(s => s.name === (room.name + '-entry'));
@@ -126,7 +138,7 @@ export function walkExtrasFromRooms(station, city) {
     out.push(...plan.areas);
     plans.push({ room, placement, stair, plan });
   }
-  return { areas: out, plans, skipped };
+  return { areas: out, plans, lotPlans, skipped };
 }
 
 /**
@@ -327,4 +339,109 @@ export function makeCameraClamp(station, rooms) {
     return false;
   };
 }
+
+
+// ---------------------------------------------------------------------------
+// 上游 8 家店（主街 lot）：`ctx.services.shopInteriors` 里这几间只登记了
+//   { lot: 'W1', box: [x0,y0,z0,x1,y1,z1] }   ← box 是 **lot 局部**坐标
+// 没有 frame。上游 layout 提供了 lotFrame(lotById(id)) → {x,y,z,rotY,w,depth}，
+// 就在站区局部空间，直接可以当 frame 用（shadow-tint.js 已经这么用了）。
+//
+// 与洗衣店的差别：
+//   - 地板只比街面高 0.16–0.37 m（洗衣店是 0.8 m + 石阶），所以**不需要石阶**；
+//   - 朝向有 90°/270°（沿街），另有三间是 91.5°/94.5°/272.9°（沿街弯道斜铺）。
+//
+// 做法：可走区用旋转盒的 **AABB**（略大一圈，但墙是精确的旋转盒，玩家进不去），
+//       地面/墙体用 physics 支持的 rotY 盒。
+// ---------------------------------------------------------------------------
+
+/** lot 局部房间盒 → 站区局部的旋转盒 + AABB */
+export function lotRoomGeom(frame, box) {
+  const c = Math.cos(frame.rotY), s = Math.sin(frame.rotY);
+  const x0 = Math.min(box[0], box[3]), x1 = Math.max(box[0], box[3]);
+  const y0 = Math.min(box[1], box[4]), y1 = Math.max(box[1], box[4]);
+  const z0 = Math.min(box[2], box[5]), z1 = Math.max(box[2], box[5]);
+  const toStation = (lx, lz) => [frame.x + lx * c + lz * s, frame.z - lx * s + lz * c];
+  const corners = [toStation(x0, z0), toStation(x1, z0), toStation(x0, z1), toStation(x1, z1)];
+  const xs = corners.map(p => p[0]), zs = corners.map(p => p[1]);
+  const [cx, cz] = toStation((x0 + x1) / 2, (z0 + z1) / 2);
+  return {
+    frame, rotY: frame.rotY, cx, cz,
+    hw: (x1 - x0) / 2, hd: (z1 - z0) / 2,
+    aabb: { x0: Math.min(...xs), x1: Math.max(...xs), z0: Math.min(...zs), z1: Math.max(...zs) },
+    floorY: frame.y + y0, ceilY: frame.y + y1, baseY: frame.y,
+    lotX0: x0, lotX1: x1, lotZ0: z0, lotZ1: z1
+  };
+}
+
+/** 一家 lot 店铺的可走区 + 地面 + 墙（全部站区局部） */
+export function planLotShopEntry(geom, name, doorW = 1.4) {
+  const a = geom.aabb;
+  const areas = [
+    { name: 'room-' + name, x0: a.x0 - 0.2, x1: a.x1 + 0.2, z0: a.z0 - 0.2, z1: a.z1 + 0.2 }
+  ];
+  // 临街方向：lot 局部 +z 边 → 站区局部方向 (s, c)
+  const c = Math.cos(geom.rotY), s = Math.sin(geom.rotY);
+  const fx = s, fz = c;
+  const push = 4.0;
+  const grow = (v) => Math.abs(v) * push;
+  areas.push({
+    name: 'approach-' + name,
+    x0: a.x0 - 0.5 - (fx < 0 ? grow(fx) : 0),
+    x1: a.x1 + 0.5 + (fx > 0 ? grow(fx) : 0),
+    z0: a.z0 - 0.5 - (fz < 0 ? grow(fz) : 0),
+    z1: a.z1 + 0.5 + (fz > 0 ? grow(fz) : 0)
+  });
+  return {
+    areas,
+    ground: {
+      floor: { cx: geom.cx, cz: geom.cz, w: geom.hw * 2, d: geom.hd * 2, rotY: geom.rotY, y: geom.floorY },
+      approach: { cx: geom.cx + fx * push / 2, cz: geom.cz + fz * push / 2, w: geom.hw * 2, d: push, rotY: geom.rotY, y: geom.baseY },
+      doorW
+    }
+  };
+}
+
+
+
+/** 把 lot 店铺的地面（地板 + 门前）和四面墙写进物理，全部用旋转盒 */
+export function addLotShopSolid(station, lotPlans) {
+  const physics = station.ctx?.physics;
+  const stats = { floors: 0, approaches: 0, walls: 0, doors: 0 };
+  if (!physics || !lotPlans?.length) return stats;
+
+  for (const { geom, plan, name } of lotPlans) {
+    const g = plan.ground;
+    physics.addWalkBox(g.floor.cx, g.floor.cz, g.floor.w, g.floor.d, g.floor.rotY, g.floor.y);
+    stats.floors++;
+    physics.addWalkBox(g.approach.cx, g.approach.cz, g.approach.w, g.approach.d, g.approach.rotY, g.approach.y);
+    stats.approaches++;
+
+    // 四面墙：lot 局部四条边 → 旋转盒
+    const c = Math.cos(geom.rotY), s = Math.sin(geom.rotY);
+    const F = geom.frame;
+    const toStation = (lx, lz) => [F.x + lx * c + lz * s, F.z - lx * s + lz * c];
+    const hy = (geom.floorY + geom.ceilY) / 2, th = geom.ceilY - geom.floorY;
+    const doorHalf = g.doorW / 2;
+    const wall = (lx, lz, w, d) => {
+      const [px, pz] = toStation(lx, lz);
+      physics.addBox(px, pz, w, d, geom.rotY, geom.floorY, geom.ceilY);
+      stats.walls++;
+    };
+    const T = 0.12;
+    // 后墙（lot z0）、左右墙（lot x0 / x1）
+    wall(0, geom.lotZ0 + T / 2, geom.lotX1 - geom.lotX0, T);
+    wall(geom.lotX0 + T / 2, (geom.lotZ0 + geom.lotZ1) / 2, T, geom.lotZ1 - geom.lotZ0);
+    wall(geom.lotX1 - T / 2, (geom.lotZ0 + geom.lotZ1) / 2, T, geom.lotZ1 - geom.lotZ0);
+    // 前墙：中间留门洞
+    const zf = geom.lotZ1 - T / 2;
+    const leftW = (0 - doorHalf) - geom.lotX0;
+    const rightW = geom.lotX1 - (0 + doorHalf);
+    if (leftW > 0.05) wall(geom.lotX0 + leftW / 2, zf, leftW, T);
+    if (rightW > 0.05) wall(0 + doorHalf + rightW / 2, zf, rightW, T);
+    stats.doors++;
+  }
+  return stats;
+}
+
 
