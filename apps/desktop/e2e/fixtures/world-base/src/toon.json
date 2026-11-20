@@ -66,7 +66,9 @@
    "skinKeep": 0.35,
    "skyKeep": 0.3,
    "skyGain": 0.4,
-   "greenCut": 3
+   "greenCut": 4,
+   "greenLumaLo": 0.27,
+   "greenLumaHi": 0.45
   },
   "form": {
    "line": {
@@ -166,7 +168,9 @@
    "skinKeep": 0.35,
    "skyKeep": 0.3,
    "skyGain": 0.4,
-   "greenCut": 0
+   "greenCut": 0,
+   "greenLumaLo": 0.27,
+   "greenLumaHi": 0.45
   },
   "form": {
    "line": {

@@ -124,7 +124,7 @@ float wbBand(float n) {
 // Parameters live in toon.json ("grade"). Alpha is not touched (the output pass writes alpha 1; the outline mask is read upstream).
 const GRADE = /* glsl */`
 uniform float uGradeOn;
-uniform vec4 uGA, uGB, uGC, uGD, uGE; // pivot contrast floor toe / gain gainLo gainHi knee / cap peakKnee peakCap vibrance / vibPow skinKeep skyKeep skyGain / contrastHi greenCut - -
+uniform vec4 uGA, uGB, uGC, uGD, uGE; // pivot contrast floor toe / gain gainLo gainHi knee / cap peakKnee peakCap vibrance / vibPow skinKeep skyKeep skyGain / contrastHi greenCut greenLumaLo greenLumaHi
 vec3 wbGrade(vec3 c, float sky) {
   float gain = uGB.x*mix(1.0, uGD.w, sky);
   float Y = dot(c, vec3(0.2126, 0.7152, 0.0722));
@@ -147,7 +147,8 @@ vec3 wbGrade(vec3 c, float sky) {
   float skin = smoothstep(0.12, 0.22, hue)*(1.0 - smoothstep(0.55, 0.70, hue))*smoothstep(0.18, 0.28, S)*(1.0 - smoothstep(0.55, 0.70, S))*smoothstep(0.30, 0.45, mx);
   float amt = uGC.w*smoothstep(0.03, 0.25, S)*pow(1.0 - clamp(S, 0.0, 1.0), uGD.x)*mix(1.0, uGD.y, skin)*mix(1.0, uGD.z, sky);
   // Round 18b: grass and foliage get less vibrance (greenCut = share of the vibrance removed, above 1 it desaturates). Per pixel only, from the pixel's own hue
-  // (HSV degrees of the pre-vibrance colour): yellow-green to green, soft edges 68-85 and 140-165, weighted by its own S so near-greys are left alone.
+  // (HSV degrees of the pre-vibrance colour): yellow-green to green, soft edges 68-85 and 140-165, weighted by its own S (near-greys are left alone) and by its luma, so shadowed blades keep their colour and only lit grass is cut (greenLuma lo/hi).
+  float Yc = dot(c, vec3(0.2126, 0.7152, 0.0722)); // vibrance keeps this luma
   float gH = 0.0;
   if (mx - mn > 1e-4) {
     if (mx == c.r) gH = (c.g - c.b)/(mx - mn);
@@ -155,9 +156,8 @@ vec3 wbGrade(vec3 c, float sky) {
     else gH = (c.r - c.g)/(mx - mn) + 4.0;
     gH = (gH - 6.0*floor(gH/6.0))*60.0;
   }
-  float greenMask = smoothstep(68.0, 85.0, gH)*(1.0 - smoothstep(140.0, 165.0, gH))*smoothstep(0.18, 0.36, S);
+  float greenMask = smoothstep(68.0, 85.0, gH)*(1.0 - smoothstep(140.0, 165.0, gH))*smoothstep(0.18, 0.36, S)*smoothstep(uGE.z, uGE.w, Yc);
   amt *= 1.0 - uGE.y*greenMask;
-  float Yc = dot(c, vec3(0.2126, 0.7152, 0.0722));
   return clamp(vec3(Yc) + (c - Yc)*(1.0 + amt), 0.0, 1.0);
 }
 `;
@@ -413,7 +413,7 @@ export function createLook(renderer, camera) {
       u.uGB.value.set(g.gain, g.gainRange[0], g.gainRange[1], g.knee);
       u.uGC.value.set(g.cap, g.peakKnee, g.peakCap, g.vibrance);
       u.uGD.value.set(g.vibrancePower, g.skinKeep, g.skyKeep, g.skyGain);
-      u.uGE.value.set(g.contrastHi, g.greenCut ?? 0, 0, 0);
+      u.uGE.value.set(g.contrastHi, g.greenCut ?? 0, g.greenLumaLo ?? 0.3, g.greenLumaHi ?? 0.5);
       u.uGradeOn.value = 1;
     },
     setAO(value) { mat.uniforms.uAO.value = value; },
