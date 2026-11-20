@@ -66,8 +66,7 @@
    "skinKeep": 0.35,
    "skyKeep": 0.3,
    "skyGain": 0.4,
-   "satKnee": 0.6,
-   "satRoom": 0.4
+   "greenCut": 3
   },
   "form": {
    "line": {
@@ -167,8 +166,7 @@
    "skinKeep": 0.35,
    "skyKeep": 0.3,
    "skyGain": 0.4,
-   "satKnee": 1,
-   "satRoom": 0.4
+   "greenCut": 0
   },
   "form": {
    "line": {
