@@ -1,0 +1,2270 @@
+{
+  "config": {
+    "fixture": "E:\\agent-review-room\\x51-r14\\apps\\desktop\\e2e\\fixtures\\world-base",
+    "output": "E:\\agent-review-room\\.tmp\\street-bake2",
+    "head": "65da5342f81a9f44ded8995b26c580e59fa64f7d",
+    "startedAt": "2026-11-19T23:05:26.310Z",
+    "runtime": "E:\\agent-review-room\\.tmp\\street-bake2\\runtime-U8eNnj",
+    "timeoutMs": 180000,
+    "driverSha256": "7731a0571894bcd8f35b49ce29610ea6147fc009f3c3c91f7a1003b560d8cfd2",
+    "electron": "E:\\agent-review-room\\dev\\node_modules\\.pnpm\\electron@44.9.0\\node_modules\\electron\\dist\\electron.exe"
+  },
+  "stage": "complete",
+  "faces": [
+    {
+      "name": "px",
+      "min": [
+        0.006256103515625,
+        0.0036258697509765625,
+        0.0033817291259765625
+      ],
+      "max": [
+        2.658203125,
+        2.734375,
+        2.939453125
+      ],
+      "mean": [
+        0.1607333282008767,
+        0.14148258269415237,
+        0.19078270849422552
+      ],
+      "negative": [
+        0,
+        0,
+        0
+      ],
+      "nonFinite": [
+        0,
+        0,
+        0
+      ],
+      "over2": [
+        16,
+        4,
+        4
+      ],
+      "over2Fraction": [
+        0.000244140625,
+        0.00006103515625,
+        0.00006103515625
+      ],
+      "limitedPixels": 16,
+      "mappedPeak": 2,
+      "maxEncodingError": 0.006545876766187675,
+      "samples": [
+        {
+          "x": 128,
+          "y": 32,
+          "linearRGB": [
+            0.0594482421875,
+            0.132568359375,
+            0.359375
+          ]
+        },
+        {
+          "x": 64,
+          "y": 32,
+          "linearRGB": [
+            0.068359375,
+            0.149169921875,
+            0.381591796875
+          ]
+        },
+        {
+          "x": 192,
+          "y": 32,
+          "linearRGB": [
+            0.06787109375,
+            0.1478271484375,
+            0.3779296875
+          ]
+        },
+        {
+          "x": 128,
+          "y": 64,
+          "linearRGB": [
+            0.07940673828125,
+            0.02484130859375,
+            0.00844573974609375
+          ]
+        },
+        {
+          "x": 128,
+          "y": 96,
+          "linearRGB": [
+            0.025238037109375,
+            0.02728271484375,
+            0.05316162109375
+          ]
+        },
+        {
+          "x": 144,
+          "y": 127,
+          "linearRGB": [
+            0.01629638671875,
+            0.006916046142578125,
+            0.004932403564453125
+          ]
+        },
+        {
+          "x": 200,
+          "y": 80,
+          "linearRGB": [
+            0.25732421875,
+            0.2200927734375,
+            0.2783203125
+          ]
+        }
+      ],
+      "quantization": {
+        "maxAbsLinearError": [
+          0.8488807762177009,
+          0.8741532832491525,
+          0.939453125
+        ],
+        "meanAbsLinearError": [
+          0.0010266280406660345,
+          0.0009839044612443783,
+          0.0011188259730829514
+        ],
+        "includesRangeClipping": true
+      },
+      "glError": 0,
+      "time": 14,
+      "camera": {
+        "matrixWorld": [
+          -2.220446049250313e-16,
+          1.2246467991473532e-16,
+          -1,
+          0,
+          -2.465190328815662e-32,
+          -1,
+          -1.2246467991473532e-16,
+          0,
+          -1,
+          0,
+          2.220446049250313e-16,
+          0,
+          280,
+          10.264,
+          918,
+          1
+        ],
+        "projectionMatrix": [
+          1.0000000000000002,
+          0,
+          0,
+          0,
+          0,
+          1.0000000000000002,
+          0,
+          0,
+          0,
+          0,
+          -1.0042949176807445,
+          -1,
+          0,
+          0,
+          -0.36077308518253404,
+          0
+        ],
+        "direction": [
+          1,
+          0,
+          0
+        ]
+      },
+      "render": {
+        "frame": 137,
+        "calls": 2674,
+        "triangles": 12817864,
+        "points": 0,
+        "lines": 0
+      },
+      "file": "px.png",
+      "sha256": "71d6ae285624e9b827aa0b0acf156201f8af794dce67290852d1767857f1e1ab",
+      "rawFile": "px.rgba16f",
+      "rawSha256": "0b4462bb3a69898dfe7af936d057db6f5525338437430d72d6f9f5eac909d26f"
+    },
+    {
+      "name": "nx",
+      "min": [
+        0,
+        0.00885009765625,
+        0.00152587890625
+      ],
+      "max": [
+        2.728515625,
+        2.4453125,
+        2.41796875
+      ],
+      "mean": [
+        0.2199661034537712,
+        0.19451506261248142,
+        0.2628909109189408
+      ],
+      "negative": [
+        0,
+        0,
+        0
+      ],
+      "nonFinite": [
+        0,
+        0,
+        0
+      ],
+      "over2": [
+        47,
+        45,
+        1
+      ],
+      "over2Fraction": [
+        0.0007171630859375,
+        0.0006866455078125,
+        0.0000152587890625
+      ],
+      "limitedPixels": 47,
+      "mappedPeak": 2,
+      "maxEncodingError": 0.007643018004986013,
+      "samples": [
+        {
+          "x": 128,
+          "y": 32,
+          "linearRGB": [
+            0.277587890625,
+            0.239990234375,
+            0.299072265625
+          ]
+        },
+        {
+          "x": 64,
+          "y": 32,
+          "linearRGB": [
+            0.10870361328125,
+            0.171142578125,
+            0.398193359375
+          ]
+        },
+        {
+          "x": 192,
+          "y": 32,
+          "linearRGB": [
+            0.151611328125,
+            0.194091796875,
+            0.409423828125
+          ]
+        },
+        {
+          "x": 128,
+          "y": 64,
+          "linearRGB": [
+            0.1680908203125,
+            0.17431640625,
+            0.1995849609375
+          ]
+        },
+        {
+          "x": 128,
+          "y": 96,
+          "linearRGB": [
+            0.295166015625,
+            0.264892578125,
+            0.362060546875
+          ]
+        },
+        {
+          "x": 144,
+          "y": 127,
+          "linearRGB": [
+            0.419677734375,
+            0.3408203125,
+            0.25830078125
+          ]
+        },
+        {
+          "x": 200,
+          "y": 80,
+          "linearRGB": [
+            0.273681640625,
+            0.2415771484375,
+            0.316650390625
+          ]
+        }
+      ],
+      "quantization": {
+        "maxAbsLinearError": [
+          0.728515625,
+          0.6527737932514672,
+          0.5217379989870385
+        ],
+        "meanAbsLinearError": [
+          0.0016342953097171692,
+          0.0015458873018186663,
+          0.0016734750982314995
+        ],
+        "includesRangeClipping": true
+      },
+      "glError": 0,
+      "time": 14,
+      "camera": {
+        "matrixWorld": [
+          -2.220446049250313e-16,
+          1.2246467991473532e-16,
+          1,
+          0,
+          -2.465190328815662e-32,
+          -1,
+          1.2246467991473532e-16,
+          0,
+          1,
+          0,
+          2.220446049250313e-16,
+          0,
+          280,
+          10.264,
+          918,
+          1
+        ],
+        "projectionMatrix": [
+          1.0000000000000002,
+          0,
+          0,
+          0,
+          0,
+          1.0000000000000002,
+          0,
+          0,
+          0,
+          0,
+          -1.0042949176807445,
+          -1,
+          0,
+          0,
+          -0.36077308518253404,
+          0
+        ],
+        "direction": [
+          -1,
+          0,
+          0
+        ]
+      },
+      "render": {
+        "frame": 138,
+        "calls": 3044,
+        "triangles": 14954279,
+        "points": 0,
+        "lines": 0
+      },
+      "file": "nx.png",
+      "sha256": "b1c50ba1e5740924b6c46a5f0949eb2aecf5ca11e4b05373381d79cbac10bfb3",
+      "rawFile": "nx.rgba16f",
+      "rawSha256": "2ce17af692bc9d608da755cae80e2b3195db5f6cd83b6f029ada021e2d636cf8"
+    },
+    {
+      "name": "py",
+      "min": [
+        0.0149688720703125,
+        0.0122222900390625,
+        0.0219573974609375
+      ],
+      "max": [
+        1.357421875,
+        0.5703125,
+        0.638671875
+      ],
+      "mean": [
+        0.0872100266860798,
+        0.10250780580099672,
+        0.30826854868792
+      ],
+      "negative": [
+        0,
+        0,
+        0
+      ],
+      "nonFinite": [
+        0,
+        0,
+        0
+      ],
+      "over2": [
+        0,
+        0,
+        0
+      ],
+      "over2Fraction": [
+        0,
+        0,
+        0
+      ],
+      "limitedPixels": 0,
+      "mappedPeak": 1.357421875,
+      "maxEncodingError": 0.0067590376603516855,
+      "samples": [
+        {
+          "x": 128,
+          "y": 32,
+          "linearRGB": [
+            0.038177490234375,
+            0.03436279296875,
+            0.04827880859375
+          ]
+        },
+        {
+          "x": 64,
+          "y": 32,
+          "linearRGB": [
+            0.044525146484375,
+            0.09979248046875,
+            0.33056640625
+          ]
+        },
+        {
+          "x": 192,
+          "y": 32,
+          "linearRGB": [
+            0.04052734375,
+            0.09765625,
+            0.32861328125
+          ]
+        },
+        {
+          "x": 128,
+          "y": 64,
+          "linearRGB": [
+            0.02392578125,
+            0.0634765625,
+            0.286376953125
+          ]
+        },
+        {
+          "x": 128,
+          "y": 96,
+          "linearRGB": [
+            0.0175323486328125,
+            0.049713134765625,
+            0.271728515625
+          ]
+        },
+        {
+          "x": 144,
+          "y": 127,
+          "linearRGB": [
+            0.01544189453125,
+            0.04534912109375,
+            0.2646484375
+          ]
+        },
+        {
+          "x": 200,
+          "y": 80,
+          "linearRGB": [
+            0.03033447265625,
+            0.076904296875,
+            0.30078125
+          ]
+        }
+      ],
+      "quantization": {
+        "maxAbsLinearError": [
+          0.0067590376603516855,
+          0.0042231917963792,
+          0.004407901331552999
+        ],
+        "meanAbsLinearError": [
+          0.0006140516896847617,
+          0.0007732755788943488,
+          0.0014882674910761443
+        ],
+        "includesRangeClipping": true
+      },
+      "glError": 0,
+      "time": 14,
+      "camera": {
+        "matrixWorld": [
+          1,
+          -2.465190328815662e-32,
+          -1.2246467991473532e-16,
+          0,
+          1.2246467991473532e-16,
+          2.220446049250313e-16,
+          1,
+          0,
+          0,
+          -1,
+          2.220446049250313e-16,
+          0,
+          280,
+          10.264,
+          918,
+          1
+        ],
+        "projectionMatrix": [
+          1.0000000000000002,
+          0,
+          0,
+          0,
+          0,
+          1.0000000000000002,
+          0,
+          0,
+          0,
+          0,
+          -1.0042949176807445,
+          -1,
+          0,
+          0,
+          -0.36077308518253404,
+          0
+        ],
+        "direction": [
+          0,
+          1,
+          0
+        ]
+      },
+      "render": {
+        "frame": 139,
+        "calls": 3313,
+        "triangles": 16724940,
+        "points": 0,
+        "lines": 0
+      },
+      "file": "py.png",
+      "sha256": "ea0c82b0d88089135807e4d315350499eb898f3fa68d5d73f4dcf0dbc27798f0",
+      "rawFile": "py.rgba16f",
+      "rawSha256": "58a3f0b05e612fcf8cf803d60160459509f661367ac119db0f90fa4f479c9500"
+    },
+    {
+      "name": "ny",
+      "min": [
+        0.0134735107421875,
+        0.01390838623046875,
+        0.026214599609375
+      ],
+      "max": [
+        0.29833984375,
+        0.3017578125,
+        0.4228515625
+      ],
+      "mean": [
+        0.10013976180925965,
+        0.10392051888629794,
+        0.16138860676437616
+      ],
+      "negative": [
+        0,
+        0,
+        0
+      ],
+      "nonFinite": [
+        0,
+        0,
+        0
+      ],
+      "over2": [
+        0,
+        0,
+        0
+      ],
+      "over2Fraction": [
+        0,
+        0,
+        0
+      ],
+      "limitedPixels": 0,
+      "mappedPeak": 0.4228515625,
+      "maxEncodingError": 0.0035630773281104533,
+      "samples": [
+        {
+          "x": 128,
+          "y": 32,
+          "linearRGB": [
+            0.270751953125,
+            0.27392578125,
+            0.38671875
+          ]
+        },
+        {
+          "x": 64,
+          "y": 32,
+          "linearRGB": [
+            0.09796142578125,
+            0.10235595703125,
+            0.166015625
+          ]
+        },
+        {
+          "x": 192,
+          "y": 32,
+          "linearRGB": [
+            0.017181396484375,
+            0.0178375244140625,
+            0.032379150390625
+          ]
+        },
+        {
+          "x": 128,
+          "y": 64,
+          "linearRGB": [
+            0.24072265625,
+            0.2442626953125,
+            0.34716796875
+          ]
+        },
+        {
+          "x": 128,
+          "y": 96,
+          "linearRGB": [
+            0.287109375,
+            0.290283203125,
+            0.407958984375
+          ]
+        },
+        {
+          "x": 144,
+          "y": 127,
+          "linearRGB": [
+            0.08868408203125,
+            0.0927734375,
+            0.1480712890625
+          ]
+        },
+        {
+          "x": 200,
+          "y": 80,
+          "linearRGB": [
+            0.07861328125,
+            0.08209228515625,
+            0.1314697265625
+          ]
+        }
+      ],
+      "quantization": {
+        "maxAbsLinearError": [
+          0.0028565510911155445,
+          0.0028565510911155445,
+          0.0035630773281104533
+        ],
+        "meanAbsLinearError": [
+          0.0008061152190355071,
+          0.0007116437894381622,
+          0.00105611406157957
+        ],
+        "includesRangeClipping": true
+      },
+      "glError": 0,
+      "time": 14,
+      "camera": {
+        "matrixWorld": [
+          1,
+          -2.465190328815662e-32,
+          1.2246467991473532e-16,
+          0,
+          1.2246467991473532e-16,
+          2.220446049250313e-16,
+          -1,
+          0,
+          0,
+          1,
+          2.220446049250313e-16,
+          0,
+          280,
+          10.264,
+          918,
+          1
+        ],
+        "projectionMatrix": [
+          1.0000000000000002,
+          0,
+          0,
+          0,
+          0,
+          1.0000000000000002,
+          0,
+          0,
+          0,
+          0,
+          -1.0042949176807445,
+          -1,
+          0,
+          0,
+          -0.36077308518253404,
+          0
+        ],
+        "direction": [
+          0,
+          -1,
+          0
+        ]
+      },
+      "render": {
+        "frame": 140,
+        "calls": 3580,
+        "triangles": 18471274,
+        "points": 0,
+        "lines": 0
+      },
+      "file": "ny.png",
+      "sha256": "f059ee3868316ca6703f67246662fc02e8d24e1d22c7e5bf34b801fd9bed3730",
+      "rawFile": "ny.rgba16f",
+      "rawSha256": "7d2dc6bdbb51590b9302e3720a402e18559c1c488ae5beb0998b144b4d82e242"
+    },
+    {
+      "name": "pz",
+      "min": [
+        0.006046295166015625,
+        0.0035839080810546875,
+        0.004241943359375
+      ],
+      "max": [
+        2.658203125,
+        2.734375,
+        2.939453125
+      ],
+      "mean": [
+        0.21756138961063698,
+        0.16017959840246476,
+        0.22972160310018808
+      ],
+      "negative": [
+        0,
+        0,
+        0
+      ],
+      "nonFinite": [
+        0,
+        0,
+        0
+      ],
+      "over2": [
+        17,
+        16,
+        16
+      ],
+      "over2Fraction": [
+        0.0002593994140625,
+        0.000244140625,
+        0.000244140625
+      ],
+      "limitedPixels": 17,
+      "mappedPeak": 2,
+      "maxEncodingError": 0.00746985066623429,
+      "samples": [
+        {
+          "x": 128,
+          "y": 32,
+          "linearRGB": [
+            0.442626953125,
+            0.2337646484375,
+            0.361572265625
+          ]
+        },
+        {
+          "x": 64,
+          "y": 32,
+          "linearRGB": [
+            0.485595703125,
+            0.306640625,
+            0.4453125
+          ]
+        },
+        {
+          "x": 192,
+          "y": 32,
+          "linearRGB": [
+            0.0709228515625,
+            0.154541015625,
+            0.394775390625
+          ]
+        },
+        {
+          "x": 128,
+          "y": 64,
+          "linearRGB": [
+            0.0478515625,
+            0.026153564453125,
+            0.045867919921875
+          ]
+        },
+        {
+          "x": 128,
+          "y": 96,
+          "linearRGB": [
+            0.1959228515625,
+            0.2181396484375,
+            0.474853515625
+          ]
+        },
+        {
+          "x": 144,
+          "y": 127,
+          "linearRGB": [
+            0.1357421875,
+            0.0863037109375,
+            0.0308990478515625
+          ]
+        },
+        {
+          "x": 200,
+          "y": 80,
+          "linearRGB": [
+            0.3623046875,
+            0.316650390625,
+            0.1773681640625
+          ]
+        }
+      ],
+      "quantization": {
+        "maxAbsLinearError": [
+          0.8488807762177009,
+          0.8741532832491525,
+          0.939453125
+        ],
+        "meanAbsLinearError": [
+          0.001272687611613788,
+          0.0011487430910539437,
+          0.0013937451059899753
+        ],
+        "includesRangeClipping": true
+      },
+      "glError": 0,
+      "time": 14,
+      "camera": {
+        "matrixWorld": [
+          1,
+          1.2246467991473532e-16,
+          0,
+          0,
+          1.2246467991473532e-16,
+          -1,
+          0,
+          0,
+          0,
+          0,
+          -1,
+          0,
+          280,
+          10.264,
+          918,
+          1
+        ],
+        "projectionMatrix": [
+          1.0000000000000002,
+          0,
+          0,
+          0,
+          0,
+          1.0000000000000002,
+          0,
+          0,
+          0,
+          0,
+          -1.0042949176807445,
+          -1,
+          0,
+          0,
+          -0.36077308518253404,
+          0
+        ],
+        "direction": [
+          0,
+          0,
+          0.9999999999999999
+        ]
+      },
+      "render": {
+        "frame": 141,
+        "calls": 4004,
+        "triangles": 20526138,
+        "points": 0,
+        "lines": 0
+      },
+      "file": "pz.png",
+      "sha256": "07fdde4aba7a6b4e794502a27774b577a1e0446f5d8487c33a86b9b678b4ee97",
+      "rawFile": "pz.rgba16f",
+      "rawSha256": "12977df4c56439af237762435a1af2810b8168deb4184e2ac161c5e8bc6c6695"
+    },
+    {
+      "name": "nz",
+      "min": [
+        0,
+        0.007427215576171875,
+        0
+      ],
+      "max": [
+        2.728515625,
+        2.4453125,
+        1.953125
+      ],
+      "mean": [
+        0.17491373518623732,
+        0.18181386654032394,
+        0.285234138238593
+      ],
+      "negative": [
+        0,
+        0,
+        0
+      ],
+      "nonFinite": [
+        0,
+        0,
+        0
+      ],
+      "over2": [
+        9,
+        8,
+        0
+      ],
+      "over2Fraction": [
+        0.0001373291015625,
+        0.0001220703125,
+        0
+      ],
+      "limitedPixels": 9,
+      "mappedPeak": 2,
+      "maxEncodingError": 0.007643018004986013,
+      "samples": [
+        {
+          "x": 128,
+          "y": 32,
+          "linearRGB": [
+            0.062042236328125,
+            0.138427734375,
+            0.375244140625
+          ]
+        },
+        {
+          "x": 64,
+          "y": 32,
+          "linearRGB": [
+            0.07000732421875,
+            0.15185546875,
+            0.387939453125
+          ]
+        },
+        {
+          "x": 192,
+          "y": 32,
+          "linearRGB": [
+            0.076171875,
+            0.1578369140625,
+            0.39697265625
+          ]
+        },
+        {
+          "x": 128,
+          "y": 64,
+          "linearRGB": [
+            0.09649658203125,
+            0.1973876953125,
+            0.436767578125
+          ]
+        },
+        {
+          "x": 128,
+          "y": 96,
+          "linearRGB": [
+            0.25927734375,
+            0.193115234375,
+            0.142578125
+          ]
+        },
+        {
+          "x": 144,
+          "y": 127,
+          "linearRGB": [
+            2.3984375,
+            0.2232666015625,
+            0.1192626953125
+          ]
+        },
+        {
+          "x": 200,
+          "y": 80,
+          "linearRGB": [
+            0.1875,
+            0.291748046875,
+            0.51123046875
+          ]
+        }
+      ],
+      "quantization": {
+        "maxAbsLinearError": [
+          0.728515625,
+          0.6527737932514672,
+          0.5217379989870385
+        ],
+        "meanAbsLinearError": [
+          0.0010890020992829967,
+          0.0011251760332176293,
+          0.0014340857556924822
+        ],
+        "includesRangeClipping": true
+      },
+      "glError": 0,
+      "time": 14,
+      "camera": {
+        "matrixWorld": [
+          -1,
+          1.2246467991473532e-16,
+          0,
+          0,
+          -1.2246467991473532e-16,
+          -1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          280,
+          10.264,
+          918,
+          1
+        ],
+        "projectionMatrix": [
+          1.0000000000000002,
+          0,
+          0,
+          0,
+          0,
+          1.0000000000000002,
+          0,
+          0,
+          0,
+          0,
+          -1.0042949176807445,
+          -1,
+          0,
+          0,
+          -0.36077308518253404,
+          0
+        ],
+        "direction": [
+          0,
+          0,
+          -0.9999999999999999
+        ]
+      },
+      "render": {
+        "frame": 142,
+        "calls": 4721,
+        "triangles": 23447464,
+        "points": 0,
+        "lines": 0
+      },
+      "file": "nz.png",
+      "sha256": "48c7500e0bcaca5297c1dd54690f1fdc3a16b3673bc1702fe5016e4ebf61f93a",
+      "rawFile": "nz.rgba16f",
+      "rawSha256": "720bf5802d59f32e66231486262ac031867c08735cac0df6c144720878bfd34d"
+    }
+  ],
+  "console": [
+    {
+      "stage": "app-ready",
+      "level": 2,
+      "message": "%cElectron Security Warning (Insecure Content-Security-Policy) font-weight: bold; This renderer process has either no Content Security\n  Policy set or a policy with \"unsafe-eval\" enabled. This exposes users of\n  this app to unnecessary security risks.\n\nFor more information and help, consult\nhttps://electronjs.org/docs/tutorial/security.\nThis warning will not show up\nonce the app is packaged."
+    },
+    {
+      "stage": "loading",
+      "level": 2,
+      "message": "%cElectron Security Warning (Insecure Content-Security-Policy) font-weight: bold; This renderer process has either no Content Security\n  Policy set or a policy with \"unsafe-eval\" enabled. This exposes users of\n  this app to unnecessary security risks.\n\nFor more information and help, consult\nhttps://electronjs.org/docs/tutorial/security.\nThis warning will not show up\nonce the app is packaged."
+    },
+    {
+      "stage": "loading",
+      "level": 2,
+      "message": "THREE.WebGLProgram: Program Info Log: (113,1): warning X4000: use of potentially uninitialized variable (f_skyBase)\n\n\n\u0000"
+    },
+    {
+      "stage": "loading",
+      "level": 2,
+      "message": "THREE.BufferGeometry.toNonIndexed(): BufferGeometry is already non-indexed."
+    },
+    {
+      "stage": "loading",
+      "level": 2,
+      "message": "THREE.BufferGeometry.toNonIndexed(): BufferGeometry is already non-indexed."
+    },
+    {
+      "stage": "loading",
+      "level": 2,
+      "message": "THREE.BufferGeometry.toNonIndexed(): BufferGeometry is already non-indexed."
+    },
+    {
+      "stage": "loading",
+      "level": 2,
+      "message": "Canvas2D: Multiple readback operations using getImageData are faster with the willReadFrequently attribute set to true. See: https://html.spec.whatwg.org/multipage/canvas.html#concept-canvas-will-read-frequently"
+    },
+    {
+      "stage": "loading",
+      "level": 2,
+      "message": "THREE.WebGLShadowMap: PCFSoftShadowMap has been removed. Using PCFShadowMap instead."
+    },
+    {
+      "stage": "loading",
+      "level": 2,
+      "message": "THREE.WebGLProgram: Program Info Log: (128,1): warning X4000: use of potentially uninitialized variable (f_skyBase)\n\n\n\u0000"
+    },
+    {
+      "stage": "loading",
+      "level": 2,
+      "message": "THREE.WebGLProgram: Program Info Log: (188,12-86): warning X3595: gradient instruction used in a loop with varying iteration; partial derivatives may have undefined value\n(188,12-86): warning X3595: gradient instruction used in a loop with varying iteration; partial derivatives may have undefined value\n(188,12-86): warning X3595: gradient instruction used in a loop with varying iteration; partial derivatives may have undefined value\n(573,1): warning X4000: use of potentially uninitialized variable (f_townMask)\n(295,1): warning X4000: use of potentially uninitialized variable (f_skyBase)\n\n\n\u0000"
+    },
+    {
+      "stage": "loading",
+      "level": 2,
+      "message": "THREE.WebGLProgram: Program Info Log: (122,12-86): warning X3595: gradient instruction used in a loop with varying iteration; partial derivatives may have undefined value\n(227,1): warning X4000: use of potentially uninitialized variable (f_skyBase)\n\n\n\u0000"
+    },
+    {
+      "stage": "loading",
+      "level": 2,
+      "message": "THREE.WebGLProgram: Program Info Log: (98,12-86): warning X3595: gradient instruction used in a loop with varying iteration; partial derivatives may have undefined value\n(203,1): warning X4000: use of potentially uninitialized variable (f_skyBase)\n\n\n\u0000"
+    },
+    {
+      "stage": "loading",
+      "level": 2,
+      "message": "THREE.WebGLProgram: Program Info Log: (117,1): warning X4000: use of potentially uninitialized variable (f_skyBase)\n\n\n\u0000"
+    },
+    {
+      "stage": "loading",
+      "level": 2,
+      "message": "THREE.WebGLProgram: Program Info Log: (463,1): warning X4000: use of potentially uninitialized variable (f_townMaskV)\n\n\n(98,12-86): warning X3595: gradient instruction used in a loop with varying iteration; partial derivatives may have undefined value\n(195,1): warning X4000: use of potentially uninitialized variable (f_skyBase)\n\n\n\u0000"
+    },
+    {
+      "stage": "loading",
+      "level": 2,
+      "message": "THREE.WebGLProgram: Program Info Log: (264,1): warning X4000: use of potentially uninitialized variable (f_townMaskV)\n\n\n(94,12-86): warning X3595: gradient instruction used in a loop with varying iteration; partial derivatives may have undefined value\n(178,1): warning X4000: use of potentially uninitialized variable (f_skyBase)\n\n\n\u0000"
+    },
+    {
+      "stage": "loading",
+      "level": 2,
+      "message": "THREE.WebGLProgram: Program Info Log: (137,12-86): warning X3595: gradient instruction used in a loop with varying iteration; partial derivatives may have undefined value\n(137,12-86): warning X3595: gradient instruction used in a loop with varying iteration; partial derivatives may have undefined value\n(137,12-86): warning X3595: gradient instruction used in a loop with varying iteration; partial derivatives may have undefined value\n(233,1): warning X4000: use of potentially uninitialized variable (f_skyBase)\n\n\n\u0000"
+    },
+    {
+      "stage": "loading",
+      "level": 2,
+      "message": "THREE.WebGLProgram: Program Info Log: (101,12-86): warning X3595: gradient instruction used in a loop with varying iteration; partial derivatives may have undefined value\n(185,1): warning X4000: use of potentially uninitialized variable (f_skyBase)\n\n\n\u0000"
+    },
+    {
+      "stage": "loading",
+      "level": 2,
+      "message": "THREE.WebGLProgram: Program Info Log: (101,12-86): warning X3595: gradient instruction used in a loop with varying iteration; partial derivatives may have undefined value\n(185,1): warning X4000: use of potentially uninitialized variable (f_skyBase)\n\n\n\u0000"
+    },
+    {
+      "stage": "loading",
+      "level": 2,
+      "message": "THREE.WebGLProgram: Program Info Log: (188,12-86): warning X3595: gradient instruction used in a loop with varying iteration; partial derivatives may have undefined value\n(188,12-86): warning X3595: gradient instruction used in a loop with varying iteration; partial derivatives may have undefined value\n(188,12-86): warning X3595: gradient instruction used in a loop with varying iteration; partial derivatives may have undefined value\n(573,1): warning X4000: use of potentially uninitialized variable (f_townMask)\n(295,1): warning X4000: use of potentially uninitialized variable (f_skyBase)\n\n\n\u0000"
+    },
+    {
+      "stage": "loading",
+      "level": 2,
+      "message": "THREE.WebGLProgram: Program Info Log: (197,12-86): warning X3595: gradient instruction used in a loop with varying iteration; partial derivatives may have undefined value\n(197,12-86): warning X3595: gradient instruction used in a loop with varying iteration; partial derivatives may have undefined value\n(197,12-86): warning X3595: gradient instruction used in a loop with varying iteration; partial derivatives may have undefined value\n(582,1): warning X4000: use of potentially uninitialized variable (f_townMask)\n(304,1): warning X4000: use of potentially uninitialized variable (f_skyBase)\n\n\n\u0000"
+    },
+    {
+      "stage": "loading",
+      "level": 2,
+      "message": "THREE.WebGLProgram: Program Info Log: (79,17-29): warning X3577: value cannot be NaN, isnan() may not be necessary.  /Gis may force isnan() to be performed\n(79,17-29): warning X3577: value cannot be NaN, isnan() may not be necessary.  /Gis may force isnan() to be performed\n(79,17-29): warning X3577: value cannot be NaN, isnan() may not be necessary.  /Gis may force isnan() to be performed\n(79,17-29): warning X3577: value cannot be NaN, isnan() may not be necessary.  /Gis may force isnan() to be performed\n(79,17-29): warning X3577: value cannot be NaN, isnan() may not be necessary.  /Gis may force isnan() to be performed\n(79,17-29): warning X3577: value cannot be NaN, isnan() may not be necessary.  /Gis may force isnan() to be performed\n(79,17-29): warning X3577: value cannot be NaN, isnan() may not be necessary.  /Gis may force isnan() to be performed\n(79,17-29): warning X3577: value cannot be NaN, isnan() may not be necessary.  /Gis may force isnan() to be performed\n(79,17-29): warning X3577: value cannot be NaN, isnan() may not be necessary.  /Gis may force isnan() to be performed\n(79,17-29): warning X3577: value cannot be NaN, isnan() may not be necessary.  /Gis may force isnan() to be performed\n(79,17-29): warning X3577: value cannot be NaN, isnan() may not be necessary.  /Gis may force isnan() to be performed\n(79,17-29): warning X3577: value cannot be NaN, isnan() may not be necessary.  /Gis may force isnan() to be performed\n(79,17-29): warning X3577: value cannot be NaN, isnan() may not be necessary.  /Gis may force isnan() to be performed\n(79,17-29): warning X3577: value cannot be NaN, isnan() may not be necessary.  /Gis may force isnan() to be performed\n(79,17-29): warning X3577: value cannot be NaN, isnan() may not be necessary.  /Gis may force isnan() to be performed\n(67,12-86): warning X3595: gradient instruction used in a loop with varying iteration; partial derivatives may have undefined value\n\n\n\u0000"
+    },
+    {
+      "stage": "loading",
+      "level": 2,
+      "message": "THREE.WebGLProgram: Program Info Log: (57,17-29): warning X3577: value cannot be NaN, isnan() may not be necessary.  /Gis may force isnan() to be performed\n(57,17-29): warning X3577: value cannot be NaN, isnan() may not be necessary.  /Gis may force isnan() to be performed\n(57,17-29): warning X3577: value cannot be NaN, isnan() may not be necessary.  /Gis may force isnan() to be performed\n(57,17-29): warning X3577: value cannot be NaN, isnan() may not be necessary.  /Gis may force isnan() to be performed\n(57,17-29): warning X3577: value cannot be NaN, isnan() may not be necessary.  /Gis may force isnan() to be performed\n(57,17-29): warning X3577: value cannot be NaN, isnan() may not be necessary.  /Gis may force isnan() to be performed\n(57,17-29): warning X3577: value cannot be NaN, isnan() may not be necessary.  /Gis may force isnan() to be performed\n(57,17-29): warning X3577: value cannot be NaN, isnan() may not be necessary.  /Gis may force isnan() to be performed\n(57,17-29): warning X3577: value cannot be NaN, isnan() may not be necessary.  /Gis may force isnan() to be performed\n(57,17-29): warning X3577: value cannot be NaN, isnan() may not be necessary.  /Gis may force isnan() to be performed\n(57,17-29): warning X3577: value cannot be NaN, isnan() may not be necessary.  /Gis may force isnan() to be performed\n(57,17-29): warning X3577: value cannot be NaN, isnan() may not be necessary.  /Gis may force isnan() to be performed\n(57,17-29): warning X3577: value cannot be NaN, isnan() may not be necessary.  /Gis may force isnan() to be performed\n(57,17-29): warning X3577: value cannot be NaN, isnan() may not be necessary.  /Gis may force isnan() to be performed\n(57,17-29): warning X3577: value cannot be NaN, isnan() may not be necessary.  /Gis may force isnan() to be performed\n(57,17-29): warning X3577: value cannot be NaN, isnan() may not be necessary.  /Gis may force isnan() to be performed\n(57,17-29): warning X3577: value cannot be NaN, isnan() may not be necessary.  /Gis may force isnan() to be performed\n(57,17-29): warning X3577: value cannot be NaN, isnan() may not be necessary.  /Gis may force isnan() to be performed\n(57,17-29): warning X3577: value cannot be NaN, isnan() may not be necessary.  /Gis may force isnan() to be performed\n(57,17-29): warning X3577: value cannot be NaN, isnan() may not be necessary.  /Gis may force isnan() to be performed\n(57,17-29): warning X3577: value cannot be NaN, isnan() may not be necessary.  /Gis may force isnan() to be performed\n(57,17-29): warning X3577: value cannot be NaN, isnan() may not be necessary.  /Gis may force isnan() to be performed\n(57,17-29): warning X3577: value cannot be NaN, isnan() may not be necessary.  /Gis may force isnan() to be performed\n(57,17-29): warning X3577: value cannot be NaN, isnan() may not be necessary.  /Gis may force isnan() to be performed\n(57,17-29): warning X3577: value cannot be NaN, isnan() may not be necessary.  /Gis may force isnan() to be performed\n(57,17-29): warning X3577: value cannot be NaN, isnan() may not be necessary.  /Gis may force isnan() to be performed\n\n\n\u0000"
+    },
+    {
+      "stage": "loading",
+      "level": 2,
+      "message": "THREE.WebGLProgram: Program Info Log: (449,17-31): warning X3577: value cannot be NaN, isnan() may not be necessary.  /Gis may force isnan() to be performed\n\n\n\u0000"
+    }
+  ],
+  "exceptions": [],
+  "networkFailures": [
+    {
+      "url": "http://127.0.0.1:54516/assets/models/menhir.glb",
+      "canceled": true,
+      "errorText": "net::ERR_ABORTED",
+      "requestId": "23540.153",
+      "timestamp": 29888.141779,
+      "type": "Fetch",
+      "stage": "loading"
+    },
+    {
+      "url": "http://127.0.0.1:54516/mature-sakura/mature-sakura.glb",
+      "canceled": true,
+      "errorText": "net::ERR_ABORTED",
+      "requestId": "23540.240",
+      "timestamp": 29896.504696,
+      "type": "Fetch",
+      "stage": "loading"
+    },
+    {
+      "url": "http://127.0.0.1:54516/prop-assets/plastic_crate_02/plastic_crate_02_1k.gltf",
+      "canceled": true,
+      "errorText": "net::ERR_ABORTED",
+      "requestId": "23540.264",
+      "timestamp": 29899.497444,
+      "type": "Fetch",
+      "stage": "loading"
+    },
+    {
+      "url": "http://127.0.0.1:54516/prop-assets/plastic_crate_02/plastic_crate_02.bin",
+      "canceled": true,
+      "errorText": "net::ERR_ABORTED",
+      "requestId": "23540.269",
+      "timestamp": 29899.509337,
+      "type": "Fetch",
+      "stage": "loading"
+    }
+  ],
+  "httpErrors": [],
+  "ok": false,
+  "readyClock": {
+    "timeOrigin": 1795129526683,
+    "now": 47215.800000000745
+  },
+  "preparation": {
+    "before": {
+      "camera": {
+        "position": [
+          278.8,
+          10.4,
+          936
+        ],
+        "quaternion": [
+          -0.003277842930440423,
+          -0.009834585659995631,
+          -0.000032237959341941705,
+          0.9999462663720154
+        ],
+        "fov": 58
+      },
+      "time": 47.2444,
+      "stationTime": 47.2444,
+      "walking": false,
+      "wet": true,
+      "skyEnv": 0,
+      "glass": [
+        {
+          "uuid": "cabd97a2-9fd7-4987-8589-fa0e68f7efd7",
+          "visible": true
+        },
+        {
+          "uuid": "098c4aac-4184-44d8-8dfd-7d294b6a57b1",
+          "visible": true
+        },
+        {
+          "uuid": "9da42f86-6c44-4402-b24f-8f33412d935e",
+          "visible": true
+        },
+        {
+          "uuid": "2e44aa36-94d9-4b3b-9511-41db352cbe0e",
+          "visible": true
+        }
+      ],
+      "excludedVisibility": [
+        {
+          "uuid": "162252b4-6324-4ef9-81eb-03295dc9d69d",
+          "name": "",
+          "type": "Mesh",
+          "visible": true
+        },
+        {
+          "uuid": "0334f249-56e2-414c-a30b-ee1c110d54e4",
+          "name": "",
+          "type": "Group",
+          "visible": true
+        },
+        {
+          "uuid": "8a7b5c69-c136-41c7-b722-b81b8e3333b5",
+          "name": "",
+          "type": "Mesh",
+          "visible": true
+        },
+        {
+          "uuid": "f51d43a3-f5e5-4702-8328-b85a0208ee52",
+          "name": "",
+          "type": "Group",
+          "visible": true
+        },
+        {
+          "uuid": "8e748e39-12e6-4916-b010-8e06347782f3",
+          "name": "",
+          "type": "Group",
+          "visible": true
+        },
+        {
+          "uuid": "51165264-bef6-4950-a4c9-0215d4a0d922",
+          "name": "",
+          "type": "Group",
+          "visible": true
+        },
+        {
+          "uuid": "6d006d05-1e1a-4e21-9b42-ab2270c439f0",
+          "name": "station-island-ground-transition",
+          "type": "Mesh",
+          "visible": true
+        },
+        {
+          "uuid": "4d78fcfe-adfd-4b7a-b564-fe52dcf1f36e",
+          "name": "",
+          "type": "Group",
+          "visible": true
+        },
+        {
+          "uuid": "0481673d-4077-474b-9f58-918ab658b9df",
+          "name": "crossing-halo",
+          "type": "Mesh",
+          "visible": true
+        },
+        {
+          "uuid": "f9f77fd7-8a7a-41a1-ae10-4fc77db3c36f",
+          "name": "crossing-halo",
+          "type": "Mesh",
+          "visible": true
+        },
+        {
+          "uuid": "987aad73-769b-467d-843b-69c0f4ead506",
+          "name": "crossing-halo",
+          "type": "Mesh",
+          "visible": true
+        },
+        {
+          "uuid": "b91009f5-df1e-4393-9640-ec3b4f3e7538",
+          "name": "crossing-halo",
+          "type": "Mesh",
+          "visible": true
+        },
+        {
+          "uuid": "e032bd59-1a60-459b-9fa5-9111e5030589",
+          "name": "crossing-halo",
+          "type": "Mesh",
+          "visible": true
+        }
+      ],
+      "captureStats": {
+        "resolution": 256,
+        "panes": {
+          "W1": 8,
+          "E1": 4,
+          "W2": 5,
+          "E2": 5,
+          "E3": 5
+        },
+        "loadedFaces": 6,
+        "captures": 0,
+        "facesAtLoad": 0,
+        "passesPerFrame": 0,
+        "loadMs": 15
+      }
+    },
+    "captureScope": "Station scene and procedural sky only. All other direct island children and crossing lens halos are temporarily hidden; physical traffic lamps remain.",
+    "exclusions": [
+      {
+        "uuid": "162252b4-6324-4ef9-81eb-03295dc9d69d",
+        "name": "",
+        "type": "Mesh",
+        "visible": false
+      },
+      {
+        "uuid": "0334f249-56e2-414c-a30b-ee1c110d54e4",
+        "name": "",
+        "type": "Group",
+        "visible": false
+      },
+      {
+        "uuid": "8a7b5c69-c136-41c7-b722-b81b8e3333b5",
+        "name": "",
+        "type": "Mesh",
+        "visible": false
+      },
+      {
+        "uuid": "f51d43a3-f5e5-4702-8328-b85a0208ee52",
+        "name": "",
+        "type": "Group",
+        "visible": false
+      },
+      {
+        "uuid": "8e748e39-12e6-4916-b010-8e06347782f3",
+        "name": "",
+        "type": "Group",
+        "visible": false
+      },
+      {
+        "uuid": "51165264-bef6-4950-a4c9-0215d4a0d922",
+        "name": "",
+        "type": "Group",
+        "visible": false
+      },
+      {
+        "uuid": "6d006d05-1e1a-4e21-9b42-ab2270c439f0",
+        "name": "station-island-ground-transition",
+        "type": "Mesh",
+        "visible": false
+      },
+      {
+        "uuid": "4d78fcfe-adfd-4b7a-b564-fe52dcf1f36e",
+        "name": "",
+        "type": "Group",
+        "visible": false
+      },
+      {
+        "uuid": "0481673d-4077-474b-9f58-918ab658b9df",
+        "name": "crossing-halo",
+        "type": "Mesh",
+        "visible": false
+      },
+      {
+        "uuid": "f9f77fd7-8a7a-41a1-ae10-4fc77db3c36f",
+        "name": "crossing-halo",
+        "type": "Mesh",
+        "visible": false
+      },
+      {
+        "uuid": "987aad73-769b-467d-843b-69c0f4ead506",
+        "name": "crossing-halo",
+        "type": "Mesh",
+        "visible": false
+      },
+      {
+        "uuid": "b91009f5-df1e-4393-9640-ec3b4f3e7538",
+        "name": "crossing-halo",
+        "type": "Mesh",
+        "visible": false
+      },
+      {
+        "uuid": "e032bd59-1a60-459b-9fa5-9111e5030589",
+        "name": "crossing-halo",
+        "type": "Mesh",
+        "visible": false
+      }
+    ],
+    "excludedHaloCount": 5,
+    "rayEquivalence": [
+      {
+        "face": "px",
+        "minDot": 0.9999999999999998
+      },
+      {
+        "face": "nx",
+        "minDot": 0.9999999999999998
+      },
+      {
+        "face": "py",
+        "minDot": 0.9999999999999998
+      },
+      {
+        "face": "ny",
+        "minDot": 0.9999999999999998
+      },
+      {
+        "face": "pz",
+        "minDot": 0.9999999999999998
+      },
+      {
+        "face": "nz",
+        "minDot": 0.9999999999999998
+      }
+    ],
+    "origin": {
+      "stationLocal": [
+        0,
+        2.264,
+        18
+      ],
+      "world": [
+        280,
+        10.264,
+        918
+      ],
+      "source": "streetReflections.uniforms.uStreetOrigin: streetCenterX(18), layout.heightAt(x,18)+1.9, z18"
+    },
+    "edges": [
+      {
+        "face": "px",
+        "ndc": [
+          -1,
+          0
+        ],
+        "direction": [
+          0.7071067811865194,
+          0,
+          0.7071067811865756
+        ],
+        "neighbor": {
+          "face": "pz",
+          "ndc": [
+            1,
+            0
+          ],
+          "dot": 0.9999999999999998
+        }
+      },
+      {
+        "face": "px",
+        "ndc": [
+          1,
+          0
+        ],
+        "direction": [
+          0.7071067811865194,
+          0,
+          -0.7071067811865756
+        ],
+        "neighbor": {
+          "face": "nz",
+          "ndc": [
+            -1,
+            0
+          ],
+          "dot": 0.9999999999999998
+        }
+      },
+      {
+        "face": "px",
+        "ndc": [
+          0,
+          -1
+        ],
+        "direction": [
+          0.7071067811865476,
+          0.7071067811865476,
+          0
+        ],
+        "neighbor": {
+          "face": "py",
+          "ndc": [
+            1,
+            0
+          ],
+          "dot": 1.0000000000000002
+        }
+      },
+      {
+        "face": "px",
+        "ndc": [
+          0,
+          1
+        ],
+        "direction": [
+          0.7071067811865476,
+          -0.7071067811865476,
+          0
+        ],
+        "neighbor": {
+          "face": "ny",
+          "ndc": [
+            1,
+            0
+          ],
+          "dot": 1.0000000000000002
+        }
+      },
+      {
+        "face": "nx",
+        "ndc": [
+          -1,
+          0
+        ],
+        "direction": [
+          -0.7071067811865194,
+          0,
+          -0.7071067811865756
+        ],
+        "neighbor": {
+          "face": "nz",
+          "ndc": [
+            1,
+            0
+          ],
+          "dot": 0.9999999999999998
+        }
+      },
+      {
+        "face": "nx",
+        "ndc": [
+          1,
+          0
+        ],
+        "direction": [
+          -0.7071067811865194,
+          0,
+          0.7071067811865756
+        ],
+        "neighbor": {
+          "face": "pz",
+          "ndc": [
+            -1,
+            0
+          ],
+          "dot": 0.9999999999999998
+        }
+      },
+      {
+        "face": "nx",
+        "ndc": [
+          0,
+          -1
+        ],
+        "direction": [
+          -0.7071067811865476,
+          0.7071067811865476,
+          0
+        ],
+        "neighbor": {
+          "face": "py",
+          "ndc": [
+            -1,
+            0
+          ],
+          "dot": 1.0000000000000002
+        }
+      },
+      {
+        "face": "nx",
+        "ndc": [
+          0,
+          1
+        ],
+        "direction": [
+          -0.7071067811865476,
+          -0.7071067811865476,
+          0
+        ],
+        "neighbor": {
+          "face": "ny",
+          "ndc": [
+            -1,
+            0
+          ],
+          "dot": 1.0000000000000002
+        }
+      },
+      {
+        "face": "py",
+        "ndc": [
+          -1,
+          0
+        ],
+        "direction": [
+          -0.7071067811865476,
+          0.7071067811865476,
+          0
+        ],
+        "neighbor": {
+          "face": "nx",
+          "ndc": [
+            0,
+            -1
+          ],
+          "dot": 1.0000000000000002
+        }
+      },
+      {
+        "face": "py",
+        "ndc": [
+          1,
+          0
+        ],
+        "direction": [
+          0.7071067811865476,
+          0.7071067811865476,
+          0
+        ],
+        "neighbor": {
+          "face": "px",
+          "ndc": [
+            0,
+            -1
+          ],
+          "dot": 1.0000000000000002
+        }
+      },
+      {
+        "face": "py",
+        "ndc": [
+          0,
+          -1
+        ],
+        "direction": [
+          0,
+          0.7071067811865194,
+          -0.7071067811865756
+        ],
+        "neighbor": {
+          "face": "nz",
+          "ndc": [
+            0,
+            -1
+          ],
+          "dot": 0.9999999999999998
+        }
+      },
+      {
+        "face": "py",
+        "ndc": [
+          0,
+          1
+        ],
+        "direction": [
+          0,
+          0.7071067811865194,
+          0.7071067811865756
+        ],
+        "neighbor": {
+          "face": "pz",
+          "ndc": [
+            0,
+            -1
+          ],
+          "dot": 0.9999999999999998
+        }
+      },
+      {
+        "face": "ny",
+        "ndc": [
+          -1,
+          0
+        ],
+        "direction": [
+          -0.7071067811865476,
+          -0.7071067811865476,
+          0
+        ],
+        "neighbor": {
+          "face": "nx",
+          "ndc": [
+            0,
+            1
+          ],
+          "dot": 1.0000000000000002
+        }
+      },
+      {
+        "face": "ny",
+        "ndc": [
+          1,
+          0
+        ],
+        "direction": [
+          0.7071067811865476,
+          -0.7071067811865476,
+          0
+        ],
+        "neighbor": {
+          "face": "px",
+          "ndc": [
+            0,
+            1
+          ],
+          "dot": 1.0000000000000002
+        }
+      },
+      {
+        "face": "ny",
+        "ndc": [
+          0,
+          -1
+        ],
+        "direction": [
+          0,
+          -0.7071067811865194,
+          0.7071067811865756
+        ],
+        "neighbor": {
+          "face": "pz",
+          "ndc": [
+            0,
+            1
+          ],
+          "dot": 0.9999999999999998
+        }
+      },
+      {
+        "face": "ny",
+        "ndc": [
+          0,
+          1
+        ],
+        "direction": [
+          0,
+          -0.7071067811865194,
+          -0.7071067811865756
+        ],
+        "neighbor": {
+          "face": "nz",
+          "ndc": [
+            0,
+            1
+          ],
+          "dot": 0.9999999999999998
+        }
+      },
+      {
+        "face": "pz",
+        "ndc": [
+          -1,
+          0
+        ],
+        "direction": [
+          -0.7071067811865194,
+          0,
+          0.7071067811865756
+        ],
+        "neighbor": {
+          "face": "nx",
+          "ndc": [
+            1,
+            0
+          ],
+          "dot": 0.9999999999999998
+        }
+      },
+      {
+        "face": "pz",
+        "ndc": [
+          1,
+          0
+        ],
+        "direction": [
+          0.7071067811865194,
+          0,
+          0.7071067811865756
+        ],
+        "neighbor": {
+          "face": "px",
+          "ndc": [
+            -1,
+            0
+          ],
+          "dot": 0.9999999999999998
+        }
+      },
+      {
+        "face": "pz",
+        "ndc": [
+          0,
+          -1
+        ],
+        "direction": [
+          0,
+          0.7071067811865194,
+          0.7071067811865756
+        ],
+        "neighbor": {
+          "face": "py",
+          "ndc": [
+            0,
+            1
+          ],
+          "dot": 0.9999999999999998
+        }
+      },
+      {
+        "face": "pz",
+        "ndc": [
+          0,
+          1
+        ],
+        "direction": [
+          0,
+          -0.7071067811865194,
+          0.7071067811865756
+        ],
+        "neighbor": {
+          "face": "ny",
+          "ndc": [
+            0,
+            -1
+          ],
+          "dot": 0.9999999999999998
+        }
+      },
+      {
+        "face": "nz",
+        "ndc": [
+          -1,
+          0
+        ],
+        "direction": [
+          0.7071067811865194,
+          0,
+          -0.7071067811865756
+        ],
+        "neighbor": {
+          "face": "px",
+          "ndc": [
+            1,
+            0
+          ],
+          "dot": 0.9999999999999998
+        }
+      },
+      {
+        "face": "nz",
+        "ndc": [
+          1,
+          0
+        ],
+        "direction": [
+          -0.7071067811865194,
+          0,
+          -0.7071067811865756
+        ],
+        "neighbor": {
+          "face": "nx",
+          "ndc": [
+            -1,
+            0
+          ],
+          "dot": 0.9999999999999998
+        }
+      },
+      {
+        "face": "nz",
+        "ndc": [
+          0,
+          -1
+        ],
+        "direction": [
+          0,
+          0.7071067811865194,
+          -0.7071067811865756
+        ],
+        "neighbor": {
+          "face": "py",
+          "ndc": [
+            0,
+            -1
+          ],
+          "dot": 0.9999999999999998
+        }
+      },
+      {
+        "face": "nz",
+        "ndc": [
+          0,
+          1
+        ],
+        "direction": [
+          0,
+          -0.7071067811865194,
+          -0.7071067811865756
+        ],
+        "neighbor": {
+          "face": "ny",
+          "ndc": [
+            0,
+            1
+          ],
+          "dot": 0.9999999999999998
+        }
+      }
+    ],
+    "edgesMatch": true,
+    "dimensions": [
+      256,
+      256
+    ],
+    "type": "RGBA binary16 HalfFloat; independent 2D target per face render, no mipmaps",
+    "encoding": "PNG RGB8 = sRGB(linearRGB / max(2, peakRGB)); alpha255. Linear radiance up to 2 is preserved, brighter texels retain RGB ratios. Bottom row0 is PNG row0, no flip. Runtime sRGB decode *2 with CubeTexture.flipY=false; face order px,nx,py,ny,pz,nz.",
+    "sourceStats": {
+      "resolution": 256,
+      "panes": {
+        "W1": 8,
+        "E1": 4,
+        "W2": 5,
+        "E2": 5,
+        "E3": 5
+      },
+      "loadedFaces": 6,
+      "captures": 0,
+      "facesAtLoad": 0,
+      "passesPerFrame": 0,
+      "loadMs": 15
+    }
+  },
+  "rangeUnclipped": false,
+  "bakeValid": true,
+  "encodingValid": true,
+  "restore": {
+    "before": {
+      "camera": {
+        "position": [
+          278.8,
+          10.4,
+          936
+        ],
+        "quaternion": [
+          -0.003277842930440423,
+          -0.009834585659995631,
+          -0.000032237959341941705,
+          0.9999462663720154
+        ],
+        "fov": 58
+      },
+      "time": 47.2444,
+      "stationTime": 47.2444,
+      "walking": false,
+      "wet": true,
+      "skyEnv": 0,
+      "glass": [
+        {
+          "uuid": "cabd97a2-9fd7-4987-8589-fa0e68f7efd7",
+          "visible": true
+        },
+        {
+          "uuid": "098c4aac-4184-44d8-8dfd-7d294b6a57b1",
+          "visible": true
+        },
+        {
+          "uuid": "9da42f86-6c44-4402-b24f-8f33412d935e",
+          "visible": true
+        },
+        {
+          "uuid": "2e44aa36-94d9-4b3b-9511-41db352cbe0e",
+          "visible": true
+        }
+      ],
+      "excludedVisibility": [
+        {
+          "uuid": "162252b4-6324-4ef9-81eb-03295dc9d69d",
+          "name": "",
+          "type": "Mesh",
+          "visible": true
+        },
+        {
+          "uuid": "0334f249-56e2-414c-a30b-ee1c110d54e4",
+          "name": "",
+          "type": "Group",
+          "visible": true
+        },
+        {
+          "uuid": "8a7b5c69-c136-41c7-b722-b81b8e3333b5",
+          "name": "",
+          "type": "Mesh",
+          "visible": true
+        },
+        {
+          "uuid": "f51d43a3-f5e5-4702-8328-b85a0208ee52",
+          "name": "",
+          "type": "Group",
+          "visible": true
+        },
+        {
+          "uuid": "8e748e39-12e6-4916-b010-8e06347782f3",
+          "name": "",
+          "type": "Group",
+          "visible": true
+        },
+        {
+          "uuid": "51165264-bef6-4950-a4c9-0215d4a0d922",
+          "name": "",
+          "type": "Group",
+          "visible": true
+        },
+        {
+          "uuid": "6d006d05-1e1a-4e21-9b42-ab2270c439f0",
+          "name": "station-island-ground-transition",
+          "type": "Mesh",
+          "visible": true
+        },
+        {
+          "uuid": "4d78fcfe-adfd-4b7a-b564-fe52dcf1f36e",
+          "name": "",
+          "type": "Group",
+          "visible": true
+        },
+        {
+          "uuid": "0481673d-4077-474b-9f58-918ab658b9df",
+          "name": "crossing-halo",
+          "type": "Mesh",
+          "visible": true
+        },
+        {
+          "uuid": "f9f77fd7-8a7a-41a1-ae10-4fc77db3c36f",
+          "name": "crossing-halo",
+          "type": "Mesh",
+          "visible": true
+        },
+        {
+          "uuid": "987aad73-769b-467d-843b-69c0f4ead506",
+          "name": "crossing-halo",
+          "type": "Mesh",
+          "visible": true
+        },
+        {
+          "uuid": "b91009f5-df1e-4393-9640-ec3b4f3e7538",
+          "name": "crossing-halo",
+          "type": "Mesh",
+          "visible": true
+        },
+        {
+          "uuid": "e032bd59-1a60-459b-9fa5-9111e5030589",
+          "name": "crossing-halo",
+          "type": "Mesh",
+          "visible": true
+        }
+      ],
+      "captureStats": {
+        "resolution": 256,
+        "panes": {
+          "W1": 8,
+          "E1": 4,
+          "W2": 5,
+          "E2": 5,
+          "E3": 5
+        },
+        "loadedFaces": 6,
+        "captures": 0,
+        "facesAtLoad": 0,
+        "passesPerFrame": 0,
+        "loadMs": 15
+      }
+    },
+    "after": {
+      "camera": {
+        "position": [
+          278.8,
+          10.4,
+          936
+        ],
+        "quaternion": [
+          -0.003277842930440423,
+          -0.009834585659995631,
+          -0.000032237959341941705,
+          0.9999462663720154
+        ],
+        "fov": 58
+      },
+      "time": 47.2444,
+      "stationTime": 47.2444,
+      "walking": false,
+      "wet": true,
+      "skyEnv": 0,
+      "glass": [
+        {
+          "uuid": "cabd97a2-9fd7-4987-8589-fa0e68f7efd7",
+          "visible": true
+        },
+        {
+          "uuid": "098c4aac-4184-44d8-8dfd-7d294b6a57b1",
+          "visible": true
+        },
+        {
+          "uuid": "9da42f86-6c44-4402-b24f-8f33412d935e",
+          "visible": true
+        },
+        {
+          "uuid": "2e44aa36-94d9-4b3b-9511-41db352cbe0e",
+          "visible": true
+        }
+      ],
+      "excludedVisibility": [
+        {
+          "uuid": "162252b4-6324-4ef9-81eb-03295dc9d69d",
+          "name": "",
+          "type": "Mesh",
+          "visible": true
+        },
+        {
+          "uuid": "0334f249-56e2-414c-a30b-ee1c110d54e4",
+          "name": "",
+          "type": "Group",
+          "visible": true
+        },
+        {
+          "uuid": "8a7b5c69-c136-41c7-b722-b81b8e3333b5",
+          "name": "",
+          "type": "Mesh",
+          "visible": true
+        },
+        {
+          "uuid": "f51d43a3-f5e5-4702-8328-b85a0208ee52",
+          "name": "",
+          "type": "Group",
+          "visible": true
+        },
+        {
+          "uuid": "8e748e39-12e6-4916-b010-8e06347782f3",
+          "name": "",
+          "type": "Group",
+          "visible": true
+        },
+        {
+          "uuid": "51165264-bef6-4950-a4c9-0215d4a0d922",
+          "name": "",
+          "type": "Group",
+          "visible": true
+        },
+        {
+          "uuid": "6d006d05-1e1a-4e21-9b42-ab2270c439f0",
+          "name": "station-island-ground-transition",
+          "type": "Mesh",
+          "visible": true
+        },
+        {
+          "uuid": "4d78fcfe-adfd-4b7a-b564-fe52dcf1f36e",
+          "name": "",
+          "type": "Group",
+          "visible": true
+        },
+        {
+          "uuid": "0481673d-4077-474b-9f58-918ab658b9df",
+          "name": "crossing-halo",
+          "type": "Mesh",
+          "visible": true
+        },
+        {
+          "uuid": "f9f77fd7-8a7a-41a1-ae10-4fc77db3c36f",
+          "name": "crossing-halo",
+          "type": "Mesh",
+          "visible": true
+        },
+        {
+          "uuid": "987aad73-769b-467d-843b-69c0f4ead506",
+          "name": "crossing-halo",
+          "type": "Mesh",
+          "visible": true
+        },
+        {
+          "uuid": "b91009f5-df1e-4393-9640-ec3b4f3e7538",
+          "name": "crossing-halo",
+          "type": "Mesh",
+          "visible": true
+        },
+        {
+          "uuid": "e032bd59-1a60-459b-9fa5-9111e5030589",
+          "name": "crossing-halo",
+          "type": "Mesh",
+          "visible": true
+        }
+      ],
+      "captureStats": {
+        "resolution": 256,
+        "panes": {
+          "W1": 8,
+          "E1": 4,
+          "W2": 5,
+          "E2": 5,
+          "E3": 5
+        },
+        "loadedFaces": 6,
+        "captures": 0,
+        "facesAtLoad": 0,
+        "passesPerFrame": 0,
+        "loadMs": 15
+      }
+    },
+    "equal": true,
+    "glError": 0,
+    "gateResumed": true
+  },
+  "changedFiles": [],
+  "sourceUnchanged": true,
+  "driverUnchanged": true,
+  "assetsUnchanged": true,
+  "transportClean": false,
+  "completedAt": "2026-11-19T23:06:17.755Z"
+}

@@ -1,0 +1,41 @@
+{
+  "label": "cand",
+  "target": "http://127.0.0.1:4173/?time=evening",
+  "at": "2026-11-19T21:02:20.938Z",
+  "results": [
+    {
+      "point": [
+        274.27,
+        8.47,
+        914.08
+      ],
+      "found": true,
+      "patchY": 8.2971,
+      "patchDxz": 0.108,
+      "patchMesh": "shop-spill",
+      "patchMaterial": "shop-spill",
+      "instanceCount": 2558,
+      "groundY": 8.2742,
+      "groundObject": "Mesh",
+      "groundMaterial": "MeshToonMaterial",
+      "gap": 0.0229,
+      "nearestHits": [
+        {
+          "y": 8.2742,
+          "object": "Mesh",
+          "material": "MeshToonMaterial"
+        },
+        {
+          "y": 8.2542,
+          "object": "Mesh",
+          "material": "env-ground"
+        },
+        {
+          "y": 0,
+          "object": "Mesh",
+          "material": "ShaderMaterial"
+        }
+      ]
+    }
+  ]
+}
