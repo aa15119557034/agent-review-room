@@ -16,6 +16,7 @@ export const toonLitUniforms = { uTbK: { value: 1 }, uTbRim: { value: 1 } };
 export const setToonLit = (on) => { toonLitUniforms.uTbK.value = toonLitUniforms.uTbRim.value = on ? 1 : 0; };
 /** Round 12: ?grade=off leaves the final grade stage out of the shader altogether (round 11 pixels). */
 export const gradeEnabled = () => new URLSearchParams(location.search).get('grade') !== 'off';
+export const formEnabled = () => new URLSearchParams(location.search).get('form') !== 'old';
 export const toonEnabled = () => new URLSearchParams(location.search).get('toon') !== 'off';
 
 const f = (x) => Number(x).toFixed(4);
@@ -103,11 +104,19 @@ ${indoorGlsl(boxes)}
 }
 
 /** Post-pass uniforms for look.js. */
+/** Round 17: merges p.form (line / lit overrides) into the round 28 parameters; ?form=old returns p unchanged. */
+export function applyForm(p) {
+  if (!p.form || !formEnabled()) return p;
+  return { ...p, line: { ...p.line, ...p.form.line }, lit: { ...p.lit, ...p.form.lit } };
+}
+
 export function toonLineUniforms(p) {
-  const l = p.line, v4 = (a, b) => new THREE.Vector4(...a, ...b);
+  const l = p.line, k = p.form && formEnabled() ? p.form.ink : null, v4 = (a, b) => new THREE.Vector4(...a, ...b);
   return {
     uLnOn: { value: 1 }, uLn: { value: new THREE.Vector4(l.width, l.strength, l.fade[0], l.fade[1]) },
     uLnS: { value: v4(l.sil, l.crease) }, uLnC: { value: l.creaseWeight }, uLnCol: { value: new THREE.Vector3(...l.tint) },
+    uLnF: { value: k ? new THREE.Vector4(1, k.darken, k.sat, k.thinWidth) : new THREE.Vector4(0, 0, 0, 0.35) },
+    uLnFl: { value: new THREE.Vector3(...(k ? k.floor : [0, 0, 0])) },
   };
 }
 

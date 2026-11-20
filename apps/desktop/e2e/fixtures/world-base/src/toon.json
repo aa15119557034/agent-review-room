@@ -1,5 +1,5 @@
 {
- "note": "Round 28 toon (stronger): ZZZ-style outlines (post, near side of a depth step with the surface slope removed, plus inverse-depth creases) and 3-band cel light in the lit-material chunk. Both are runtime-switchable: lit bands / warm rim by uniform (uTbK, uTbRim), lines by uLnOn/uToon. ?toon=off installs nothing and restores round 26 pixel for pixel. lit.levels = direct-light level of the dark / middle / lit band relative to full sun; lit.edges = where the bands change; lit.width = smoothstep half-width. line.width in pixels at 1080 px height; sil = relative depth step that starts / completes a silhouette line; crease = inverse-depth curvature range; fade = metres where lines start thinning / vanish. line.tint multiplies the local colour (dark and cool, not black).",
+ "note": "Round 28 toon (stronger): ZZZ-style outlines (post, near side of a depth step with the surface slope removed, plus inverse-depth creases) and 3-band cel light in the lit-material chunk. Both are runtime-switchable: lit bands / warm rim by uniform (uTbK, uTbRim), lines by uLnOn/uToon. ?toon=off installs nothing and restores round 26 pixel for pixel. lit.levels = direct-light level of the dark / middle / lit band relative to full sun; lit.edges = where the bands change; lit.width = smoothstep half-width. line.width in pixels at 1080 px height; sil = relative depth step that starts / completes a silhouette line; crease = inverse-depth curvature range; fade = metres where lines start thinning / vanish. line.tint multiplies the local colour (dark and cool, not black). Round 17 form (ZZZ line/flat colour): evening/afternoon.form overrides line / lit (merged in by main.js) and ink = line colour derived from the local colour (darken multiplier, saturation boost sat, floor = additive violet floor, thinWidth = how much the line narrows towards fade[1]). ?form=old restores round 28 exactly.",
  "evening": {
   "skyFill": "#c9cbe2",
   "lit": {
@@ -69,6 +69,37 @@
    "frameSatCut": 1.2,
    "frameSatLo": 0.52,
    "frameSatHi": 0.64
+  },
+  "form": {
+   "line": {
+    "width": 4.0,
+    "sil": [
+     0.008,
+     0.026
+    ],
+    "crease": [
+     0.045,
+     0.1
+    ],
+    "creaseWeight": 1.0,
+    "fade": [
+     40,
+     130
+    ]
+   },
+   "lit": {
+    "width": 0.012
+   },
+   "ink": {
+    "darken": 0.2,
+    "sat": 2.2,
+    "floor": [
+     0.012,
+     0.008,
+     0.03
+    ],
+    "thinWidth": 0.5
+   }
   }
  },
  "afternoon": {
@@ -140,6 +171,37 @@
    "frameSatCut": 0,
    "frameSatLo": 0.52,
    "frameSatHi": 0.68
+  },
+  "form": {
+   "line": {
+    "width": 4.0,
+    "sil": [
+     0.008,
+     0.026
+    ],
+    "crease": [
+     0.045,
+     0.1
+    ],
+    "creaseWeight": 1.0,
+    "fade": [
+     40,
+     130
+    ]
+   },
+   "lit": {
+    "width": 0.012
+   },
+   "ink": {
+    "darken": 0.2,
+    "sat": 2.2,
+    "floor": [
+     0.012,
+     0.008,
+     0.03
+    ],
+    "thinWidth": 0.5
+   }
   }
  },
  "gradeNote": "Round 12 grade (look.js, last stage of the composite pass, in sRGB after tone mapping, ?grade=off restores round 11 pixel for pixel; no auto exposure, fixed curve). Luma Y (Rec.709): S-curve about pivot (contrast = exponent below the pivot, contrastHi above it: dark end pulled down hard, bright end barely lifted) -> soft black floor Y + floor*(1-Y)^toe -> highlight gain (1 + gain*smoothstep(gainRange), skyGain = share of it kept on the sky) -> shoulder above knee towards cap; rgb follows by ratio (additive in the deepest darks, so pure black lifts to the floor), peak channel soft-capped from peakKnee towards peakCap so no pixel clips to 255. Vibrance: saturation scale 1 + vibrance*smoothstep(0.03,0.25,S)*(1-S)^vibrancePower (nothing on near-neutrals); skinKeep / skyKeep = share of it left on orange skin-like pixels / on the sky."

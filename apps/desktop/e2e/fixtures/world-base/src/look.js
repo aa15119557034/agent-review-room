@@ -89,13 +89,14 @@ float wbEdge(vec2 uv) {
 const LINES = /* glsl */`
 uniform float uLnOn, uLnC;
 uniform vec4 uLn, uLnS;   // width px / strength / fade near / fade far ; sil lo hi / crease lo hi
-uniform vec3 uLnCol;
+uniform vec3 uLnCol, uLnFl;
+uniform vec4 uLnF;       // round 17: form on / ink darken / ink saturation / thin-out of the width
 float wbLine(vec2 uv, float d0) {
   if (d0 >= uFar*0.9 || d0 > uLn.w) return 0.0;
   float mask = texture(tColor, uv).a;
   if (mask < 0.95) return 0.0; // resolved MSAA alpha: any masked coverage at the edge pixel (blade tips, canopy cards, glass) skips the line
   float thin = smoothstep(uLn.z, uLn.w, d0);
-  vec2 px = max(uLn.x*(uRes.y/1080.0)*(1.0 - 0.35*thin), 1.0)/uRes;
+  vec2 px = max(uLn.x*(uRes.y/1080.0)*(1.0 - uLnF.w*thin), 1.0)/uRes;
   float dl = wbDepth(uv-vec2(px.x,0.0)), dr = wbDepth(uv+vec2(px.x,0.0));
   float du = wbDepth(uv+vec2(0.0,px.y)), dd = wbDepth(uv-vec2(0.0,px.y));
   // Depth step on the near side. The slope of the pixel's own surface (the flatter side) is removed first,
@@ -241,7 +242,7 @@ export function createLook(renderer, camera) {
     tWorldDepth: pipeline.uDepth, uNear: { value: camera.near }, uFar: { value: camera.far },
     uProjScale: { value: 1 }, uAO: { value: 0.55 },
     uReversed: { value: pipeline.reversed ? 1 : 0 }, uToon: toon, uHaze: { value: 1 },
-    uLnOn: { value: 0 }, uLn: { value: new THREE.Vector4() }, uLnS: { value: new THREE.Vector4() }, uLnC: { value: 0 }, uLnCol: { value: new THREE.Vector3() },
+    uLnOn: { value: 0 }, uLn: { value: new THREE.Vector4() }, uLnS: { value: new THREE.Vector4() }, uLnC: { value: 0 }, uLnCol: { value: new THREE.Vector3() }, uLnF: { value: new THREE.Vector4(0,0,0,0.35) }, uLnFl: { value: new THREE.Vector3() },
     uShOn: { value: 0 }, uShAO: { value: new THREE.Vector3(1, 1, 1) }, uShMul: { value: new THREE.Vector3(1, 1, 1) },
     uShLift: { value: new THREE.Vector3() }, uShRange: { value: new THREE.Vector3(0.06, 0.42, 1) },
     uGradeOn: { value: 0 }, uGA: { value: new THREE.Vector4() }, uGB: { value: new THREE.Vector4() }, uGC: { value: new THREE.Vector4() }, uGD: { value: new THREE.Vector4() }, uGE: { value: new THREE.Vector4() }, tFrameSat: { value: satRT.texture },
@@ -256,7 +257,14 @@ export function createLook(renderer, camera) {
     }
     if (uLnOn > 0.5) {
       float wbL27 = wbLine(uv, wbDepth(uv))*uToon;
-      col = mix(col, col*uLnCol, wbL27*uLn.y); // round 27: dark, cool, hand-drawn line in the local colour
+      vec3 wbInk = col*uLnCol; // round 27: dark, cool, hand-drawn line in the local colour
+      if (uLnF.x > 0.5) {
+        // round 17: ink = the local colour, darkened and made more saturated (never black), plus a violet floor
+        wbInk = col*uLnF.y;
+        float wbIl = dot(wbInk, vec3(0.2126, 0.7152, 0.0722));
+        wbInk = max(mix(vec3(wbIl), wbInk, uLnF.z), 0.0) + uLnFl;
+      }
+      col = mix(col, wbInk, wbL27*uLn.y);
     } else {
     float edge = wbEdge(uv)*uToon;
     vec3 line = mix(col*vec3(0.42,0.38,0.50),vec3(0.027,0.020,0.051),0.35);

@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { createIsland, clearVegetationAreas } from './island.js';
 import { loadShadowTint, shadowTintEnabled, installLitShadowTint, patchIslandShadowTint, shadowTintUniforms, shopInteriorBoxes } from './shadow-tint.js';
-import { loadToon, toonEnabled, gradeEnabled, installLitToon, installToonHook, toonLineUniforms, maskGlassAlpha } from './toon.js';
+import { loadToon, toonEnabled, gradeEnabled, applyForm, installLitToon, installToonHook, toonLineUniforms, maskGlassAlpha } from './toon.js';
 import { addShopSpill, loadShopSpill, shopFrontsFromRooms, groundSpillFronts } from './shop-spill.js';
 import { addDoorGlow, loadDoorGlow, resolveDoorLamps } from './door-glow.js';
 import { applyEveningGlow, applyEveningSakura, fadeDistantCrossingHalos } from './evening-glow.js';
@@ -176,7 +176,7 @@ async function init() {
   }
   // Round 27: outlines + cel bands (?toon=off keeps round 26). Same shop-room boxes as the shadow tint.
   if (toonEnabled()) {
-    const toonAll = await loadToon(), toonP = toonAll[timeOfDay === 'afternoon' ? 'afternoon' : 'evening'];
+    const toonAll = await loadToon(), toonP = applyForm(toonAll[timeOfDay === 'afternoon' ? 'afternoon' : 'evening']);
     originalFillColor = skyFill.color.clone();
     toonFillColor = new THREE.Color(toonP.skyFill);
     if (worldBase.styleState.toon) skyFill.color.copy(toonFillColor);
