@@ -58,6 +58,8 @@ export function createStationWalker(station, dom) {
       const clearance = Math.hypot(view.near, halfHeight, halfHeight * view.aspect) + 0.02;
       const fraction = physics.sweepSphere(target, desired, clearance);
       camera.position.lerpVectors(target, desired, fraction);
+      // 玩家在室内时把相机夹进房间内盒：门洞会让 sweepSphere 放行（物理正确、画面错误）
+      if (station.clampCamera) station.clampCamera(position, camera.position);
       if (fraction > 1e-6) camera.lookAt(target);
     }
     station.cameraToWorld(camera.position, camera.quaternion);
@@ -129,4 +131,5 @@ export function createStationWalker(station, dom) {
   };
   return walker;
 }
+
 
