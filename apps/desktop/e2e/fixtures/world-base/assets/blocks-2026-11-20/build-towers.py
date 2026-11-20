@@ -92,7 +92,7 @@ SHAPES = {
     'slab':    dict(W=40.0, D=18.0, H=38.0, tiers=[(1.0, 1.0, 1.0)]),
     'setback': dict(W=30.0, D=30.0, H=52.0, tiers=[(1.0, 1.0, 0.60), (0.78, 0.78, 0.25), (0.56, 0.56, 0.15)]),
     # C酱 要的三样（2026-11-20 16:58 与 21:33 交接）
-    'landmark': dict(W=20.0, D=20.0, H=102.0, tiers=[(1.0, 1.0, 0.60), (0.86, 0.86, 0.22), (0.70, 0.70, 0.11), (0.54, 0.54, 0.07)]),
+    'landmark': dict(W=20.0, D=20.0, H=102.0, tiers=[(1.0, 1.0, 0.60), (0.86, 0.86, 0.22), (0.72, 0.72, 0.11), (0.62, 0.62, 0.07)]),
     'midrise':  dict(W=50.0, D=20.0, H=23.0, tiers=[(1.0, 1.0, 1.0)]),
 }
 
@@ -132,7 +132,7 @@ def build(shape, roof):
     pil_bm = bmesh.new()
     win_bm = bmesh.new()
     for (z0, h, w, d) in tier_geo:
-        floors = max(1, int(h / 3.6))
+        floors = max(1, int(round(h / 3.2)))   # 按 3.2 m 一层铺，中层 25 m ≈ 7 层
         fh = h / floors
         # 四面
         for f in range(floors):
@@ -183,7 +183,7 @@ def build(shape, roof):
                 box(bm, sx, sy, top + 1.1, 0.6, 0.6, 2.2)
     elif roof == 'billboard':
         box(bm, 0, 0, top + 5.0, 9.0, 0.6, 5.5)   # 广告牌放大到 9 x 5.5 m
-        for sx in (-tw * 0.3, tw * 0.3):
+        for sx in (-3.6, 0.0, 3.6):   # 固定落在 9 m 板子底下（原来 ±tw*0.3 在 tw=50 时会飘到 ±15）
             box(bm, sx, 0, top + 1.6, 0.6, 0.6, 3.2)
     else:  # antenna
         box(bm, 0, 0, top + 6.0, 0.5, 0.5, 12.0)
@@ -227,6 +227,7 @@ for shape in ('slim', 'slab', 'setback', 'landmark', 'midrise'):
 with open(os.path.join(OUT, 'tower-report.json'), 'w', encoding='utf-8') as f:
     json.dump(report, f, ensure_ascii=False, indent=2)
 print('DONE')
+
 
 
 

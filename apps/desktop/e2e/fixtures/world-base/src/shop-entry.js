@@ -187,17 +187,6 @@ export function addShopGround(station, island, plans) {
   return stats;
 }
 
-/**
- * 把**站区平台的 walk 盒**在接缝处截断（C酱 评审的情形 3）。
- *
- * 原因：`physics.resolve` 会把"顶部远高于玩家脚部的 walk 盒"当墙推人。
- * 站区平台的 walk 盒向北越过了主矩形边界，玩家沿着地形斜坡降到平台下方后，
- * 就被这个悬在头顶的平台盒挡住——表现就是"走到接缝前卡住、每帧被推回一个步长"。
- *
- * 做法：凡是"顶面明显高于接缝地面、且向北越过主矩形边界"的 walk 盒，
- * 把它的北沿收回到边界上。
- */
-
 /** 室内碰撞：后墙、左右墙、带门洞的前墙（由 box + entrances 推导） */
 export function addRoomCollision(station) {
   const rooms = station.ctx?.services?.shopInteriors ?? [];
@@ -307,6 +296,8 @@ export function makeCameraClamp(station, rooms) {
   const boxes = [];
   for (const room of rooms) {
     if (!room?.frame || !Array.isArray(room.box)) continue;
+    // 只处理轴对齐房间：未旋转的盒子套在转过的店上会盖到街面，把相机夹到错地方
+    if (!axisAligned(room)) continue;
     const [bx0, by0, bz0, bx1, by1, bz1] = room.box;
     const f = room.frame;
     boxes.push({
@@ -320,7 +311,8 @@ export function makeCameraClamp(station, rooms) {
   return function clampCamera(playerLocal, camLocal, margin = 0.25) {
     for (const b of boxes) {
       const inRoom = playerLocal.x >= b.x0 && playerLocal.x <= b.x1 &&
-                     playerLocal.z >= b.z0 && playerLocal.z <= b.z1;
+                     playerLocal.z >= b.z0 && playerLocal.z <= b.z1 &&
+                     playerLocal.y >= b.y0 - 0.3 && playerLocal.y <= b.y1;   // 只看 x/z 会把楼上/屋顶的玩家也拽进店里
       if (!inRoom) continue;
       camLocal.x = Math.min(Math.max(camLocal.x, b.x0 + margin), b.x1 - margin);
       camLocal.z = Math.min(Math.max(camLocal.z, b.z0 + margin), b.z1 - margin);
