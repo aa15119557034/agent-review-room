@@ -65,7 +65,10 @@
    "vibrancePower": 3.0,
    "skinKeep": 0.35,
    "skyKeep": 0.3,
-   "skyGain": 0.4
+   "skyGain": 0.4,
+   "frameSatCut": 1.0,
+   "frameSatLo": 0.52,
+   "frameSatHi": 0.68
   }
  },
  "afternoon": {
@@ -133,7 +136,10 @@
    "vibrancePower": 3.0,
    "skinKeep": 0.35,
    "skyKeep": 0.3,
-   "skyGain": 0.4
+   "skyGain": 0.4,
+   "frameSatCut": 0,
+   "frameSatLo": 0.52,
+   "frameSatHi": 0.68
   }
  },
  "gradeNote": "Round 12 grade (look.js, last stage of the composite pass, in sRGB after tone mapping, ?grade=off restores round 11 pixel for pixel; no auto exposure, fixed curve). Luma Y (Rec.709): S-curve about pivot (contrast = exponent below the pivot, contrastHi above it: dark end pulled down hard, bright end barely lifted) -> soft black floor Y + floor*(1-Y)^toe -> highlight gain (1 + gain*smoothstep(gainRange), skyGain = share of it kept on the sky) -> shoulder above knee towards cap; rgb follows by ratio (additive in the deepest darks, so pure black lifts to the floor), peak channel soft-capped from peakKnee towards peakCap so no pixel clips to 255. Vibrance: saturation scale 1 + vibrance*smoothstep(0.03,0.25,S)*(1-S)^vibrancePower (nothing on near-neutrals); skinKeep / skyKeep = share of it left on orange skin-like pixels / on the sky."
