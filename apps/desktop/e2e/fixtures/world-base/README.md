@@ -91,7 +91,7 @@ node scripts\baseline.cjs --scene=combined --electron=D:\codex\2026-11-16\world-
 
 湿路原来只采样一张离线烘好、整条街共用一个 box 的 256² 立方体（`street-env*/`），权重又很低（0.03～0.23），所以只剩一层天空色。`src/street-zones.js` 把主街沿 z 切成 5 个区（`toon.json` 的 `evening.refl.zones`，局部 z 3～36 m），每区一个 AABB（街宽 × 到屋檐 × 区长再各加 `pad`）和一张 512² HalfFloat 立方体，加载末尾在每区中心、离地 1.5 m 处烘一次（不落盘、不进仓库）。烘焙时隐藏岛屿（除天空）、车辆、自行车、列车、电线、路口光晕、店前光斑和橱窗玻璃，做完全部还原。路面着色器按自己的 z 选区（区界 `blend` m 线性过渡），把反射向量对该区 box 做视差校正再采样；招牌／橱窗灯沿仰角往下多取 `streakTaps` 个点、只累加 `streakThresh` 以上的亮部，拉成竖条。
 
-`?refl=old`（或 `?toon=off`，或下午预设 `refl.on:0`）不装着色器分支、不烘焙，和第21轮逐像素一致。运行时可改 `worldBase.refl.uniforms.uReflW / uReflS / uReflLod / uReflN`，烘焙耗时在 `worldBase.refl.bakeMs`。
+`?refl=old`（或 `?toon=off`，或下午预设 `refl.on:0`）不装着色器分支、不烘焙，和第21轮逐像素一致。运行时调参用 `worldBase.refl.set({ lod, lodRough, lodPuddle, base, grazing, dry, ripple, streakLen, streakThresh, streakGain, streakLod, streakTaps, on })`（任意子集，非有限数或未知键会抛错且不写入，`streakTaps` 钳到 0～8，返回当前值）和 `worldBase.refl.get()`。`lod` 给数字同时设两档，给 `[粗糙, 水洼]` 分别设；`lodFar` 是 `lodRough` 的别名。不要直接 `worldBase.refl.uniforms.uReflLod = 1`（着色器仍持有旧对象，什么都不变），也不要把数字写进 Vector2／Vector4 uniform 的 `.value`（`uniform2fv(1)` 每帧抛错，画布停在上一帧）。烘焙耗时 `worldBase.refl.bakeMs` 用 `Date.now()` 计，捕获脚本把 `performance.now()` 钉死时也有值。
 
 ## 当前状态
 

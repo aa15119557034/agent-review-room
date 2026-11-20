@@ -115,7 +115,8 @@ ${blocks}
  * Everything it touches (camera, visibility, shadow map state, wet shader, time) is put back.
  */
 export async function bakeStreetZones({ world, layout, params, uniforms, onProgress = () => {} }) {
-  const t0 = performance.now();
+  // Date.now, not performance.now: capture harnesses pin performance.now() to a constant (bakeMs then read 0).
+  const t0 = Date.now();
   const { renderer, scene, station: s, island, look, camera } = world;
   const n = params.zones.length, res = params.res;
   const root = s.root;
@@ -227,7 +228,7 @@ export async function bakeStreetZones({ world, layout, params, uniforms, onProgr
     if (look?.pipeline) look.pipeline.hasPrev = false;
   }
   uniforms.uReflOn.value = 1;
-  const ms = Math.round(performance.now() - t0);
+  const ms = Math.max(1, Date.now() - t0);
   return {
     ms, zones: info, res, cubes,
     dispose() {
@@ -236,4 +237,62 @@ export async function bakeStreetZones({ world, layout, params, uniforms, onProgr
       cubes.length = 0;
     },
   };
+}
+
+const KEYS = ['on', 'lod', 'lodRough', 'lodFar', 'lodPuddle', 'base', 'grazing', 'dry', 'ripple', 'streakLen', 'streakThresh', 'streakGain', 'streakLod', 'streakTaps'];
+
+/**
+ * Live tuning. Uniform values are mutated in place (three keeps a reference to each uniform object and, for
+ * Vector2 / Vector4 uniforms, reads .x/.y/.z/.w every draw). Do NOT replace `uniforms.uReflLod` (the shader keeps the old
+ * object) and do NOT write a number into `.value` of a vector uniform (uniform2fv(number) throws every frame).
+ * set() takes any subset, validates everything first (unknown key / non-finite number throws, nothing is written) and
+ * returns get(). lod: a number sets both mips, [rough, puddle] sets each; lodRough (alias lodFar) / lodPuddle set one.
+ */
+export function createReflControl(uniforms) {
+  const finite = (key, v) => {
+    if (typeof v !== 'number' || !Number.isFinite(v)) throw new TypeError(`refl.set: ${key} must be a finite number, got ${String(v)}`);
+    return v;
+  };
+  const control = {
+    get() {
+      const w = uniforms.uReflW.value, l = uniforms.uReflLod.value, s = uniforms.uReflS.value;
+      return {
+        on: uniforms.uReflOn.value, lod: [l.x, l.y], lodRough: l.x, lodPuddle: l.y,
+        base: w.x, grazing: w.y, dry: w.z, ripple: w.w,
+        streakLen: s.x, streakThresh: s.y, streakGain: s.z, streakLod: s.w, streakTaps: uniforms.uReflN.value,
+      };
+    },
+    set(values = {}) {
+      if (values === null || typeof values !== 'object') throw new TypeError('refl.set expects an object');
+      for (const key of Object.keys(values)) if (!KEYS.includes(key)) throw new Error(`refl.set: unknown key ${key} (known: ${KEYS.join(', ')})`);
+      const v = {};
+      if ('on' in values) v.on = finite('on', Number(values.on === true ? 1 : values.on === false ? 0 : values.on)) > 0.5 ? 1 : 0;
+      if ('lod' in values) {
+        if (Array.isArray(values.lod)) {
+          if (values.lod.length !== 2) throw new TypeError('refl.set: lod array must be [rough, puddle]');
+          v.lodRough = finite('lod[0]', values.lod[0]); v.lodPuddle = finite('lod[1]', values.lod[1]);
+        } else v.lodRough = v.lodPuddle = finite('lod', values.lod);
+      }
+      if ('lodRough' in values) v.lodRough = finite('lodRough', values.lodRough);
+      if ('lodFar' in values) v.lodRough = finite('lodFar', values.lodFar);
+      if ('lodPuddle' in values) v.lodPuddle = finite('lodPuddle', values.lodPuddle);
+      for (const key of ['base', 'grazing', 'dry', 'ripple', 'streakLen', 'streakThresh', 'streakGain', 'streakLod']) if (key in values) v[key] = finite(key, values[key]);
+      if ('streakTaps' in values) v.streakTaps = Math.max(0, Math.min(MAX_TAPS, Math.round(finite('streakTaps', values.streakTaps))));
+      const w = uniforms.uReflW.value, l = uniforms.uReflLod.value, s = uniforms.uReflS.value;
+      if ('on' in v) uniforms.uReflOn.value = v.on;
+      if ('lodRough' in v) l.x = v.lodRough;
+      if ('lodPuddle' in v) l.y = v.lodPuddle;
+      if ('base' in v) w.x = v.base;
+      if ('grazing' in v) w.y = v.grazing;
+      if ('dry' in v) w.z = v.dry;
+      if ('ripple' in v) w.w = v.ripple;
+      if ('streakLen' in v) s.x = v.streakLen;
+      if ('streakThresh' in v) s.y = v.streakThresh;
+      if ('streakGain' in v) s.z = v.streakGain;
+      if ('streakLod' in v) s.w = v.streakLod;
+      if ('streakTaps' in v) uniforms.uReflN.value = v.streakTaps;
+      return control.get();
+    },
+  };
+  return control;
 }

@@ -7,7 +7,7 @@ import { addDoorGlow, loadDoorGlow, resolveDoorLamps } from './door-glow.js';
 import { applyEveningGlow, applyEveningSakura, fadeDistantCrossingHalos } from './evening-glow.js';
 import * as layoutModule from '../upstream/sakuragaoka/src/world/layout.js';
 import { createStation } from './station.js';
-import { reflEnabled, bakeStreetZones } from './street-zones.js';
+import { reflEnabled, bakeStreetZones, createReflControl } from './street-zones.js';
 import { createLook } from './look.js';
 import { createSkyline } from './skyline.js';
 import { createCity } from './city.js';
@@ -310,7 +310,8 @@ async function init() {
     const zonesBake = await bakeStreetZones({ world: worldBase, layout: layoutModule, params: refl, uniforms: station.zones.uniforms,
       onProgress: (done, total) => stage(`正在烘焙湿路分区反射 ${done}/${total}…`) });
     station.streetZones = zonesBake;
-    worldBase.refl = { params: refl, uniforms: station.zones.uniforms, bakeMs: zonesBake.ms, zones: zonesBake.zones, res: zonesBake.res };
+    worldBase.refl = { params: refl, uniforms: station.zones.uniforms, bakeMs: zonesBake.ms, zones: zonesBake.zones, res: zonesBake.res,
+      ...createReflControl(station.zones.uniforms) };
     console.info(`[world-base] street zone cubes: ${zonesBake.zones.length} zones x 6 faces @ ${zonesBake.res}px baked in ${zonesBake.ms} ms`);
   }
   stage('场景已就绪');
