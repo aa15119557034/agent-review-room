@@ -132,10 +132,13 @@ export async function createStation({ scene, renderer, camera, offset = [280, 8,
   const scratch = new THREE.Vector3();
   const bufferSize = new THREE.Vector2();
   const bounds = layout.WORLD.play;
+  // 附加可走区（#254：主矩形之外的店铺室内等），由 shop-entry 在场景建好后填充。
+  // clipMaterials / 网格剔除仍只用主矩形 bounds，不受影响。
+  const walkExtra = [];
   let disposed = false;
   const walkers = new Set();
   const station = {
-    root, ctx, physics: ctx.physics, camera, localCamera, bounds, moduleStats, batch, detailLod,
+    root, ctx, physics: ctx.physics, camera, localCamera, bounds, walkExtra, moduleStats, batch, detailLod,
     timings: { trimMs, batchMs }, removedMeshes, artR1, groundBlend, streetscape, wetRoad, streetReflections, texturedProps, zones, streetZones: null,
     toLocal(position, target = new THREE.Vector3()) { return target.copy(position).applyMatrix4(inverse); },
     toWorld(position, target = new THREE.Vector3()) { return target.copy(position).applyMatrix4(root.matrixWorld); },
@@ -143,6 +146,22 @@ export async function createStation({ scene, renderer, camera, offset = [280, 8,
       station.toWorld(position, camera.position);
       camera.quaternion.copy(rotation).multiply(quaternion);
       camera.updateMatrixWorld();
+    },
+    /** 主矩形 + 附加可走区的并集；都不在时夹到最近的一块 */
+    clampWalkable(position, radius) {
+      const inside = (a) => position.x >= a.x0 + radius && position.x <= a.x1 - radius
+        && position.z >= a.z0 + radius && position.z <= a.z1 - radius;
+      if (inside(bounds)) return position;
+      for (const a of walkExtra) if (inside(a)) return position;
+      let bx = position.x, bz = position.z, bestD = Infinity;
+      for (const a of [bounds, ...walkExtra]) {
+        const cx = THREE.MathUtils.clamp(position.x, a.x0 + radius, a.x1 - radius);
+        const cz = THREE.MathUtils.clamp(position.z, a.z0 + radius, a.z1 - radius);
+        const d = (cx - position.x) ** 2 + (cz - position.z) ** 2;
+        if (d < bestD) { bestD = d; bx = cx; bz = cz; }
+      }
+      position.x = bx; position.z = bz;
+      return position;
     },
     contains(position) {
       station.toLocal(position, scratch);
@@ -205,3 +224,4 @@ export async function createStation({ scene, renderer, camera, offset = [280, 8,
   station.update(0, 14);
   return station;
 }
+
