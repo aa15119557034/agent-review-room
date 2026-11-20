@@ -1,0 +1,14 @@
+{
+  "label": "static",
+  "target": "http://127.0.0.1:4181/?time=evening&grade=off&shadow=static",
+  "at": "2026-11-20T01:49:56.426Z",
+  "result": {
+    "frames": 90,
+    "minCalls": 1079,
+    "maxCalls": 1079,
+    "shadowFrames": 0,
+    "histogram": {
+      "1079": 90
+    }
+  }
+}

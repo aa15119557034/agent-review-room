@@ -116,7 +116,10 @@ async function init() {
   const shadowQuery = new URLSearchParams(location.search);
   const shadowMode = shadowQuery.get('shadow') ?? 'every30';
   const shadowStatic = shadowMode === 'static';
-  const shadowEvery = shadowMode === 'dynamic' ? 0 : Math.max(1, Number(shadowQuery.get('shadowEvery') ?? 30) | 0);
+  // static 是真·只渲一次；dynamic 每帧；其余按 shadowEvery（默认 30）
+  const shadowEvery = (shadowStatic || shadowMode === 'dynamic')
+    ? 0
+    : Math.max(1, Number(shadowQuery.get('shadowEvery') ?? 30) | 0);
   // Round 24: blue-violet shade. The lit-material chunk is patched before any program compiles.
   const shadowTintParams = shadowTintEnabled() ? await loadShadowTint() : null;
   const shadowTint = shadowTintParams ? shadowTintParams[timeOfDay === 'afternoon' ? 'afternoon' : 'evening'] : null;
@@ -326,5 +329,6 @@ async function init() {
   requestAnimationFrame(frame);
 }
 init().catch(fail);
+
 
 
