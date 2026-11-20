@@ -13,6 +13,8 @@ import { createSkyline } from './skyline.js';
 import { createCity } from './city.js';
 import { massingEnabled, loadMassing, createMassing } from './massing.js';
 import { blocksEnabled, applyBlocksParams, createFacadeBlocks } from './facade-blocks.js';
+import { towersEnabled, createTowerBlocks } from './tower-blocks.js';
+import { makeShared } from './block-common.js';
 import { applyWeathering, loadWeatheringParams } from './weathering.js';
 import { addWeatheringDecals, loadBakedDecals } from './weathering-decals.js';
 import { groundEnabled, loadGround, applyFlowerDrifts, patchGroundShader, patchPetals } from './island-ground.js';
@@ -197,9 +199,15 @@ async function init() {
     // Art round 24: the real facade modules replace the facade placeholders (wide 10 m deep lots, rows of modules). ?blocks=off keeps r23c.
     const blocksOn = blocksEnabled(), massingParams = blocksOn ? applyBlocksParams(await loadMassing()) : await loadMassing();
     worldBase.massing = await createMassing({ scene, station, island, city: worldBase.city, skyline: worldBase.skyline, params: massingParams, timeOfDay: island.timeOfDay });
-    if (blocksOn && massingParams.blocks) {
-      stage('正在装立面模块…');
-      worldBase.blocks = await createFacadeBlocks({ scene, station, island, massing: worldBase.massing, params: massingParams, timeOfDay: island.timeOfDay });
+    // Art round 24 / 25: real facade rows (?blocks=off keeps r23c) and real towers (?towers=off keeps r24); both share the sign atlas and the
+    // camera-distance fog patch.
+    const towersOn = towersEnabled();
+    if ((blocksOn || towersOn) && massingParams.blocks) {
+      stage('正在装立面与高楼模块…');
+      const common = { scene, station, island, massing: worldBase.massing, params: massingParams, timeOfDay: island.timeOfDay };
+      worldBase.blockShared = makeShared({ island, params: massingParams, timeOfDay: island.timeOfDay });
+      if (blocksOn) worldBase.blocks = await createFacadeBlocks({ ...common, shared: worldBase.blockShared });
+      if (towersOn) worldBase.towers = await createTowerBlocks({ ...common, shared: worldBase.blockShared });
     }
     worldBase.massing.vegetationClear = clearVegetationAreas(island.terrain,
       worldBase.massing.vegetationClearAreas, station.root.matrixWorld, { flowers: 5, jitter: 2 });

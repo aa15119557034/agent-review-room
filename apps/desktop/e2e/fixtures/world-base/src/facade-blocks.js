@@ -1,7 +1,8 @@
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { WHITE, hash32, rngFrom, pick, Bucket, frameOf, addPart, addPlinth, addSignQuad, patchAerial } from './block-common.js';
 
-// Art round 24 (#254 X-51): the real facade modules (assets/blocks-2026-11-20/street-facade-01..04.glb) replace the r23 placeholder
+// Art round 24 / 25 (#254 X-51): the real facade modules (assets/blocks-2026-11-20/street-facade-01..04.glb) replace the r23 placeholder
 // `facade` slots. Each slot becomes a row of modules (16 / 20 / 24 m, 10 m deep, +Z towards the street) that tile end to end.
 // Everything is merged per cluster into three meshes: flat colours (walls, podium, pilasters, trim, stair cores, plinths), the shared
 // 1024 atlas (windows, shutters, canopies, air conditioners; evening lit cells go through an emissive map) and the shop signs
@@ -10,14 +11,8 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 export const blocksEnabled = () => new URLSearchParams(location.search).get('blocks') !== 'off';
 const BASE = '/blocks/';
 const MODULES = [1, 2, 3, 4];
-const FLOOR = 3.2, GROUND = 4.0, CELL = 1 / 8, WHITE = new THREE.Color(1, 1, 1);
+const FLOOR = 3.2, GROUND = 4.0, CELL = 1 / 8;
 
-const hash32 = (...values) => { let h = 2166136261; for (const v of values) { h ^= (v | 0) + 0x9e3779b9 + (h << 6) + (h >>> 2); h = Math.imul(h, 16777619); } return h >>> 0; };
-function rngFrom(seed) {
-  let a = seed >>> 0;
-  return () => { a = (a + 0x6D2B79F5) >>> 0; let t = a; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
-}
-const pick = (rng, list) => list[Math.floor(rng() * list.length) % list.length];
 
 /** massing.json "blocks" -> the params createMassing sees when blocks are on: wide, 10 m deep lots that fit a row of modules, and the
  *  facing of every cluster. ?blocks=off never calls this, so the r23c layout is untouched. */
@@ -40,7 +35,7 @@ async function loadTemplates(loader) {
   for (const n of MODULES) {
     const gltf = await loader.loadAsync(`${BASE}street-facade-0${n}.glb`);
     gltf.scene.updateMatrixWorld(true);
-    const t = { n, parts: [], slots: [], vslots: [], width: 0, depth: 10 };
+    const t = { n, parts: [], slots: [], vslots: [], width: 0, depth: 10, top: 0 };
     gltf.scene.traverse(o => {
       if (!o.isMesh) return;
       const g = o.geometry, mat = [].concat(o.material)[0];
@@ -53,106 +48,13 @@ async function loadTemplates(loader) {
       if (/^sign-slot-v-/.test(name)) { t.vslots.push({ name, box }); return; }
       if (/^sign-slot-\d+$/.test(name)) { t.slots.push({ name, box }); return; }
       if (name === 'body') { t.width = box.max.x - box.min.x; t.depth = box.max.z - box.min.z; }
+      if (name === 'parapet') t.top = box.min.y;
       t.parts.push({ name, kind: ATLAS_PARTS.has(name) ? 'atlas' : 'flat', role: ROLE[mat.name] ?? 'wall', pos, nrm, idx, uv, mat: mat.name });
     });
     templates.push(t);
     gltf.scene.traverse(o => { if (o.isMesh) { o.geometry.dispose(); for (const m of [].concat(o.material)) { m.map?.dispose(); m.dispose(); } } });
   }
   return { templates, image };
-}
-
-// ---- merged output -----------------------------------------------------------------------------------------------------------
-class Bucket {
-  constructor() { this.pos = []; this.nrm = []; this.col = []; this.uv = []; this.idx = []; }
-  get vertices() { return this.pos.length / 3; }
-  get triangles() { return this.idx.length / 3; }
-  geometry(withColor = true) {
-    const g = new THREE.BufferGeometry();
-    g.setAttribute('position', new THREE.BufferAttribute(new Float32Array(this.pos), 3));
-    g.setAttribute('normal', new THREE.BufferAttribute(new Float32Array(this.nrm), 3));
-    if (withColor) g.setAttribute('color', new THREE.BufferAttribute(new Float32Array(this.col), 3));
-    if (this.uv.length) g.setAttribute('uv', new THREE.BufferAttribute(new Float32Array(this.uv), 2));
-    g.setIndex(new THREE.BufferAttribute(new Uint32Array(this.idx), 1));
-    g.computeBoundingSphere(); g.computeBoundingBox();
-    return g;
-  }
-}
-
-/** Placement frame: module-local (x, y, z) -> station-local x / z, world y. mir = -1 mirrors the module along its length. */
-function frameOf(cx, y0, cz, yaw, mir) {
-  const c = Math.cos(yaw), s = Math.sin(yaw);
-  return {
-    p: (x, y, z) => [cx + x * mir * c + z * s, y0 + y, cz - x * mir * s + z * c],
-    n: (x, y, z) => [x * mir * c + z * s, y, -x * mir * s + z * c],
-    mir,
-  };
-}
-
-function addPart(bucket, F, part, colorOf, uvShift) {
-  const base = bucket.vertices, count = part.pos.length / 3;
-  for (let i = 0; i < count; i++) {
-    const p = F.p(part.pos[i * 3], part.pos[i * 3 + 1], part.pos[i * 3 + 2]), n = F.n(part.nrm[i * 3], part.nrm[i * 3 + 1], part.nrm[i * 3 + 2]);
-    bucket.pos.push(p[0], p[1], p[2]); bucket.nrm.push(n[0], n[1], n[2]);
-    const c = colorOf(i); bucket.col.push(c.r, c.g, c.b);
-    if (part.uv) { const s = uvShift ? uvShift(i) : [0, 0]; bucket.uv.push(part.uv[i * 2] + s[0], part.uv[i * 2 + 1] + s[1]); }
-  }
-  for (let k = 0; k < part.idx.length; k += 3) {
-    if (F.mir < 0) bucket.idx.push(base + part.idx[k], base + part.idx[k + 2], base + part.idx[k + 1]);
-    else bucket.idx.push(base + part.idx[k], base + part.idx[k + 1], base + part.idx[k + 2]);
-  }
-}
-
-/** Four side faces of a box in module-local axes (the plinth under a module). */
-function addPlinth(bucket, F, cx, cz, w, d, y0, y1, color) {
-  const hx = w / 2, hz = d / 2;
-  const faces = [[0, 1, [[-hx, hz], [hx, hz]]], [1, 0, [[hx, hz], [hx, -hz]]], [0, -1, [[hx, -hz], [-hx, -hz]]], [-1, 0, [[-hx, -hz], [-hx, hz]]]];
-  for (const [nx, nz, [a, b]] of faces) {
-    const base = bucket.vertices;
-    for (const [x, y, z] of [[a[0], y0, a[1]], [b[0], y0, b[1]], [b[0], y1, b[1]], [a[0], y1, a[1]]]) {
-      const p = F.p(cx + x, y, cz + z), n = F.n(nx, 0, nz);
-      bucket.pos.push(...p); bucket.nrm.push(...n); bucket.col.push(color.r, color.g, color.b);
-    }
-    if (F.mir < 0) bucket.idx.push(base, base + 2, base + 1, base, base + 3, base + 2); else bucket.idx.push(base, base + 1, base + 2, base, base + 2, base + 3);
-  }
-}
-
-// ---- sign atlas ----------------------------------------------------------------------------------------------------------------
-const FONT = '"Yu Gothic","Meiryo","Hiragino Sans","Noto Sans CJK JP","IPAGothic","IPA Gothic",sans-serif';
-function buildSignAtlas(spec) {
-  const [W, H] = spec.size, [hw, hh] = spec.h.cell, [vw, vh] = spec.v.cell;
-  const hCols = Math.floor(W / hw), vCols = Math.floor(W / vw), schemes = spec.schemes;
-  const canvas = document.createElement('canvas'); canvas.width = W; canvas.height = H;
-  const ctx = canvas.getContext('2d');
-  ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, W, H);
-  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-  const cells = { h: [], v: [] };
-  // Horizontal boards: every word in every colour scheme, in a fixed order (cell index = word * schemes + scheme).
-  spec.h.words.forEach((word, wi) => schemes.forEach((sc, si) => {
-    const i = wi * schemes.length + si, col = i % hCols, row = Math.floor(i / hCols), x = col * hw, y = row * hh;
-    ctx.fillStyle = sc.bg; ctx.fillRect(x, y, hw, hh);
-    ctx.strokeStyle = sc.fg; ctx.globalAlpha = 0.55; ctx.lineWidth = 3; ctx.strokeRect(x + 6, y + 6, hw - 12, hh - 12); ctx.globalAlpha = 1;
-    const len = [...word].length;
-    let size = Math.min(hh * 0.62, (hw * 0.78) / len);
-    ctx.font = `700 ${size}px ${FONT}`; ctx.fillStyle = sc.fg;
-    ctx.fillText(word, x + hw / 2, y + hh / 2 + size * 0.04);
-    cells.h.push({ x, y, w: hw, h: hh, word, scheme: si });
-  }));
-  const hRows = Math.ceil(spec.h.words.length * schemes.length / hCols), vTop = hRows * hh;
-  // Vertical boards: characters stacked top to bottom, one board per word and scheme.
-  spec.v.words.forEach((word, wi) => schemes.forEach((sc, si) => {
-    const i = wi * schemes.length + si, col = i % vCols, row = Math.floor(i / vCols), x = col * vw, y = vTop + row * vh;
-    ctx.fillStyle = sc.bg; ctx.fillRect(x, y, vw, vh);
-    ctx.strokeStyle = sc.fg; ctx.globalAlpha = 0.55; ctx.lineWidth = 3; ctx.strokeRect(x + 4, y + 4, vw - 8, vh - 8); ctx.globalAlpha = 1;
-    const chars = [...word], size = Math.min(vw * 0.74, (vh - 24) / chars.length * 0.92);
-    ctx.font = `700 ${size}px ${FONT}`; ctx.fillStyle = sc.fg;
-    const step = (vh - 16) / chars.length;
-    chars.forEach((ch, k) => ctx.fillText(ch, x + vw / 2, y + 8 + step * (k + 0.5) + size * 0.04));
-    cells.v.push({ x, y, w: vw, h: vh, word, scheme: si, chars: chars.length });
-  }));
-  if (vTop + Math.ceil(spec.v.words.length * schemes.length / vCols) * vh > H) throw new Error('Sign atlas too small');
-  const texture = new THREE.CanvasTexture(canvas);
-  texture.colorSpace = THREE.SRGBColorSpace; texture.anisotropy = 4; texture.generateMipmaps = true; texture.minFilter = THREE.LinearMipmapLinearFilter;
-  return { texture, canvas, cells, W, H };
 }
 
 /** Atlas cells: classify the evening window rows (2-3) once by looking at the glass pixels. */
@@ -203,15 +105,13 @@ function composeRow(rng, width, widths) {
  * Replace every facade slot of `massing` (rows of modules) with the real facade GLBs. Returns { root meshes, stats, dispose }.
  * Slots narrower than the smallest module keep their placeholder.
  */
-export async function createFacadeBlocks({ scene, station, island, massing, params, timeOfDay = 'evening' }) {
-  const B = params.blocks, palette = params[timeOfDay === 'afternoon' ? 'afternoon' : 'evening'], evening = timeOfDay !== 'afternoon';
-  const L = B[evening ? 'evening' : 'afternoon'];
+export async function createFacadeBlocks({ station, island, massing, params, shared, timeOfDay = 'evening' }) {
+  const { B, L, palette, evening, signs, signMat } = shared;
   const o = station.root.position, ox = o.x, oz = o.z;
   const heightAt = (x, z) => island.heightAt(x + ox, z + oz);
   const { templates, image } = await loadTemplates(new GLTFLoader());
   const widths = templates.map(t => t.width);
   const atlas = classifyAtlas(image);
-  const signs = buildSignAtlas(B.signs);
   const gradientMap = station.ctx.mat.gradientMap;
 
   const color = hex => new THREE.Color(hex);
@@ -220,10 +120,8 @@ export async function createFacadeBlocks({ scene, station, island, massing, para
   if (evening) { atlasMat.emissive = new THREE.Color(1, 1, 1); atlasMat.emissiveMap = atlas.emissive; atlasMat.emissiveIntensity = L.emissive; }
   // The atlas holds windows, not paint: no flat-colour mip pull and no printed-sign outline (the lit windows are emissive, the walls are lit toon).
   atlasMat.userData.wbNoFlat = true; atlasMat.userData.wbNoSignLine = true; atlasMat.userData.wbEveningGlow = true;
-  const signMat = new THREE.MeshBasicMaterial({ map: signs.texture, toneMapped: false, name: 'massing-blocks-sign' });
-  signMat.color.setScalar(L.signGain);
-  signMat.userData.wbEveningGlow = true; // the gain is set here; the generic print pass leaves it alone
-  const materials = [flat, atlasMat, signMat];
+  patchAerial(flat, shared.aerial, 'lit'); patchAerial(atlasMat, shared.aerial, 'lit');
+  const materials = [flat, atlasMat];
 
   const stats = { slots: 0, replaced: 0, kept: [], modules: 0, perCluster: {}, windows: 0, litWindows: 0, signsH: 0, signsV: 0, triangles: 0, plinth: { max: 0, count: 0 }, combos: {}, terrain: [], words: {} };
   const clusters = new Map(), modulesOut = [];
@@ -290,19 +188,11 @@ export async function createFacadeBlocks({ scene, station, island, massing, para
       const schemes = B.signs.schemes.length, hWords = B.signs.h.words.length, vWords = B.signs.v.words.length;
       // Sign boards are built in the module frame AFTER the mirror (x' = mir * x), so the lettering always reads left to right.
       const F0 = frameOf(px, y0, pz, slot.yaw, 1);
-      const quad = (bucket, cell, centre, n, w, h) => {
-        const W = signs.W, H = signs.H, u0 = (cell.x + 2) / W, u1 = (cell.x + cell.w - 2) / W, vTop = 1 - (cell.y + 2) / H, vBot = 1 - (cell.y + cell.h - 2) / H;
-        const right = [n[2], 0, -n[0]], base = bucket.vertices, uvs = [[u0, vBot], [u1, vBot], [u1, vTop], [u0, vTop]];
-        [[-1, -1], [1, -1], [1, 1], [-1, 1]].forEach(([sx, sy], i) => {
-          const p = F0.p(centre[0] + right[0] * sx * w / 2, centre[1] + sy * h / 2, centre[2] + right[2] * sx * w / 2), nn = F0.n(n[0], 0, n[2]);
-          bucket.pos.push(...p); bucket.nrm.push(...nn); bucket.uv.push(...uvs[i]);
-        });
-        bucket.idx.push(base, base + 1, base + 2, base, base + 2, base + 3);
-      };
+      const quad = (bucket, cell, centre, n, w, h) => addSignQuad(bucket, F0, signs, cell, centre, n, w, h);
       t.slots.forEach((sl, i) => {
         const wi = Math.floor(mrng() * hWords) % hWords, sc = Math.floor(mrng() * schemes) % schemes, cell = signs.cells.h[wi * schemes + sc];
         const w = sl.box.max.x - sl.box.min.x, h = sl.box.max.y - sl.box.min.y, z = sl.box.max.z + B.signLift;
-        quad(cl.sign, cell, [mir * (sl.box.min.x + sl.box.max.x) / 2, (sl.box.min.y + sl.box.max.y) / 2, z], [0, 0, 1], w, h);
+        quad(cl.sign, cell, [mir * (sl.box.min.x + sl.box.max.x) / 2, (sl.box.min.y + sl.box.max.y) / 2, z], [0, 1], w, h);
         stats.signsH++; stats.words[cell.word] = (stats.words[cell.word] || 0) + 1;
       });
       t.vslots.forEach(sl => {
@@ -310,10 +200,11 @@ export async function createFacadeBlocks({ scene, station, island, massing, para
         const depth = sl.box.max.z - sl.box.min.z, x = mir * (sl.box.min.x + sl.box.max.x) / 2, zc = (sl.box.min.z + sl.box.max.z) / 2;
         // Board length follows the word (the cell is 100 px per metre); it hangs from the top of the slot.
         const hBoard = Math.min(sl.box.max.y - sl.box.min.y, cell.h / B.signs.v.pxPerMetre), yc = sl.box.max.y - hBoard / 2 - 0.3;
-        quad(cl.sign, cell, [x + B.bladeLift, yc, zc], [1, 0, 0], depth, hBoard);
-        quad(cl.sign, cell, [x - B.bladeLift, yc, zc], [-1, 0, 0], depth, hBoard);
+        quad(cl.sign, cell, [x + B.bladeLift, yc, zc], [1, 0], depth, hBoard);
+        quad(cl.sign, cell, [x - B.bladeLift, yc, zc], [-1, 0], depth, hBoard);
         stats.signsV++; stats.words[cell.word] = (stats.words[cell.word] || 0) + 1;
       });
+      const crownY = y0 + palette.fog.skyAt * t.top; cl.flat.seal(crownY); cl.atlas.seal(crownY); cl.sign.seal(crownY);
       stats.modules++; stats.perCluster[slot.cluster].modules++; stats.perCluster[slot.cluster].width += t.width;
       modulesOut.push({ slot: slot.id, cluster: slot.cluster, module: t.n, mirrored: mir < 0, centre: [px + ox, y0, pz + oz], yaw: slot.yaw, width: t.width, depth: t.depth, ground: [gmin, gmax], windows: wBox });
       stats.terrain.push({ id: `${slot.id}#${k}`, relief: +(gmax - gmin).toFixed(2), plinth: +(y0 - (gmin - B.sink)).toFixed(2) });
@@ -346,7 +237,7 @@ export async function createFacadeBlocks({ scene, station, island, massing, para
       if (disposed) return; disposed = true;
       for (const m of meshes) { m.removeFromParent(); m.geometry.dispose(); }
       for (const m of materials) m.dispose();
-      atlas.color.dispose(); atlas.emissive.dispose(); signs.texture.dispose();
+      atlas.color.dispose(); atlas.emissive.dispose();
     },
   };
 }

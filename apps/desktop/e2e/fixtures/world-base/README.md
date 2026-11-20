@@ -95,6 +95,12 @@ node scripts\baseline.cjs --scene=combined --electron=D:\codex\2026-11-16\world-
 
 `src/facade-blocks.js` 把汐的 `assets/blocks-2026-11-20/street-facade-01..04.glb`（宽 16 / 20 / 16 / 24 m，进深 10 m，+Z 朝街）按槽位铺进主街两侧与河对岸。开 `blocks` 时 `massing.json` 的 `blocks` 节会把 facade 地块改成「宽度 = 模块宽度之和、进深 10 m、群落 yaw = 朝向」的整排（`applyBlocksParams`），每排用种子随机组合模块（相邻不重复，随机镜像），再调用 `massing.removeSlots()` 去掉对应占位。每个群落合并成三个网格：纯色（墙、裙楼、壁柱、檐口、赤陶楼梯间、地基）、图集（窗、卷帘门、雨棚、空调；傍晚亮窗走 emissive 贴图，只取图集里亮窗格的玻璃）、招牌（运行时画的小图集，日文店名，无品牌名）。材质均为 `MeshToonMaterial` / `MeshBasicMaterial`，名字带 `massing`，所以天然带卡通分档与描边、不被做旧；招牌材质会被 `markSignMaterials` 标上描边。模块按自己脚下地形最高点落地，往下用地基裙边伸到最低点，不会悬空。`?blocks=off` 保留第23轮占位（逐像素同 r23c），`?massing=off` 仍什么都不装。静态服务器新增 `/blocks/` 路由指向该素材目录（`scripts/baseline.cjs`）。
 
+## 立面距离雾 + 真高楼替换占位塔（第25轮）
+
+`src/block-common.js` 放立面与高楼共用的东西：种子工具、合并几何 `Bucket`、招牌 canvas 图集（新增宽幅广告牌格）、以及**按相机距离的空气透视补丁** `patchAerial`。雾量用 `massing.json` 傍晚/下午 `fog` 的同一条近/远曲线（近 190 m → 0.42、远 850 m → 0.78，线性），乘一条 `blocks.fog.start`（50→150 m 的 smoothstep）让 ~60 m 以内保持清晰；雾色是着色器里直接调上游 `skyBase`，方向取「像素水平方向 + 模块顶冠（`skyAt` × 高度）的仰角」，再按 `lumaMax` 封顶、`desat` 去饱和、`gain` 缩放，和 massing.js 给占位塔烘的雾色同一公式，只是改成逐像素、跟着真实相机走。亮窗 emissive 与招牌按 `1 − litFade × 雾` 淡出（招牌再乘 `windows`）。雾在光照之后混合（与 massing 的 `addFog` 同位置），描边由屏幕空间后处理按场景色算，所以随雾一起淡，远处不会冒黑线。
+
+`src/tower-blocks.js` 把汐的 6 个塔 GLB（slim / slab / setback × tank / billboard）按槽位替换占位塔：每槽位按占地和高度挑最贴的变体（XZ 等比 ±15 %、Y ±25 %，屋顶设备不随 Y 拉伸），绕 90° 步进转向群落 `face`，随机镜像，同一邻域内尽量不用相同体型，再检查不与其他槽位重叠。原占位上带屋顶招牌的槽位用 billboard 变体，两面广告牌贴宽幅招牌。窗带用 512² 塔图集：傍晚把图集整张重画（恰好 17 % 的窗格亮，冷暖混合，另出一张只含亮窗的 emissive 贴图），每条窗带随机取一行和整格 u 偏移；下午用 GLB 自带白天格。每个群落合并为实心 / 图集 / 招牌三个网格。`?towers=off` 保留 r24 的占位塔；`?blocks=off` 与 `?towers=off` 互相独立，两个都关等于 r23c。
+
 ## 湿路店铺倒影（第22轮）
 
 湿路原来只采样一张离线烘好、整条街共用一个 box 的 256² 立方体（`street-env*/`），权重又很低（0.03～0.23），所以只剩一层天空色。`src/street-zones.js` 把主街沿 z 切成 5 个区（`toon.json` 的 `evening.refl.zones`，局部 z 3～36 m），每区一个 AABB（街宽 × 到屋檐 × 区长再各加 `pad`）和一张 512² HalfFloat 立方体，加载末尾在每区中心、离地 1.5 m 处烘一次（不落盘、不进仓库）。烘焙时隐藏岛屿（除天空）、车辆、自行车、列车、电线、路口光晕、店前光斑和橱窗玻璃，做完全部还原。路面着色器按自己的 z 选区（区界 `blend` m 线性过渡），把反射向量对该区 box 做视差校正再采样；招牌／橱窗灯沿仰角往下多取 `streakTaps` 个点、只累加 `streakThresh` 以上的亮部，拉成竖条。
