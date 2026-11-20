@@ -392,7 +392,8 @@
    "lumaMax": 0.95,
    "windows": 0.9,
    "litFade": 0.6,
-   "skyAt": 0.8
+   "skyAt": 0.8,
+   "gain": 0.93
   }
  },
  "afternoon": {
@@ -464,7 +465,7 @@
    "litFade": 0.6,
    "skyAt": 0.8,
    "desat": 0.55,
-   "gain": 0.9
+   "gain": 0.82
   }
  },
  "raise": {
