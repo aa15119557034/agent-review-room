@@ -109,6 +109,14 @@ async function init() {
   stage('正在读取岛屿地形、港镇和云层…');
   // ?time=afternoon keeps Petalwake's original light for before/after comparison.
   const timeOfDay = new URLSearchParams(location.search).get('time') ?? 'evening';
+  // 阴影更新策略。默认 every30（每 30 帧重烘一次，实测与静态同速，但会动物体阴影跟得上）。
+  //   ?shadow=dynamic  回到旧行为（每帧重渲）
+  //   ?shadow=static   只渲一次
+  //   ?shadowEvery=N   每 N 帧重渲一次（配合 static 或单独用）
+  const shadowQuery = new URLSearchParams(location.search);
+  const shadowMode = shadowQuery.get('shadow') ?? 'every30';
+  const shadowStatic = shadowMode === 'static';
+  const shadowEvery = shadowMode === 'dynamic' ? 0 : Math.max(1, Number(shadowQuery.get('shadowEvery') ?? 30) | 0);
   // Round 24: blue-violet shade. The lit-material chunk is patched before any program compiles.
   const shadowTintParams = shadowTintEnabled() ? await loadShadowTint() : null;
   const shadowTint = shadowTintParams ? shadowTintParams[timeOfDay === 'afternoon' ? 'afternoon' : 'evening'] : null;
@@ -286,6 +294,7 @@ async function init() {
   stage('场景已就绪');
   document.querySelector('#loading').hidden = true;
   let last = performance.now(), sampleStart = last, samples = 0;
+  let shadowFrames = 0;
   function frame(now) {
     const dt = Math.min((now - last) / 1000, 0.05);
     last = now;
@@ -305,9 +314,17 @@ async function init() {
         document.querySelector('#performance').textContent = `${fps.toFixed(0)} FPS · ${(renderer.info.render.triangles / 1e6).toFixed(2)} M tris`;
         sampleStart = now; samples = 0;
       }
+      // 静态阴影：前 3 帧照常渲染，之后关掉 autoUpdate；shadowEvery=N 则每 N 帧重渲一次
+      if (shadowStatic || shadowEvery > 0) {
+        shadowFrames++;
+        if (shadowFrames === 3) renderer.shadowMap.autoUpdate = false;
+        else if (shadowFrames > 3 && shadowEvery > 0 && shadowFrames % shadowEvery === 0) renderer.shadowMap.needsUpdate = true;
+      }
       requestAnimationFrame(frame);
     } catch (error) { fail(error); }
   }
   requestAnimationFrame(frame);
 }
 init().catch(fail);
+
+
