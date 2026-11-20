@@ -91,6 +91,10 @@ node scripts\baseline.cjs --scene=combined --electron=D:\codex\2026-11-16\world-
 
 `src/massing.js` + `src/massing.json` 用程序化方盒子先把布局、高度和构图定下来，之后汐的 Blender 楼块按「槽位」一块块替换。两层：`tower`（远景，25–80 m，1–3 段收分、屋顶设备、水箱、屋顶招牌，傍晚带稀疏亮窗；离主街 ≥120 m，不在 `station.bounds` / `walkExtra` 内、不在水上）和 `facade`（3–6 层，补主街两侧与河对岸的空档，只放在可走区之外，避开 city / skyline 的地块与网格包围盒）。每块一个槽位 `{ id, kind, cluster, center:[x,y,z]（世界坐标，楼层面）, yaw, footprint:[w,d], height }`，在 `worldBase.massing = { slots, stats, root, removeSlot(id), replaceSlot(id, object3d) }` 里；按群落合并成一个墙体网格（`MeshToonMaterial`，顶点色，自动带卡通分档与描边）加一个窗户网格（`MeshBasicMaterial`，亮窗预乘发光增益），总共约 +20 次绘制、约 3.3 万三角形，不投影、无物理。种子、数量、高度、配色（傍晚／下午）都在 `massing.json`。`?massing=off` 什么都不装，画面与上一轮逐像素相同。
 
+## 立面模块替换占位（第24轮）
+
+`src/facade-blocks.js` 把汐的 `assets/blocks-2026-11-20/street-facade-01..04.glb`（宽 16 / 20 / 16 / 24 m，进深 10 m，+Z 朝街）按槽位铺进主街两侧与河对岸。开 `blocks` 时 `massing.json` 的 `blocks` 节会把 facade 地块改成「宽度 = 模块宽度之和、进深 10 m、群落 yaw = 朝向」的整排（`applyBlocksParams`），每排用种子随机组合模块（相邻不重复，随机镜像），再调用 `massing.removeSlots()` 去掉对应占位。每个群落合并成三个网格：纯色（墙、裙楼、壁柱、檐口、赤陶楼梯间、地基）、图集（窗、卷帘门、雨棚、空调；傍晚亮窗走 emissive 贴图，只取图集里亮窗格的玻璃）、招牌（运行时画的小图集，日文店名，无品牌名）。材质均为 `MeshToonMaterial` / `MeshBasicMaterial`，名字带 `massing`，所以天然带卡通分档与描边、不被做旧；招牌材质会被 `markSignMaterials` 标上描边。模块按自己脚下地形最高点落地，往下用地基裙边伸到最低点，不会悬空。`?blocks=off` 保留第23轮占位（逐像素同 r23c），`?massing=off` 仍什么都不装。静态服务器新增 `/blocks/` 路由指向该素材目录（`scripts/baseline.cjs`）。
+
 ## 湿路店铺倒影（第22轮）
 
 湿路原来只采样一张离线烘好、整条街共用一个 box 的 256² 立方体（`street-env*/`），权重又很低（0.03～0.23），所以只剩一层天空色。`src/street-zones.js` 把主街沿 z 切成 5 个区（`toon.json` 的 `evening.refl.zones`，局部 z 3～36 m），每区一个 AABB（街宽 × 到屋檐 × 区长再各加 `pad`）和一张 512² HalfFloat 立方体，加载末尾在每区中心、离地 1.5 m 处烘一次（不落盘、不进仓库）。烘焙时隐藏岛屿（除天空）、车辆、自行车、列车、电线、路口光晕、店前光斑和橱窗玻璃，做完全部还原。路面着色器按自己的 z 选区（区界 `blend` m 线性过渡），把反射向量对该区 box 做视差校正再采样；招牌／橱窗灯沿仰角往下多取 `streakTaps` 个点、只累加 `streakThresh` 以上的亮部，拉成竖条。

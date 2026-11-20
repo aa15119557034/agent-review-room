@@ -481,5 +481,162 @@
    "width": 1.1,
    "maxHeight": 90
   }
+ },
+ "blocks": {
+  "note": "Art round 24 (#254 X-51): the Blender facade modules (assets/blocks-2026-11-20/street-facade-01..04.glb: 16 / 20 / 16 / 24 m wide, 10 m deep, +Z = street) replace the facade placeholders. With blocks on, the facade lots are re-laid as rows (width = a sum of module widths, depth 10 m, cluster yaw = facing) and every row is filled with a seeded combination. ?blocks=off uses none of this (r23c layout).",
+  "facade": {
+   "footprint": [
+    [
+     16,
+     16
+    ],
+    [
+     10,
+     10
+    ]
+   ],
+   "widths": [
+    16,
+    20,
+    24,
+    32,
+    36,
+    40,
+    44,
+    48
+   ],
+   "gap": 6,
+   "boundsMargin": 5,
+   "lotMargin": 5,
+   "clearPad": [
+    2.5,
+    4
+   ],
+   "maxRelief": 2.4
+  },
+  "clusters": {
+   "facade-farbank-w": {
+    "count": 4,
+    "yaw": 0.2915
+   },
+   "facade-farbank-e": {
+    "count": 4,
+    "yaw": -0.2915
+   },
+   "facade-farbank-back": {
+    "count": 3
+   },
+   "facade-flank-w": {
+    "count": 6,
+    "yaw": 1.5708
+   },
+   "facade-flank-e": {
+    "count": 6,
+    "yaw": -1.5708
+   },
+   "facade-south": {
+    "count": 5,
+    "yaw": 3.14159
+   }
+  },
+  "lift": 0.1,
+  "sink": 0.6,
+  "signLift": 0.012,
+  "bladeLift": 0.06,
+  "signs": {
+   "size": [
+    2048,
+    2400
+   ],
+   "h": {
+    "cell": [
+     384,
+     108
+    ],
+    "words": [
+     "喫茶",
+     "薬",
+     "本",
+     "居酒屋",
+     "理容",
+     "クリーニング",
+     "珈琲",
+     "洋食",
+     "食堂",
+     "文具",
+     "花",
+     "眼鏡",
+     "八百屋",
+     "寿司",
+     "蕎麦",
+     "菓子"
+    ]
+   },
+   "v": {
+    "cell": [
+     64,
+     320
+    ],
+    "pxPerMetre": 100,
+    "words": [
+     "居酒屋",
+     "喫茶",
+     "薬局",
+     "書店",
+     "理容",
+     "食堂",
+     "歯科",
+     "銭湯"
+    ]
+   },
+   "schemes": [
+    {
+     "bg": "#c9485a",
+     "fg": "#fff4ea"
+    },
+    {
+     "bg": "#e8b040",
+     "fg": "#3a2a14"
+    },
+    {
+     "bg": "#3a8f9a",
+     "fg": "#f4fffd"
+    },
+    {
+     "bg": "#efe6d2",
+     "fg": "#8a2f3b"
+    },
+    {
+     "bg": "#3d6a5a",
+     "fg": "#f4efd0"
+    }
+   ]
+  },
+  "evening": {
+   "emissive": 2.2,
+   "signGain": 1.15,
+   "podium": 0.8,
+   "pilaster": 0.92,
+   "trim": 0.95,
+   "core": "#84564a",
+   "plinth": "#6c7080",
+   "canopyTint": 0.35,
+   "litChance": 0.28,
+   "floorOn": 0.72,
+   "coolShare": 0.22
+  },
+  "afternoon": {
+   "emissive": 0,
+   "signGain": 0.85,
+   "podium": 0.8,
+   "pilaster": 0.94,
+   "trim": 1.0,
+   "core": "#b07a68",
+   "plinth": "#a6a9b4",
+   "canopyTint": 0.35,
+   "litChance": 0,
+   "floorOn": 0.72,
+   "coolShare": 0.3
+  }
  }
 }

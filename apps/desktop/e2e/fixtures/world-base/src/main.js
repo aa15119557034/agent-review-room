@@ -12,6 +12,7 @@ import { createLook } from './look.js';
 import { createSkyline } from './skyline.js';
 import { createCity } from './city.js';
 import { massingEnabled, loadMassing, createMassing } from './massing.js';
+import { blocksEnabled, applyBlocksParams, createFacadeBlocks } from './facade-blocks.js';
 import { applyWeathering, loadWeatheringParams } from './weathering.js';
 import { addWeatheringDecals, loadBakedDecals } from './weathering-decals.js';
 import { groundEnabled, loadGround, applyFlowerDrifts, patchGroundShader, patchPetals } from './island-ground.js';
@@ -193,8 +194,13 @@ async function init() {
   // weathering, glow and street-zone bake so reflections and outlines see it. ?massing=off installs nothing.
   if (massingEnabled()) {
     stage('正在安放远景楼群…');
-    const massingParams = await loadMassing();
+    // Art round 24: the real facade modules replace the facade placeholders (wide 10 m deep lots, rows of modules). ?blocks=off keeps r23c.
+    const blocksOn = blocksEnabled(), massingParams = blocksOn ? applyBlocksParams(await loadMassing()) : await loadMassing();
     worldBase.massing = await createMassing({ scene, station, island, city: worldBase.city, skyline: worldBase.skyline, params: massingParams, timeOfDay: island.timeOfDay });
+    if (blocksOn && massingParams.blocks) {
+      stage('正在装立面模块…');
+      worldBase.blocks = await createFacadeBlocks({ scene, station, island, massing: worldBase.massing, params: massingParams, timeOfDay: island.timeOfDay });
+    }
     worldBase.massing.vegetationClear = clearVegetationAreas(island.terrain,
       worldBase.massing.vegetationClearAreas, station.root.matrixWorld, { flowers: 5, jitter: 2 });
   }

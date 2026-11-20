@@ -46,6 +46,11 @@ function createStaticServer(root = fixture) {
       base = path.join(root, '.local', 'apartment-surfaces');
       relative = pathname.slice('/apartment-assets/'.length);
     }
+    // Art round 24: Blender facade modules + shared atlas (assets/blocks-2026-11-20), loaded by src/facade-blocks.js.
+    if (pathname.startsWith('/blocks/')) {
+      base = path.join(root, 'assets', 'blocks-2026-11-20');
+      relative = pathname.slice('/blocks/'.length);
+    }
     const stationArt = /^\/(mature-sakura|station-art)\/(.*)$/.exec(pathname);
     if (stationArt) {
       try { stationArtRelease ??= stationArtReleasePath(root); }

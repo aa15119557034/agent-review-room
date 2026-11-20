@@ -247,7 +247,7 @@ export async function createMassing({ scene, station, island, city, skyline, par
     let attempts = 0;
     while (accepted.length < spec.count && attempts++ < spec.count * 160) {
       const [fw, fd] = P.footprint.map(r => range(rng, r) * (spec.scale ?? 1));
-      const w = Math.round(fw * 2) / 2, d = Math.round(fd * 2) / 2;
+      const w = P.widths ? pick(rng, P.widths) : Math.round(fw * 2) / 2, d = Math.round(fd * 2) / 2;
       const yaw = (spec.yaw ?? 0) + (rng() - 0.5) * 0.14;
       const cx = x0 + rng() * (x1 - x0), cz = z0 + rng() * (z1 - z0);
       const rect = footprintRect(cx, cz, w, d, yaw);
@@ -475,6 +475,13 @@ export async function createMassing({ scene, station, island, city, skyline, par
       const s = slotById.get(id); if (!s || s.removed) return false;
       s.removed = true; build(groupOf.get(s)); return true;
     },
+    /** Same for several blocks at once: every touched cluster mesh is rebuilt once. */
+    removeSlots(ids) {
+      const touched = new Set();
+      for (const id of ids) { const s = slotById.get(id); if (!s || s.removed) continue; s.removed = true; touched.add(groupOf.get(s)); }
+      for (const g of touched) build(g);
+      return touched.size;
+    },
     /** Swap a placeholder for the real module: object3d is placed at the slot centre with the slot yaw. */
     replaceSlot(id, object) {
       const s = slotById.get(id); if (!s) throw new Error('Unknown massing slot ' + id);
@@ -491,7 +498,7 @@ export async function createMassing({ scene, station, island, city, skyline, par
   };
   // Footprints (station-local rectangles) so main.js can clear grass and flowers under every block.
   // Only the facade blocks are close enough for grass or flowers to be seen against their walls.
-  api.vegetationClearAreas = slots.filter(s => s.kind === 'facade').map(s => ({ name: s.id, ...footprintRect(s.center[0] - ox, s.center[2] - oz, s.footprint[0] + 1, s.footprint[1] + 1, s.yaw) }));
+  api.vegetationClearAreas = slots.filter(s => s.kind === 'facade').map(s => ({ name: s.id, ...footprintRect(s.center[0] - ox, s.center[2] - oz, s.footprint[0] + (params.facade.clearPad?.[0] ?? 1), s.footprint[1] + (params.facade.clearPad?.[1] ?? 1), s.yaw) }));
   const sum = (list) => list.reduce((n, v) => n + v, 0);
   const tris = [];
   for (const g of groups) for (const m of [g.wallMesh, g.windowMesh]) if (m) tris.push(m.geometry.index.count / 3);
