@@ -31,9 +31,6 @@ export const toonFlatUniforms = { uTfTex: { value: 0 }, uTfBias: { value: 0 }, u
 let flatActive = false;
 const LIT_FLAT = /^(MeshStandardMaterial|MeshPhysicalMaterial|MeshPhongMaterial|MeshLambertMaterial|MeshToonMaterial)$/;
 const flatEligible = (m) => flatActive && LIT_FLAT.test(m.type) && !!m.map && !m.transparent && !(m.alphaTest > 0) && !m.alphaToCoverage && !m.userData?.wbNoFlat && !NOLINE_NAMES.test(m.name);
-/** Round 21: stylised weathering patches. form.grime in toon.json (read by weathering.js); ?form=r20 (or r19 / r18 / old) returns null
- *  and the round 22 weathering shader is compiled exactly as before. */
-export const grimeParams = (p) => (p && p.form && p.form.grime && formEnabled() && !['r18', 'r19', 'r20'].includes(new URLSearchParams(location.search).get('form'))) ? p.form.grime : null;
 export const toonEnabled = () => new URLSearchParams(location.search).get('toon') !== 'off';
 
 const f = (x) => Number(x).toFixed(4);

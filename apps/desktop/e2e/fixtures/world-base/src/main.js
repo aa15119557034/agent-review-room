@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { createIsland, clearVegetationAreas } from './island.js';
 import { loadShadowTint, shadowTintEnabled, installLitShadowTint, patchIslandShadowTint, shadowTintUniforms, shopInteriorBoxes } from './shadow-tint.js';
-import { loadToon, toonEnabled, gradeEnabled, applyForm, installLitToon, installToonHook, toonLineUniforms, maskGlassAlpha, signLinesEnabled, markSignMaterials, installFlatColour, toonFlatUniforms, grimeParams } from './toon.js';
+import { loadToon, toonEnabled, gradeEnabled, applyForm, installLitToon, installToonHook, toonLineUniforms, maskGlassAlpha, signLinesEnabled, markSignMaterials, installFlatColour, toonFlatUniforms } from './toon.js';
 import { addShopSpill, loadShopSpill, shopFrontsFromRooms, groundSpillFronts } from './shop-spill.js';
 import { addDoorGlow, loadDoorGlow, resolveDoorLamps } from './door-glow.js';
 import { applyEveningGlow, applyEveningSakura, fadeDistantCrossingHalos } from './evening-glow.js';
@@ -263,8 +263,7 @@ async function init() {
   {
     const weatheringStart = performance.now();
     const params = await loadWeatheringParams();
-    worldBase.weathering = applyWeathering({ scene, station, island, city: worldBase.city, skyline: worldBase.skyline, params, timeOfDay: island.timeOfDay,
-      style: grimeParams(worldBase.toon27?.params) });
+    worldBase.weathering = applyWeathering({ scene, station, island, city: worldBase.city, skyline: worldBase.skyline, params, timeOfDay: island.timeOfDay });
     worldBase.weatheringDecals = addWeatheringDecals({ scene, station, wallMaterials: worldBase.weathering.wallMaterials, vehicleBoxes: worldBase.weathering.vehicleBoxes,
       roots: [station.root, worldBase.city.root, worldBase.skyline.root], gradientMap: station.ctx.mat.gradientMap, explicit: params.decals.explicit,
       baked: await loadBakedDecals(), forcePlan: new URLSearchParams(location.search).get('decals') === 'plan' });
