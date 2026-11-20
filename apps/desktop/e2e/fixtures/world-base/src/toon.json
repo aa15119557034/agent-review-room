@@ -66,9 +66,8 @@
    "skinKeep": 0.35,
    "skyKeep": 0.3,
    "skyGain": 0.4,
-   "frameSatCut": 1.2,
-   "frameSatLo": 0.52,
-   "frameSatHi": 0.64
+   "satKnee": 0.6,
+   "satRoom": 0.4
   },
   "form": {
    "line": {
@@ -168,9 +167,8 @@
    "skinKeep": 0.35,
    "skyKeep": 0.3,
    "skyGain": 0.4,
-   "frameSatCut": 0,
-   "frameSatLo": 0.52,
-   "frameSatHi": 0.68
+   "satKnee": 1,
+   "satRoom": 0.4
   },
   "form": {
    "line": {

@@ -1,6 +1,5 @@
 import * as THREE from 'three';
 import { Pipeline } from '../upstream/petalwake/src/core/pipeline.js';
-import { TONEMAP } from '../upstream/petalwake/src/shaders/common.js';
 import { distanceToRoom } from './shadow-tint.js';
 import { toonEnabled, gradeEnabled, setToonLit } from './toon.js';
 
@@ -125,8 +124,7 @@ float wbBand(float n) {
 // Parameters live in toon.json ("grade"). Alpha is not touched (the output pass writes alpha 1; the outline mask is read upstream).
 const GRADE = /* glsl */`
 uniform float uGradeOn;
-uniform vec4 uGA, uGB, uGC, uGD, uGE; // pivot contrast floor toe / gain gainLo gainHi knee / cap peakKnee peakCap vibrance / vibPow skinKeep skyKeep skyGain / contrastHi frameSatCut frameSatLo frameSatHi
-uniform sampler2D tFrameSat; // 1x1: mean HSV saturation of the whole frame (round 15, see FRAME_SAT_FRAG)
+uniform vec4 uGA, uGB, uGC, uGD, uGE; // pivot contrast floor toe / gain gainLo gainHi knee / cap peakKnee peakCap vibrance / vibPow skinKeep skyKeep skyGain / contrastHi satKnee satRoom -
 vec3 wbGrade(vec3 c, float sky) {
   float gain = uGB.x*mix(1.0, uGD.w, sky);
   float Y = dot(c, vec3(0.2126, 0.7152, 0.0722));
@@ -148,31 +146,20 @@ vec3 wbGrade(vec3 c, float sky) {
   float hue = c.r >= c.g && c.g >= c.b ? (c.g - c.b)/max(c.r - c.b, 1e-4) : -1.0; // 0..1 = red .. yellow
   float skin = smoothstep(0.12, 0.22, hue)*(1.0 - smoothstep(0.55, 0.70, hue))*smoothstep(0.18, 0.28, S)*(1.0 - smoothstep(0.55, 0.70, S))*smoothstep(0.30, 0.45, mx);
   float amt = uGC.w*smoothstep(0.03, 0.25, S)*pow(1.0 - clamp(S, 0.0, 1.0), uGD.x)*mix(1.0, uGD.y, skin)*mix(1.0, uGD.z, sky);
-  // Round 15: the more colourful the whole frame already is, the less vibrance it gets (cut = max share removed, between frameSatLo and frameSatHi).
-  amt *= 1.0 - uGE.y*smoothstep(uGE.z, uGE.w, texture(tFrameSat, vec2(0.5)).r);
   float Yc = dot(c, vec3(0.2126, 0.7152, 0.0722));
-  return clamp(vec3(Yc) + (c - Yc)*(1.0 + amt), 0.0, 1.0);
-}
-`;
-
-// Round 15: whole-frame mean saturation, estimated by one 1x1 pass over a 32x18 grid of taps of the composite target
-// (approximate tone map + sRGB, no full-resolution pass). Feeds the vibrance cut in wbGrade.
-const FRAME_SAT_FRAG = /* glsl */`
-precision highp float;
-varying vec2 vUv;
-uniform sampler2D tColor;
-uniform float uExposure;
-${TONEMAP}
-void main(){
-  float sum = 0.0;
-  for (int j = 0; j < 18; j++) for (int i = 0; i < 32; i++) {
-    vec3 c = texture(tColor, (vec2(float(i), float(j)) + 0.5) / vec2(32.0, 18.0)).rgb;
-    if (any(isnan(c)) || any(isinf(c))) c = vec3(0.0);
-    c = toSRGB(acesFilm(c * uExposure * 0.92));
-    float mx = max(max(c.r, c.g), c.b), mn = min(min(c.r, c.g), c.b);
-    sum += (mx - mn) / max(mx, 1e-4);
+  c = clamp(vec3(Yc) + (c - Yc)*(1.0 + amt), 0.0, 1.0);
+  // Round 18: per-pixel saturation soft shoulder (replaces the round 15 whole-frame estimate, which swung with the camera heading).
+  // HSV saturation up to satKnee is untouched; above it the excess is compressed, S' = knee + ex/(1 + ex/room), so S' tends to knee + room (C1 at the knee).
+  // Brightness (max channel) and hue stay; satKnee >= 1 leaves every pixel exactly as it was.
+  float sMx = max(max(c.r, c.g), c.b), sMn = min(min(c.r, c.g), c.b);
+  float sS = (sMx - sMn)/max(sMx, 1e-5);
+  float sKnee = uGE.y, sRoom = max(uGE.z, 1e-4);
+  float sEx = max(sS - sKnee, 0.0);
+  if (sEx > 0.0) {
+    float sOut = sKnee + sEx/(1.0 + sEx/sRoom);
+    c = vec3(sMx) - (vec3(sMx) - c)*(sOut/sS);
   }
-  gl_FragColor = vec4(vec3(sum / 576.0), 1.0);
+  return c;
 }
 `;
 
@@ -213,22 +200,6 @@ export function createLook(renderer, camera) {
   // every blurred pixel. Keep the centre pixel's alpha. Rewritten only with the toon on (round 26 stays as it was).
   if (toonEnabled()) pipeline.blurMat.fragmentShader = insert(pipeline.blurMat.fragmentShader, 'gl_FragColor = vec4(acc / wsum, 1.0);', 'gl_FragColor = vec4(acc / wsum, c0.a);', 'blur keeps coverage mask');
   const mat = pipeline.finalMat;
-  // Round 15: 1x1 frame-saturation target, filled right before the final blit (grade on only).
-  const satRT = new THREE.WebGLRenderTarget(1, 1, { type: THREE.HalfFloatType, format: THREE.RGBAFormat, depthBuffer: false, minFilter: THREE.NearestFilter, magFilter: THREE.NearestFilter });
-  const satMat = new THREE.ShaderMaterial({
-    uniforms: { tColor: { value: null }, uExposure: { value: 1 } },
-    vertexShader: 'varying vec2 vUv; void main(){ vUv = position.xy * 0.5 + 0.5; gl_Position = vec4(position.xy, 0.0, 1.0); }',
-    fragmentShader: FRAME_SAT_FRAG, depthTest: false, depthWrite: false,
-  });
-  const blit = pipeline._blit.bind(pipeline);
-  pipeline._blit = (m, target) => {
-    if (m === mat && mat.uniforms.uGradeOn.value > 0.5 && mat.uniforms.uGE.value.y > 0) {
-      satMat.uniforms.tColor.value = pipeline.compRT.texture;
-      satMat.uniforms.uExposure.value = pipeline.params.exposure;
-      blit(satMat, satRT);
-    }
-    blit(m, target);
-  };
   // Round 24: composite shadow tint fades out while the camera is inside any shop box (see shadow-tint.js).
   let shBase = 0, shBox = null, shFade = 1.5;
   const camIndoor = () => {
@@ -245,7 +216,7 @@ export function createLook(renderer, camera) {
     uLnOn: { value: 0 }, uLn: { value: new THREE.Vector4() }, uLnS: { value: new THREE.Vector4() }, uLnC: { value: 0 }, uLnCol: { value: new THREE.Vector3() }, uLnF: { value: new THREE.Vector4(0,0,0,0.35) }, uLnFl: { value: new THREE.Vector3() },
     uShOn: { value: 0 }, uShAO: { value: new THREE.Vector3(1, 1, 1) }, uShMul: { value: new THREE.Vector3(1, 1, 1) },
     uShLift: { value: new THREE.Vector3() }, uShRange: { value: new THREE.Vector3(0.06, 0.42, 1) },
-    uGradeOn: { value: 0 }, uGA: { value: new THREE.Vector4() }, uGB: { value: new THREE.Vector4() }, uGC: { value: new THREE.Vector4() }, uGD: { value: new THREE.Vector4() }, uGE: { value: new THREE.Vector4() }, tFrameSat: { value: satRT.texture },
+    uGradeOn: { value: 0 }, uGA: { value: new THREE.Vector4() }, uGB: { value: new THREE.Vector4() }, uGC: { value: new THREE.Vector4() }, uGD: { value: new THREE.Vector4() }, uGE: { value: new THREE.Vector4() },
   });
   mat.fragmentShader = insert(mat.fragmentShader, 'void main(){', `${OUTLINES}\n${LINES}\n${GRADE}\nvoid main(){`, 'composite entry');
   mat.fragmentShader = insert(mat.fragmentShader, 'col *= uExposure;', `
@@ -423,8 +394,6 @@ export function createLook(renderer, camera) {
     water.needsUpdate = true;
   }
   return {
-    /** Round 15 (diagnostics): the 1x1 frame-saturation estimate of the last frame. */
-    readFrameSat() { const b = new Uint16Array(4); renderer.readRenderTargetPixels(satRT, 0, 0, 1, 1, b); return THREE.DataUtils.fromHalfFloat(b[0]); },
     pipeline, applyIsland,
     setToon(value) { toon.value = value ? 1 : 0; setToonLit(value); },
     /** World-space town rect [minX, minZ, maxX, maxZ]; strength 0 restores the open-island meadow. */
@@ -445,7 +414,7 @@ export function createLook(renderer, camera) {
       u.uGB.value.set(g.gain, g.gainRange[0], g.gainRange[1], g.knee);
       u.uGC.value.set(g.cap, g.peakKnee, g.peakCap, g.vibrance);
       u.uGD.value.set(g.vibrancePower, g.skinKeep, g.skyKeep, g.skyGain);
-      u.uGE.value.set(g.contrastHi, g.frameSatCut ?? 0, g.frameSatLo ?? 0.4, g.frameSatHi ?? 0.6);
+      u.uGE.value.set(g.contrastHi, g.satKnee ?? 1, g.satRoom ?? 0.4, 0);
       u.uGradeOn.value = 1;
     },
     setAO(value) { mat.uniforms.uAO.value = value; },
