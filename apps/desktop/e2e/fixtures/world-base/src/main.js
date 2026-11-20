@@ -149,6 +149,31 @@ async function init() {
   sun.shadow.normalBias = 0.035;
   skyFill = evening ? new THREE.HemisphereLight(0xb4bce8, 0xa08068, 1.6) : new THREE.HemisphereLight(0xcfe0ff, 0xa89c94, 1.05);
   scene.add(sun, sun.target, skyFill);
+
+  // 阴影跟随玩家（#254 提醒第 2 条）：单张阴影图跟着玩家走，位置吸附到贴图像素格避免边缘抖动，
+  // 走出 SHADOW_STEP 才移动并重烘一次；平时仍按 shadowEvery 的节流重烘。
+  // ?shadowFollow=off 可关掉，用于对照。
+  const SHADOW_EXTENT = 150;
+  const SHADOW_TEXEL = (SHADOW_EXTENT * 2) / 4096;
+  const SHADOW_STEP = 30;
+  const shadowCenter = new THREE.Vector3(...island.stationPlacement.position);
+  const shadowFollowOff = new URLSearchParams(location.search).get('shadowFollow') === 'off';
+  function updateShadowFollow() {
+    // 只在真正行走时跟随：固定机位截图（setView 会 setEnabled(false)）保持原阴影中心，逐像素可复现
+    if (shadowFollowOff || !walker || !walker.enabled || !walker.worldPosition) return;
+    const p = walker.worldPosition;
+    const dx = p.x - shadowCenter.x, dz = p.z - shadowCenter.z;
+    if (dx * dx + dz * dz < SHADOW_STEP * SHADOW_STEP) return;
+    shadowCenter.set(
+      Math.round(p.x / SHADOW_TEXEL) * SHADOW_TEXEL,
+      shadowCenter.y,
+      Math.round(p.z / SHADOW_TEXEL) * SHADOW_TEXEL);
+    sun.target.position.copy(shadowCenter);
+    sun.position.copy(island.U.uSunDir.value).multiplyScalar(160).add(shadowCenter);
+    sun.target.updateMatrixWorld();
+    sun.updateMatrixWorld();
+    renderer.shadowMap.needsUpdate = true;
+  }
   stage('正在安放车站、店铺与碰撞体…');
   station = await createStation({
     scene, renderer, camera, offset: island.stationPlacement.position,
@@ -305,6 +330,7 @@ async function init() {
       renderer.info.reset();
       station.update(dt, now / 1000, walker.worldPosition);
       walker.update(dt);
+      updateShadowFollow();
       island.update(dt, now / 1000);
       look.render(scene, dt);
       worldBase.ready = true;
@@ -329,6 +355,8 @@ async function init() {
   requestAnimationFrame(frame);
 }
 init().catch(fail);
+
+
 
 
 
