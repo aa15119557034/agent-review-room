@@ -113,6 +113,16 @@
     "shadowNoise": 0,
     "shadowCut": 1.25,
     "shadowCutAt": 0.85
+   },
+   "grime": {
+    "scale": 0.25,
+    "cut": 0.56,
+    "soft": 0.04,
+    "tint": [0.84, 0.85, 0.94],
+    "amount": 0.7,
+    "edge": 0.5,
+    "foot": { "height": 0.5, "amount": 0.8, "soft": 0.03, "wobble": 0.35 },
+    "rain": { "amount": 0.6, "perMetre": 1.0, "skip": 0.55, "halfWidth": 0.22 }
    }
   }
  },
@@ -229,6 +239,16 @@
     "shadowNoise": 0,
     "shadowCut": 1.25,
     "shadowCutAt": 0.85
+   },
+   "grime": {
+    "scale": 0.25,
+    "cut": 0.56,
+    "soft": 0.04,
+    "tint": [0.86, 0.87, 0.95],
+    "amount": 0.75,
+    "edge": 0.5,
+    "foot": { "height": 0.5, "amount": 0.8, "soft": 0.03, "wobble": 0.35 },
+    "rain": { "amount": 0.6, "perMetre": 1.0, "skip": 0.55, "halfWidth": 0.22 }
    }
   }
  },

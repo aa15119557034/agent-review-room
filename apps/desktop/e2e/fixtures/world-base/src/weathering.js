@@ -88,9 +88,78 @@ if (uWx > 0.0 && vWxMask.x > 0.01) {
 }
 `;
 
+
+// Round 21 (X-51): stylised weathering. Same four terms, redrawn the way an anime background paints dirt: a few flat,
+// hard-edged, low-contrast patches instead of fine continuous noise. Only compiled when toon.json form.grime is on
+// (?form=r20 and older keep the GLSL above untouched, so the round 20b pixels come back exactly).
+//  patches   one low-frequency noise octave cut at a threshold (smoothstep, width from fwidth), flat colour inside
+//  wall foot a flat band from the ground up, its top edge wobbling slowly with a low-frequency noise
+//  rain      a few wide vertical bands under the storey lines, hard sides, hard end
+//  all three share one stain colour (base * tint: darker and cooler) and combine with max(), so each is one flat level
+//  edge wear the old crease lift, scaled by uWxSt1.w (0 = off)
+// Every derivative (fwidth, dFdx) is taken before the branch: they are not defined in non-uniform control flow.
+const GLSL_STYLE_COMMON = /* glsl */`
+uniform vec4 uWxSt0;  // patch noise scale (1/m), cut, soft (noise units), amount
+uniform vec4 uWxSt1;  // tint rgb (multiplier at full strength), edge-wear scale
+uniform vec4 uWxSt2;  // wall foot height (m), amount, soft (m), wobble (fraction of height)
+uniform vec4 uWxSt3;  // rain amount, bands per metre, column skip (0..1), band half width (fraction of a column)
+`;
+
+const GLSL_BODY_STYLE = /* glsl */`
+#include <normal_fragment_maps>
+{
+  vec3 wxP = vWxPos;
+  vec3 wxN = normalize((vec4(normalize(vNormal), 0.0) * viewMatrix).xyz);
+  float wxWall = 1.0 - smoothstep(0.45, 0.8, abs(wxN.y));
+  float wxSeed = vWxMask.y;
+  vec2 gUv = (wxP.xz - uWxGroundRect.xy) * uWxGroundRect.zw;
+  float wxGround = texture2D(uWxGround, clamp(gUv, 0.0, 1.0)).r + uWxOrigin.y;
+  float wxH = max(wxP.y - wxGround, 0.0);
+  float wxU = dot(wxP.xz, vec2(-wxN.z, wxN.x));
+  vec2 wxPc = mix(wxP.xz, vec2(wxU, wxP.y), wxWall);
+  // patches and foot-line wobble: noise first, widths from its screen-space change
+  float wxNp = wxTex(wxPc * uWxSt0.x + wxSeed).r;
+  float wxNw = wxTex(wxPc * 0.5 + wxSeed * 1.7 + 11.0).g;
+  float wxWp = uWxSt0.z + min(fwidth(wxNp) * 0.75, 0.2);
+  float wxWf = uWxSt2.z + min(fwidth(wxH) * 0.75, 0.2);
+  // rain: column, per-column and per-storey random, metres below the storey line above
+  float wxF = wxU * uWxSt3.y, wxCol = floor(wxF), wxCu = fract(wxF);
+  vec4 wxR = wxCell(vec2(wxCol, wxSeed * 0.37));
+  float wxOff = wxR.r * 0.18;
+  float wxStorey = floor((wxH + wxOff) / uWxRain.y);
+  float wxD = (wxStorey + 1.0) * uWxRain.y - (wxH + wxOff);
+  vec4 wxS = wxCell(vec2(wxCol + wxStorey * 7.0, wxSeed * 0.37 + 31.0));
+  float wxLen = mix(0.9, 2.2, wxS.g);
+  float wxCentre = 0.5 + (wxR.g - 0.5) * 0.16;
+  float wxWl = 0.012 + min(fwidth(wxF) * 0.75, 0.2);
+  float wxWd = 0.03 + min(fwidth(wxD) * 0.75, 0.12);
+  // convex edge wear (old formula)
+  float wxEd = smoothstep(0.12, 0.5, length(fwidth(vNormal)));
+  float wxCv = step(0.0, dot(dFdx(vNormal), dFdx(wxP)) + dot(dFdy(vNormal), dFdy(wxP)));
+  if (uWx > 0.0 && vWxMask.x > 0.01) {
+    float wxK = uWx * uWxClass * vWxMask.x;
+    vec3 wxC = diffuseColor.rgb;
+    wxC *= 1.0 + (smoothstep(0.0, 14.0, wxH) - 0.35) * uWxFreq.z * wxWall * wxK;
+    float wxPatch = smoothstep(uWxSt0.y - wxWp, uWxSt0.y + wxWp, wxNp) * uWxSt0.w;
+    float wxTop = uWxSt2.x * (1.0 + (wxNw - 0.5) * 2.0 * uWxSt2.w);
+    float wxFoot = (1.0 - smoothstep(wxTop - wxWf, wxTop + wxWf, wxH)) * wxWall * uWxSt2.y;
+    float wxLat = 1.0 - smoothstep(uWxSt3.w - wxWl, uWxSt3.w + wxWl, abs(wxCu - wxCentre));
+    float wxEnd = (1.0 - smoothstep(wxLen - wxWd, wxLen + wxWd, wxD)) * smoothstep(0.0, 0.03, wxD);
+    float wxRain = step(uWxSt3.z, wxS.r) * wxLat * wxEnd * wxWall * uWxSt3.x;
+    float wxStain = clamp(max(wxPatch, max(wxFoot, wxRain)), 0.0, 1.0);
+    wxC = mix(wxC, wxC * uWxSt1.rgb, wxStain * wxK);
+    float wxFade = 1.0 - smoothstep(uWxEdge.z, uWxEdge.w, length(cameraPosition - wxP));
+    float wxE = wxEd * wxCv * wxFade * wxK * uWxSt1.w;
+    float wxLum2 = dot(wxC, vec3(0.2126, 0.7152, 0.0722));
+    wxC = mix(wxC, mix(vec3(wxLum2), wxC, 1.0 - uWxEdge.y) * (1.0 + uWxEdge.x), wxE);
+    diffuseColor.rgb = wxC;
+  }
+}
+`;
+
 const hex = (v) => new THREE.Color(v[0], v[1], v[2]);
 
-function patchMaterial(material, uniforms, wxClass) {
+function patchMaterial(material, uniforms, wxClass, style) {
   const prev = material.onBeforeCompile, prevKey = material.customProgramCacheKey;
   const own = { value: wxClass };
   material.userData.wxClass = own;
@@ -109,10 +178,10 @@ function patchMaterial(material, uniforms, wxClass) {
             wxw = instanceMatrix * wxw;
           #endif
           vWxPos = (modelMatrix * wxw).xyz; vWxMask = wxMask; }`);
-    shader.fragmentShader = f.replace('#include <common>', '#include <common>\n' + GLSL_COMMON)
-      .replace('#include <normal_fragment_maps>', GLSL_BODY);
+    shader.fragmentShader = f.replace('#include <common>', '#include <common>\n' + GLSL_COMMON + (style ? GLSL_STYLE_COMMON : ''))
+      .replace('#include <normal_fragment_maps>', style ? GLSL_BODY_STYLE : GLSL_BODY);
   };
-  material.customProgramCacheKey = () => (prevKey ? prevKey.call(material) : '') + '|weathering22';
+  material.customProgramCacheKey = () => (prevKey ? prevKey.call(material) : '') + (style ? '|weathering22s' : '|weathering22');
   material.needsUpdate = true;
 }
 
@@ -208,7 +277,7 @@ export async function loadWeatheringParams() {
   return response.json();
 }
 
-export function applyWeathering({ scene, station, island, city, skyline, params, timeOfDay = 'evening' }) {
+export function applyWeathering({ scene, station, island, city, skyline, params, timeOfDay = 'evening', style = null }) {
   const o = station.root.position;
   const ground = bakeGround({ island, station, city, params });
   // The array position selects the building's dirt tint. Keep the original city and skyline indices.
@@ -233,6 +302,14 @@ export function applyWeathering({ scene, station, island, city, skyline, params,
     uWxOrigin: { value: o.clone() },
     uWxNoise: { value: noiseTex.noise }, uWxWhite: { value: noiseTex.white },
   };
+  // Round 21: form.grime from toon.json (null = the round 22 look)
+  if (style) {
+    const g = style;
+    uniforms.uWxSt0 = { value: new THREE.Vector4(g.scale, g.cut, g.soft, g.amount) };
+    uniforms.uWxSt1 = { value: new THREE.Vector4(...g.tint, g.edge) };
+    uniforms.uWxSt2 = { value: new THREE.Vector4(g.foot.height, g.foot.amount, g.foot.soft, g.foot.wobble) };
+    uniforms.uWxSt3 = { value: new THREE.Vector4(g.rain.amount, g.rain.perMetre, g.rain.skip, g.rain.halfWidth) };
+  }
   const houses = station.ctx.services.houses.buildContext.M;
   const stationClass = new Map();
   for (const key of params.stationMaps) if (houses[key]?.map) stationClass.set(houses[key].map, 'wall');
@@ -280,14 +357,14 @@ export function applyWeathering({ scene, station, island, city, skyline, params,
       const cls = classify(m, mesh);
       if (!cls) return m;
       let c = clones.get(m);
-      if (!c) { c = cloneOwned(m); patchMaterial(c, uniforms, params.classScale[cls]); clones.set(m, c); counts[cls]++; }
+      if (!c) { c = cloneOwned(m); patchMaterial(c, uniforms, params.classScale[cls], !!style); clones.set(m, c); counts[cls]++; }
       return c;
     });
     if (next.some((m, i) => m !== list[i])) { if (addMask(mesh.geometry, meshSeed(mesh), mesh, vehicleBoxes)) maskedGeometries.push(mesh.geometry); swaps.push([mesh, mesh.material]); mesh.material = Array.isArray(mesh.material) ? next : next[0]; }
   });
   let disposed = false;
   const api = {
-    uniforms, stats: { vehicleVolumes: vehicleBoxes.length, materials: clones.size, meshes: swaps.length, classes: counts, groundSamples: ground.samples, buildingSeeds: rectCount,
+    uniforms, stats: { stylised: !!style, vehicleVolumes: vehicleBoxes.length, materials: clones.size, meshes: swaps.length, classes: counts, groundSamples: ground.samples, buildingSeeds: rectCount,
       extraDrawCalls: 0, noiseTaps: '2 tiling-noise fetches (4 channels each) + 1 white-noise fetch x2 + 1 height texture + 6 derivatives/fragment; no loops, no procedural hashing' },
     // The authored laundry portal has its paint baked into COLOR_0. It still physically supports the five original decals.
     wallMaterials: new Set([...clones.values(), city.laundryPortal.material]), vehicleBoxes,
