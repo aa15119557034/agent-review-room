@@ -267,3 +267,57 @@ export function clearBoundaryWalls(station, areas, margin = 0.25) {
   }
   return { cleared: done.length, items: done };
 }
+
+/**
+ * 室内第三人称相机夹取。
+ *
+ * 现象（2026-11-21 实测）：玩家从门洞走进洗衣店后，相机仍停在墙外 4.7 m，
+ * 画面拍的是店门外立面，玩家被墙挡住；等玩家走到后墙才「啪」地收进 1.52 m。
+ *
+ * 原因：`station-view.js` 的 `physics.sweepSphere(target, desired, clearance)` 本身是对的，
+ * 但玩家是从**门洞**进去的，相机沿原路退回时正好从门洞穿出，扫掠路径上没有障碍 ——
+ * 物理正确，画面错误。
+ *
+ * 修法：玩家在某个房间内时，把相机位置夹到该房间的内盒里（留出 near 平面余量）。
+ */
+export function makeCameraClamp(station, rooms) {
+  const boxes = [];
+  for (const room of rooms) {
+    if (!room?.frame || !Array.isArray(room.box)) continue;
+    // 只处理轴对齐房间：未旋转的盒子套在转过的店上会盖到街面，把相机夹到错地方
+    if (!axisAligned(room)) continue;
+    const [bx0, by0, bz0, bx1, by1, bz1] = room.box;
+    const f = room.frame;
+    boxes.push({
+      x0: f.x + Math.min(bx0, bx1), x1: f.x + Math.max(bx0, bx1),
+      y0: f.y + Math.min(by0, by1), y1: f.y + Math.max(by0, by1),
+      z0: f.z + Math.min(bz0, bz1), z1: f.z + Math.max(bz0, bz1)
+    });
+  }
+  if (!boxes.length) return null;
+
+  return function clampCamera(playerLocal, camLocal, margin = 0.25) {
+    for (const b of boxes) {
+      const inRoom = playerLocal.x >= b.x0 && playerLocal.x <= b.x1 &&
+                     playerLocal.z >= b.z0 && playerLocal.z <= b.z1 &&
+                     playerLocal.y >= b.y0 - 0.3 && playerLocal.y <= b.y1;   // 只看 x/z 会把楼上/屋顶的玩家也拽进店里
+      if (!inRoom) continue;
+      camLocal.x = Math.min(Math.max(camLocal.x, b.x0 + margin), b.x1 - margin);
+      camLocal.z = Math.min(Math.max(camLocal.z, b.z0 + margin), b.z1 - margin);
+      camLocal.y = Math.min(Math.max(camLocal.y, b.y0 + margin), b.y1 - margin);
+      // clamp 完如果离玩家太近（薄房间、刚进门），改成往上抬，别硬挤在墙边切近平面
+      const MIN_D = 1.2;
+      const dx = camLocal.x - playerLocal.x;
+      const dz = camLocal.z - playerLocal.z;
+      const dy = camLocal.y - playerLocal.y;
+      const d = Math.hypot(dx, dy, dz);
+      if (d < MIN_D) {
+        camLocal.y = Math.min(b.y1 - 0.35, camLocal.y + (MIN_D - d));
+      }
+      return true;
+    }
+    return false;
+  };
+}
+
+
