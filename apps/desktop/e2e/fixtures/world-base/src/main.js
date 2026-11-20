@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { createIsland, clearVegetationAreas } from './island.js';
 import { loadShadowTint, shadowTintEnabled, installLitShadowTint, patchIslandShadowTint, shadowTintUniforms, shopInteriorBoxes } from './shadow-tint.js';
-import { loadToon, toonEnabled, gradeEnabled, applyForm, installLitToon, installToonHook, toonLineUniforms, maskGlassAlpha, signLinesEnabled, markSignMaterials } from './toon.js';
+import { loadToon, toonEnabled, gradeEnabled, applyForm, installLitToon, installToonHook, toonLineUniforms, maskGlassAlpha, signLinesEnabled, markSignMaterials, installFlatColour, toonFlatUniforms } from './toon.js';
 import { addShopSpill, loadShopSpill, shopFrontsFromRooms, groundSpillFronts } from './shop-spill.js';
 import { addDoorGlow, loadDoorGlow, resolveDoorLamps } from './door-glow.js';
 import { applyEveningGlow, applyEveningSakura, fadeDistantCrossingHalos } from './evening-glow.js';
@@ -185,6 +185,8 @@ async function init() {
     if (worldBase.styleState.toon) skyFill.color.copy(toonFillColor);
     const toonBoxes = worldBase.shadowTint?.indoorBox || shopInteriorBoxes(layoutModule, station, 0.05);
     installLitToon(toonP, toonBoxes);
+    installFlatColour(toonP); // round 20: ?form=r19 installs nothing
+    worldBase.toonFlat = toonFlatUniforms;
     look.setToonLines(toonLineUniforms(toonP));
     worldBase.toon27 = { params: toonP };
   }

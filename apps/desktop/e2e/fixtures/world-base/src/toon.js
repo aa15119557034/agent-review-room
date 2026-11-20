@@ -23,6 +23,14 @@ export const signLinesEnabled = (p) => !!(p && p.form && p.form.outlineEmissive)
 // Coverage mask written by sign materials. Above 1 on purpose: the line test is mask >= 0.95 and an MSAA-resolved edge pixel that is
 // part foliage (mask 0) averages to something below 1, so no partly covered pixel can be mistaken for a sign. Alpha is half float.
 const SIGN_MASK = 1.5;
+/** Round 20: flat colour blocks. form.flat in toon.json pulls the albedo of lit textured materials towards its own low mip (large shapes and
+ *  colour blocks stay, fine texture noise goes). Printed signs (TOON_SIGN), unlit, transparent, alpha-cut, shader materials and tree crowns are
+ *  left out. ?form=r19 (or r18 / old) installs nothing and restores the round 19 pixels. */
+export const flatEnabled = (p) => !!(p && p.form && p.form.flat && p.form.flat.tex > 0) && formEnabled() && !['r18', 'r19'].includes(new URLSearchParams(location.search).get('form'));
+export const toonFlatUniforms = { uTfTex: { value: 0 }, uTfBias: { value: 0 }, uTfThr: { value: new THREE.Vector2(0, 0) }, uTfSh: { value: 1 } };
+let flatActive = false;
+const LIT_FLAT = /^(MeshStandardMaterial|MeshPhysicalMaterial|MeshPhongMaterial|MeshLambertMaterial|MeshToonMaterial)$/;
+const flatEligible = (m) => flatActive && LIT_FLAT.test(m.type) && !!m.map && !m.transparent && !(m.alphaTest > 0) && !m.alphaToCoverage && !m.userData?.wbNoFlat && !NOLINE_NAMES.test(m.name);
 export const toonEnabled = () => new URLSearchParams(location.search).get('toon') !== 'off';
 
 const f = (x) => Number(x).toFixed(4);
@@ -46,7 +54,11 @@ export function installToonHook() {
       // Foliage saves the previous hook and calls it as a plain function.
       const material = this || owner;
       Object.assign(shader.uniforms, toonLitUniforms);
+      if (flatActive) Object.assign(shader.uniforms, toonFlatUniforms);
       const result = original.call(material, shader, renderer);
+      if (flatEligible(material) && shader.fragmentShader && !shader.fragmentShader.includes('TOON_FLAT')) {
+        shader.fragmentShader = `#define TOON_FLAT\n${shader.fragmentShader}`;
+      }
       if (NOLINE_NAMES.test(material.name) && shader.fragmentShader && !shader.fragmentShader.includes('TOON_NOLINE')) {
         shader.fragmentShader = `#define TOON_NOLINE\n${shader.fragmentShader}`;
       }
@@ -110,6 +122,38 @@ ${signs ? `#if defined( TOON_SIGN ) && ! defined( TOON_NOLINE )
 ` : ''}  gl_FragColor.a = tmM;
 }
 #endif`;
+  }
+}
+
+/** Round 20: must run before the first program that uses map_fragment is compiled. Values are runtime uniforms (strength, mip bias). */
+export function installFlatColour(p) {
+  if (!flatEnabled(p) || flatActive) return;
+  flatActive = true;
+  toonFlatUniforms.uTfTex.value = p.form.flat.tex;
+  toonFlatUniforms.uTfBias.value = p.form.flat.bias;
+  toonFlatUniforms.uTfThr.value.set(...p.form.flat.keep);
+  toonFlatUniforms.uTfSh.value = p.form.flat.shadowNoise;
+  const pars = THREE.ShaderChunk.map_pars_fragment;
+  if (!pars.includes('uTfTex')) THREE.ShaderChunk.map_pars_fragment = `${pars}\nuniform float uTfTex;\nuniform float uTfBias;\nuniform vec2 uTfThr;`;
+  // The sun's PCF takes 5 taps rotated per pixel by interleaved gradient noise: harmless when smooth, but the cel bands cut that
+  // dither at a threshold and every shadow edge becomes a speckled strip. uTfSh = share of the noise kept (0: five fixed taps).
+  const sm = THREE.ShaderChunk.shadowmap_pars_fragment, noise = 'interleavedGradientNoise( gl_FragCoord.xy ) * PI2';
+  if (!sm.includes('uTfSh')) {
+    if (!sm.includes(noise)) throw new Error('Pinned three shadowmap_pars_fragment changed');
+    THREE.ShaderChunk.shadowmap_pars_fragment = `uniform float uTfSh;\n${sm.replace(noise, `${noise} * uTfSh`)}`;
+  }
+  const frag = THREE.ShaderChunk.map_fragment;
+  if (!frag.includes('wbFlatTex')) {
+    if (!frag.includes('diffuseColor *= sampledDiffuseColor;')) throw new Error('Pinned three map_fragment changed');
+    THREE.ShaderChunk.map_fragment = frag.replace('diffuseColor *= sampledDiffuseColor;', `#if defined( TOON_FLAT ) && ! defined( TOON_SIGN ) && ! defined( DECODE_VIDEO_TEXTURE )
+	{ // wbFlatTex
+		vec3 tfLow = texture2D( map, vMapUv, uTfBias ).rgb;
+		// detail that stands out clearly from its own low mip (print, lettering, a bold pattern) is kept; small deviations are texture noise
+		float tfKeep = smoothstep( uTfThr.x, uTfThr.y, length( sampledDiffuseColor.rgb - tfLow ) );
+		sampledDiffuseColor.rgb = mix( mix( sampledDiffuseColor.rgb, tfLow, uTfTex ), sampledDiffuseColor.rgb, tfKeep );
+	}
+#endif
+	diffuseColor *= sampledDiffuseColor;`);
   }
 }
 
