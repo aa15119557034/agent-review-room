@@ -187,8 +187,10 @@ export function makeAerial(island, fog, start) {
   };
 }
 
-/** kind: 'lit' (MeshToonMaterial: fog after lighting, emissive fades) or 'sign' (MeshBasicMaterial: colour fades, fog * windows). */
-export function patchAerial(material, aerial, kind) {
+/** kind: 'lit' (MeshToonMaterial: fog after lighting, emissive fades) or 'sign' (MeshBasicMaterial: colour fades, fog * windows).
+ *  gain (r26b, default 1 = the code of r25, byte for byte): multiplies the fog fraction, so 0.55 gives 0.55 x the usual distance fog
+ *  (colour mix and the fade of lit windows / signs together). The mid-band uses it so its blocks do not melt into the haze. */
+export function patchAerial(material, aerial, kind, gain = 1) {
   const U = aerial.island.U;
   material.onBeforeCompile = (shader) => {
     Object.assign(shader.uniforms, aerial.uniforms);
@@ -206,7 +208,7 @@ ${ATMOSPHERE}`;
     const body = `
   vec2 bkH = vBkPos.xz - cameraPosition.xz;
   float bkD = length( bkH );
-  float bkK = clamp( uBkFog.y + ( uBkFog.w - uBkFog.y ) * ( bkD - uBkFog.x ) / ( uBkFog.z - uBkFog.x ), 0.0, 1.0 ) * smoothstep( uBkRamp.x, uBkRamp.y, bkD );
+  float bkK = clamp( uBkFog.y + ( uBkFog.w - uBkFog.y ) * ( bkD - uBkFog.x ) / ( uBkFog.z - uBkFog.x ), 0.0, 1.0 ) * smoothstep( uBkRamp.x, uBkRamp.y, bkD )${gain === 1 ? '' : ' * ' + gain.toFixed(4)};
   float bkE = max( 0.035, ( vBkCrown - cameraPosition.y ) / max( bkD, 1.0 ) );
   vec3 bkSky = skyBase( normalize( vec3( bkH.x / max( bkD, 1e-3 ), bkE, bkH.y / max( bkD, 1e-3 ) ) ) );
   float bkL = dot( bkSky, vec3( 0.2126, 0.7152, 0.0722 ) );
@@ -224,7 +226,7 @@ ${ATMOSPHERE}`;
     }
     shader.fragmentShader = f;
   };
-  material.customProgramCacheKey = () => 'blocks-aerial-' + kind;
+  material.customProgramCacheKey = () => 'blocks-aerial-' + kind + (gain === 1 ? '' : '-g' + gain.toFixed(4));
 }
 
 /** Everything the facade and tower blocks share: palette, sign atlas, sign material, aerial uniforms. Created once per page. */
@@ -237,6 +239,15 @@ export function makeShared({ island, params, timeOfDay, midband = false }) {
   signMat.color.setScalar(L.signGain);
   signMat.userData.wbEveningGlow = true; // the gain is set here; the generic print pass leaves it alone
   patchAerial(signMat, aerial, 'sign');
+  // r26b: the mid-band's boards fade with their own (lighter) fog gain, so they get a sign material of their own; null = not used
+  let signMatMid = null;
+  const midGain = B.midband?.fogGain ?? 0.55;
+  if (midband && B.midband && midGain !== 1) {
+    signMatMid = new THREE.MeshBasicMaterial({ map: signs.texture, toneMapped: false, name: 'massing-blocks-sign' });
+    signMatMid.color.setScalar(L.signGain);
+    signMatMid.userData.wbEveningGlow = true;
+    patchAerial(signMatMid, aerial, 'sign', midGain);
+  }
   let disposed = false;
-  return { B, L, palette, evening, signs, aerial, signMat, dispose() { if (disposed) return; disposed = true; signMat.dispose(); signs.texture.dispose(); } };
+  return { B, L, palette, evening, signs, aerial, signMat, signMatMid, dispose() { if (disposed) return; disposed = true; signMat.dispose(); signMatMid?.dispose(); signs.texture.dispose(); } };
 }

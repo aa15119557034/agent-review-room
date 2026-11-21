@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-import { pickLandmarks } from './midband-blocks.js';
+import { pickLandmarks, obb } from './midband-blocks.js';
 import { WHITE, hash32, rngFrom, pick, Bucket, frameOf, addPart, addPlinth, addSignQuad, patchAerial } from './block-common.js';
 
 // Art round 25 (#254 X-51): the six skyline tower GLBs (assets/blocks-2026-11-20/skyline-tower-{slim,slab,setback}-{tank,billboard}.glb)
@@ -12,6 +12,8 @@ import { WHITE, hash32, rngFrom, pick, Bucket, frameOf, addPart, addPlinth, addS
 // Art round 26 (mid-band, blocks.midband, rules in midband-blocks.js; ?midband=off skips all of it): the same pipeline also builds the
 // mid-rise GLBs (extra slots from layoutMidband) and puts the landmark GLB on the tower slots best seen from the main street; the rooftop
 // panels of the six older billboard variants are enlarged to match the 9 x 5.5 m panels of the new models.
+// Art round 26b: the mid-rises stand behind the facade rows, are stretched in height only (to their own 28-32 m, no clamp, footprint 1:1) and use their
+// own materials with the lighter fog gain (blocks.midband.fogGain); the landmarks are the towers the art-a-street / sample-g-rail views see best.
 
 export const towersEnabled = () => new URLSearchParams(location.search).get('towers') !== 'off';
 const BASE = '/blocks/';
@@ -134,6 +136,16 @@ export async function createTowerBlocks({ station, island, massing, params, shar
   if (evening) { atlasMat.emissive = new THREE.Color(1, 1, 1); atlasMat.emissiveMap = atlas.emissive; atlasMat.emissiveIntensity = L.emissive; }
   atlasMat.userData.wbNoFlat = true; atlasMat.userData.wbNoSignLine = true; atlasMat.userData.wbEveningGlow = true;
   patchAerial(flat, shared.aerial, 'lit'); patchAerial(atlasMat, shared.aerial, 'lit');
+  // r26b: the mid-band cluster ('midband') gets its own copies of the three materials with the fog gain blocks.midband.fogGain (default 0.55); everything else
+  // keeps the r25 materials. Only built when the mid-band is on and has slots.
+  const fogGain = midband ? (midband.fogGain ?? 0.55) : 1, mids = { flat: null, atlas: null, sign: shared.signMatMid ?? signMat };
+  if (midband && extraSlots?.length) {
+    mids.flat = new THREE.MeshToonMaterial({ vertexColors: true, gradientMap: station.ctx.mat.gradientMap, name: 'massing-blocks-tower-flat' });
+    mids.atlas = new THREE.MeshToonMaterial({ vertexColors: true, map: atlas.color, gradientMap: station.ctx.mat.gradientMap, name: 'massing-blocks-tower-atlas' });
+    if (evening) { mids.atlas.emissive = new THREE.Color(1, 1, 1); mids.atlas.emissiveMap = atlas.emissive; mids.atlas.emissiveIntensity = L.emissive; }
+    mids.atlas.userData.wbNoFlat = true; mids.atlas.userData.wbNoSignLine = true; mids.atlas.userData.wbEveningGlow = true;
+    patchAerial(mids.flat, shared.aerial, 'lit', fogGain); patchAerial(mids.atlas, shared.aerial, 'lit', fogGain);
+  }
 
   const towerSlots = massing.slots.filter(s => s.kind === 'tower');
   // r26 (only with the mid-band on and its GLBs present): mid-rise slots appended AFTER the towers (so the tower slots keep their indices and
@@ -145,7 +157,13 @@ export async function createTowerBlocks({ station, island, massing, params, shar
   const placed = new Map(); // slot id -> { rect, shape }
   const clusters = new Map(), stats = { slots: slots.length, replaced: 0, perCluster: {}, variants: {}, sxz: [Infinity, -Infinity], sy: [Infinity, -Infinity], windowStrips: 0, litShare: 0, triangles: 0, plinth: { max: 0 }, picks: {}, heightErr: [] };
   const ordered = [...towerSlots.slice().sort((a, b) => a.cluster.localeCompare(b.cluster) || a.center[0] - b.center[0] || a.center[2] - b.center[2]), ...extras];
-  const landmarks = midband && has('landmark') ? pickLandmarks(towerSlots, ox, oz, midband.landmarks) : [], landmarkIds = new Map(landmarks.map(l => [l.id, l]));
+  // r26b: landmark = the tower slot each main view sees best; what could stand in front of it: the facade rows, the mid-rises and the other towers
+  const occluders = !midband || !has('landmark') ? [] : [
+    ...massing.slots.filter(s => s.kind === 'facade').map(s => ({ id: s.id, box: obb(s.center[0] - ox, s.center[2] - oz, s.yaw, s.footprint[0], s.footprint[1]), top: s.center[1] + s.height })),
+    ...extras.map(s => ({ id: s.id, box: obb(s.center[0] - ox, s.center[2] - oz, s.yaw, s.footprint[0], s.footprint[1]), top: s.center[1] + s.height })),
+    ...towerSlots.map(s => ({ id: s.id, box: obb(s.center[0] - ox, s.center[2] - oz, s.yaw, s.footprint[0], s.footprint[1]), top: s.center[1] + s.height })),
+  ];
+  const landmarks = midband && has('landmark') ? pickLandmarks(towerSlots, o, midband.landmarks, occluders) : [], landmarkIds = new Map(landmarks.map(l => [l.id, l]));
   stats.landmarks = []; stats.midrises = 0;
   let litSum = 0;
 
@@ -169,20 +187,23 @@ export async function createTowerBlocks({ station, island, massing, params, shar
     const near = [...placed.entries()].filter(([id]) => Math.hypot(slotRects.get(id).minX - slotRects.get(slot.id).minX, slotRects.get(id).minZ - slotRects.get(slot.id).minZ) < T.sameNeighbour).map(([, p]) => p.shape);
     let choice = cands[0];
     if (near.includes(choice.t.shape)) { const alt = cands.find(c => !near.includes(c.t.shape) && c.cost < cands[0].cost + T.altTolerance); if (alt) choice = alt; }
-    // the landmark keeps its own size (20 x 20 x ~110 m, no clamped refit)
+    // the landmark keeps its own size (20 x 20 x ~110 m, no clamped refit); r26b: the mid-rise keeps its 50 x 20 m footprint and is stretched in height only,
+    // to the slot's own 28-32 m (no clamp to the usual +-25 %; the rooftop panel keeps its size, see `map`)
     if (family === 'landmark') { const fixed = { t: choice.t, sxz: 1, sy: 1, cost: choice.cost }; choice = { ...fixed, fits: [fixed, fixed] }; }
+    if (family === 'midrise') { const fixed = { t: choice.t, sxz: 1, sy: slot.height / choice.t.top, cost: choice.cost }; choice = { ...fixed, fits: [fixed, fixed] }; }
     const { t } = choice;
     // ---- orientation: any of the four 90 degree turns (the fit of the other parity costs extra), mirror; face the cluster's face vector,
     //      avoid other slots' footprints ----
     const cx = slot.center[0] - ox, cz = slot.center[2] - oz, face = slot.face ?? faceOf[slot.cluster] ?? [0, 1];
     const opts = [];
-    for (const k of [0, 1, 2, 3]) for (const mir of [1, -1]) {
+    // r26b: a mid-rise always faces the street (the layout put it behind a facade row with that yaw): no 90 degree turns, no overlap scoring
+    for (const k of family === 'midrise' ? [0] : [0, 1, 2, 3]) for (const mir of [1, -1]) {
       const f = choice.fits[k % 2], sxz = f.sxz, sy = f.sy;
       const yaw = slot.yaw + k * Math.PI / 2, dot = Math.sin(yaw) * face[0] + Math.cos(yaw) * face[1];
       // the stair core hangs on the +x side of the module (the -x side when mirrored)
       const half = t.W / 2 * sxz + 0.4, extra = t.core ? Math.max(0, (t.core.max.x - t.W / 2) * sxz) : 0;
       const rect = rectOfModule(cx, cz, yaw, mir > 0 ? -half : -half - extra, mir > 0 ? half + extra : half, -t.D / 2 * sxz - 0.4, t.D / 2 * sxz + 0.4);
-      let hits = 0; for (const [id, r] of slotRects) if (id !== slot.id && overlap(rect, placed.get(id)?.rect ?? r)) hits++;
+      let hits = 0; if (family !== 'midrise') for (const [id, r] of slotRects) if (id !== slot.id && overlap(rect, placed.get(id)?.rect ?? r)) hits++;
       opts.push({ yaw, mir, rect, sxz, sy, score: hits * 10 + (f.cost - choice.cost) * 3 - dot + (rng() - 0.5) * 0.4 });
     }
     opts.sort((a, b) => a.score - b.score);
@@ -239,7 +260,7 @@ export async function createTowerBlocks({ station, island, massing, params, shar
     stats.perCluster[slot.cluster].variants[t.name] = (stats.perCluster[slot.cluster].variants[t.name] ?? 0) + 1;
     stats.variants[t.name] = (stats.variants[t.name] ?? 0) + 1;
     stats.sxz = [Math.min(stats.sxz[0], sxz), Math.max(stats.sxz[1], sxz)]; stats.sy = [Math.min(stats.sy[0], sy), Math.max(stats.sy[1], sy)];
-    if (family === 'landmark') stats.landmarks.push({ id: slot.id, score: landmarkIds.get(slot.id)?.score, variant: t.name, height: +(t.top * sy).toFixed(1), core: t.core ? +(t.core.max.y * sy).toFixed(1) : null, footprint: [+(t.W * sxz).toFixed(1), +(t.D * sxz).toFixed(1)], yaw: +yaw.toFixed(2), centre: [+(slot.center[0] - ox).toFixed(0), +(slot.center[2] - oz).toFixed(0)] });
+    if (family === 'landmark') stats.landmarks.push({ id: slot.id, ...landmarkIds.get(slot.id), variant: t.name, height: +(t.top * sy).toFixed(1), core: t.core ? +(t.core.max.y * sy).toFixed(1) : null, footprint: [+(t.W * sxz).toFixed(1), +(t.D * sxz).toFixed(1)], yaw: +yaw.toFixed(2), centre: [+(slot.center[0] - ox).toFixed(0), +(slot.center[2] - oz).toFixed(0)] });
     if (family === 'midrise') stats.midrises++;
     if (boardW != null) (stats.boardSizes ??= []).push([+boardW.toFixed(1), +boardH.toFixed(1)]);
     stats.picks[slot.id] = `${t.name} sxz=${sxz.toFixed(2)} sy=${sy.toFixed(2)} ${mir < 0 ? 'm' : ''} yaw=${yaw.toFixed(2)} h=${slot.height}->${(t.top * sy).toFixed(1)}`;
@@ -248,7 +269,8 @@ export async function createTowerBlocks({ station, island, massing, params, shar
 
   const meshes = [];
   for (const cl of clusters.values()) {
-    for (const [key, bucket, material] of [['flat', cl.flat, flat], ['atlas', cl.atlas, atlasMat], ['sign', cl.sign, signMat]]) {
+    const own = cl.name === 'midband' && mids.flat;
+    for (const [key, bucket, material] of [['flat', cl.flat, own ? mids.flat : flat], ['atlas', cl.atlas, own ? mids.atlas : atlasMat], ['sign', cl.sign, own ? mids.sign : signMat]]) {
       if (!bucket.vertices) continue;
       const mesh = new THREE.Mesh(bucket.geometry(key !== 'sign'), material);
       mesh.name = `massing-blocks-tower-${key}-${cl.name}`; mesh.castShadow = false; mesh.receiveShadow = false; mesh.userData.walkable = false;
@@ -261,7 +283,8 @@ export async function createTowerBlocks({ station, island, massing, params, shar
   stats.drawCalls = meshes.length; stats.meshes = meshes.map(m => m.name);
   stats.litShare = stats.windowStrips ? litSum / stats.windowStrips : 0;
   stats.timeOfDay = timeOfDay;
-  const materials = [flat, atlasMat];
+  const materials = [flat, atlasMat, ...(mids.flat ? [mids.flat, mids.atlas] : [])];
+  stats.midFogGain = mids.flat ? fogGain : null; stats.midMaterials = !!mids.flat;
   let disposed = false;
   return {
     meshes, materials, stats, atlas, placed,

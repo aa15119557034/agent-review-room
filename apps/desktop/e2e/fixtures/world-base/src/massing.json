@@ -679,37 +679,36 @@
    "signLift": 0.03
   },
   "midband": {
-   "note": "Art round 26 (#254 X-51): the mid-height transition band and the landmark towers. Rules in src/midband-blocks.js, geometry = assets/blocks-2026-11-20/skyline-tower-midrise-*.glb (50 x 20 x 23 m) and skyline-tower-landmark-*.glb (20 x 20 x ~110 m) built by tower-blocks.js. Mid-rises: `count` lots of width x depth x height, `band` m outside the walkable station area, spread over `sectors` angular sectors around `ring`, `gap` m from every slot, on land with relief <= maxRelief. Landmarks: the tower slots best seen from the main street (view direction + eyes along the street). towerBoard: size of the rooftop panel of the six older billboard towers. ?midband=off removes all of it.",
-   "count": 20,
-   "attempts": 8000,
+   "note": "Art round 26 / 26b (#254 X-51): the mid-height transition band and the landmark towers. Rules in src/midband-blocks.js, geometry = assets/blocks-2026-11-20/skyline-tower-midrise-*.glb (50 x 20 x 23 m before the vertical stretch) and skyline-tower-landmark-*.glb (20 x 20 x ~110 m) built by tower-blocks.js. Mid-rises (r26b): at most `count` blocks, each straight behind a facade row (same yaw, shifted sideways by up to `slide` x half the combined widths), nearest edge `band` m from the walkable area, `backGap` m of air to every facade slot (backing off up to `pushMax` m when staggered rows are in the way), `gap` m from towers, `lotGap` m from each other, ground relief <= maxRelief; `footprint` = the GLB's own size (never scaled), `clear` = the box tested (core of the staircase included), `frontPad` = the podium sticking out in front; `height` = the vertical stretch target (m, seeded), `tries` rounds over the facade slots. `fogGain` = fraction of the usual camera-distance fog the mid-band gets (its own materials). Landmarks (r26b): per `views` entry the tower slot best seen from that camera (`dist` m away, within `halfAngle` degrees of the view direction, least covered by facades / mid-rises / other towers, `top` = landmark height). towerBoard: size of the rooftop panel of the six older billboard towers. ?midband=off removes all of it.",
+   "count": 24,
+   "tries": 12,
+   "perSlot": 2,
+   "backGap": [
+    2,
+    4
+   ],
+   "slide": 0.6,
+   "pushMax": 40,
    "gap": 6,
-   "region": [
-    -300,
-    -300,
-    300,
-    200
-   ],
+   "lotGap": 4,
    "band": [
-    35,
-    150
+    20,
+    100
    ],
-   "ring": [
-    0,
-    15
+   "footprint": [
+    50,
+    20
    ],
-   "sectors": 8,
-   "width": [
-    44,
-    56
+   "clear": [
+    54.4,
+    21
    ],
-   "depth": [
-    18,
-    22
-   ],
+   "frontPad": 0.4,
    "height": [
-    21,
-    25
+    28,
+    32
    ],
+   "fogGain": 0.55,
    "boardChance": 0.4,
    "minGround": 1.5,
    "maxRelief": 2.6,
@@ -740,23 +739,49 @@
     }
    },
    "landmarks": {
-    "count": 2,
+    "perView": 1,
     "footprint": 20,
     "minFootprint": 17,
     "minGap": 120,
-    "halfAngle": 14,
+    "halfAngle": 25,
     "dist": [
-     380,
-     700
+     150,
+     400
     ],
-    "view": [
-     0,
-     -1
-    ],
-    "eyes": [
-     10,
-     100,
-     15
+    "top": 110,
+    "rays": 5,
+    "minVisible": 2,
+    "views": [
+     {
+      "name": "art-a-street",
+      "frame": "local",
+      "eye": [
+       -1.2,
+       2.488,
+       36
+      ],
+      "target": [
+       0,
+       2.088,
+       -25
+      ],
+      "fov": 35.63777782904556
+     },
+     {
+      "name": "sample-g-rail",
+      "frame": "world",
+      "eye": [
+       337.8563,
+       9.6,
+       844.5
+      ],
+      "target": [
+       268,
+       10.55,
+       857
+      ],
+      "fov": 57
+     }
     ]
    },
    "towerBoard": {
