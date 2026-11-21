@@ -1,0 +1,52 @@
+[
+  {
+    "file": "grass-clump-a.glb",
+    "triangles": 14,
+    "bytes": 109372,
+    "size_m": [
+      0.68,
+      0.65,
+      0.84
+    ]
+  },
+  {
+    "file": "grass-clump-b.glb",
+    "triangles": 18,
+    "bytes": 109752,
+    "size_m": [
+      1.09,
+      1.04,
+      1.03
+    ]
+  },
+  {
+    "file": "flower-white.glb",
+    "triangles": 18,
+    "bytes": 119440,
+    "size_m": [
+      0.52,
+      0.63,
+      0.58
+    ]
+  },
+  {
+    "file": "flower-yellow.glb",
+    "triangles": 18,
+    "bytes": 119440,
+    "size_m": [
+      0.62,
+      0.65,
+      0.67
+    ]
+  },
+  {
+    "file": "flower-pink.glb",
+    "triangles": 18,
+    "bytes": 119440,
+    "size_m": [
+      0.68,
+      0.51,
+      0.64
+    ]
+  }
+]
