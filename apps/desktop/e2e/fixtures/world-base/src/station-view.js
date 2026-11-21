@@ -15,6 +15,8 @@ export function createStationWalker(station, dom) {
   const target = new THREE.Vector3(), desired = new THREE.Vector3();
   let enabled = false, disposed = false, mode = 'third', yaw = 4 * Math.PI / 180, pitch = -0.14;
   let verticalSpeed = 0, grounded = true, dragging = false, lastX = 0, lastY = 0;
+  let indoorBlend = 0;   // 0 = 第三人称，1 = 室内固定机位
+  const indoorPos = new THREE.Vector3(), indoorLook = new THREE.Vector3(), tmpQ = new THREE.Quaternion(), lookM = new THREE.Matrix4();
   const radius = 0.3, height = 1.7, eye = 1.52;
   const editable = target => target?.closest?.('input,select,textarea,[contenteditable="true"]');
   const clear = () => { keys.clear(); dragging = false; velocity.set(0, 0, 0); };
@@ -44,7 +46,7 @@ export function createStationWalker(station, dom) {
     pitch = THREE.MathUtils.clamp(pitch - dy * 0.0022, -1.2, 1.2);
   }, { signal });
 
-  function syncCamera() {
+  function syncCamera(dt = 0) {
     camera.rotation.set(pitch, yaw, 0, 'YXZ');
     target.copy(position); target.y += eye;
     camera.position.copy(target);
@@ -61,6 +63,21 @@ export function createStationWalker(station, dom) {
       // 玩家在室内时把相机夹进房间内盒：门洞会让 sweepSphere 放行（物理正确、画面错误）
       if (station.clampCamera) station.clampCamera(position, camera.position);
       if (fraction > 1e-6) camera.lookAt(target);
+    }
+    // 室内专用机位：玩家进店后切到门口斜上方的固定角度，0.3 s 插值
+    if (mode === 'third' && station.indoorCamera) {
+      const shot = station.indoorCamera.pose(position);
+      const want = shot ? 1 : 0;
+      const k = dt > 0 ? Math.min(1, dt / 0.3) : (want ? 1 : 0);
+      indoorBlend += (want - indoorBlend) * k;
+      if (indoorBlend > 1e-3 && shot) {
+        indoorPos.set(shot.pos.x, shot.pos.y, shot.pos.z);
+        indoorLook.set(shot.look.x, shot.look.y, shot.look.z);
+        camera.position.lerp(indoorPos, indoorBlend);
+        lookM.lookAt(indoorPos, indoorLook, THREE.Object3D.DEFAULT_UP);
+        tmpQ.setFromRotationMatrix(lookM);
+        camera.quaternion.slerp(tmpQ, indoorBlend);
+      }
     }
     station.cameraToWorld(camera.position, camera.quaternion);
   }
@@ -124,7 +141,7 @@ export function createStationWalker(station, dom) {
       if (grounded) { position.y = ground; verticalSpeed = 0; }
       station.toWorld(position, worldPosition);
       station.ctx.player.position.copy(position);
-      syncCamera();
+      syncCamera(dt);
       return worldPosition;
     },
     dispose() { if (!disposed) { walker.setEnabled(false); disposed = true; listeners.abort(); } },

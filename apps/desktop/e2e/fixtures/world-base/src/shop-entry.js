@@ -444,3 +444,69 @@ export function addLotShopSolid(station, lotPlans) {
 
 
 
+
+// ---------------------------------------------------------------------------
+// 室内专用机位（C酱 2026-11-20 22:09 定的方案）
+//
+// 房间只有 2.14 m 深时，第三人称夹进房间后会贴着天花板（接近俯视），取景很难看。
+// 改成：玩家进店就切到**门口斜上方的固定机位**看店内，不跟玩家；出门切回第三人称，
+// 切换用 0.3 s 插值。
+//
+// 返回 { pose(playerLocal) → { pos, look } | null }，坐标都是**站区局部**。
+// ---------------------------------------------------------------------------
+export function makeIndoorCamera(station, rooms, lotPlans = []) {
+  const shots = [];
+
+  const push = (f, lotX0, lotX1, lotZ0, lotZ1, floorY, doorX) => {
+    const c = Math.cos(f.rotY), s = Math.sin(f.rotY);
+    const toS = (lx, lz) => [f.x + lx * c + lz * s, f.z - lx * s + lz * c];
+    const dx = doorX ?? (lotX0 + lotX1) / 2;
+    // 房间只有 2.1 m 深，机位放在**门洞外 0.4 m**、高 1.9 m，看向房间中心偏后
+    const [px, pz] = toS(dx, lotZ1 + 1.1);
+    const [lx2, lz2] = toS((lotX0 + lotX1) / 2, lotZ0 + 1.2);
+    shots.push({
+      lotX0, lotX1, lotZ0, lotZ1, rotY: f.rotY, f,
+      floorY,
+      pos: { x: px, y: floorY + 1.55, z: pz },
+      look: { x: lx2, y: floorY + 1.0, z: lz2 }
+    });
+  };
+
+  // 带 frame 的房间（洗衣店）
+  for (const room of rooms) {
+    if (!room?.frame || !Array.isArray(room.box)) continue;
+    if (!axisAligned(room)) continue;
+    const [bx0, by0, bz0, bx1, by1, bz1] = room.box;
+    const f = room.frame;
+    const lotX0 = Math.min(bx0, bx1), lotX1 = Math.max(bx0, bx1);
+    const lotZ0 = Math.min(bz0, bz1), lotZ1 = Math.max(bz0, bz1);
+    push(f, lotX0, lotX1, lotZ0, lotZ1, f.y + Math.min(by0, by1), room.entrances?.[0]?.x ?? 0);
+  }
+
+  // lot 店
+  for (const { geom, plan } of lotPlans) {
+    push(geom.frame, geom.lotX0, geom.lotX1, geom.lotZ0, geom.lotZ1, geom.floorY, plan?.doorX);
+  }
+
+  if (!shots.length) return null;
+
+  return {
+    /** 玩家在哪个房间里？返回固定机位；不在任何房间返回 null */
+    pose(playerLocal) {
+      for (const s of shots) {
+        // 转到 lot 局部判定
+        const c = Math.cos(s.rotY), sn = Math.sin(s.rotY);
+        const dx0 = playerLocal.x - s.f.x, dz0 = playerLocal.z - s.f.z;
+        const lx = dx0 * c - dz0 * sn;
+        const lz = dx0 * sn + dz0 * c;
+        if (lx < s.lotX0 || lx > s.lotX1 || lz < s.lotZ0 || lz > s.lotZ1) continue;
+        if (playerLocal.y < s.floorY - 0.3 || playerLocal.y > s.floorY + 3.2) continue;
+        return s;
+      }
+      return null;
+    }
+  };
+}
+
+
+

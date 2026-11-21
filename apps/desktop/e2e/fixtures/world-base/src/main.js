@@ -177,7 +177,7 @@ async function init() {
   worldBase.city = await createCity({ scene, station, island, skyline: worldBase.skyline });
   // #254：店铺室内可进入——附加可走区 + 室内碰撞，全部由 shopInteriors 推导
   {
-      const { walkExtrasFromRooms, addShopGround, addRoomCollision, clearBoundaryWalls, makeCameraClamp, addLotShopSolid } = await import('./shop-entry.js');
+      const { walkExtrasFromRooms, addShopGround, addRoomCollision, clearBoundaryWalls, makeCameraClamp, addLotShopSolid, makeIndoorCamera } = await import('./shop-entry.js');
       const extras = walkExtrasFromRooms(station, worldBase.city, layoutModule);
       station.walkExtra.push(...extras.areas);
       const trim = clearBoundaryWalls(station, extras.areas);
@@ -185,6 +185,7 @@ async function init() {
       const rooms = addRoomCollision(station);
       const lotSolid = addLotShopSolid(station, extras.lotPlans);
       station.clampCamera = makeCameraClamp(station, station.ctx.services.shopInteriors || []);
+      station.indoorCamera = makeIndoorCamera(station, station.ctx.services.shopInteriors || [], extras.lotPlans);
       worldBase.shopEntry = {
         walkExtra: extras.areas, skippedExtras: extras.skipped,
         walls: rooms.added.length, skippedRooms: rooms.skipped,
@@ -390,6 +391,7 @@ async function init() {
   requestAnimationFrame(frame);
 }
 init().catch(fail);
+
 
 
 
