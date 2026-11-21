@@ -33,7 +33,7 @@ async function loadTemplates(shapes = SHAPES) {
   let image = null;
   for (const shape of shapes) for (const roof of ROOFS) {
     let gltf;
-    try { gltf = await loader.loadAsync(`${BASE}skyline-tower-${shape}-${roof}.glb`); }
+    try { gltf = await loader.loadAsync(`${BASE}skyline-tower-${shape === 'midrise' ? 'midrise30' : shape}-${roof}.glb`); }
     catch (error) { if (!SPECIAL.includes(shape)) throw error; console.warn(`[world-base] r26: ${shape}-${roof}.glb unavailable, skipped`, error?.message); continue; }
     gltf.scene.updateMatrixWorld(true);
     const t = { shape, roof, name: `${shape}-${roof}`, parts: [], W: 0, D: 0, top: 0, core: null, board: null };

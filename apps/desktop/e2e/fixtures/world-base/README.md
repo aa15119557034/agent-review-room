@@ -116,6 +116,10 @@ node scripts\baseline.cjs --scene=combined --electron=D:\codex\2026-11-16\world-
 - **实测（云端无头，未渲染）**：放了 6 栋（flank-e 2、farbank-w 2、flank-w 1、farbank-e 1），最近边离可走区 61.8–98.8 m、中心 72–110 m，高 29–32 m，与立面背面空隙 2.0–3.9 m，雾增益 0.55；地标 `tower-north-00`（art-a-street：368 m、偏 3.6°、可见约 15°）和 `tower-west-05`（sample-g-rail：296 m、偏 6.5°、可见约 20°）。默认参数加载 `worldBase.ready` 为真、`errors` 为空、控制台无 error。
 - **已知取舍**：①立面排本身离可走区就有 8–86 m（侧翼 x ±100–178，北岸 z −128…−215，边界在 x ±92、z −97…128），所以背后的楼最近边多半在 60–100 m，`band` 上限从目标的 80 m 放宽到 100 m，否则北岸一排全部落选。②实际只放得下 6 栋（上限 24）：立面排前后错落、南面是水（地面检测）、走廊和村落把其余槽位背后的地方占了；想要更多，下一步是允许放第二排（立面背后 + 一栋楼的深度）或放宽 `maxRelief`，这需要汐看了图再定。③每个地标的遮挡估计只算立面、中层楼、其他塔，不含车站内的 city / skyline 建筑和樱花树。④中层楼纵向拉到 28–32 m（×1.22–1.39）后，窗带每层约 4.2–4.4 m，比塔上 3.2 m 一层的窗高，近看是否别扭请汐看图。
 
+### r26c：换 midrise30 GLB，放宽限制到 12 栋
+
+中层带改用 #278 的 `skyline-tower-midrise30-{tank,billboard}.glb`（50 × 20 × 30 m，窗带 3.33 m 一层），高度 30–32 m，纵向系数约 1.0–1.07（r26b 是 1.22–1.39）。放宽 `blocks.midband`：`band` 上限 100 → 150 m、`maxRelief` 2.6 → 5 m、`minGround` 1.5 → 1 m、`pushMax` 40 → 80 m；仍用有向包围盒检查，不放第二排，`?midband=off` 不变。云端无头加载（未渲染）：12 栋（r26b 为 6），主街机位视野 ±30° 内 4 栋，最近边离可走区 45.8–125.4 m，`worldBase.ready` 为真、`errors` 为空、控制台无 error。
+
 ## 立面距离雾 + 真高楼替换占位塔（第25轮）
 
 `src/block-common.js` 放立面与高楼共用的东西：种子工具、合并几何 `Bucket`、招牌 canvas 图集（新增宽幅广告牌格）、以及**按相机距离的空气透视补丁** `patchAerial`。雾量用 `massing.json` 傍晚/下午 `fog` 的同一条近/远曲线（近 190 m → 0.42、远 850 m → 0.78，线性），乘一条 `blocks.fog.start`（50→150 m 的 smoothstep）让 ~60 m 以内保持清晰；雾色是着色器里直接调上游 `skyBase`，方向取「像素水平方向 + 模块顶冠（`skyAt` × 高度）的仰角」，再按 `lumaMax` 封顶、`desat` 去饱和、`gain` 缩放，和 massing.js 给占位塔烘的雾色同一公式，只是改成逐像素、跟着真实相机走。亮窗 emissive 与招牌按 `1 − litFade × 雾` 淡出（招牌再乘 `windows`）。雾在光照之后混合（与 massing 的 `addFog` 同位置），描边由屏幕空间后处理按场景色算，所以随雾一起淡，远处不会冒黑线。

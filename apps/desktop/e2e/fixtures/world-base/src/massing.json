@@ -42,7 +42,7 @@
     12
    ]
   ],
-  "minGround": 1.5,
+  "minGround": 1,
   "maxRelief": 3.2,
   "gap": 3.5,
   "boundsMargin": 3,
@@ -688,12 +688,12 @@
     4
    ],
    "slide": 0.6,
-   "pushMax": 40,
+   "pushMax": 80,
    "gap": 6,
    "lotGap": 4,
    "band": [
     20,
-    100
+    150
    ],
    "footprint": [
     50,
@@ -705,13 +705,13 @@
    ],
    "frontPad": 0.4,
    "height": [
-    28,
+    30,
     32
    ],
    "fogGain": 0.55,
    "boardChance": 0.4,
-   "minGround": 1.5,
-   "maxRelief": 2.6,
+   "minGround": 1,
+   "maxRelief": 5,
    "boundsMargin": 6,
    "lotMargin": 6,
    "signs": {
