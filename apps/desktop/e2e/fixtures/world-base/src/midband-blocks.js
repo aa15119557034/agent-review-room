@@ -30,6 +30,8 @@ export function obbOverlap(A, B) {
   return true;
 }
 const aabbOf = B => ({ minX: Math.min(...B.corners.map(p => p[0])), maxX: Math.max(...B.corners.map(p => p[0])), minZ: Math.min(...B.corners.map(p => p[1])), maxZ: Math.max(...B.corners.map(p => p[1])) });
+/** r26e: gap between the rotated box's axis-aligned bounding box and the walkable rectangle (0 when they touch). */
+const aabbGap = (B, bounds) => { const a = aabbOf(B); return Math.hypot(Math.max(bounds.x0 - a.maxX, 0, a.minX - bounds.x1), Math.max(bounds.z0 - a.maxZ, 0, a.minZ - bounds.z1)); };
 /** Nearest distance from the box outline to the walkable rectangle {x0, x1, z0, z1} (0 when they touch). */
 function distToBounds(B, bounds) {
   let best = Infinity;
@@ -83,23 +85,24 @@ export function layoutMidband({ massing, station, params }) {
   // r26d focus: sectors of a camera view's field that get nearer / extra lots. A focus = { view, yawRange: [lo, hi] degrees left (-) / right (+) of the view
   // direction, pull: max metres a lot there may be moved toward the walkable area, extra: lots that may be added in the sector when too few stand there,
   // want: how many lots the sector should hold, dist: [min, max] m from the view eye for the extra lots, corridor: false = ignore corridors there }.
-  const foci = (M.focus ?? []).map(F => {
+  const foci = (M.focus ?? []).filter(F => F.enabled !== false).map(F => {
     const v = M.landmarks.views.find(q => q.name === F.view), a = v.frame === 'world' ? [v.eye[0] - ox, v.eye[2] - oz] : [v.eye[0], v.eye[2]], b = v.frame === 'world' ? [v.target[0] - ox, v.target[2] - oz] : [v.target[0], v.target[2]];
     return { ...F, eye: a, heading: Math.atan2(b[1] - a[1], b[0] - a[0]) };
   });
   const bearing = (F, x, z) => ((Math.atan2(z - F.eye[1], x - F.eye[0]) - F.heading) * DEG + 540) % 360 - 180;
   const focusOf = (x, z) => foci.find(F => { const a = bearing(F, x, z); return a >= F.yawRange[0] && a <= F.yawRange[1]; });
   /** The placement tests that do not depend on how the lot was found; null when the lot at (cx, cz) is fine, else the reject key. */
-  const lotTest = (cx, cz, yaw, facadeAir, F) => {
-    const lotBox = obb(cx, cz, yaw, CW, CD, 0), grown = obb(cx, cz, yaw, CW, CD, facadeAir);
+  const lotTest = (cx, cz, yaw, facadeAir, F, dims = [CW, CD], minNear = M.minAabb ?? 0) => {
+    const [LW, LD] = dims, lotBox = obb(cx, cz, yaw, LW, LD, 0), grown = obb(cx, cz, yaw, LW, LD, facadeAir);
     if (facadeBoxes.some(b => obbOverlap(grown, b))) return ['slots'];
     const near = distToBounds(lotBox, bounds);
     if (near < M.band[0] || near > M.band[1]) return ['band'];
-    const why = massing.rejectReason(aabbOf(obb(cx, cz, yaw, CW + 2, CD + 2, 0)), { boundsMargin: M.boundsMargin, lotMargin: M.lotMargin, skipCorridor: F && F.corridor === false });
+    if (aabbGap(lotBox, bounds) < minNear) return ['near'];
+    const why = massing.rejectReason(aabbOf(obb(cx, cz, yaw, LW + 2, LD + 2, 0)), { boundsMargin: M.boundsMargin, lotMargin: M.lotMargin, skipCorridor: F && F.corridor === false });
     if (why) return [why];
     if (towerBoxes.some(b => obbOverlap(lotBox, b))) return ['towers'];
-    if (lots.some(l => obbOverlap(lotBox, obb(l.cx, l.cz, l.yaw, CW, CD, M.lotGap)))) return ['spacing'];
-    const ground = massing.groundStats(cx, cz, CW + 2, CD + 2, yaw, 5);
+    if (lots.some(l => obbOverlap(lotBox, obb(l.cx, l.cz, l.yaw, ...(l.dims ?? [CW, CD]), M.lotGap)))) return ['spacing'];
+    const ground = massing.groundStats(cx, cz, LW + 2, LD + 2, yaw, 5);
     if (!ground || ground.min < M.minGround) return ['ground'];
     if (ground.relief > M.maxRelief) return ['relief'];
     return { lotBox, near, ground };
@@ -121,10 +124,11 @@ export function layoutMidband({ massing, station, params }) {
     const rect = aabbOf(obb(cx, cz, yaw, CW + 2, CD + 2, 0));
     let near = distToBounds(lotBox, bounds), centre = centreDist(cx, cz);
     if (near < M.band[0] || near > M.band[1]) return bump('band', s.id);
+    if (aabbGap(lotBox, bounds) < (M.minAabb ?? 0)) return bump('near', s.id);
     const why = massing.rejectReason(rect, { boundsMargin: M.boundsMargin, lotMargin: M.lotMargin });
     if (why) return bump(why, s.id);
     if (towerBoxes.some(b => obbOverlap(lotBox, b))) return bump('towers', s.id);
-    if (lots.some(l => obbOverlap(lotBox, obb(l.cx, l.cz, l.yaw, CW, CD, M.lotGap)))) return bump('spacing', s.id);
+    if (lots.some(l => obbOverlap(lotBox, obb(l.cx, l.cz, l.yaw, ...(l.dims ?? [CW, CD]), M.lotGap)))) return bump('spacing', s.id);
     const ground = massing.groundStats(cx, cz, CW + 2, CD + 2, yaw, 5);
     if (!ground || ground.min < M.minGround) return bump('ground', s.id);
     if (ground.relief > M.maxRelief) return bump('relief', s.id);
@@ -134,6 +138,7 @@ export function layoutMidband({ massing, station, params }) {
       const px = clamp(cx, bounds.x0, bounds.x1), pz = clamp(cz, bounds.z0, bounds.z1), len = Math.hypot(px - cx, pz - cz) || 1, ux = (px - cx) / len, uz = (pz - cz) / len;
       for (let d = F.pull; d >= 1; d -= 1) {
         const x = cx + ux * d, z = cz + uz * d, r = lotTest(x, z, yaw, M.backGap[0], F);
+        if (Array.isArray(r)) bump('pull-' + r[0]); else if (d === F.pull) bump('pull-ok-full');
         if (!Array.isArray(r)) { cx = x; cz = z; pulled = d; Object.assign(ground, r.ground); lotBox = r.lotBox; break; }
       }
     }
@@ -150,40 +155,50 @@ export function layoutMidband({ massing, station, params }) {
       attempt(s);
     }
   }
-  // r26d: a focus sector that still holds fewer than `want` lots gets up to `extra` more: a polar search around the view eye (bearing step 2 degrees, distance
-  // step 6 m), the yaw of the nearest facade row, all the usual tests except the corridors when `corridor` is false; the nearest legal spot to the eye wins.
-  const extras = [];
+  // r26d / r26e: a focus sector gets tall blocks. With `shape` set (r26e: "slab", `fallback` "setback"), the ordinary mid-rises standing in the sector are
+  // dropped (they hide behind the cherry trees and the station) and up to `want` tall blocks are placed instead: a polar search around the view eye
+  // (bearing / distance step `step` = [2 degrees, 6 m] by default, yaw of the nearest facade row), all the usual tests (the corridors are ignored when `corridor` is false),
+  // and the nearest edge of the rotated box's AABB at least `minNear` m from the walkable area. Shapes come from blocks.midband.shapes
+  // ({ footprint, clear, top }; height = top x a seeded stretch in `stretch`). The slab goes first; the fallback shape fills what the slab cannot.
+  // Without `shape` the old r26d behaviour stays: at most `extra` mid-rises are added when fewer than `want` stand there.
+  const extras = [], inSectorOf = F => l => { const a = bearing(F, l.cx, l.cz); return a >= F.yawRange[0] && a <= F.yawRange[1]; };
   for (const F of foci) {
-    const inSector = () => lots.filter(l => { const a = bearing(F, l.cx, l.cz); return a >= F.yawRange[0] && a <= F.yawRange[1]; }).length;
-    for (let added = 0; added < (F.extra ?? 0) && inSector() < (F.want ?? 0); added++) {
+    const shapes = F.shape ? [F.shape, ...(F.fallback ? [F.fallback] : [])].map(n => ({ name: n, ...M.shapes[n] })) : [{ name: 'midrise', footprint: [FW, FD], clear: [CW, CD], top: null }];
+    if (F.shape) for (let i = lots.length - 1; i >= 0; i--) if (inSectorOf(F)(lots[i])) { const l = lots[i]; lots.splice(i, 1); perCluster[l.cluster]--; done.set(l.behind, done.get(l.behind) - 1); extras.push({ view: F.view, dropped: true }); }
+    const want = F.want ?? 0, minNear = F.minNear ?? M.minAabb ?? 0;
+    for (let added = 0; added < (F.extra ?? 0) && lots.filter(inSectorOf(F)).length < want; added++) {
       let best = null;
-      for (let a = F.yawRange[0]; a <= F.yawRange[1]; a += 2) for (let d = F.dist[0]; d <= F.dist[1]; d += 6) {
-        const ang = F.heading + a / DEG, cx = F.eye[0] + Math.cos(ang) * d, cz = F.eye[1] + Math.sin(ang) * d;
-        let nf = null, nd = Infinity; for (const f of facades) { const q = Math.hypot(f.center[0] - ox - cx, f.center[2] - oz - cz); if (q < nd) { nd = q; nf = f; } }
-        const yaw = nf.yaw, r = lotTest(cx, cz, yaw, M.backGap[0], F);
-        if (Array.isArray(r)) { bump('focus-' + r[0]); continue; }
-        // sparser sector first: prefer the spot farthest from lots already standing, then the nearest to the walkable area
-        const gapToLots = Math.min(1e9, ...lots.map(l => Math.hypot(l.cx - cx, l.cz - cz)));
-        const score = r.near - Math.min(gapToLots, 120) * 0.5;
-        if (!best || score < best.score) best = { score, cx, cz, yaw, r, nf, a, d };
+      for (const sh of shapes) {
+        for (let a = F.yawRange[0]; a <= F.yawRange[1]; a += (F.step ?? [2, 6])[0]) for (let d = F.dist[0]; d <= F.dist[1]; d += (F.step ?? [2, 6])[1]) {
+          const ang = F.heading + a / DEG, cx = F.eye[0] + Math.cos(ang) * d, cz = F.eye[1] + Math.sin(ang) * d;
+          let nf = null, nd = Infinity; for (const f of facades) { const q = Math.hypot(f.center[0] - ox - cx, f.center[2] - oz - cz); if (q < nd) { nd = q; nf = f; } }
+          const yaw = nf.yaw, r = lotTest(cx, cz, yaw, M.backGap[0], F, sh.clear, minNear);
+          if (Array.isArray(r)) { bump('focus-' + sh.name + '-' + r[0]); continue; }
+          // sparser sector first (the farthest from lots already standing), then the one nearest the eye's centre line
+          const gapToLots = Math.min(1e9, ...lots.map(l => Math.hypot(l.cx - cx, l.cz - cz)));
+          const score = (F.shape ? Math.abs(a - (F.yawRange[0] + F.yawRange[1]) / 2) * 0.3 + d * 0.02 : r.near) - Math.min(gapToLots, 120) * 0.5;
+          if (!best || score < best.score) best = { score, cx, cz, yaw, r, nf, a, d, sh };
+        }
+        if (best) break; // the first shape that fits somewhere wins; the fallback only when the slab finds no legal spot
       }
       if (!best) break;
-      const { cx, cz, yaw, r, nf } = best, f = [Math.sin(yaw), Math.cos(yaw)];
-      const height = Math.round((M.height[0] + rng() * (M.height[1] - M.height[0])) * 2) / 2;
-      lots.push({ cx, cz, yaw, pulled: 0, extra: true, height, ground: r.ground, near: r.near, centre: centreDist(cx, cz), shift: 0, gap: M.backGap[0], pushed: 0, behind: nf.id, cluster: nf.cluster, face: f, box: r.lotBox });
-      perCluster[nf.cluster] = (perCluster[nf.cluster] ?? 0) + 1; extras.push({ view: F.view, bearing: +best.a.toFixed(0), dist: +best.d.toFixed(0) });
+      const { cx, cz, yaw, r, nf, sh } = best, f = [Math.sin(yaw), Math.cos(yaw)];
+      const stretch = sh.top ? F.stretch[0] + rng() * (F.stretch[1] - F.stretch[0]) : null;
+      const height = sh.top ? +(sh.top * stretch).toFixed(1) : Math.round((M.height[0] + rng() * (M.height[1] - M.height[0])) * 2) / 2;
+      lots.push({ cx, cz, yaw, pulled: 0, extra: true, shape: sh.name, stretch, dims: sh.clear, footprint: sh.footprint, height, ground: r.ground, near: r.near, centre: centreDist(cx, cz), shift: 0, gap: M.backGap[0], pushed: 0, behind: nf.id, cluster: nf.cluster, face: f, box: r.lotBox });
+      perCluster[nf.cluster] = (perCluster[nf.cluster] ?? 0) + 1; extras.push({ view: F.view, shape: sh.name, bearing: +best.a.toFixed(0), dist: +best.d.toFixed(0), height });
     }
   }
   const slots = lots.map((l, i) => ({
-    id: `midrise-${String(i).padStart(2, '0')}`, kind: 'midrise', shape: 'midrise', cluster: 'midband', center: [l.cx + ox, l.ground.max + 0.15, l.cz + oz], yaw: l.yaw,
-    footprint: [FW, FD], height: l.height, face: l.face, sign: rng() < M.boardChance, behind: l.behind, boundsDist: +l.near.toFixed(0),
+    id: `midrise-${String(i).padStart(2, '0')}`, kind: 'midrise', shape: l.shape ?? 'midrise', stretch: l.stretch ?? undefined, cluster: 'midband', center: [l.cx + ox, l.ground.max + 0.15, l.cz + oz], yaw: l.yaw,
+    footprint: l.footprint ?? [FW, FD], height: l.height, face: l.face, sign: rng() < M.boardChance, behind: l.behind, boundsDist: +l.near.toFixed(0),
   }));
-  const areas = lots.map((l, i) => ({ name: `midband-${i}`, ...aabbOf(obb(l.cx, l.cz, l.yaw, CW + 4, CD + 4)) }));
+  const areas = lots.map((l, i) => ({ name: `midband-${i}`, ...aabbOf(obb(l.cx, l.cz, l.yaw, (l.dims ?? [CW, CD])[0] + 4, (l.dims ?? [CW, CD])[1] + 4)) }));
   const near = lots.map(l => l.near), centres = lots.map(l => l.centre), range = v => v.length ? [+Math.min(...v).toFixed(1), +Math.max(...v).toFixed(1)] : null;
   return {
     slots, areas, stats: {
-      wanted: M.count, placed: lots.length, focus: foci.map(F => ({ view: F.view, lots: lots.filter(l => { const a = bearing(F, l.cx, l.cz); return a >= F.yawRange[0] && a <= F.yawRange[1]; }).map(l => ({ az: +bearing(F, l.cx, l.cz).toFixed(1), dist: +Math.hypot(l.cx - F.eye[0], l.cz - F.eye[1]).toFixed(0), near: +l.near.toFixed(0), pulled: l.pulled, extra: !!l.extra })) })), extras, rejects, rejectsBySlot: bySlot, perCluster, facadeSlots: facades.length, behindSlots: done.size,
-      nearEdge: range(near), centre: range(centres), height: range(lots.map(l => l.height)), backGap: range(lots.map(l => l.gap)),
+      wanted: M.count, placed: lots.length, focus: foci.map(F => ({ view: F.view, lots: lots.filter(inSectorOf(F)).map(l => ({ shape: l.shape ?? 'midrise', height: l.height, az: +bearing(F, l.cx, l.cz).toFixed(1), dist: +Math.hypot(l.cx - F.eye[0], l.cz - F.eye[1]).toFixed(0), near: +l.near.toFixed(0), pulled: l.pulled, extra: !!l.extra })) })), extras, rejects, rejectsBySlot: bySlot, perCluster, facadeSlots: facades.length, behindSlots: done.size,
+      nearEdge: range(near), nearAabb: range(lots.map(l => aabbGap(l.box, bounds))), centre: range(centres), height: range(lots.map(l => l.height)), backGap: range(lots.map(l => l.gap)),
     },
   };
 }

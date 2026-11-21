@@ -125,6 +125,13 @@ node scripts\baseline.cjs --scene=combined --electron=D:\codex\2026-11-16\world-
 - **泄漏原因**：r26c 的 `massing.json` 里把 `blocks.midband` 的 `minGround 1.5 → 1` 用批量替换时，顶层 `facade.minGround` 也被改成了 1（汐实测港镇机位 0.102 % 像素差的来源）。立面排的放置检查变松，off 时也多放/挪了立面。已改回 1.5。证明：`?midband=off` 下遍历场景全部 Mesh，对顶点位置抽样 + 世界矩阵做哈希，并对 `massing.slots`（中心、朝向、尺寸、高度）做哈希，和 `git worktree` 检出的 r26b（bcb7cf0）逐项比对（`massing.slots` 哈希在 off 下与 r26b 完全一致（1555767746）；全场景 Mesh 哈希因含随时间变动的矩阵，未能证明逐位一致，见汇报）。
 - **focus 扇区（通用规则）**：`blocks.midband.focus = [{ view, yawRange, pull, want, extra, dist, corridor }]`。`view` 指 `landmarks.views` 里的机位名，`yawRange` 是相对视线方向的方位角（负 = 左），只有落在扇区里的中层楼被放宽：①最多往可走区方向挪 `pull` m（逐米试，取最大的合法步长，仍须不与立面/塔/城区/可走区相交、离立面背面 ≥ `backGap[0]` = 2 m）；②扇区里不足 `want` 栋时再补最多 `extra` 栋（方位每 2° × 距离每 6 m 的极坐标搜索，朝向取最近立面排，优先选离已有楼最远的位置）；③`corridor:false` 时只在这个扇区忽略走廊。别的方向规则不变。当前参数：`art-a-street`，方位 −45°…−10°，`pull` 15 m，`want` 6，`extra` 2，距离 90–260 m。
 
+### r26e：中层楼离可走区一律 ≥ 45 m，focus 关掉
+
+- 所有中层楼按旋转后外接矩形（AABB）算，离可走区至少 `blocks.midband.minAabb` = 45 m（r26d 的 `midrise-11` 离边界 23.9 m，现在不会再出现）。
+- `blocks.midband.focus` 条目加了 `enabled:false`，r26d 的 pull / 补楼和 r26e 试做的 slab / setback 扇区高楼代码保留（`shape`、`fallback`、`stretch`、`minNear`、`step`、`shapes`），但默认全关，不再为单个机位调。
+- pull 挪不动的原因（r26d 拒绝统计）：逐米尝试共被拒 57 次，全是 `slots`——中层楼本来贴在立面排正后方（留 2–4 m 空气），往前一步就压进前面那排立面，只能挪 0–2 m。
+- `?midband=off` 不受影响。
+
 ## 立面距离雾 + 真高楼替换占位塔（第25轮）
 
 `src/block-common.js` 放立面与高楼共用的东西：种子工具、合并几何 `Bucket`、招牌 canvas 图集（新增宽幅广告牌格）、以及**按相机距离的空气透视补丁** `patchAerial`。雾量用 `massing.json` 傍晚/下午 `fog` 的同一条近/远曲线（近 190 m → 0.42、远 850 m → 0.78，线性），乘一条 `blocks.fog.start`（50→150 m 的 smoothstep）让 ~60 m 以内保持清晰；雾色是着色器里直接调上游 `skyBase`，方向取「像素水平方向 + 模块顶冠（`skyAt` × 高度）的仰角」，再按 `lumaMax` 封顶、`desat` 去饱和、`gain` 缩放，和 massing.js 给占位塔烘的雾色同一公式，只是改成逐像素、跟着真实相机走。亮窗 emissive 与招牌按 `1 − litFade × 雾` 淡出（招牌再乘 `windows`）。雾在光照之后混合（与 massing 的 `addFog` 同位置），描边由屏幕空间后处理按场景色算，所以随雾一起淡，远处不会冒黑线。

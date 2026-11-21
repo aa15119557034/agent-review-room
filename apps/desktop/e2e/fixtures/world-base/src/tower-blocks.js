@@ -179,7 +179,7 @@ export async function createTowerBlocks({ station, island, massing, params, shar
       return { t, sxz, sy, cost };
     };
     // r26: mid-rise slots only take the mid-rise GLB, landmark slots the landmark GLB; the ordinary best-fit never sees these shapes
-    const family = slot.shape ?? (landmarkIds.has(slot.id) ? 'landmark' : null);
+    const isLot = slot.kind === 'midrise', family = slot.shape ?? (landmarkIds.has(slot.id) ? 'landmark' : null);
     const cands = templates.filter(t => t.roof === roofWanted && (family ? t.shape === family : !SPECIAL.includes(t.shape))).map(t => {
       const f0 = fit(t, 0), f1 = fit(t, 1), best = f0.cost <= f1.cost ? f0 : f1;
       return { ...best, parity: best === f0 ? 0 : 1, fits: [f0, f1] };
@@ -191,19 +191,21 @@ export async function createTowerBlocks({ station, island, massing, params, shar
     // to the slot's own 28-32 m (no clamp to the usual +-25 %; the rooftop panel keeps its size, see `map`)
     if (family === 'landmark') { const fixed = { t: choice.t, sxz: 1, sy: 1, cost: choice.cost }; choice = { ...fixed, fits: [fixed, fixed] }; }
     if (family === 'midrise') { const fixed = { t: choice.t, sxz: 1, sy: slot.height / choice.t.top, cost: choice.cost }; choice = { ...fixed, fits: [fixed, fixed] }; }
+    // r26e: a tall block of a focus sector (slab / setback GLB on a mid-band lot) keeps its own footprint and is stretched by the seeded `stretch` (1.0-1.05) only
+    if (isLot && family !== 'midrise') { const fixed = { t: choice.t, sxz: 1, sy: slot.stretch ?? 1, cost: choice.cost }; choice = { ...fixed, fits: [fixed, fixed] }; }
     const { t } = choice;
     // ---- orientation: any of the four 90 degree turns (the fit of the other parity costs extra), mirror; face the cluster's face vector,
     //      avoid other slots' footprints ----
     const cx = slot.center[0] - ox, cz = slot.center[2] - oz, face = slot.face ?? faceOf[slot.cluster] ?? [0, 1];
     const opts = [];
     // r26b: a mid-rise always faces the street (the layout put it behind a facade row with that yaw): no 90 degree turns, no overlap scoring
-    for (const k of family === 'midrise' ? [0] : [0, 1, 2, 3]) for (const mir of [1, -1]) {
+    for (const k of isLot ? [0] : [0, 1, 2, 3]) for (const mir of [1, -1]) {
       const f = choice.fits[k % 2], sxz = f.sxz, sy = f.sy;
       const yaw = slot.yaw + k * Math.PI / 2, dot = Math.sin(yaw) * face[0] + Math.cos(yaw) * face[1];
       // the stair core hangs on the +x side of the module (the -x side when mirrored)
       const half = t.W / 2 * sxz + 0.4, extra = t.core ? Math.max(0, (t.core.max.x - t.W / 2) * sxz) : 0;
       const rect = rectOfModule(cx, cz, yaw, mir > 0 ? -half : -half - extra, mir > 0 ? half + extra : half, -t.D / 2 * sxz - 0.4, t.D / 2 * sxz + 0.4);
-      let hits = 0; if (family !== 'midrise') for (const [id, r] of slotRects) if (id !== slot.id && overlap(rect, placed.get(id)?.rect ?? r)) hits++;
+      let hits = 0; if (!isLot) for (const [id, r] of slotRects) if (id !== slot.id && overlap(rect, placed.get(id)?.rect ?? r)) hits++;
       opts.push({ yaw, mir, rect, sxz, sy, score: hits * 10 + (f.cost - choice.cost) * 3 - dot + (rng() - 0.5) * 0.4 });
     }
     opts.sort((a, b) => a.score - b.score);
@@ -261,7 +263,7 @@ export async function createTowerBlocks({ station, island, massing, params, shar
     stats.variants[t.name] = (stats.variants[t.name] ?? 0) + 1;
     stats.sxz = [Math.min(stats.sxz[0], sxz), Math.max(stats.sxz[1], sxz)]; stats.sy = [Math.min(stats.sy[0], sy), Math.max(stats.sy[1], sy)];
     if (family === 'landmark') stats.landmarks.push({ id: slot.id, ...landmarkIds.get(slot.id), variant: t.name, height: +(t.top * sy).toFixed(1), core: t.core ? +(t.core.max.y * sy).toFixed(1) : null, footprint: [+(t.W * sxz).toFixed(1), +(t.D * sxz).toFixed(1)], yaw: +yaw.toFixed(2), centre: [+(slot.center[0] - ox).toFixed(0), +(slot.center[2] - oz).toFixed(0)] });
-    if (family === 'midrise') stats.midrises++;
+    if (isLot) stats.midrises++;
     if (boardW != null) (stats.boardSizes ??= []).push([+boardW.toFixed(1), +boardH.toFixed(1)]);
     stats.picks[slot.id] = `${t.name} sxz=${sxz.toFixed(2)} sy=${sy.toFixed(2)} ${mir < 0 ? 'm' : ''} yaw=${yaw.toFixed(2)} h=${slot.height}->${(t.top * sy).toFixed(1)}`;
     stats.heightErr.push(+(t.top * sy - slot.height).toFixed(1));
