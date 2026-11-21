@@ -110,14 +110,26 @@ export function planShopEntry(room, placement, stair, mainBounds) {
 }
 
 /** 把所有店铺的附加区算出来（写进 station.walkExtra） */
-export function walkExtrasFromRooms(station, city) {
+export function walkExtrasFromRooms(station, city, layout = null) {
   const rooms = station.ctx?.services?.shopInteriors ?? [];
   const placements = city?.placements ?? [];
   const stairs = city?.stats?.connections?.stairs ?? [];
   const out = [];
   const plans = [];
+  const lotPlans = [];
   const skipped = [];
   for (const room of rooms) {
+    // 上游 8 家店：只有 { lot, box }，用 layout.lotFrame 现算 frame
+    if (!room.frame && room.lot && layout?.lotFrame && layout?.lotById) {
+      const lot = layout.lotById(room.lot);
+      if (!lot) { skipped.push({ name: room.lot, why:'lot not found' }); continue; }
+      const frame = layout.lotFrame(lot);
+      const geom = lotRoomGeom(frame, room.box);
+      const plan = planLotShopEntry(geom, room.lot);
+      out.push(...plan.areas);
+      lotPlans.push({ geom, plan, name: room.lot });
+      continue;
+    }
     if (!room.frame || !Array.isArray(room.box)) continue;
     const placement = placements.find(p => p.name === room.name);
     const stair = stairs.find(s => s.name === (room.name + '-entry'));
@@ -126,7 +138,7 @@ export function walkExtrasFromRooms(station, city) {
     out.push(...plan.areas);
     plans.push({ room, placement, stair, plan });
   }
-  return { areas: out, plans, skipped };
+  return { areas: out, plans, lotPlans, skipped };
 }
 
 /**
@@ -173,46 +185,6 @@ export function addShopGround(station, island, plans) {
     }
   }
   return stats;
-}
-
-/**
- * 把**站区平台的 walk 盒**在接缝处截断（C酱 评审的情形 3）。
- *
- * 原因：`physics.resolve` 会把"顶部远高于玩家脚部的 walk 盒"当墙推人。
- * 站区平台的 walk 盒向北越过了主矩形边界，玩家沿着地形斜坡降到平台下方后，
- * 就被这个悬在头顶的平台盒挡住——表现就是"走到接缝前卡住、每帧被推回一个步长"。
- *
- * 做法：凡是"顶面明显高于接缝地面、且向北越过主矩形边界"的 walk 盒，
- * 把它的北沿收回到边界上。
- */
-export function trimPlatformWalk(station, areas, margin = 0.8) {
-  const physics = station.ctx?.physics;
-  const items = physics?.items;
-  if (!items?.length || !areas?.length) return { trimmed: 0, items: [] };
-
-  // 每条 approach 的北端（真正需要被清空的边界）
-  const strips = areas.filter(a => a.name === 'approach');
-  if (!strips.length) return { trimmed: 0, items: [] };
-  const boundZ = Math.max(...strips.map(a => a.z1));   // 局部 z 最大（最靠南的边界）
-  const done = [];
-
-  for (const it of items) {
-    if (it.type !== 'walk' || it.top == null) continue;
-    const northEdge = it.cz - it.hd;
-    if (northEdge >= boundZ - 0.05) continue;          // 没越过边界
-    // 只在 approach 的 x 范围内裁
-    const hit = strips.find(a => it.cx + it.hw > a.x0 - margin && it.cx - it.hw < a.x1 + margin);
-    if (!hit) continue;
-    // 顶面必须"明显高于"接缝处的可行走面（否则是别的矮台，别动）
-    const keepNorth = boundZ - 0.05;
-    const southEdge = it.cz + it.hd;
-    if (southEdge <= keepNorth + 0.05) continue;        // 整块都在北边，管不了
-    const newHd = (southEdge - keepNorth) / 2;
-    const newCz = keepNorth + newHd;
-    done.push({ from: [+(it.cz - it.hd).toFixed(2), +(it.cz + it.hd).toFixed(2)], to: [+keepNorth.toFixed(2), +southEdge.toFixed(2)], top: +it.top.toFixed(2), x: [+(it.cx - it.hw).toFixed(1), +(it.cx + it.hw).toFixed(1)] });
-    it.hd = newHd; it.d = newHd * 2; it.cz = newCz;
-  }
-  return { trimmed: done.length, boundZ: +boundZ.toFixed(2), items: done };
 }
 
 /** 室内碰撞：后墙、左右墙、带门洞的前墙（由 box + entrances 推导） */
@@ -308,4 +280,275 @@ export function clearBoundaryWalls(station, areas, margin = 0.25) {
   return { cleared: done.length, items: done };
 }
 
+/**
+ * 室内第三人称相机夹取。
+ *
+ * 现象（2026-11-21 实测）：玩家从门洞走进洗衣店后，相机仍停在墙外 4.7 m，
+ * 画面拍的是店门外立面，玩家被墙挡住；等玩家走到后墙才「啪」地收进 1.52 m。
+ *
+ * 原因：`station-view.js` 的 `physics.sweepSphere(target, desired, clearance)` 本身是对的，
+ * 但玩家是从**门洞**进去的，相机沿原路退回时正好从门洞穿出，扫掠路径上没有障碍 ——
+ * 物理正确，画面错误。
+ *
+ * 修法：玩家在某个房间内时，把相机位置夹到该房间的内盒里（留出 near 平面余量）。
+ */
+export function makeCameraClamp(station, rooms, lotPlans = []) {
+  const boxes = [];
+  for (const room of rooms) {
+    if (!room?.frame || !Array.isArray(room.box)) continue;
+    // 只处理轴对齐房间：未旋转的盒子套在转过的店上会盖到街面，把相机夹到错地方
+    if (!axisAligned(room)) continue;
+    const [bx0, by0, bz0, bx1, by1, bz1] = room.box;
+    const f = room.frame;
+    boxes.push({
+      x0: f.x + Math.min(bx0, bx1), x1: f.x + Math.max(bx0, bx1),
+      y0: f.y + Math.min(by0, by1), y1: f.y + Math.max(by0, by1),
+      z0: f.z + Math.min(bz0, bz1), z1: f.z + Math.max(bz0, bz1)
+    });
+  }
+  // lot 店：box 是 lot 局部，带旋转，用 OBB 判定 + 在 lot 局部夹取
+  for (const { geom, plan } of lotPlans) {
+    boxes.push({
+      rotY: geom.rotY, fx: geom.frame.x, fz: geom.frame.z,
+      x0: geom.lotX0, x1: geom.lotX1, z0: geom.lotZ0, z1: geom.lotZ1,
+      y0: geom.floorY, y1: geom.ceilY, doorX: plan?.doorX
+    })
+  }
+  if (!boxes.length) return null;
 
+  return function clampCamera(playerLocal, camLocal, margin = 0.25) {
+    for (const b of boxes) {
+      // 旋转盒：先转到 lot 局部再判定/夹取（rotY=0 时等同于轴对齐）
+      const rot = b.rotY ?? 0, cc = Math.cos(rot), ss = Math.sin(rot)
+      const pl = (p) => {
+        const dx0 = p.x - (b.fx ?? 0), dz0 = p.z - (b.fz ?? 0)
+        return { u: dx0 * cc - dz0 * ss, v: dx0 * ss + dz0 * cc }
+      }
+      const pLoc = pl(playerLocal)
+      const inRoom = pLoc.u >= b.x0 && pLoc.u <= b.x1 &&
+                     pLoc.v >= b.z0 && pLoc.v <= b.z1 &&
+                     playerLocal.y >= b.y0 - 0.3 && playerLocal.y <= b.y1
+      if (!inRoom) continue;
+      const cLoc = pl(camLocal)
+      const cu = Math.min(Math.max(cLoc.u, b.x0 + margin), b.x1 - margin)
+      const cv = Math.min(Math.max(cLoc.v, b.z0 + margin), b.z1 - margin)
+      camLocal.x = (b.fx ?? 0) + cu * cc + cv * ss
+      camLocal.z = (b.fz ?? 0) - cu * ss + cv * cc
+      camLocal.y = Math.min(Math.max(camLocal.y, b.y0 + margin), b.y1 - margin);
+      // clamp 完如果离玩家太近（薄房间、刚进门），改成往上抬，别硬挤在墙边切近平面
+      const MIN_D = 1.2;
+      const dx = camLocal.x - playerLocal.x;
+      const dz = camLocal.z - playerLocal.z;
+      const dy = camLocal.y - playerLocal.y;
+      const d = Math.hypot(dx, dy, dz);
+      if (d < MIN_D) {
+        camLocal.y = Math.min(b.y1 - 0.35, camLocal.y + (MIN_D - d));
+      }
+      return true;
+    }
+    return false;
+  };
+}
+
+
+// ---------------------------------------------------------------------------
+// 上游 8 家店（主街 lot）：`ctx.services.shopInteriors` 里这几间只登记了
+//   { lot: 'W1', box: [x0,y0,z0,x1,y1,z1] }   ← box 是 **lot 局部**坐标
+// 没有 frame。上游 layout 提供了 lotFrame(lotById(id)) → {x,y,z,rotY,w,depth}，
+// 就在站区局部空间，直接可以当 frame 用（shadow-tint.js 已经这么用了）。
+//
+// 与洗衣店的差别：
+//   - 地板只比街面高 0.16–0.37 m（洗衣店是 0.8 m + 石阶），所以**不需要石阶**；
+//   - 朝向有 90°/270°（沿街），另有三间是 91.5°/94.5°/272.9°（沿街弯道斜铺）。
+//
+// 做法：可走区用旋转盒的 **AABB**（略大一圈，但墙是精确的旋转盒，玩家进不去），
+//       地面/墙体用 physics 支持的 rotY 盒。
+// ---------------------------------------------------------------------------
+
+/** lot 局部房间盒 → 站区局部的旋转盒 + AABB */
+export function lotRoomGeom(frame, box) {
+  const c = Math.cos(frame.rotY), s = Math.sin(frame.rotY);
+  const x0 = Math.min(box[0], box[3]), x1 = Math.max(box[0], box[3]);
+  const y0 = Math.min(box[1], box[4]), y1 = Math.max(box[1], box[4]);
+  const z0 = Math.min(box[2], box[5]), z1 = Math.max(box[2], box[5]);
+  const toStation = (lx, lz) => [frame.x + lx * c + lz * s, frame.z - lx * s + lz * c];
+  const corners = [toStation(x0, z0), toStation(x1, z0), toStation(x0, z1), toStation(x1, z1)];
+  const xs = corners.map(p => p[0]), zs = corners.map(p => p[1]);
+  const [cx, cz] = toStation((x0 + x1) / 2, (z0 + z1) / 2);
+  return {
+    frame, rotY: frame.rotY, cx, cz,
+    hw: (x1 - x0) / 2, hd: (z1 - z0) / 2,
+    aabb: { x0: Math.min(...xs), x1: Math.max(...xs), z0: Math.min(...zs), z1: Math.max(...zs) },
+    floorY: frame.y + y0, ceilY: frame.y + y1, baseY: frame.y,
+    lotX0: x0, lotX1: x1, lotZ0: z0, lotZ1: z1
+  };
+}
+
+/** 一家 lot 店铺的可走区 + 地面 + 墙（全部站区局部） */
+// 门位覆盖表：上游各店的门/暖帘坐标不同，先留 null（用 lot 中间），有坐标了再填。
+const LOT_DOOR_X = { W1: null, E1: null, W2: null, W4: null, E2: null, E3: null, E5: null, W6: null };
+
+export function planLotShopEntry(geom, name, doorW = 1.4) {
+  const a = geom.aabb;
+  const areas = [
+    { name: 'room-' + name, x0: a.x0 - 0.2, x1: a.x1 + 0.2, z0: a.z0 - 0.2, z1: a.z1 + 0.2 }
+  ];
+  // 临街方向：lot 局部 +z 边 → 站区局部方向 (s, c)
+  const c = Math.cos(geom.rotY), s = Math.sin(geom.rotY);
+  const fx = s, fz = c;
+  const push = 4.0;
+  const grow = (v) => Math.abs(v) * push;
+  areas.push({
+    name: 'approach-' + name,
+    x0: a.x0 - 0.5 - (fx < 0 ? grow(fx) : 0),
+    x1: a.x1 + 0.5 + (fx > 0 ? grow(fx) : 0),
+    z0: a.z0 - 0.5 - (fz < 0 ? grow(fz) : 0),
+    z1: a.z1 + 0.5 + (fz > 0 ? grow(fz) : 0)
+  });
+  return {
+    doorX: LOT_DOOR_X[name] ?? ((geom.lotX0 + geom.lotX1) / 2),
+    areas,
+    ground: {
+      floor: { cx: geom.cx, cz: geom.cz, w: geom.hw * 2, d: geom.hd * 2, rotY: geom.rotY, y: geom.floorY },
+      approach: { cx: geom.cx + fx * push / 2, cz: geom.cz + fz * push / 2, w: geom.hw * 2, d: push, rotY: geom.rotY, y: geom.baseY },
+      doorW
+    }
+  };
+}
+
+
+
+/** 把 lot 店铺的地面（地板 + 门前）和四面墙写进物理，全部用旋转盒 */
+export function addLotShopSolid(station, lotPlans) {
+  const physics = station.ctx?.physics;
+  const stats = { floors: 0, approaches: 0, walls: 0, doors: 0 };
+  if (!physics || !lotPlans?.length) return stats;
+
+  for (const { geom, plan, name } of lotPlans) {
+    const g = plan.ground;
+    physics.addWalkBox(g.floor.cx, g.floor.cz, g.floor.w, g.floor.d, g.floor.rotY, g.floor.y);
+    stats.floors++;
+    physics.addWalkBox(g.approach.cx, g.approach.cz, g.approach.w, g.approach.d, g.approach.rotY, g.approach.y);
+    stats.approaches++;
+
+    // 四面墙：lot 局部四条边 → 旋转盒
+    const c = Math.cos(geom.rotY), s = Math.sin(geom.rotY);
+    const F = geom.frame;
+    const toStation = (lx, lz) => [F.x + lx * c + lz * s, F.z - lx * s + lz * c];
+    const hy = (geom.floorY + geom.ceilY) / 2, th = geom.ceilY - geom.floorY;
+    const doorHalf = g.doorW / 2;
+    const wall = (lx, lz, w, d) => {
+      const [px, pz] = toStation(lx, lz);
+      physics.addBox(px, pz, w, d, geom.rotY, geom.floorY, geom.ceilY);
+      stats.walls++;
+    };
+    const T = 0.12;
+    // 后墙（lot z0）、左右墙（lot x0 / x1）
+    wall(0, geom.lotZ0 + T / 2, geom.lotX1 - geom.lotX0, T);
+    wall(geom.lotX0 + T / 2, (geom.lotZ0 + geom.lotZ1) / 2, T, geom.lotZ1 - geom.lotZ0);
+    wall(geom.lotX1 - T / 2, (geom.lotZ0 + geom.lotZ1) / 2, T, geom.lotZ1 - geom.lotZ0);
+    // 前墙：中间留门洞
+    const zf = geom.lotZ1 - T / 2;
+    const mid = plan.doorX;   // 优先用覆盖表，没有就 lot 中间
+    const leftW = (mid - doorHalf) - geom.lotX0;
+    const rightW = geom.lotX1 - (mid + doorHalf);
+    if (leftW > 0.05) wall(geom.lotX0 + leftW / 2, zf, leftW, T);
+    if (rightW > 0.05) wall(mid + doorHalf + rightW / 2, zf, rightW, T);
+    stats.doors++;
+  }
+  return stats;
+}
+
+
+
+
+
+// ---------------------------------------------------------------------------
+// 室内专用机位（C酱 2026-11-20 22:09 定的方案）
+//
+// 房间只有 2.14 m 深时，第三人称夹进房间后会贴着天花板（接近俯视），取景很难看。
+// 改成：玩家进店就切到**门口斜上方的固定机位**看店内，不跟玩家；出门切回第三人称，
+// 切换用 0.3 s 插值。
+//
+// 返回 { pose(playerLocal) → { pos, look } | null }，坐标都是**站区局部**。
+// ---------------------------------------------------------------------------
+export function makeIndoorCamera(station, rooms, lotPlans = []) {
+  const shots = [];
+
+  // kind: 'laundry'（房间很浅，机位在门外往里看）| 'lot'（7–10 m 深，机位在门内往内俯视）
+  const push = (kind, f, lotX0, lotX1, lotZ0, lotZ1, floorY, ceilY, doorX) => {
+    const c = Math.cos(f.rotY), s = Math.sin(f.rotY);
+    const toS = (lx, lz) => [f.x + lx * c + lz * s, f.z - lx * s + lz * c];
+    const door = doorX ?? (lotX0 + lotX1) / 2;
+    const midX = (lotX0 + lotX1) / 2;
+    let posLZ, posY, lookLZ, lookY;
+    if (kind === 'laundry') {
+      // 洗衣店只有 2.14 m 深：机位在**门洞外 1.1 m**、离地 1.55 m，看向房间中心偏后、离地 1.0 m
+      posLZ = lotZ1 + 1.1; posY = floorY + 1.55;
+      lookLZ = lotZ0 + 1.2; lookY = floorY + 1.0;
+    } else {
+      // lot 店 7–10 m 深：机位在**门内 0.5 m**、离地 2.3 m，看向房间中心、离地 0.8 m（俯角约 15°）
+      posLZ = lotZ1 - 0.5; posY = floorY + 2.3;
+      lookLZ = (lotZ0 + lotZ1) / 2; lookY = floorY + 0.8;
+    }
+    const [px, pz] = toS(door, posLZ);
+    const [lx2, lz2] = toS(midX, lookLZ);
+    shots.push({
+      kind, f, rotY: f.rotY,
+      lotX0, lotX1, lotZ0, lotZ1, floorY, ceilY,
+      pos: { x: px, y: posY, z: pz },
+      look: { x: lx2, y: lookY, z: lz2 },
+      inside: false          // 迟滞状态：当前是否算「在店里」
+    });
+  };
+
+  for (const room of rooms) {
+    if (!room?.frame || !Array.isArray(room.box)) continue;
+    if (!axisAligned(room)) continue;
+    const [bx0, by0, bz0, bx1, by1, bz1] = room.box;
+    const f = room.frame;
+    push('laundry', f,
+      Math.min(bx0, bx1), Math.max(bx0, bx1),
+      Math.min(bz0, bz1), Math.max(bz0, bz1),
+      f.y + Math.min(by0, by1), f.y + Math.max(by0, by1),
+      room.entrances?.[0]?.x ?? 0);
+  }
+
+  for (const { geom, plan } of lotPlans) {
+    push('lot', geom.frame,
+      geom.lotX0, geom.lotX1, geom.lotZ0, geom.lotZ1,
+      geom.floorY, geom.ceilY, plan?.doorX);
+  }
+
+  if (!shots.length) return null;
+
+  const HYST = 0.3;   // 迟滞：进入要内缩 0.3 m，离开要外扩 0.3 m
+
+  // 共用的「在不在房间内」判定（pose 和 clampCamera 用同一套 y 口径）
+  const inShot = (s, playerLocal, grow) => {
+    const c = Math.cos(s.rotY), sn = Math.sin(s.rotY);
+    const dx0 = playerLocal.x - s.f.x, dz0 = playerLocal.z - s.f.z;
+    const lx = dx0 * c - dz0 * sn;
+    const lz = dx0 * sn + dz0 * c;
+    return lx >= s.lotX0 + grow && lx <= s.lotX1 - grow &&
+           lz >= s.lotZ0 + grow && lz <= s.lotZ1 - grow &&
+           playerLocal.y >= s.floorY - 0.3 && playerLocal.y <= s.ceilY;
+  };
+
+  return {
+    /** 玩家在哪个房间里？带迟滞，返回固定机位；不在任何房间返回 null */
+    pose(playerLocal) {
+      for (let i = 0; i < shots.length; i++) {
+        const s = shots[i];
+        // 没在店里：要求进入「内缩 0.3 m」的盒；已在店里：只要没出「外扩 0.3 m」的盒就留着
+        const ok = s.inside ? inShot(s, playerLocal, -HYST) : inShot(s, playerLocal, HYST);
+        if (ok) {
+          if (!s.inside) { for (const o of shots) o.inside = false; s.inside = true; }
+          return s;
+        }
+        if (s.inside) s.inside = false;
+      }
+      return null;
+    }
+  };
+}

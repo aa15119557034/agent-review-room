@@ -91,6 +91,9 @@ SHAPES = {
     'slim':    dict(W=25.0, D=25.0, H=72.0, tiers=[(1.0, 1.0, 0.68), (0.82, 0.82, 0.20), (0.62, 0.62, 0.12)]),
     'slab':    dict(W=40.0, D=18.0, H=38.0, tiers=[(1.0, 1.0, 1.0)]),
     'setback': dict(W=30.0, D=30.0, H=52.0, tiers=[(1.0, 1.0, 0.60), (0.78, 0.78, 0.25), (0.56, 0.56, 0.15)]),
+    # C酱 要的三样（2026-11-20 16:58 与 21:33 交接）
+    'landmark': dict(W=20.0, D=20.0, H=102.0, tiers=[(1.0, 1.0, 0.60), (0.86, 0.86, 0.22), (0.72, 0.72, 0.11), (0.62, 0.62, 0.07)]),
+    'midrise':  dict(W=50.0, D=20.0, H=23.0, tiers=[(1.0, 1.0, 1.0)]),
 }
 
 
@@ -129,7 +132,7 @@ def build(shape, roof):
     pil_bm = bmesh.new()
     win_bm = bmesh.new()
     for (z0, h, w, d) in tier_geo:
-        floors = max(1, int(h / 3.6))
+        floors = max(1, int(round(h / 3.2)))   # 按 3.2 m 一层铺，中层 25 m ≈ 7 层
         fh = h / floors
         # 四面
         for f in range(floors):
@@ -166,7 +169,8 @@ def build(shape, roof):
 
     # 咬合体块：侧面楼梯井，高出主体
     bm = bmesh.new()
-    core_h = 6.0 if shape == 'slab' else 8.0   # 板楼总高要压回 45 m 以内
+    core_h = {'slab': 6.0, 'midrise': 2.0}.get(shape, 8.0)   # 中层压到 25 m 内、地标顶到 110 m
+    # 咬合井高度按体型给：中层要压在 25 m 内，地标要顶到 110
     box(bm, tw / 2 + 1.6, 0, (top + core_h) / 2, 3.2, 4.2, top + core_h)
     objs.append(new_obj('core', terra, bm))
 
@@ -178,8 +182,8 @@ def build(shape, roof):
             for sy in (-2.8, 2.8):
                 box(bm, sx, sy, top + 1.1, 0.6, 0.6, 2.2)
     elif roof == 'billboard':
-        box(bm, 0, 0, top + 3.4, tw * 0.7, 0.5, 2.6)
-        for sx in (-tw * 0.3, tw * 0.3):
+        box(bm, 0, 0, top + 5.0, 9.0, 0.6, 5.5)   # 广告牌放大到 9 x 5.5 m
+        for sx in (-3.6, 0.0, 3.6):   # 固定落在 9 m 板子底下（原来 ±tw*0.3 在 tw=50 时会飘到 ±15）
             box(bm, sx, 0, top + 1.6, 0.6, 0.6, 3.2)
     else:  # antenna
         box(bm, 0, 0, top + 6.0, 0.5, 0.5, 12.0)
@@ -210,7 +214,7 @@ def export(objs, name):
 
 
 report = []
-for shape in ('slim', 'slab', 'setback'):
+for shape in ('slim', 'slab', 'setback', 'landmark', 'midrise'):
     for roof in ('tank', 'billboard'):
         name = 'skyline-tower-%s-%s' % (shape, roof)
         objs, tri, W, D, H = build(shape, roof)
@@ -223,4 +227,7 @@ for shape in ('slim', 'slab', 'setback'):
 with open(os.path.join(OUT, 'tower-report.json'), 'w', encoding='utf-8') as f:
     json.dump(report, f, ensure_ascii=False, indent=2)
 print('DONE')
+
+
+
 
