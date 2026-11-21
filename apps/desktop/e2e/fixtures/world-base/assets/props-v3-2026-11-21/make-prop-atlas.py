@@ -154,24 +154,22 @@ def sign_warning(d, box):
 
 
 def sign_stop(d, box):
-    """日本停止牌：倒三角（尖朝下）、红底白字、白边"""
+    """日本停止牌：倒三角（尖朝下）、红铺满、细白边、白字"""
     x0, y0, w, h = box
     cx, cy = x0 + w / 2, y0 + h / 2
-    r = min(w, h) * 0.42
-    # 倒三角：两个点在**上**，一个点在**下** → 尖朝下
-    top_y = cy - r * 0.72
-    bot_y = cy + r * 0.78
-    outer = [(cx - r, top_y), (cx + r, top_y), (cx, bot_y)]
-    d.polygon(outer, fill=(248, 246, 242))
-    r2 = r * 0.88
-    top2 = top_y + r * 0.09
-    bot2 = bot_y - r * 0.13
-    inner = [(cx - r2, top2), (cx + r2, top2), (cx, bot2)]
-    d.polygon(inner, fill=(198, 40, 38))
-    f = font(int(r * 0.33))
+    r = min(w, h) * 0.44
+    top_y = cy - r * 0.80
+    bot_y = cy + r * 0.86
+    # 细白边：外三角略大
+    d.polygon([(cx - r, top_y), (cx + r, top_y), (cx, bot_y)], fill=(250, 248, 244))
+    # 红底铺满（只比白边小一点，模拟细边）
+    e = r * 0.045
+    d.polygon([(cx - r + e * 1.6, top_y + e * 1.3), (cx + r - e * 1.6, top_y + e * 1.3), (cx, bot_y - e * 1.9)],
+              fill=(198, 40, 38))
+    f = font(int(r * 0.30))
     t = "止まれ"
     tw = d.textlength(t, font=f)
-    d.text((cx - tw / 2, cy - r * 0.16), t, font=f, fill=(250, 250, 248))
+    d.text((cx - tw / 2, cy - r * 0.42), t, font=f, fill=(252, 252, 250))
 
 
 def make_sign_atlas(size=1024):
@@ -194,5 +192,6 @@ prev = Image.new('RGB', (1024 + 1024 + 24, 1024), (24, 26, 30))
 prev.paste(v, (0, 0)); prev.paste(s, (1048, 0))
 prev.save(os.path.join(OUT, 'prop-atlas-preview.png'))
 print('OK', OUT)
+
 
 

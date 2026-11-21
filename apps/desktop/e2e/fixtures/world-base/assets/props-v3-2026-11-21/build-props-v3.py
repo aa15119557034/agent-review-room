@@ -174,7 +174,8 @@ def build_sign(kind):
     bm = bmesh.new()
     layer = bm.loops.layers.uv.verify()
     u0, v0, u1, v1 = cell_uv((col, row))
-    cz = post_h
+    # 牌中心：倒三角时整块牌抬到杆顶以上，杆顶到牌下沿，不挡字
+    cz = post_h + (sh * 0.5 + 0.04) if shape in ("triangle", "triangle_down") else post_h
     y = -0.02
     if shape == 'circle':
         seg = 20
@@ -209,21 +210,25 @@ def build_sign(kind):
     # 背板：形状跟牌面一致（不然圆形/菱形/三角牌周围会露灰边）
     bm = bmesh.new()
     by = 0.022
-    if shape == 'circle':
+    if shape == "circle":
         seg = 16
         pts = [(math.cos(2 * math.pi * i / seg) * sw * 0.49, by, cz + math.sin(2 * math.pi * i / seg) * sh * 0.49) for i in range(seg)]
         bm.faces.new([bm.verts.new(p) for p in pts])
-    elif shape == 'rect':
+    elif shape == "rect":
         pts = [(-sw / 2, by, cz - sh / 2), (sw / 2, by, cz - sh / 2), (sw / 2, by, cz + sh / 2), (-sw / 2, by, cz + sh / 2)]
         bm.faces.new([bm.verts.new(p) for p in pts])
-    elif shape == 'diamond':
+    elif shape == "diamond":
         pts = [(0, by, cz + sh / 2), (sw / 2, by, cz), (0, by, cz - sh / 2), (-sw / 2, by, cz)]
+        bm.faces.new([bm.verts.new(p) for p in pts])
+    elif shape == "triangle_down":
+        h2 = sh / 2
+        pts = [(-sw / 2, by, cz + h2), (sw / 2, by, cz + h2), (0, by, cz - h2)]
         bm.faces.new([bm.verts.new(p) for p in pts])
     else:
         h2 = sh / 2
         pts = [(0, by, cz + h2), (sw / 2, by, cz - h2), (-sw / 2, by, cz - h2)]
         bm.faces.new([bm.verts.new(p) for p in pts])
-    objs.append(new_obj('sign-back', mat_plain('sign-back', (0.55, 0.57, 0.60), 0.8), bm, smooth=False))
+    objs.append(new_obj("sign-back", mat_plain("sign-back", (0.55, 0.57, 0.60), 0.8), bm, smooth=False))
     return objs
 
 
@@ -268,6 +273,7 @@ for name, fn in BUILDS:
 with open(os.path.join(OUT, 'props3-report.json'), 'w', encoding='utf-8') as f:
     json.dump(report, f, ensure_ascii=False, indent=2)
 print('DONE')
+
 
 
 
