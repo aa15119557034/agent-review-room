@@ -1,0 +1,183 @@
+"""make-prop-atlas.py —— 贩卖机 / 路牌贴图集
+vending-atlas.png  1024x1024  左半：饮料机正面，右半：咖啡机正面
+sign-atlas.png     1024x1024  2x2 四格：限速 40 / 蓝色方向牌 / 菱形警示 / 止まれ
+做法：画 4 倍再缩，字体用 Windows 自带的。
+"""
+import math, os
+from PIL import Image, ImageDraw, ImageFont, ImageFilter
+
+OUT = r'E:\agent-review-room\.tmp\blender-blocks\out\proptex'
+os.makedirs(OUT, exist_ok=True)
+SS = 2
+
+FONT_CANDIDATES = [
+    r'C:\Windows\Fonts\msyhbd.ttc', r'C:\Windows\Fonts\msyh.ttc',
+    r'C:\Windows\Fonts\simhei.ttf', r'C:\Windows\Fonts\arialbd.ttf',
+    r'C:\Windows\Fonts\arial.ttf',
+]
+
+
+def font(size):
+    for p in FONT_CANDIDATES:
+        if os.path.exists(p):
+            try:
+                return ImageFont.truetype(p, size)
+            except Exception:
+                continue
+    return ImageFont.load_default()
+
+
+def vending_face(d, x0, y0, w, h, theme):
+    """一台贩卖机的正面：展示窗 + 商品行 + 品牌条 + 投币区 + 取物口"""
+    S = w  # 以宽度为基准
+    dark = theme['dark']
+    # 底板
+    d.rectangle([x0, y0, x0 + w, y0 + h], fill=theme['body'])
+    # 顶部品牌条
+    bh = h * 0.085
+    d.rectangle([x0, y0, x0 + w, y0 + bh], fill=theme['brand'])
+    f_brand = font(int(bh * 0.62))
+    txt = theme['brandText']
+    tw = d.textlength(txt, font=f_brand)
+    d.text((x0 + (w - tw) / 2, y0 + bh * 0.18), txt, font=f_brand, fill=theme['brandFg'])
+    # 展示窗（发光）
+    wx0, wy0 = x0 + w * 0.06, y0 + bh + h * 0.03
+    wx1, wy1 = x0 + w * 0.94, y0 + h * 0.62
+    d.rectangle([wx0, wy0, wx1, wy1], fill=theme['glass'])
+    # 商品：3 行 x 5 列
+    rows, cols = 3, 4
+    cw = (wx1 - wx0) / cols
+    ch = (wy1 - wy0) / rows
+    for r in range(rows):
+        for c in range(cols):
+            cx = wx0 + c * cw + cw * 0.5
+            cy = wy0 + r * ch + ch * 0.62
+            col = theme['cans'][(r * cols + c) % len(theme['cans'])]
+            # 罐身
+            cwid, chei = cw * 0.42, ch * 0.52
+            d.rounded_rectangle([cx - cwid / 2, cy - chei, cx + cwid / 2, cy], radius=cwid * 0.18, fill=col)
+            # 高光
+            d.rectangle([cx - cwid * 0.32, cy - chei * 0.92, cx - cwid * 0.16, cy - chei * 0.12],
+                        fill=tuple(min(255, int(v * 1.35)) for v in col))
+            # 价签
+            f_p = font(int(ch * 0.16))
+            d.text((cx - cw * 0.12, cy + ch * 0.02), '¥130', font=f_p, fill=dark)
+    # 中部按钮列
+    by = y0 + h * 0.645
+    for i in range(5):
+        bx = x0 + w * 0.10 + i * w * 0.165
+        d.rounded_rectangle([bx, by, bx + w * 0.11, by + h * 0.028], radius=4, fill=theme['button'])
+    # 投币区
+    d.rectangle([x0 + w * 0.70, y0 + h * 0.70, x0 + w * 0.92, y0 + h * 0.80], fill=theme['panel'])
+    d.rectangle([x0 + w * 0.76, y0 + h * 0.715, x0 + w * 0.86, y0 + h * 0.735], fill=dark)
+    d.ellipse([x0 + w * 0.77, y0 + h * 0.745, x0 + w * 0.81, y0 + h * 0.775], fill=(200, 200, 205))
+    # 取物口
+    d.rectangle([x0 + w * 0.10, y0 + h * 0.86, x0 + w * 0.74, y0 + h * 0.97], fill=theme['panel'])
+    d.rectangle([x0 + w * 0.13, y0 + h * 0.885, x0 + w * 0.71, y0 + h * 0.945], fill=dark)
+    f_small = font(int(h * 0.020))
+    d.text((x0 + w * 0.13, y0 + h * 0.955), 'PUSH', font=f_small, fill=theme['brandFg'])
+
+
+def make_vending_atlas(size=1024):
+    S = size * SS
+    img = Image.new('RGB', (S, S), (28, 30, 34))
+    d = ImageDraw.Draw(img)
+    half = S // 2
+    drinks = dict(
+        body=(196, 62, 58), brand=(28, 96, 172), brandText='DRINK', brandFg=(255, 255, 255),
+        glass=(232, 240, 246), panel=(60, 62, 66), button=(240, 236, 210),
+        cans=[(220, 80, 70), (80, 150, 210), (240, 200, 80), (120, 190, 120), (230, 230, 235)],
+        dark=(38, 40, 44),
+    )
+    coffee = dict(
+        body=(52, 56, 62), brand=(24, 26, 30), brandText='COFFEE', brandFg=(232, 196, 120),
+        glass=(238, 226, 206), panel=(30, 32, 36), button=(232, 196, 120),
+        cans=[(120, 84, 60), (200, 170, 130), (90, 66, 50), (230, 210, 180), (150, 110, 78)],
+        dark=(24, 26, 30),
+    )
+    vending_face(d, 0, 0, half, S, drinks)
+    vending_face(d, half, 0, half, S, coffee)
+    # 分隔线
+    d.rectangle([half - 2, 0, half + 2, S], fill=(20, 20, 22))
+    img = img.resize((size, size), Image.LANCZOS)
+    img.save(os.path.join(OUT, 'vending-atlas.png'))
+    return img
+
+
+def sign_speed(d, box, num):
+    x0, y0, w, h = box
+    cx, cy, r = x0 + w / 2, y0 + h / 2, min(w, h) * 0.40
+    d.ellipse([cx - r, cy - r, cx + r, cy + r], fill=(248, 248, 246))
+    d.ellipse([cx - r * 0.86, cy - r * 0.86, cx + r * 0.86, cy + r * 0.86], outline=(198, 44, 40), width=int(r * 0.20))
+    f = font(int(r * 1.05))
+    tw = d.textlength(num, font=f)
+    d.text((cx - tw / 2, cy - r * 0.52), num, font=f, fill=(32, 34, 38))
+
+
+def sign_blue(d, box):
+    x0, y0, w, h = box
+    bw, bh = w * 0.86, h * 0.30
+    bx, by = x0 + (w - bw) / 2, y0 + h * 0.30
+    d.rounded_rectangle([bx, by, bx + bw, by + bh], radius=int(bh * 0.10), fill=(22, 74, 150))
+    d.rounded_rectangle([bx + 6, by + 6, bx + bw - 6, by + bh - 6], radius=int(bh * 0.08),
+                        outline=(246, 246, 242), width=5)
+    f = font(int(bh * 0.52))
+    for i, t in enumerate(['桜ヶ丘駅', 'Sakuragaoka Sta.']):
+        tw = d.textlength(t, font=f if i == 0 else font(int(bh * 0.30)))
+        ff = f if i == 0 else font(int(bh * 0.30))
+        d.text((bx + (bw - tw) / 2, by + bh * (0.10 + i * 0.50)), t, font=ff, fill=(246, 246, 242))
+    # 箭头
+    ay = by + bh * 0.5
+    d.polygon([(bx + bw * 0.12, ay), (bx + bw * 0.20, ay - bh * 0.16), (bx + bw * 0.20, ay + bh * 0.16)],
+              fill=(246, 246, 242))
+
+
+def sign_warning(d, box):
+    x0, y0, w, h = box
+    cx, cy, r = x0 + w / 2, y0 + h / 2, min(w, h) * 0.36
+    pts = [(cx, cy - r), (cx + r, cy), (cx, cy + r), (cx - r, cy)]
+    d.polygon(pts, fill=(246, 206, 52))
+    r2 = r * 0.78
+    pts2 = [(cx, cy - r2), (cx + r2, cy), (cx, cy + r2), (cx - r2, cy)]
+    d.polygon(pts2, outline=(40, 40, 44), width=int(r * 0.10))
+    # 中间：注意符号
+    d.rectangle([cx - r * 0.07, cy - r * 0.45, cx + r * 0.07, cy + r * 0.14], fill=(30, 30, 34))
+    d.ellipse([cx - r * 0.10, cy + r * 0.24, cx + r * 0.10, cy + r * 0.44], fill=(30, 30, 34))
+
+
+def sign_stop(d, box):
+    x0, y0, w, h = box
+    cx, cy = x0 + w / 2, y0 + h / 2
+    r = min(w, h) * 0.40
+    pts = [(cx, cy - r), (cx + r * 0.92, cy + r * 0.62), (cx - r * 0.92, cy + r * 0.62)]
+    d.polygon(pts, fill=(246, 246, 242))
+    r2 = r * 0.86
+    pts2 = [(cx, cy - r2), (cx + r2 * 0.92, cy + r2 * 0.62), (cx - r2 * 0.92, cy + r2 * 0.62)]
+    d.polygon(pts2, fill=(198, 44, 40))
+    f = font(int(r * 0.52))
+    t = '止まれ'
+    tw = d.textlength(t, font=f)
+    d.text((cx - tw / 2, cy - r * 0.02), t, font=f, fill=(250, 250, 248))
+
+
+def make_sign_atlas(size=1024):
+    S = size * SS
+    img = Image.new('RGB', (S, S), (150, 160, 172))
+    d = ImageDraw.Draw(img)
+    q = S // 2
+    sign_speed(d, (0, 0, q, q), '40')
+    sign_blue(d, (q, 0, q, q))
+    sign_warning(d, (0, q, q, q))
+    sign_stop(d, (q, q, q, q))
+    img = img.resize((size, size), Image.LANCZOS)
+    img.save(os.path.join(OUT, 'sign-atlas.png'))
+    return img
+
+
+v = make_vending_atlas()
+s = make_sign_atlas()
+prev = Image.new('RGB', (1024 + 1024 + 24, 1024), (24, 26, 30))
+prev.paste(v, (0, 0)); prev.paste(s, (1048, 0))
+prev.save(os.path.join(OUT, 'prop-atlas-preview.png'))
+print('OK', OUT)
+
