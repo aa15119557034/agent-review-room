@@ -677,6 +677,99 @@
    "sameNeighbour": 110,
    "altTolerance": 0.35,
    "signLift": 0.03
+  },
+  "midband": {
+   "note": "Art round 26 (#254 X-51): the mid-height transition band and the landmark towers. Rules in src/midband-blocks.js, geometry = assets/blocks-2026-11-20/skyline-tower-midrise-*.glb (50 x 20 x 23 m) and skyline-tower-landmark-*.glb (20 x 20 x ~110 m) built by tower-blocks.js. Mid-rises: `count` lots of width x depth x height, `band` m outside the walkable station area, spread over `sectors` angular sectors around `ring`, `gap` m from every slot, on land with relief <= maxRelief. Landmarks: the tower slots best seen from the main street (view direction + eyes along the street). towerBoard: size of the rooftop panel of the six older billboard towers. ?midband=off removes all of it.",
+   "count": 20,
+   "attempts": 8000,
+   "gap": 6,
+   "region": [
+    -300,
+    -300,
+    300,
+    200
+   ],
+   "band": [
+    35,
+    150
+   ],
+   "ring": [
+    0,
+    15
+   ],
+   "sectors": 8,
+   "width": [
+    44,
+    56
+   ],
+   "depth": [
+    18,
+    22
+   ],
+   "height": [
+    21,
+    25
+   ],
+   "boardChance": 0.4,
+   "minGround": 1.5,
+   "maxRelief": 2.6,
+   "boundsMargin": 6,
+   "lotMargin": 6,
+   "signs": {
+    "size": [
+     2048,
+     4096
+    ],
+    "b": {
+     "cell": [
+      512,
+      320
+     ],
+     "words": [
+      "春の新作",
+      "大売出し",
+      "新装開店",
+      "本日特売",
+      "ご来店を",
+      "お買い得"
+     ],
+     "schemes": [
+      0,
+      1
+     ]
+    }
+   },
+   "landmarks": {
+    "count": 2,
+    "footprint": 20,
+    "minFootprint": 17,
+    "minGap": 120,
+    "halfAngle": 14,
+    "dist": [
+     380,
+     700
+    ],
+    "view": [
+     0,
+     -1
+    ],
+    "eyes": [
+     10,
+     100,
+     15
+    ]
+   },
+   "towerBoard": {
+    "w": [
+     8,
+     10
+    ],
+    "h": [
+     5,
+     6
+    ],
+    "postAt": 0.32
+   }
   }
  }
 }

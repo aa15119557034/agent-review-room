@@ -15,6 +15,7 @@ import { massingEnabled, loadMassing, createMassing } from './massing.js';
 import { blocksEnabled, applyBlocksParams, createFacadeBlocks } from './facade-blocks.js';
 import { towersEnabled, createTowerBlocks } from './tower-blocks.js';
 import { makeShared } from './block-common.js';
+import { midbandEnabled, layoutMidband } from './midband-blocks.js';
 import { applyWeathering, loadWeatheringParams } from './weathering.js';
 import { addWeatheringDecals, loadBakedDecals } from './weathering-decals.js';
 import { groundEnabled, loadGround, applyFlowerDrifts, patchGroundShader, patchPetals } from './island-ground.js';
@@ -205,9 +206,15 @@ async function init() {
     if ((blocksOn || towersOn) && massingParams.blocks) {
       stage('正在装立面与高楼模块…');
       const common = { scene, station, island, massing: worldBase.massing, params: massingParams, timeOfDay: island.timeOfDay };
-      worldBase.blockShared = makeShared({ island, params: massingParams, timeOfDay: island.timeOfDay });
+      // Art round 26: the mid-height transition band, the landmark towers and the larger rooftop panels. ?midband=off = the r25 page.
+      const midbandOn = midbandEnabled() && !!massingParams.blocks.midband;
+      worldBase.massingParams = massingParams;
+      worldBase.blockShared = makeShared({ island, params: massingParams, timeOfDay: island.timeOfDay, midband: midbandOn });
       if (blocksOn) worldBase.blocks = await createFacadeBlocks({ ...common, shared: worldBase.blockShared });
-      if (towersOn) worldBase.towers = await createTowerBlocks({ ...common, shared: worldBase.blockShared });
+      // The ring of mid-rise lots comes from the layout rules; the tower pipeline builds them (and the landmark GLBs) with the r25 towers.
+      if (midbandOn) worldBase.midband = layoutMidband({ massing: worldBase.massing, station, params: massingParams });
+      if (towersOn) worldBase.towers = await createTowerBlocks({ ...common, shared: worldBase.blockShared, midband: midbandOn ? massingParams.blocks.midband : null, extraSlots: worldBase.midband?.slots });
+      if (midbandOn) worldBase.massing.vegetationClearAreas.push(...worldBase.midband.areas);
     }
     worldBase.massing.vegetationClear = clearVegetationAreas(island.terrain,
       worldBase.massing.vegetationClearAreas, station.root.matrixWorld, { flowers: 5, jitter: 2 });

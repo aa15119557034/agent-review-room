@@ -10,6 +10,15 @@ export function rngFrom(seed) {
   return () => { a = (a + 0x6D2B79F5) >>> 0; let t = a; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
 }
 export const pick = (rng, list) => list[Math.floor(rng() * list.length) % list.length];
+/** Axis-aligned bounds (minX / maxX / minZ / maxZ) of a w x d rectangle centred on (cx, cz), turned by yaw (same convention as frameOf). */
+export function rotRect(cx, cz, yaw, w, d) {
+  const c = Math.cos(yaw), s = Math.sin(yaw), r = { minX: Infinity, maxX: -Infinity, minZ: Infinity, maxZ: -Infinity };
+  for (const [lx, lz] of [[-w / 2, -d / 2], [w / 2, -d / 2], [w / 2, d / 2], [-w / 2, d / 2]]) {
+    const x = cx + lx * c + lz * s, z = cz - lx * s + lz * c;
+    r.minX = Math.min(r.minX, x); r.maxX = Math.max(r.maxX, x); r.minZ = Math.min(r.minZ, z); r.maxZ = Math.max(r.maxZ, z);
+  }
+  return r;
+}
 
 // ---- merged output -----------------------------------------------------------------------------------------------------------
 export class Bucket {
@@ -79,7 +88,7 @@ export function buildSignAtlas(spec) {
   const ctx = canvas.getContext('2d');
   ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, W, H);
   ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-  const cells = { h: [], v: [], w: [] };
+  const cells = { h: [], v: [], w: [], b: [] };
   // Horizontal boards: every word in every colour scheme, in a fixed order (cell index = word * schemes + scheme).
   spec.h.words.forEach((word, wi) => schemes.forEach((sc, si) => {
     const i = wi * schemes.length + si, col = i % hCols, row = Math.floor(i / hCols), x = col * hw, y = row * hh;
@@ -104,6 +113,7 @@ export function buildSignAtlas(spec) {
     cells.v.push({ x, y, w: vw, h: vh, word, scheme: si, chars: chars.length });
   }));
   const vRows = Math.ceil(spec.v.words.length * schemes.length / vCols), wTop = vTop + vRows * vh;
+  let bTop = wTop;
   // Wide boards (rooftop billboards): one word per cell, a few colour schemes; sampled with a centred crop to match the board's aspect.
   if (spec.w) {
     const [ww, wh] = spec.w.cell, wCols = Math.floor(W / ww);
@@ -116,7 +126,24 @@ export function buildSignAtlas(spec) {
       ctx.fillText([...word].join(' '), x + ww / 2, y + wh / 2 + size * 0.04);
       cells.w.push({ x, y, w: ww, h: wh, word, scheme: si });
     }));
-    if (wTop + Math.ceil(spec.w.words.length * spec.w.schemes.length / wCols) * wh > H) throw new Error('Sign atlas too small (wide boards)');
+    bTop = wTop + Math.ceil(spec.w.words.length * spec.w.schemes.length / wCols) * wh;
+    if (bTop > H) throw new Error('Sign atlas too small (wide boards)');
+  }
+  // r26 billboard boards (rooftop panels of the mid-band and the landmark towers, ~ 8-10 x 5-6 m): a squarer cell, the word on one or two
+  // lines. Only present when the spec carries `b` (the mid-band adds it; ?midband=off leaves the atlas exactly as in r25).
+  if (spec.b) {
+    const [bw, bh] = spec.b.cell, bCols = Math.floor(W / bw);
+    spec.b.words.forEach((word, wi) => spec.b.schemes.forEach((si, k) => {
+      const sc = schemes[si], i = wi * spec.b.schemes.length + k, col = i % bCols, row = Math.floor(i / bCols), x = col * bw, y = bTop + row * bh;
+      ctx.fillStyle = sc.bg; ctx.fillRect(x, y, bw, bh);
+      ctx.strokeStyle = sc.fg; ctx.globalAlpha = 0.55; ctx.lineWidth = 6; ctx.strokeRect(x + 10, y + 10, bw - 20, bh - 20); ctx.globalAlpha = 1;
+      const chars = [...word], half = Math.ceil(chars.length / 2), lines = chars.length > 2 ? [chars.slice(0, half), chars.slice(half)] : [chars];
+      const size = Math.min(bh * 0.36, bw * 0.78 / Math.max(...lines.map(l => l.length)));
+      ctx.font = `700 ${size}px ${FONT}`; ctx.fillStyle = sc.fg;
+      lines.forEach((line, li) => ctx.fillText(line.join(' '), x + bw / 2, y + bh / 2 + (li - (lines.length - 1) / 2) * size * 1.18 + size * 0.04));
+      cells.b.push({ x, y, w: bw, h: bh, word, scheme: si });
+    }));
+    if (bTop + Math.ceil(spec.b.words.length * spec.b.schemes.length / bCols) * bh > H) throw new Error('Sign atlas too small (billboard boards)');
   }
   if (vTop + vRows * vh > H) throw new Error('Sign atlas too small');
   const texture = new THREE.CanvasTexture(canvas);
@@ -201,9 +228,10 @@ ${ATMOSPHERE}`;
 }
 
 /** Everything the facade and tower blocks share: palette, sign atlas, sign material, aerial uniforms. Created once per page. */
-export function makeShared({ island, params, timeOfDay }) {
+export function makeShared({ island, params, timeOfDay, midband = false }) {
   const B = params.blocks, evening = timeOfDay !== 'afternoon', palette = params[evening ? 'evening' : 'afternoon'], L = B[evening ? 'evening' : 'afternoon'];
-  const signs = buildSignAtlas(B.signs);
+  // r26: with the mid-band on, the sign atlas also carries the squarer billboard cells (blocks.midband.signs); off = the r25 atlas untouched.
+  const signs = buildSignAtlas(midband && B.midband?.signs ? { ...B.signs, ...B.midband.signs } : B.signs);
   const aerial = makeAerial(island, palette.fog, B.fog.start);
   const signMat = new THREE.MeshBasicMaterial({ map: signs.texture, toneMapped: false, name: 'massing-blocks-sign' });
   signMat.color.setScalar(L.signGain);

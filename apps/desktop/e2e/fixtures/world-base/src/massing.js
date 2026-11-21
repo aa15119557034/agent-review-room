@@ -499,6 +499,21 @@ export async function createMassing({ scene, station, island, city, skyline, par
   // Footprints (station-local rectangles) so main.js can clear grass and flowers under every block.
   // Only the facade blocks are close enough for grass or flowers to be seen against their walls.
   api.vegetationClearAreas = slots.filter(s => s.kind === 'facade').map(s => ({ name: s.id, ...footprintRect(s.center[0] - ox, s.center[2] - oz, s.footprint[0] + (params.facade.clearPad?.[0] ?? 1), s.footprint[1] + (params.facade.clearPad?.[1] ?? 1), s.yaw) }));
+  // r26: the cluster placement tests, exposed for later layers (mid-band). rejectReason = the first exclusion a station-local rectangle
+  // trips (walkable rects, corridors, city / skyline lots, existing meshes, village, props) or null; nothing here changes what is built.
+  api.rejectReason = (rect, P = {}) => {
+    if (walkable.some(a => rectsOverlap(rect, grow(a, P.boundsMargin ?? 5)))) return 'bounds';
+    if (corridors.some(a => rectsOverlap(rect, grow(a, 2)))) return 'corridor';
+    if (buildings.some(a => rectsOverlap(rect, grow(a, P.lotMargin ?? 4)))) return 'buildings';
+    if (meshBoxes.some(a => rectsOverlap(rect, grow(a, 2.5)))) return 'meshes';
+    if (towns.some(a => rectsOverlap(rect, a))) return 'town';
+    if (propHit(rect, params.avoid.propRadius)) return 'props';
+    return null;
+  };
+  api.streetDistance = streetDistance;
+  api.groundStats = (cx, cz, w, d, yaw, n) => terrainStats(localHeight, cx, cz, w, d, yaw, n);
+  api.footprintRect = footprintRect;
+  api.exclusions = { walkable, buildings, meshBoxes, corridors, towns };
   const sum = (list) => list.reduce((n, v) => n + v, 0);
   const tris = [];
   for (const g of groups) for (const m of [g.wallMesh, g.windowMesh]) if (m) tris.push(m.geometry.index.count / 3);

@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { pickLandmarks } from './midband-blocks.js';
 import { WHITE, hash32, rngFrom, pick, Bucket, frameOf, addPart, addPlinth, addSignQuad, patchAerial } from './block-common.js';
 
 // Art round 25 (#254 X-51): the six skyline tower GLBs (assets/blocks-2026-11-20/skyline-tower-{slim,slab,setback}-{tank,billboard}.glb)
@@ -8,10 +9,14 @@ import { WHITE, hash32, rngFrom, pick, Bucket, frameOf, addPart, addPlinth, addS
 // `face`, seeded mirror, no identical neighbours. Merged per cluster into solid / atlas / sign meshes like the facades, same toon +
 // outline pipeline, same camera-distance fog. Slots that had a rooftop board get a billboard variant whose boards carry a wide sign.
 // Parameters: massing.json "blocks.towers". ?towers=off keeps the r23 placeholders.
+// Art round 26 (mid-band, blocks.midband, rules in midband-blocks.js; ?midband=off skips all of it): the same pipeline also builds the
+// mid-rise GLBs (extra slots from layoutMidband) and puts the landmark GLB on the tower slots best seen from the main street; the rooftop
+// panels of the six older billboard variants are enlarged to match the 9 x 5.5 m panels of the new models.
 
 export const towersEnabled = () => new URLSearchParams(location.search).get('towers') !== 'off';
 const BASE = '/blocks/';
 const SHAPES = ['slim', 'slab', 'setback'], ROOFS = ['tank', 'billboard'];
+const SPECIAL = ['landmark', 'midrise']; // r26 shapes: never picked by the ordinary best-fit, only through landmarks / extra slots
 const CELL = 0.25;
 
 const ROLE_BY_PART = (name, mat) => {
@@ -21,11 +26,13 @@ const ROLE_BY_PART = (name, mat) => {
   return { body: 'wall', podium: 'podium', pilaster: 'pilaster', trim: 'trim', terracotta: 'core' }[mat] ?? 'wall';
 };
 
-async function loadTemplates() {
+async function loadTemplates(shapes = SHAPES) {
   const loader = new GLTFLoader(), templates = [];
   let image = null;
-  for (const shape of SHAPES) for (const roof of ROOFS) {
-    const gltf = await loader.loadAsync(`${BASE}skyline-tower-${shape}-${roof}.glb`);
+  for (const shape of shapes) for (const roof of ROOFS) {
+    let gltf;
+    try { gltf = await loader.loadAsync(`${BASE}skyline-tower-${shape}-${roof}.glb`); }
+    catch (error) { if (!SPECIAL.includes(shape)) throw error; console.warn(`[world-base] r26: ${shape}-${roof}.glb unavailable, skipped`, error?.message); continue; }
     gltf.scene.updateMatrixWorld(true);
     const t = { shape, roof, name: `${shape}-${roof}`, parts: [], W: 0, D: 0, top: 0, core: null, board: null };
     gltf.scene.traverse(o => {
@@ -90,6 +97,19 @@ function buildAtlas(image, evening, share, coolShare, seed) {
   return { color, emissive, rowLit, rows: evening ? [0, 1, 2, 3] : [0, 1] };
 }
 
+/** r26: the board of an older billboard template (first 24 vertices of roof-detail) resized to w x h metres in its own frame (x about its
+ *  centre, y up from its bottom edge); the two posts (next two boxes) move under the new width. Returns a copy of the roof-detail part. */
+function reshapeBoard(part, board, w, h, postAt) {
+  const pos = part.pos.slice(), cx = (board.min.x + board.max.x) / 2, w0 = board.max.x - board.min.x, h0 = board.max.y - board.min.y;
+  for (let i = 0; i < 24; i++) { pos[i * 3] = cx + (pos[i * 3] - cx) * w / w0; pos[i * 3 + 1] = board.min.y + (pos[i * 3 + 1] - board.min.y) * h / h0; }
+  for (let bx = 1; bx <= 2; bx++) {
+    let mid = 0; for (let v = 0; v < 24; v++) mid += pos[(bx * 24 + v) * 3] / 24;
+    const shift = Math.sign(mid || 1) * postAt * w - mid;
+    for (let v = 0; v < 24; v++) pos[(bx * 24 + v) * 3] += shift;
+  }
+  return { ...part, pos };
+}
+
 const rectOfModule = (cx, cz, yaw, x0, x1, z0, z1) => {
   const c = Math.cos(yaw), s = Math.sin(yaw), r = { minX: Infinity, maxX: -Infinity, minZ: Infinity, maxZ: -Infinity };
   for (const [lx, lz] of [[x0, z0], [x1, z0], [x1, z1], [x0, z1]]) { const x = cx + lx * c + lz * s, z = cz - lx * s + lz * c; r.minX = Math.min(r.minX, x); r.maxX = Math.max(r.maxX, x); r.minZ = Math.min(r.minZ, z); r.maxZ = Math.max(r.maxZ, z); }
@@ -101,11 +121,12 @@ const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));
 /**
  * Replace every tower slot of `massing` with a tower GLB. `shared` comes from makeShared (palette, sign atlas / material, fog uniforms).
  */
-export async function createTowerBlocks({ station, island, massing, params, shared, timeOfDay = 'evening' }) {
+export async function createTowerBlocks({ station, island, massing, params, shared, timeOfDay = 'evening', midband = null, extraSlots = null }) {
   const { B, L, palette, evening, signs, signMat } = shared, T = B.towers;
   const o = station.root.position, ox = o.x, oz = o.z;
   const heightAt = (x, z) => island.heightAt(x + ox, z + oz);
-  const { templates, image } = await loadTemplates();
+  const { templates, image } = await loadTemplates(midband ? [...SHAPES, ...SPECIAL] : SHAPES);
+  const has = shape => templates.some(t => t.shape === shape);
   const atlas = buildAtlas(image, evening, T.litShare, palette.coolShare ?? 0.22, hash32(params.seed, 25));
   const color = hex => new THREE.Color(hex);
   const flat = new THREE.MeshToonMaterial({ vertexColors: true, gradientMap: station.ctx.mat.gradientMap, name: 'massing-blocks-tower-flat' });
@@ -114,12 +135,18 @@ export async function createTowerBlocks({ station, island, massing, params, shar
   atlasMat.userData.wbNoFlat = true; atlasMat.userData.wbNoSignLine = true; atlasMat.userData.wbEveningGlow = true;
   patchAerial(flat, shared.aerial, 'lit'); patchAerial(atlasMat, shared.aerial, 'lit');
 
-  const slots = massing.slots.filter(s => s.kind === 'tower');
+  const towerSlots = massing.slots.filter(s => s.kind === 'tower');
+  // r26 (only with the mid-band on and its GLBs present): mid-rise slots appended AFTER the towers (so the tower slots keep their indices and
+  // seeds), landmark ids picked among the tower slots.
+  const extras = midband && has('midrise') && extraSlots ? extraSlots : [];
+  const slots = [...towerSlots, ...extras];
   const faceOf = Object.fromEntries(params.clusters.filter(c => c.kind === 'tower').map(c => [c.name, c.face]));
   const slotRects = new Map(slots.map(s => [s.id, rectOfModule(s.center[0] - ox, s.center[2] - oz, s.yaw, -s.footprint[0] / 2, s.footprint[0] / 2, -s.footprint[1] / 2, s.footprint[1] / 2)]));
   const placed = new Map(); // slot id -> { rect, shape }
   const clusters = new Map(), stats = { slots: slots.length, replaced: 0, perCluster: {}, variants: {}, sxz: [Infinity, -Infinity], sy: [Infinity, -Infinity], windowStrips: 0, litShare: 0, triangles: 0, plinth: { max: 0 }, picks: {}, heightErr: [] };
-  const ordered = slots.slice().sort((a, b) => a.cluster.localeCompare(b.cluster) || a.center[0] - b.center[0] || a.center[2] - b.center[2]);
+  const ordered = [...towerSlots.slice().sort((a, b) => a.cluster.localeCompare(b.cluster) || a.center[0] - b.center[0] || a.center[2] - b.center[2]), ...extras];
+  const landmarks = midband && has('landmark') ? pickLandmarks(towerSlots, ox, oz, midband.landmarks) : [], landmarkIds = new Map(landmarks.map(l => [l.id, l]));
+  stats.landmarks = []; stats.midrises = 0;
   let litSum = 0;
 
   for (const slot of ordered) {
@@ -133,17 +160,21 @@ export async function createTowerBlocks({ station, island, massing, params, shar
       const cost = 0.6 * Math.abs(Math.log(sw / (Wv * sxz))) + 0.6 * Math.abs(Math.log(sd / (Dv * sxz))) + 2 * Math.abs(Math.log(slot.height / (t.top * sy))) + 0.5 * Math.abs(Math.log(sy)) + 0.3 * Math.abs(Math.log(sxz));
       return { t, sxz, sy, cost };
     };
-    const cands = templates.filter(t => t.roof === roofWanted).map(t => {
+    // r26: mid-rise slots only take the mid-rise GLB, landmark slots the landmark GLB; the ordinary best-fit never sees these shapes
+    const family = slot.shape ?? (landmarkIds.has(slot.id) ? 'landmark' : null);
+    const cands = templates.filter(t => t.roof === roofWanted && (family ? t.shape === family : !SPECIAL.includes(t.shape))).map(t => {
       const f0 = fit(t, 0), f1 = fit(t, 1), best = f0.cost <= f1.cost ? f0 : f1;
       return { ...best, parity: best === f0 ? 0 : 1, fits: [f0, f1] };
     }).sort((a, b) => a.cost - b.cost);
     const near = [...placed.entries()].filter(([id]) => Math.hypot(slotRects.get(id).minX - slotRects.get(slot.id).minX, slotRects.get(id).minZ - slotRects.get(slot.id).minZ) < T.sameNeighbour).map(([, p]) => p.shape);
     let choice = cands[0];
     if (near.includes(choice.t.shape)) { const alt = cands.find(c => !near.includes(c.t.shape) && c.cost < cands[0].cost + T.altTolerance); if (alt) choice = alt; }
+    // the landmark keeps its own size (20 x 20 x ~110 m, no clamped refit)
+    if (family === 'landmark') { const fixed = { t: choice.t, sxz: 1, sy: 1, cost: choice.cost }; choice = { ...fixed, fits: [fixed, fixed] }; }
     const { t } = choice;
     // ---- orientation: any of the four 90 degree turns (the fit of the other parity costs extra), mirror; face the cluster's face vector,
     //      avoid other slots' footprints ----
-    const cx = slot.center[0] - ox, cz = slot.center[2] - oz, face = faceOf[slot.cluster] ?? [0, 1];
+    const cx = slot.center[0] - ox, cz = slot.center[2] - oz, face = slot.face ?? faceOf[slot.cluster] ?? [0, 1];
     const opts = [];
     for (const k of [0, 1, 2, 3]) for (const mir of [1, -1]) {
       const f = choice.fits[k % 2], sxz = f.sxz, sy = f.sy;
@@ -175,7 +206,15 @@ export async function createTowerBlocks({ station, island, massing, params, shar
     stats.plinth.max = Math.max(stats.plinth.max, y0 - (gmin - T.sink));
     const top = t.top;
     const map = part => part.name === 'roof-detail' ? (x, y, z) => [x * sxz, top * sy + (y - top), z * sxz] : (x, y, z) => [x * sxz, y * sy, z * sxz];
-    for (const part of t.parts) {
+    // r26: the six older billboard variants get a rooftop panel of the new models' size (final boardW x boardH metres, posts follow);
+    // the landmark / mid-rise GLBs already ship a 9 x 5.5 m panel; off = the r25 board untouched
+    let parts = t.parts, boardW = null, boardH = null;
+    if (midband && t.board && !SPECIAL.includes(t.shape)) {
+      const BR = midband.towerBoard, brng = rngFrom(hash32(params.seed, 26, slots.indexOf(slot), 11));
+      boardW = BR.w[0] + brng() * (BR.w[1] - BR.w[0]); boardH = BR.h[0] + brng() * (BR.h[1] - BR.h[0]);
+      parts = t.parts.map(p => p.name === 'roof-detail' ? reshapeBoard(p, t.board, boardW / sxz, boardH, BR.postAt) : p);
+    }
+    for (const part of parts) {
       if (part.kind === 'flat') { const col = roleColors[part.role]; addPart(cl.flat, F, part, () => col, null, map(part)); continue; }
       // window strips: one box per floor and side (24 vertices); each takes a random atlas row (+ a whole-cell u shift, the texture repeats)
       const n = part.pos.length / 3 / 24, shifts = [];
@@ -187,8 +226,8 @@ export async function createTowerBlocks({ station, island, massing, params, shar
     }
     // rooftop boards: a wide sign on both faces of the billboard
     if (t.board) {
-      const bb = t.board, w = (bb.max.x - bb.min.x) * sxz, h = bb.max.y - bb.min.y, cyy = top * sy + ((bb.min.y + bb.max.y) / 2 - top);
-      const cell = signs.cells.w[Math.floor(rng() * signs.cells.w.length) % signs.cells.w.length], ca = cell.w / cell.h, r = w / h;
+      const bb = t.board, w = boardW ?? (bb.max.x - bb.min.x) * sxz, h = boardH ?? (bb.max.y - bb.min.y), cyy = top * sy + ((boardH != null ? bb.min.y + boardH / 2 : (bb.min.y + bb.max.y) / 2) - top);
+      const list = midband ? signs.cells.b : signs.cells.w, cell = list[Math.floor(rng() * list.length) % list.length], ca = cell.w / cell.h, r = w / h;
       const crop = r < ca ? { u: r / ca, v: 1 } : { u: 1, v: ca / r };
       const cxm = mir * (bb.min.x + bb.max.x) / 2 * sxz;
       addSignQuad(cl.sign, F0, signs, cell, [cxm, cyy, bb.max.z * sxz + T.signLift], [0, 1], w, h, crop);
@@ -200,6 +239,9 @@ export async function createTowerBlocks({ station, island, massing, params, shar
     stats.perCluster[slot.cluster].variants[t.name] = (stats.perCluster[slot.cluster].variants[t.name] ?? 0) + 1;
     stats.variants[t.name] = (stats.variants[t.name] ?? 0) + 1;
     stats.sxz = [Math.min(stats.sxz[0], sxz), Math.max(stats.sxz[1], sxz)]; stats.sy = [Math.min(stats.sy[0], sy), Math.max(stats.sy[1], sy)];
+    if (family === 'landmark') stats.landmarks.push({ id: slot.id, score: landmarkIds.get(slot.id)?.score, variant: t.name, height: +(t.top * sy).toFixed(1), core: t.core ? +(t.core.max.y * sy).toFixed(1) : null, footprint: [+(t.W * sxz).toFixed(1), +(t.D * sxz).toFixed(1)], yaw: +yaw.toFixed(2), centre: [+(slot.center[0] - ox).toFixed(0), +(slot.center[2] - oz).toFixed(0)] });
+    if (family === 'midrise') stats.midrises++;
+    if (boardW != null) (stats.boardSizes ??= []).push([+boardW.toFixed(1), +boardH.toFixed(1)]);
     stats.picks[slot.id] = `${t.name} sxz=${sxz.toFixed(2)} sy=${sy.toFixed(2)} ${mir < 0 ? 'm' : ''} yaw=${yaw.toFixed(2)} h=${slot.height}->${(t.top * sy).toFixed(1)}`;
     stats.heightErr.push(+(t.top * sy - slot.height).toFixed(1));
   }
