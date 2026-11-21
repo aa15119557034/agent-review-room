@@ -1,0 +1,32 @@
+[
+  {
+    "file": "pole-utility-a.glb",
+    "triangles": 992,
+    "bytes": 28356,
+    "size_m": [
+      2.2,
+      0.6,
+      11.0
+    ]
+  },
+  {
+    "file": "pole-utility-b.glb",
+    "triangles": 1076,
+    "bytes": 30116,
+    "size_m": [
+      2.4,
+      0.6,
+      12.0
+    ]
+  },
+  {
+    "file": "wire-bundle.glb",
+    "triangles": 608,
+    "bytes": 12784,
+    "size_m": [
+      25.0,
+      4.5,
+      4.2
+    ]
+  }
+]
