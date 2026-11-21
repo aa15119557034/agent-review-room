@@ -31,7 +31,7 @@ export const PARAMS = {
   street: { spacing: [9, 13], offset: 1.9, keep: 0.75, minHalfW: 1.8 },
   bush: { share: 0.55, cell: 14, edge: 0.3, base: 0.05, cap: 3500, walkMargin: 2.5 },
   hedge: { offset: 1.4, overlap: 0.92, skip: 0.06 },   // segment spacing = model length x overlap
-  grass: { cell: 4, p: 0.2, meadowBoost: 1.7, perTree: 2, cap: 22000, coverMin: 0.45, radius: [[280, 900, 450], [176, -1182, 150]], flowerShare: 0.27,
+  grass: { cell: 4, p: 0.2, meadowBoost: 1.7, perTree: 2, cap: 30000, coverMin: 0.45, radius: [[280, 900, 450], [176, -1182, 150], [60, 110, 200]], flowerShare: 0.27,
     edge: { step: 1.7, p: 0.6, reach: [0.4, 2.6], reachFocus: 1.25, flower: 0.4, coverMin: 0.2 } },
   skipRoads: /:(mole|pier)$/,
 };
