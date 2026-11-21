@@ -160,6 +160,21 @@ function createWindow(): void {
   }
 }
 
+/**
+ * 启动修复这一类动作：可以失败，但不该致命。
+ * 上次崩溃留下的半截数据、库正忙、磁盘满都可能让修复抛错；因为这些错让应用起不来，
+ * 用户看到的是「启动失败」，实际他只想打开应用看一眼（#223 评审建议 4）。
+ * 返回 null = 修不动，已经记了日志；调用方按 0 处理。
+ */
+async function repairOrWarn<T>(label: string, what: string, run: () => T | Promise<T>): Promise<T | null> {
+  try {
+    return await run();
+  } catch (error) {
+    console.warn(`[${label}] ${what}失败，先继续启动：` + (error instanceof Error ? error.message : String(error)));
+    return null;
+  }
+}
+
 async function bootstrap(): Promise<void> {
   const userData = app.getPath("userData");
   const db = openDatabase(join(userData, "room.db"));
@@ -191,7 +206,9 @@ async function bootstrap(): Promise<void> {
     emit: broadcast,
     now: () => new Date().toISOString(),
   });
-  const repairedVoice = cliRequested ? 0 : voice.repairInterrupted();
+  const repairedVoice = cliRequested
+    ? 0
+    : ((await repairOrWarn("voice", "启动时收尾没转完的录音", () => voice.repairInterrupted())) ?? 0);
   if (repairedVoice > 0) console.warn(`[voice] 收尾了 ${repairedVoice} 条上次没转完的录音（应用重启，转写中断）`);
 
   // D-34a：选文件 / 表情用的对话框。renderer 只拿 ref，拿不到路径
@@ -248,7 +265,9 @@ async function bootstrap(): Promise<void> {
   });
 
   // 上次崩掉 / 被强杀留下的画图任务统一收尾（契约 media.ts：不留「生成中」）
-  const repairedMedia = cliRequested ? 0 : await jobs.repairInterrupted();
+  const repairedMedia = cliRequested
+    ? 0
+    : ((await repairOrWarn("media", "启动时收尾没跑完的画图任务", () => jobs.repairInterrupted())) ?? 0);
   if (repairedMedia > 0) console.warn(`[media] 收尾了 ${repairedMedia} 个上次没跑完的画图任务`);
 
   const media = new MediaService({
@@ -269,16 +288,13 @@ async function bootstrap(): Promise<void> {
   // §32 第 3 步：上次崩溃留下的 QUEUED / STARTING / RUNNING 统一标成 interrupted
   // 讨论室的 Turn / 轮先收尾（它连 Run 一起结），剩下的 Run 再交给通用修复
   // 修不动（脏数据、库正忙）只记日志：不能因为一行坏数据让应用起不来
-  let repairedTurns = 0;
-  if (!cliRequested) {
-    try {
-      repairedTurns = await repairInterruptedTurns(db, queue);
-    } catch (error) {
-      console.warn("[discussion] 启动时收尾没答完的发言失败，先继续启动：", error instanceof Error ? error.message : String(error));
-    }
-  }
+  const repairedTurns = cliRequested
+    ? 0
+    : ((await repairOrWarn("discussion", "启动时收尾没答完的发言", () => repairInterruptedTurns(db, queue))) ?? 0);
   if (repairedTurns > 0) console.warn(`[discussion] 收尾了 ${repairedTurns} 次上次没答完的发言（应用重启，回答中断）`);
-  const repaired = cliRequested ? { repaired: [] as unknown[] } : await repairInterruptedRuns(db, queue);
+  const repaired = cliRequested
+    ? { repaired: [] as unknown[] }
+    : ((await repairOrWarn("run", "启动时收尾中断的运行", () => repairInterruptedRuns(db, queue))) ?? { repaired: [] as unknown[] });
 
   const settings = new SettingsStore(join(userData, "settings.json"), safeStorage);
   // 旧设置里的 Reviewer 节点 -> user-pc（幂等）：多节点有了 Token 存储，单次评审照旧
@@ -392,8 +408,10 @@ async function bootstrap(): Promise<void> {
       return adapter;
     },
   });
-  const repairedChat = cliRequested ? 0 : await chat.repairInterrupted();
-  if (!cliRequested) await chat.repairPendingImmersive();
+  const repairedChat = cliRequested
+    ? 0
+    : ((await repairOrWarn("chat", "启动时收尾没答完的回答", () => chat.repairInterrupted())) ?? 0);
+  if (!cliRequested) await repairOrWarn("chat", "恢复上次没做完的自动语音 / 画图", () => chat.repairPendingImmersive());
 
   const world = new WorldService({ db, queue, emit: broadcast, knownAgents: () => repo.listAgents().map((agent) => agent.id), agentName: (id) => repo.listAgents().find((agent) => agent.id === id)?.displayName ?? id, dbPath: join(userData, "room.db") });
   let worldReady = false;
