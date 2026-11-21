@@ -184,7 +184,7 @@ async function init() {
       const ground = addShopGround(station, island, extras.plans);
       const rooms = addRoomCollision(station);
       const lotSolid = addLotShopSolid(station, extras.lotPlans);
-      station.clampCamera = makeCameraClamp(station, station.ctx.services.shopInteriors || []);
+      station.clampCamera = makeCameraClamp(station, station.ctx.services.shopInteriors || [], extras.lotPlans);
       station.indoorCamera = makeIndoorCamera(station, station.ctx.services.shopInteriors || [], extras.lotPlans);
       worldBase.shopEntry = {
         walkExtra: extras.areas, skippedExtras: extras.skipped,
@@ -391,6 +391,7 @@ async function init() {
   requestAnimationFrame(frame);
 }
 init().catch(fail);
+
 
 
 

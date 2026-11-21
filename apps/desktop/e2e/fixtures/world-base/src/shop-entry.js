@@ -292,7 +292,7 @@ export function clearBoundaryWalls(station, areas, margin = 0.25) {
  *
  * 修法：玩家在某个房间内时，把相机位置夹到该房间的内盒里（留出 near 平面余量）。
  */
-export function makeCameraClamp(station, rooms) {
+export function makeCameraClamp(station, rooms, lotPlans = []) {
   const boxes = [];
   for (const room of rooms) {
     if (!room?.frame || !Array.isArray(room.box)) continue;
@@ -306,16 +306,34 @@ export function makeCameraClamp(station, rooms) {
       z0: f.z + Math.min(bz0, bz1), z1: f.z + Math.max(bz0, bz1)
     });
   }
+  // lot 店：box 是 lot 局部，带旋转，用 OBB 判定 + 在 lot 局部夹取
+  for (const { geom, plan } of lotPlans) {
+    boxes.push({
+      rotY: geom.rotY, fx: geom.frame.x, fz: geom.frame.z,
+      x0: geom.lotX0, x1: geom.lotX1, z0: geom.lotZ0, z1: geom.lotZ1,
+      y0: geom.floorY, y1: geom.ceilY, doorX: plan?.doorX
+    })
+  }
   if (!boxes.length) return null;
 
   return function clampCamera(playerLocal, camLocal, margin = 0.25) {
     for (const b of boxes) {
-      const inRoom = playerLocal.x >= b.x0 && playerLocal.x <= b.x1 &&
-                     playerLocal.z >= b.z0 && playerLocal.z <= b.z1 &&
-                     playerLocal.y >= b.y0 - 0.3 && playerLocal.y <= b.y1;   // 只看 x/z 会把楼上/屋顶的玩家也拽进店里
+      // 旋转盒：先转到 lot 局部再判定/夹取（rotY=0 时等同于轴对齐）
+      const rot = b.rotY ?? 0, cc = Math.cos(rot), ss = Math.sin(rot)
+      const pl = (p) => {
+        const dx0 = p.x - (b.fx ?? 0), dz0 = p.z - (b.fz ?? 0)
+        return { u: dx0 * cc - dz0 * ss, v: dx0 * ss + dz0 * cc }
+      }
+      const pLoc = pl(playerLocal)
+      const inRoom = pLoc.u >= b.x0 && pLoc.u <= b.x1 &&
+                     pLoc.v >= b.z0 && pLoc.v <= b.z1 &&
+                     playerLocal.y >= b.y0 - 0.3 && playerLocal.y <= b.y1
       if (!inRoom) continue;
-      camLocal.x = Math.min(Math.max(camLocal.x, b.x0 + margin), b.x1 - margin);
-      camLocal.z = Math.min(Math.max(camLocal.z, b.z0 + margin), b.z1 - margin);
+      const cLoc = pl(camLocal)
+      const cu = Math.min(Math.max(cLoc.u, b.x0 + margin), b.x1 - margin)
+      const cv = Math.min(Math.max(cLoc.v, b.z0 + margin), b.z1 - margin)
+      camLocal.x = (b.fx ?? 0) + cu * cc + cv * ss
+      camLocal.z = (b.fz ?? 0) - cu * ss + cv * cc
       camLocal.y = Math.min(Math.max(camLocal.y, b.y0 + margin), b.y1 - margin);
       // clamp 完如果离玩家太近（薄房间、刚进门），改成往上抬，别硬挤在墙边切近平面
       const MIN_D = 1.2;
