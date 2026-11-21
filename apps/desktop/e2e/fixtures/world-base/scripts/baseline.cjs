@@ -51,6 +51,15 @@ function createStaticServer(root = fixture) {
       base = path.join(root, 'assets', 'blocks-2026-11-20');
       relative = pathname.slice('/blocks/'.length);
     }
+    // X-51 2026-11-21: street props and vegetation GLBs (src/street-props.js, src/vegetation-scatter.js). /assets/ is Petalwake's, so they get their own routes.
+    if (pathname.startsWith('/street-props/')) {
+      base = path.join(root, 'assets', 'props-2026-11-21');
+      relative = pathname.slice('/street-props/'.length);
+    }
+    if (pathname.startsWith('/vegetation/')) {
+      base = path.join(root, 'assets', 'vegetation-2026-11-21');
+      relative = pathname.slice('/vegetation/'.length);
+    }
     const stationArt = /^\/(mature-sakura|station-art)\/(.*)$/.exec(pathname);
     if (stationArt) {
       try { stationArtRelease ??= stationArtReleasePath(root); }

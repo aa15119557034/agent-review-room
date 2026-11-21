@@ -222,6 +222,15 @@ async function init() {
     worldBase.massing.vegetationClear = clearVegetationAreas(island.terrain,
       worldBase.massing.vegetationClearAreas, station.root.matrixWorld, { flowers: 5, jitter: 2 });
   }
+  // X-51 (2026-11-21): island-wide street props (poles, wires, signs, vending machines, post boxes, hydrants, guardrails) and vegetation (trees, bushes,
+  // hedges, grass). Rules in src/street-props.js / src/vegetation-scatter.js; they run after every vegetation clear and building slot is known.
+  // ?props=off / ?veg=off import nothing, and the page is the one without them.
+  {
+    const scatterQuery = new URLSearchParams(location.search), propsOn = scatterQuery.get('props') !== 'off', vegOn = scatterQuery.get('veg') !== 'off';
+    if (propsOn || vegOn) stage('正在铺放街道道具与植被…');
+    if (propsOn) worldBase.streetProps = await (await import('./street-props.js')).createStreetProps({ scene, worldBase, island, station });
+    if (vegOn) worldBase.vegetation = await (await import('./vegetation-scatter.js')).createVegetation({ scene, worldBase, island, station });
+  }
   // Round 11: the shop-room boxes are installed after the town edge is built (the laundromat registers its room there). No program
   // using the lit chunks has compiled yet: the first render is after init.
   if (shadowTint) {

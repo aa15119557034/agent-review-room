@@ -144,6 +144,27 @@ node scripts\baseline.cjs --scene=combined --electron=D:\codex\2026-11-16\world-
 
 `?refl=old`（或 `?toon=off`，或下午预设 `refl.on:0`）不装着色器分支、不烘焙，和第21轮逐像素一致。运行时调参用 `worldBase.refl.set({ lod, lodRough, lodPuddle, base, grazing, dry, ripple, streakLen, streakThresh, streakGain, streakLod, streakTaps, on })`（任意子集，非有限数或未知键会抛错且不写入，`streakTaps` 钳到 0～8，返回当前值）和 `worldBase.refl.get()`。`lod` 给数字同时设两档，给 `[粗糙, 水洼]` 分别设；`lodFar` 是 `lodRough` 的别名。不要直接 `worldBase.refl.uniforms.uReflLod = 1`（着色器仍持有旧对象，什么都不变），也不要把数字写进 Vector2／Vector4 uniform 的 `.value`（`uniform2fv(1)` 每帧抛错，画布停在上一帧）。烘焙耗时 `worldBase.refl.bakeMs` 用 `Date.now()` 计，捕获脚本把 `performance.now()` 钉死时也有值。
 
+## 街道道具与植被（2026-11-21）
+
+全岛通用的自动铺放，不为任何机位手摆。两个模块各自一个开关，关掉时**完全不加载**（`main.js` 用动态 `import`，文件都不会请求），画面等同没有它们：
+
+| 开关 | 模块 | 内容 |
+|---|---|---|
+| `?props=off` | `src/street-props.js` | 电柱、电线、标志牌、贩卖机、邮筒、消火栓、护栏 |
+| `?veg=off` | `src/vegetation-scatter.js` | 阔叶/针叶/樱/行道小树、灌木、绿篱、草簇 |
+
+共用 `src/scatter-common.js`（GLB 读取与合并、卡通材质 + 距离雾、实例批次、场景事实查询）。
+
+**模型与权重全在资产表 `src/props-veg.json`**：GLB 路径、期望尺寸 `size`、原点偏移 `origin`、`scale`/`fit`、`snapGround`、放置半径 `radius`、每组/每树种的权重和缩放范围。代码只按「组」或「树种」取模型，不出现文件名。换模型或整包重做只改这个表；GLB 实际包围盒与 `size` 相差超过 35% 会记入 `worldBase.scatter.*.summary.sizeWarnings`。电线不是 GLB：每个电柱条目的 `attach`（挂线高度 + 横向偏移列表，列表长度即每跨根数）和 `wire`（下垂比例、线径、段数、颜色）程序生成，一个跨合并成一个网格。静态服务器路由 `/street-props/`、`/vegetation/` 指向 `assets/props-2026-11-21/`、`assets/vegetation-2026-11-21/`（`scripts/baseline.cjs`）。
+
+### 数据来源与避让
+
+- 路网：车站 `layout.js` 的 R1–R6（仅用于距离判断，站内上游已有电柱/贩卖机/标志/护栏，只补上游没有的邮筒、消火栓，放在主街地块接缝，避开门洞和上游贩卖点），加 Petalwake 三个聚落的 `assets/town/sites.json` 街道（中心线 + 宽度）和地块多边形。
+- 避让：站内可走矩形与店铺附加可走区、城市/天际线/立面行/塔楼/中层楼的包围盒、massing 的道路走廊、`ctx.physics` 实体碰撞盒、聚落的 `Town.heightAt` 实体高度图（房屋、墙、树、船）、岛上旧树和岩石、河带、水下、坡度、草地覆盖（splat 的 A 通道，各处 `clearVegetationAreas` 之后读取，镇、地块、站区都已清零）。
+- 规则参数在各文件顶部的 `PARAMS`：电柱间距 25–35 m、路缘外 1.1 m；路口标志（支路 stop，其余按权重）；地块两端接缝放贩卖机/邮筒/消火栓；落差 > 1.1 m 的路边铺 2 m 护栏段；树的疏密由 230 m 尺度噪声成片、按到车站/两个镇的距离衰减，树线以上与陡坡不放；绿篱沿可走矩形外 1.4 m；草簇铺在树脚与站区、Cairnwick 周围的空地。`cap` 控制上限（总预算：新增 draw call ≤ 60，三角面 ≤ 1.5 M）。
+
+自检结果和实例数见本分支提交说明；运行后 `worldBase.scatter.props` / `.veg` 里有各类计数、`drawCalls`、`triangles`、被拒原因统计。
+
 ## 当前状态
 
 第17轮源码`0184c79`的[3060地表与参数归属回验](./evidence/greenery-c17-2026-11-18/README.md)关闭C16交回的两项缺陷：两原机位的北侧亮绿细带消失，terrain／transition／两份站区edge blend实际共享TOWN参数；双look、未注册Meadow、质量重建和材质池重新归属的15条CPU断言全部通过。四组恢复后的PNG都与各自开启时完全相同。仍是定向回归关闭，不是整体风格／P2验收。
