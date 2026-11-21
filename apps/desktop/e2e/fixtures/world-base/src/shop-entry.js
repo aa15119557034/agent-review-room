@@ -475,56 +475,80 @@ export function addLotShopSolid(station, lotPlans) {
 export function makeIndoorCamera(station, rooms, lotPlans = []) {
   const shots = [];
 
-  const push = (f, lotX0, lotX1, lotZ0, lotZ1, floorY, doorX) => {
+  // kind: 'laundry'（房间很浅，机位在门外往里看）| 'lot'（7–10 m 深，机位在门内往内俯视）
+  const push = (kind, f, lotX0, lotX1, lotZ0, lotZ1, floorY, ceilY, doorX) => {
     const c = Math.cos(f.rotY), s = Math.sin(f.rotY);
     const toS = (lx, lz) => [f.x + lx * c + lz * s, f.z - lx * s + lz * c];
-    const dx = doorX ?? (lotX0 + lotX1) / 2;
-    // 房间只有 2.1 m 深，机位放在**门洞外 0.4 m**、高 1.9 m，看向房间中心偏后
-    const [px, pz] = toS(dx, lotZ1 + 1.1);
-    const [lx2, lz2] = toS((lotX0 + lotX1) / 2, lotZ0 + 1.2);
+    const door = doorX ?? (lotX0 + lotX1) / 2;
+    const midX = (lotX0 + lotX1) / 2;
+    let posLZ, posY, lookLZ, lookY;
+    if (kind === 'laundry') {
+      // 洗衣店只有 2.14 m 深：机位在**门洞外 1.1 m**、离地 1.55 m，看向房间中心偏后、离地 1.0 m
+      posLZ = lotZ1 + 1.1; posY = floorY + 1.55;
+      lookLZ = lotZ0 + 1.2; lookY = floorY + 1.0;
+    } else {
+      // lot 店 7–10 m 深：机位在**门内 0.5 m**、离地 2.3 m，看向房间中心、离地 0.8 m（俯角约 15°）
+      posLZ = lotZ1 - 0.5; posY = floorY + 2.3;
+      lookLZ = (lotZ0 + lotZ1) / 2; lookY = floorY + 0.8;
+    }
+    const [px, pz] = toS(door, posLZ);
+    const [lx2, lz2] = toS(midX, lookLZ);
     shots.push({
-      lotX0, lotX1, lotZ0, lotZ1, rotY: f.rotY, f,
-      floorY,
-      pos: { x: px, y: floorY + 1.55, z: pz },
-      look: { x: lx2, y: floorY + 1.0, z: lz2 }
+      kind, f, rotY: f.rotY,
+      lotX0, lotX1, lotZ0, lotZ1, floorY, ceilY,
+      pos: { x: px, y: posY, z: pz },
+      look: { x: lx2, y: lookY, z: lz2 },
+      inside: false          // 迟滞状态：当前是否算「在店里」
     });
   };
 
-  // 带 frame 的房间（洗衣店）
   for (const room of rooms) {
     if (!room?.frame || !Array.isArray(room.box)) continue;
     if (!axisAligned(room)) continue;
     const [bx0, by0, bz0, bx1, by1, bz1] = room.box;
     const f = room.frame;
-    const lotX0 = Math.min(bx0, bx1), lotX1 = Math.max(bx0, bx1);
-    const lotZ0 = Math.min(bz0, bz1), lotZ1 = Math.max(bz0, bz1);
-    push(f, lotX0, lotX1, lotZ0, lotZ1, f.y + Math.min(by0, by1), room.entrances?.[0]?.x ?? 0);
+    push('laundry', f,
+      Math.min(bx0, bx1), Math.max(bx0, bx1),
+      Math.min(bz0, bz1), Math.max(bz0, bz1),
+      f.y + Math.min(by0, by1), f.y + Math.max(by0, by1),
+      room.entrances?.[0]?.x ?? 0);
   }
 
-  // lot 店
   for (const { geom, plan } of lotPlans) {
-    push(geom.frame, geom.lotX0, geom.lotX1, geom.lotZ0, geom.lotZ1, geom.floorY, plan?.doorX);
+    push('lot', geom.frame,
+      geom.lotX0, geom.lotX1, geom.lotZ0, geom.lotZ1,
+      geom.floorY, geom.ceilY, plan?.doorX);
   }
 
   if (!shots.length) return null;
 
+  const HYST = 0.3;   // 迟滞：进入要内缩 0.3 m，离开要外扩 0.3 m
+
+  // 共用的「在不在房间内」判定（pose 和 clampCamera 用同一套 y 口径）
+  const inShot = (s, playerLocal, grow) => {
+    const c = Math.cos(s.rotY), sn = Math.sin(s.rotY);
+    const dx0 = playerLocal.x - s.f.x, dz0 = playerLocal.z - s.f.z;
+    const lx = dx0 * c - dz0 * sn;
+    const lz = dx0 * sn + dz0 * c;
+    return lx >= s.lotX0 + grow && lx <= s.lotX1 - grow &&
+           lz >= s.lotZ0 + grow && lz <= s.lotZ1 - grow &&
+           playerLocal.y >= s.floorY - 0.3 && playerLocal.y <= s.ceilY;
+  };
+
   return {
-    /** 玩家在哪个房间里？返回固定机位；不在任何房间返回 null */
+    /** 玩家在哪个房间里？带迟滞，返回固定机位；不在任何房间返回 null */
     pose(playerLocal) {
-      for (const s of shots) {
-        // 转到 lot 局部判定
-        const c = Math.cos(s.rotY), sn = Math.sin(s.rotY);
-        const dx0 = playerLocal.x - s.f.x, dz0 = playerLocal.z - s.f.z;
-        const lx = dx0 * c - dz0 * sn;
-        const lz = dx0 * sn + dz0 * c;
-        if (lx < s.lotX0 || lx > s.lotX1 || lz < s.lotZ0 || lz > s.lotZ1) continue;
-        if (playerLocal.y < s.floorY - 0.3 || playerLocal.y > s.floorY + 3.2) continue;
-        return s;
+      for (let i = 0; i < shots.length; i++) {
+        const s = shots[i];
+        // 没在店里：要求进入「内缩 0.3 m」的盒；已在店里：只要没出「外扩 0.3 m」的盒就留着
+        const ok = s.inside ? inShot(s, playerLocal, -HYST) : inShot(s, playerLocal, HYST);
+        if (ok) {
+          if (!s.inside) { for (const o of shots) o.inside = false; s.inside = true; }
+          return s;
+        }
+        if (s.inside) s.inside = false;
       }
       return null;
     }
   };
 }
-
-
-
