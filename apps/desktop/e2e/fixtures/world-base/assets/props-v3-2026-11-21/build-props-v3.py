@@ -97,32 +97,42 @@ def cell_uv(cell, inset=0.0):
 
 # ---------------------------------------------------------------- 贩卖机
 def build_vending(which):
-    """which = 'drink' | 'coffee'；正面用 vending-atlas 的左/右半"""
+    """which = "drink" | "coffee"；机身和商品窗是两个材质，商品窗可单独加自发光"""
     W, D, H = 1.00, 0.75, 1.83
-    body_col = (0.70, 0.16, 0.14) if which == 'drink' else (0.16, 0.17, 0.19)
+    row = 0 if which == "drink" else 1
+    body_col = (0.70, 0.16, 0.14) if which == "drink" else (0.16, 0.17, 0.19)
     objs = []
-    # 机箱（六面，正面留空给贴图）
+    # 机箱
     bm = bmesh.new()
     box(bm, 0, D / 2, H / 2, W, D - 0.02, H)
-    objs.append(new_obj('vend-body', mat_plain('vend-body', body_col, 0.55, 0.15), bm, smooth=False))
+    objs.append(new_obj("vend-body", mat_plain("vend-body", body_col, 0.55, 0.15), bm, smooth=False))
     # 顶盖
     bm = bmesh.new()
     box(bm, 0, D / 2, H + 0.02, W + 0.04, D + 0.04, 0.04)
-    objs.append(new_obj('vend-cap', mat_plain('vend-cap', (0.22, 0.23, 0.25), 0.5, 0.4), bm, smooth=False))
-    # 正面贴图（略前出于箱体）
+    objs.append(new_obj("vend-cap", mat_plain("vend-cap", (0.22, 0.23, 0.25), 0.5, 0.4), bm, smooth=False))
+    # 正面机身贴图：取左列对应行
     bm = bmesh.new()
     layer = bm.loops.layers.uv.verify()
-    u0 = 0.0 if which == 'drink' else 0.5
-    u1 = 0.5 if which == 'drink' else 1.0
+    u0, v0, u1, v1 = cell_uv((0, row))
     y = -0.012
     pts = [(-W / 2, y, 0.02), (W / 2, y, 0.02), (W / 2, y, H - 0.02), (-W / 2, y, H - 0.02)]
-    quad_uv(bm, pts, [(u0, 0.0), (u1, 0.0), (u1, 1.0), (u0, 1.0)], layer)
-    objs.append(new_obj('vend-face', mat_tex('vend-face', 'vending-atlas.png', emit=0.55), bm, smooth=False))
+    quad_uv(bm, pts, [(u0, v0), (u1, v0), (u1, v1), (u0, v1)], layer)
+    objs.append(new_obj("vend-face", mat_tex("vend-face", "vending-atlas.png"), bm, smooth=False))
+    # 商品窗：单独一片、单独材质（接入时给 vend-window 加自发光）
+    bm = bmesh.new()
+    layer = bm.loops.layers.uv.verify()
+    wu0, wv0, wu1, wv1 = cell_uv((1, row))
+    wx = W * 0.41
+    wz0, wz1 = H * 0.155, H * 0.645
+    yw = -0.016
+    pts2 = [(-wx, yw, wz0), (wx, yw, wz0), (wx, yw, wz1), (-wx, yw, wz1)]
+    quad_uv(bm, pts2, [(wu0, wv0), (wu1, wv0), (wu1, wv1), (wu0, wv1)], layer)
+    objs.append(new_obj("vend-window", mat_tex("vend-window", "vending-atlas.png", emit=0.35), bm, smooth=False))
     # 侧面散热格栅
     bm = bmesh.new()
     for i in range(5):
         box(bm, W / 2 + 0.005, D * 0.55, 0.35 + i * 0.09, 0.01, D * 0.6, 0.03)
-    objs.append(new_obj('vend-grille', mat_plain('vend-grille', (0.20, 0.21, 0.23), 0.6, 0.4), bm, smooth=False))
+    objs.append(new_obj("vend-grille", mat_plain("vend-grille", (0.20, 0.21, 0.23), 0.6, 0.4), bm, smooth=False))
     return objs
 
 
@@ -152,7 +162,7 @@ def build_sign(kind):
         'speed40': (0, 0, 2.45, 0.62, 0.62, 'circle'),
         'blue': (1, 0, 2.55, 1.30, 0.42, 'rect'),
         'warning': (0, 1, 2.35, 0.70, 0.70, 'diamond'),
-        'stop': (1, 1, 2.30, 0.82, 0.74, 'triangle'),
+        'stop': (1, 1, 2.30, 0.82, 0.74, 'triangle_down'),
     }[kind]
     col, row, post_h, sw, sh, shape = cfg
     objs = []
@@ -185,6 +195,11 @@ def build_sign(kind):
         pts = [(0, y, cz + sh / 2), (sw / 2, y, cz), (0, y, cz - sh / 2), (-sw / 2, y, cz)]
         quad_uv(bm, pts, [(u0 + (u1 - u0) * 0.5, v1), (u1, v0 + (v1 - v0) * 0.5),
                           (u0 + (u1 - u0) * 0.5, v0), (u0, v0 + (v1 - v0) * 0.5)], layer)
+    elif shape == "triangle_down":
+        # 日本停止牌：倒三角（尖朝下）
+        h2 = sh / 2
+        pts = [(-sw / 2, y, cz + h2), (sw / 2, y, cz + h2), (0, y, cz - h2)]
+        quad_uv(bm, pts, [(u0, v1), (u1, v1), (u0 + (u1 - u0) * 0.5, v0)], layer)
     else:  # triangle
         h2 = sh / 2
         pts = [(0, y, cz + h2), (sw / 2, y, cz - h2), (-sw / 2, y, cz - h2)]
@@ -253,6 +268,8 @@ for name, fn in BUILDS:
 with open(os.path.join(OUT, 'props3-report.json'), 'w', encoding='utf-8') as f:
     json.dump(report, f, ensure_ascii=False, indent=2)
 print('DONE')
+
+
 
 
 

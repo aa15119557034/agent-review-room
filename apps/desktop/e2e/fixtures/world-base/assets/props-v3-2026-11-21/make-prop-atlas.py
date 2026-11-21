@@ -27,80 +27,88 @@ def font(size):
     return ImageFont.load_default()
 
 
-def vending_face(d, x0, y0, w, h, theme):
-    """一台贩卖机的正面：展示窗 + 商品行 + 品牌条 + 投币区 + 取物口"""
-    S = w  # 以宽度为基准
-    dark = theme['dark']
-    # 底板
-    d.rectangle([x0, y0, x0 + w, y0 + h], fill=theme['body'])
-    # 顶部品牌条
-    bh = h * 0.085
-    d.rectangle([x0, y0, x0 + w, y0 + bh], fill=theme['brand'])
-    f_brand = font(int(bh * 0.62))
-    txt = theme['brandText']
-    tw = d.textlength(txt, font=f_brand)
-    d.text((x0 + (w - tw) / 2, y0 + bh * 0.18), txt, font=f_brand, fill=theme['brandFg'])
-    # 展示窗（发光）
-    wx0, wy0 = x0 + w * 0.06, y0 + bh + h * 0.03
-    wx1, wy1 = x0 + w * 0.94, y0 + h * 0.62
-    d.rectangle([wx0, wy0, wx1, wy1], fill=theme['glass'])
-    # 商品：3 行 x 5 列
+def vend_body_cell(d, x0, y0, w, h, theme):
+    """机身（不含商品窗）：品牌条 + 按钮列 + 投币区 + 取物口 + PUSH"""
+    dark = theme["dark"]
+    d.rectangle([x0, y0, x0 + w, y0 + h], fill=theme["body"])
+    bh = h * 0.10
+    d.rectangle([x0, y0, x0 + w, y0 + bh], fill=theme["brand"])
+    f_brand = font(int(bh * 0.58))
+    tw = d.textlength(theme["brandText"], font=f_brand)
+    d.text((x0 + (w - tw) / 2, y0 + bh * 0.20), theme["brandText"], font=f_brand, fill=theme["brandFg"])
+    # 商品窗位置留空（深色底，让窗片盖上去）
+    wx0, wy0 = x0 + w * 0.07, y0 + h * 0.13
+    wx1, wy1 = x0 + w * 0.93, y0 + h * 0.66
+    d.rectangle([wx0, wy0, wx1, wy1], fill=theme["socket"])
+    # 按钮列
+    by = y0 + h * 0.70
+    for i in range(4):
+        bx = x0 + w * 0.10 + i * w * 0.20
+        d.rounded_rectangle([bx, by, bx + w * 0.13, by + h * 0.030], radius=4, fill=theme["button"])
+    # 投币区
+    d.rectangle([x0 + w * 0.68, y0 + h * 0.755, x0 + w * 0.92, y0 + h * 0.85], fill=theme["panel"])
+    d.rectangle([x0 + w * 0.74, y0 + h * 0.770, x0 + w * 0.86, y0 + h * 0.790], fill=dark)
+    d.ellipse([x0 + w * 0.76, y0 + h * 0.800, x0 + w * 0.81, y0 + h * 0.833], fill=(200, 200, 205))
+    # 取物口
+    d.rectangle([x0 + w * 0.08, y0 + h * 0.885, x0 + w * 0.66, y0 + h * 0.975], fill=theme["panel"])
+    d.rectangle([x0 + w * 0.11, y0 + h * 0.905, x0 + w * 0.63, y0 + h * 0.955], fill=dark)
+    f_small = font(int(h * 0.018))
+    d.text((x0 + w * 0.11, y0 + h * 0.978), "PUSH", font=f_small, fill=theme["brandFg"])
+
+
+def vend_window_cell(d, x0, y0, w, h, theme):
+    """商品窗（单独一格，接入时给这块加自发光）：3 行 x 4 列商品 + 价签 + 灯带"""
+    d.rectangle([x0, y0, x0 + w, y0 + h], fill=theme["glass"])
+    # 顶部灯带
+    d.rectangle([x0 + w * 0.02, y0 + h * 0.02, x0 + w * 0.98, y0 + h * 0.07], fill=theme["strip"])
     rows, cols = 3, 4
-    cw = (wx1 - wx0) / cols
-    ch = (wy1 - wy0) / rows
+    gx0, gy0 = x0 + w * 0.05, y0 + h * 0.11
+    gx1, gy1 = x0 + w * 0.95, y0 + h * 0.95
+    cw = (gx1 - gx0) / cols
+    ch = (gy1 - gy0) / rows
     for r in range(rows):
         for c in range(cols):
-            cx = wx0 + c * cw + cw * 0.5
-            cy = wy0 + r * ch + ch * 0.62
-            col = theme['cans'][(r * cols + c) % len(theme['cans'])]
-            # 罐身
-            cwid, chei = cw * 0.42, ch * 0.52
+            cx = gx0 + c * cw + cw * 0.5
+            cy = gy0 + r * ch + ch * 0.62
+            col = theme["cans"][(r * cols + c) % len(theme["cans"])]
+            cwid, chei = cw * 0.40, ch * 0.50
             d.rounded_rectangle([cx - cwid / 2, cy - chei, cx + cwid / 2, cy], radius=cwid * 0.18, fill=col)
-            # 高光
-            d.rectangle([cx - cwid * 0.32, cy - chei * 0.92, cx - cwid * 0.16, cy - chei * 0.12],
+            d.rectangle([cx - cwid * 0.30, cy - chei * 0.92, cx - cwid * 0.14, cy - chei * 0.12],
                         fill=tuple(min(255, int(v * 1.35)) for v in col))
-            # 价签
-            f_p = font(int(ch * 0.16))
-            d.text((cx - cw * 0.12, cy + ch * 0.02), '¥130', font=f_p, fill=dark)
-    # 中部按钮列
-    by = y0 + h * 0.645
-    for i in range(5):
-        bx = x0 + w * 0.10 + i * w * 0.165
-        d.rounded_rectangle([bx, by, bx + w * 0.11, by + h * 0.028], radius=4, fill=theme['button'])
-    # 投币区
-    d.rectangle([x0 + w * 0.70, y0 + h * 0.70, x0 + w * 0.92, y0 + h * 0.80], fill=theme['panel'])
-    d.rectangle([x0 + w * 0.76, y0 + h * 0.715, x0 + w * 0.86, y0 + h * 0.735], fill=dark)
-    d.ellipse([x0 + w * 0.77, y0 + h * 0.745, x0 + w * 0.81, y0 + h * 0.775], fill=(200, 200, 205))
-    # 取物口
-    d.rectangle([x0 + w * 0.10, y0 + h * 0.86, x0 + w * 0.74, y0 + h * 0.97], fill=theme['panel'])
-    d.rectangle([x0 + w * 0.13, y0 + h * 0.885, x0 + w * 0.71, y0 + h * 0.945], fill=dark)
-    f_small = font(int(h * 0.020))
-    d.text((x0 + w * 0.13, y0 + h * 0.955), 'PUSH', font=f_small, fill=theme['brandFg'])
+            f_p = font(int(ch * 0.14))
+            pt = "¥130"
+            pw2 = d.textlength(pt, font=f_p)
+            d.text((cx - pw2 / 2, cy + ch * 0.04), pt, font=f_p, fill=theme["dark"])
 
 
 def make_vending_atlas(size=1024):
+    """2x2：左列=机身（上 DRINK / 下 COFFEE），右列=商品窗（上 DRINK / 下 COFFEE）"""
     S = size * SS
-    img = Image.new('RGB', (S, S), (28, 30, 34))
+    img = Image.new("RGB", (S, S), (28, 30, 34))
     d = ImageDraw.Draw(img)
-    half = S // 2
+    q = S // 2
     drinks = dict(
-        body=(196, 62, 58), brand=(28, 96, 172), brandText='DRINK', brandFg=(255, 255, 255),
-        glass=(232, 240, 246), panel=(60, 62, 66), button=(240, 236, 210),
-        cans=[(220, 80, 70), (80, 150, 210), (240, 200, 80), (120, 190, 120), (230, 230, 235)],
+        body=(196, 62, 58), brand=(28, 96, 172), brandText="DRINK", brandFg=(255, 255, 255),
+        glass=(236, 243, 248), panel=(60, 62, 66), button=(240, 236, 210), socket=(90, 40, 38),
+        strip=(255, 248, 214),
+        cans=[(220, 80, 70), (80, 150, 210), (240, 200, 80), (120, 190, 120)],
         dark=(38, 40, 44),
     )
     coffee = dict(
-        body=(52, 56, 62), brand=(24, 26, 30), brandText='COFFEE', brandFg=(232, 196, 120),
-        glass=(238, 226, 206), panel=(30, 32, 36), button=(232, 196, 120),
-        cans=[(120, 84, 60), (200, 170, 130), (90, 66, 50), (230, 210, 180), (150, 110, 78)],
+        body=(52, 56, 62), brand=(24, 26, 30), brandText="COFFEE", brandFg=(232, 196, 120),
+        glass=(240, 228, 208), panel=(30, 32, 36), button=(232, 196, 120), socket=(40, 40, 44),
+        strip=(255, 226, 170),
+        cans=[(120, 84, 60), (200, 170, 130), (90, 66, 50), (230, 210, 180)],
         dark=(24, 26, 30),
     )
-    vending_face(d, 0, 0, half, S, drinks)
-    vending_face(d, half, 0, half, S, coffee)
-    # 分隔线
-    d.rectangle([half - 2, 0, half + 2, S], fill=(20, 20, 22))
+    vend_body_cell(d, 0, 0, q, q, drinks)
+    vend_window_cell(d, q, 0, q, q, drinks)
+    vend_body_cell(d, 0, q, q, q, coffee)
+    vend_window_cell(d, q, q, q, q, coffee)
+    d.rectangle([q - 2, 0, q + 2, S], fill=(20, 20, 22))
+    d.rectangle([0, q - 2, S, q + 2], fill=(20, 20, 22))
     img = img.resize((size, size), Image.LANCZOS)
-    img.save(os.path.join(OUT, 'vending-atlas.png'))
+    img.save(os.path.join(OUT, "vending-atlas.png"))
     return img
 
 
@@ -146,18 +154,24 @@ def sign_warning(d, box):
 
 
 def sign_stop(d, box):
+    """日本停止牌：倒三角（尖朝下）、红底白字、白边"""
     x0, y0, w, h = box
     cx, cy = x0 + w / 2, y0 + h / 2
-    r = min(w, h) * 0.40
-    pts = [(cx, cy - r), (cx + r * 0.92, cy + r * 0.62), (cx - r * 0.92, cy + r * 0.62)]
-    d.polygon(pts, fill=(246, 246, 242))
-    r2 = r * 0.86
-    pts2 = [(cx, cy - r2), (cx + r2 * 0.92, cy + r2 * 0.62), (cx - r2 * 0.92, cy + r2 * 0.62)]
-    d.polygon(pts2, fill=(198, 44, 40))
-    f = font(int(r * 0.52))
-    t = '止まれ'
+    r = min(w, h) * 0.42
+    # 倒三角：两个点在**上**，一个点在**下** → 尖朝下
+    top_y = cy - r * 0.72
+    bot_y = cy + r * 0.78
+    outer = [(cx - r, top_y), (cx + r, top_y), (cx, bot_y)]
+    d.polygon(outer, fill=(248, 246, 242))
+    r2 = r * 0.88
+    top2 = top_y + r * 0.09
+    bot2 = bot_y - r * 0.13
+    inner = [(cx - r2, top2), (cx + r2, top2), (cx, bot2)]
+    d.polygon(inner, fill=(198, 40, 38))
+    f = font(int(r * 0.33))
+    t = "止まれ"
     tw = d.textlength(t, font=f)
-    d.text((cx - tw / 2, cy - r * 0.02), t, font=f, fill=(250, 250, 248))
+    d.text((cx - tw / 2, cy - r * 0.16), t, font=f, fill=(250, 250, 248))
 
 
 def make_sign_atlas(size=1024):
@@ -180,4 +194,5 @@ prev = Image.new('RGB', (1024 + 1024 + 24, 1024), (24, 26, 30))
 prev.paste(v, (0, 0)); prev.paste(s, (1048, 0))
 prev.save(os.path.join(OUT, 'prop-atlas-preview.png'))
 print('OK', OUT)
+
 
