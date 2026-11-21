@@ -236,7 +236,10 @@ function makeTreeLod({ far: farModel, near, list, params, materials, root, name 
   const far = farMeshes[0], origM = far.instanceMatrix.array.slice(), origC = far.instanceColor.array.slice(), isNear = new Uint8Array(sorted.length);
   const cells = new Map();
   sorted.forEach((t, i) => { const k = key(t); let c = cells.get(k); if (!c) cells.set(k, (c = { minX: Infinity, maxX: -Infinity, minZ: Infinity, maxZ: -Infinity, idx: [] })); c.idx.push(i); c.minX = Math.min(c.minX, t.x); c.maxX = Math.max(c.maxX, t.x); c.minZ = Math.min(c.minZ, t.z); c.maxZ = Math.max(c.maxZ, t.z); });
-  const cellList = [...cells.values()], reach = params.nearDist + params.hysteresis;
+  // debug ?lod=near / ?lod=far: force every tree within `nearForceDist` m to v2 (still capped by nearMax), or none
+  const lodForce = typeof location === 'undefined' ? null : new URLSearchParams(location.search).get('lod');
+  const nearDist = lodForce === 'far' ? -1 : lodForce === 'near' ? (params.nearForceDist ?? 400) : params.nearDist;
+  const cellList = [...cells.values()], reach = Math.max(0, nearDist + params.hysteresis);
   let lastX = Infinity, lastZ = Infinity, nearCount = 0;
   const update = cam => {
     if (Math.hypot(cam.x - lastX, cam.z - lastZ) < params.step) return { near: nearCount, far: sorted.length - nearCount };
@@ -245,7 +248,7 @@ function makeTreeLod({ far: farModel, near, list, params, materials, root, name 
     for (const c of cellList) {
       const dx = Math.max(c.minX - cam.x, 0, cam.x - c.maxX), dz = Math.max(c.minZ - cam.z, 0, cam.z - c.maxZ);
       if (dx * dx + dz * dz > reach * reach) continue;
-      for (const i of c.idx) { const t = sorted[i], d = Math.hypot(t.x - cam.x, t.z - cam.z); if (d < params.nearDist || (isNear[i] && d < reach)) cand.push([d, i]); }
+      for (const i of c.idx) { const t = sorted[i], d = Math.hypot(t.x - cam.x, t.z - cam.z); if (d < nearDist || (isNear[i] && d < reach)) cand.push([d, i]); }
     }
     cand.sort((a, b) => a[0] - b[0]); if (cand.length > nearMax) cand.length = nearMax;
     const chosen = new Set(cand.map(c => c[1])); let changed = false;

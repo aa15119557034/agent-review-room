@@ -124,7 +124,7 @@ export async function createStreetProps({ scene, worldBase, island, station, dry
         for (let k = 0; k <= W.segments * 4; k++) { const t = k / (W.segments * 4), off = A.offsets[w] + (B.offsets[w] - A.offsets[w]) * t; curve.push(new THREE.Vector3(a.x + dx * t + cx * off, ya + (yb - ya) * t - 4 * W.sagRatio * L * t * (1 - t), a.z + dz * t + cz * off)); }
         curves.push(curve);
       }
-      if (spanBlocked(curves)) { wireBlocked++; continue; }
+      if (spanBlocked(curves)) { wireBlocked++; all.push({ kind: 'wire', blocked: true, x: (a.x + b.x) / 2, z: (a.z + b.z) / 2, y: (a.y + b.y) / 2, r: L / 2, ax: a.x, az: a.z, bx: b.x, bz: b.z, wires: n }); continue; }
       for (const full of curves) {
         const curve = full.filter((_, k) => k % 4 === 0);
         const tube = new THREE.TubeGeometry(new THREE.CatmullRomCurve3(curve), W.segments * 2, W.radius, W.radial, false);
