@@ -384,6 +384,7 @@ async function init() {
       station.update(dt, now / 1000, walker.worldPosition);
       walker.update(dt);
       island.update(dt, now / 1000);
+      worldBase.vegetation?.update?.(camera); // X-51: near / far tree LOD (only when ?veg is on)
       look.render(scene, dt);
       worldBase.ready = true;
       worldBase.cameraMode = walker.view;

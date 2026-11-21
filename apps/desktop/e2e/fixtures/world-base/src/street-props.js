@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
-import { loadTable, loadModels, pickWeighted, makeMaterial, makeBatch, getAerial, getContext, hash32, rngFrom } from './scatter-common.js';
+import { loadTable, loadModels, pickWeighted, makeMaterialSet, makeBatches, getAerial, getContext, hash32, rngFrom } from './scatter-common.js';
 
 // X-51 street props (2026-11-21): island-wide, rule driven; nothing here knows a camera. Models, sizes, origin offsets, radii and all weights live in
 // src/props-veg.json ("props"): the rules ask for a GROUP (pole, vending, signStop, ...) and never name a GLB. Wires are generated (wireCount = the pole's attach.offsets).
@@ -44,11 +44,11 @@ export async function createStreetProps({ scene, worldBase, island, station, dry
   const ctx = await getContext({ worldBase, island, station, scene });
   const [aerial, table] = await Promise.all([getAerial(worldBase, island), loadTable()]);
   const model = await loadModels(table.props), GROUPS = table.props.groups, pick = g => pickWeighted(rng, GROUPS[g]), RAD = id => model[id].radius;
-  const material = makeMaterial({ gradientMap: station.ctx.mat.gradientMap, aerial, name: 'street-props' });
+  const materials = makeMaterialSet({ gradientMap: station.ctx.mat.gradientMap, aerial, name: 'street-props' }), material = materials.shared;
   const root = new THREE.Group(); root.name = 'street-props';
   const items = {}, all = [], rejects = {};
   const bump = k => { rejects[k] = (rejects[k] ?? 0) + 1; return null; };
-  const add = (kind, x, y, z, mat, extra = {}) => { (items[kind] ??= []).push({ matrix: mat, tint: 1 }); const r = { kind, x, y, z, r: RAD(kind), ...extra }; all.push(r); grid.add(r); return r; };
+  const add = (kind, x, y, z, mat, extra = {}) => { const item = { matrix: mat, tint: 1 }; (items[kind] ??= []).push(item); const r = { kind, x, y, z, r: RAD(kind), item, ...extra }; all.push(r); grid.add(r); return r; };
   const grid = { map: new Map(), add(r) { const k = Math.floor(r.x / 8) + ',' + Math.floor(r.z / 8); (this.map.get(k) ?? this.map.set(k, []).get(k)).push(r); },
     near(x, z, d) { for (let ix = Math.floor((x - d) / 8); ix <= Math.floor((x + d) / 8); ix++) for (let iz = Math.floor((z - d) / 8); iz <= Math.floor((z + d) / 8); iz++) for (const r of this.map.get(ix + ',' + iz) ?? []) if (r.kind !== 'wire' && Math.hypot(x - r.x, z - r.z) < d + r.r) return r; return null; } };
 
@@ -92,24 +92,41 @@ export async function createStreetProps({ scene, worldBase, island, station, dry
     if (run.length > 1) poleRuns.push(run);
   }
   // pole yaw: along the line (central difference), the transformer side flips with the seed; then the spans
-  let wireSpans = 0; const wireGeoms = [];
+  let wireSpans = 0, wireBlocked = 0; const wireGeoms = [];
+  // does any wire of the span (sampled every ~1.5 m) pass through a building footprint box or below a town solid (house, wall, tree)? Then the span is dropped.
+  const spanBlocked = curves => {
+    for (const curve of curves) for (let k = 1; k < curve.length - 1; k++) {
+      const q = curve[k];
+      for (let f = 0; f < 1; f += 0.25) { // four samples per segment
+        const nq = curve[k + 1], x = q.x + (nq.x - q.x) * f, y = q.y + (nq.y - q.y) * f, z = q.z + (nq.z - q.z) * f;
+        if (ctx.rects.hit(x, z, 0.3, ['bld'])) return true;
+        if (ctx.townTop(x, z) > y - 0.4) return true;
+      }
+    }
+    return false;
+  };
   for (const run of poleRuns) {
     run.forEach((p, i) => {
       const a = run[Math.max(0, i - 1)], b = run[Math.min(run.length - 1, i + 1)];
       let dx = b.x - a.x, dz = b.z - a.z; const l = Math.hypot(dx, dz) || 1; dx /= l; dz /= l; p.dx = dx; p.dz = dz;
       const flip = rng() < 0.5 ? -1 : 1;
       // local z = line direction, local x = crossarm across the road
-      p.rec.matrix = facing(p.x, p.y, p.z, dx * flip, dz * flip); p.rec.yaw = Math.atan2(dx * flip, dz * flip);
+      p.rec.item.matrix = facing(p.x, p.y, p.z, dx * flip, dz * flip); p.rec.yaw = Math.atan2(dx * flip, dz * flip);
     });
     for (let i = 0; i + 1 < run.length; i++) {
       const a = run[i], b = run[i + 1], dx = b.x - a.x, dz = b.z - a.z, L = Math.hypot(dx, dz);
       if (L > P.pole.maxSpan || L < P.pole.minSpan) continue;
       const A = model[a.kind].spec.attach, B = model[b.kind].spec.attach;
       if (!A || !B) continue;
-      const W = table.props.wire, n = Math.min(A.offsets.length, B.offsets.length), cx = dz / L, cz = -dx / L, pts = [];
+      const W = table.props.wire, n = Math.min(A.offsets.length, B.offsets.length), cx = dz / L, cz = -dx / L, curves = [];
       for (let w = 0; w < n; w++) { // wire w hangs from offsets[w] across the road on both poles; parabola sag
         const ya = a.y + A.height, yb = b.y + B.height, curve = [];
-        for (let k = 0; k <= W.segments; k++) { const t = k / W.segments; curve.push(new THREE.Vector3(a.x + dx * t + cx * A.offsets[w], ya + (yb - ya) * t - 4 * W.sagRatio * L * t * (1 - t), a.z + dz * t + cz * A.offsets[w])); }
+        for (let k = 0; k <= W.segments * 4; k++) { const t = k / (W.segments * 4), off = A.offsets[w] + (B.offsets[w] - A.offsets[w]) * t; curve.push(new THREE.Vector3(a.x + dx * t + cx * off, ya + (yb - ya) * t - 4 * W.sagRatio * L * t * (1 - t), a.z + dz * t + cz * off)); }
+        curves.push(curve);
+      }
+      if (spanBlocked(curves)) { wireBlocked++; continue; }
+      for (const full of curves) {
+        const curve = full.filter((_, k) => k % 4 === 0);
         const tube = new THREE.TubeGeometry(new THREE.CatmullRomCurve3(curve), W.segments * 2, W.radius, W.radial, false);
         const nn = tube.attributes.position.count, col = new Float32Array(nn * 3); for (let q = 0; q < nn; q++) col.set(W.color, q * 3);
         tube.deleteAttribute('uv'); tube.setAttribute('color', new THREE.BufferAttribute(col, 3)); wireGeoms.push(tube);
@@ -225,8 +242,7 @@ export async function createStreetProps({ scene, worldBase, island, station, dry
   // ---- batches -----------------------------------------------------------------------------------------------------------------------------------
   let drawCalls = 0, triangles = 0; const counts = {};
   for (const [kind, list] of Object.entries(items)) {
-    const mesh = makeBatch({ name: 'street-props-' + kind, model: model[kind], material, items: list });
-    root.add(mesh); drawCalls++; triangles += model[kind].tris * list.length; counts[kind] = list.length;
+    for (const mesh of makeBatches({ name: 'street-props-' + kind, model: model[kind], materials, items: list })) { root.add(mesh); drawCalls++; } triangles += model[kind].tris * list.length; counts[kind] = list.length;
   }
   let wireTris = 0;
   if (wireGeoms.length) {
@@ -236,7 +252,7 @@ export async function createStreetProps({ scene, worldBase, island, station, dry
   }
   if (!dryRun) scene.add(root);
   const sum = group => GROUPS[group].reduce((n, e) => n + (counts[e.id] ?? 0), 0);
-  const summary = { poles: sum('pole'), wireSpans, wireTubes: wireGeoms.length, signs, corners, frontage, station: stationItems, guardrails: guardSegs,
+  const summary = { poles: sum('pole'), wireSpans, wireBlocked, wireTubes: wireGeoms.length, signs, corners, frontage, station: stationItems, guardrails: guardSegs,
     vending: sum('vending'), postboxes: sum('postbox'), hydrants: sum('hydrant'), sizeWarnings: model.warnings };
   worldBase.scatter = { ...(worldBase.scatter ?? {}), props: { root, counts, summary, drawCalls, triangles, wireTris, items: all, junctions: junctions.length, rejects, runs: poleRuns.length, ms: +(performance.now() - t0).toFixed(1), contextStats: ctx.stats } };
   console.info('[world-base] street props', JSON.stringify({ ...summary, drawCalls, triangles, ms: worldBase.scatter.props.ms }));

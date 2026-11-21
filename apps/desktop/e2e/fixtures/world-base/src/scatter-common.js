@@ -35,7 +35,10 @@ export function pickWeighted(rng, list) {
 /** Load every model of a section ({ base, models }) -> { id: model }; model.spec is the table entry, model.radius the placement radius. */
 export async function loadModels(section) {
   const warnings = [];
-  const entries = await Promise.all(Object.entries(section.models).map(async ([id, spec]) => [id, await loadModel(section.base + spec.file, spec, id, warnings)]));
+  const entries = await Promise.all(Object.entries(section.models).map(async ([id, spec]) => {
+    if (typeof spec.tint === 'string') spec = { ...spec, tint: section.tints?.[spec.tint] ?? null }; // a name from the section's "tints"
+    return [id, await loadModel((spec.base ?? section.base) + spec.file, spec, id, warnings)];
+  }));
   const models = Object.fromEntries(entries); models.warnings = warnings;
   return models;
 }
@@ -44,35 +47,40 @@ export async function loadModels(section) {
 export async function loadModel(url, spec = {}, id = url, warnings = []) {
   const gltf = await new GLTFLoader().loadAsync(url);
   gltf.scene.updateMatrixWorld(true);
-  const parts = [];
+  // Untextured parts: material colour (x the GLB's vertex colours when spec.vertexColors) baked into ONE merged geometry. Parts whose material has a base-colour
+  // texture (alpha-masked leaf / grass cards, v2 models) go into a second geometry that keeps its UVs; it is drawn with the card material (alphaTest, no blending).
+  const parts = [], cardParts = []; let map = null;
   gltf.scene.traverse(o => {
     if (!o.isMesh) return;
     const g = o.geometry.clone();
     g.applyMatrix4(o.matrixWorld);
-    const m = [].concat(o.material)[0], n = g.attributes.position.count, col = new Float32Array(n * 3);
-    for (let i = 0; i < n; i++) { col[i * 3] = m.color.r; col[i * 3 + 1] = m.color.g; col[i * 3 + 2] = m.color.b; }
-    for (const k of Object.keys(g.attributes)) if (k !== 'position' && k !== 'normal') g.deleteAttribute(k);
+    const m = [].concat(o.material)[0], n = g.attributes.position.count, col = new Float32Array(n * 3), src = spec.vertexColors || m.map ? g.attributes.color : null;
+    for (let i = 0; i < n; i++) {
+      const k = src ? [src.getX(i), src.getY(i), src.getZ(i)] : [1, 1, 1];
+      col[i * 3] = m.color.r * k[0]; col[i * 3 + 1] = m.color.g * k[1]; col[i * 3 + 2] = m.color.b * k[2];
+    }
+    const card = !!m.map;
+    for (const k of Object.keys(g.attributes)) if (k !== 'position' && k !== 'normal' && !(card && k === 'uv')) g.deleteAttribute(k);
     g.setAttribute('color', new THREE.BufferAttribute(col, 3));
     if (!g.index) g.setIndex(Array.from({ length: n }, (_, i) => i));
-    parts.push(g);
-    o.material.dispose?.();
+    if (card) { cardParts.push(g); map ??= m.map; map.anisotropy = 4; } else { parts.push(g); o.material.dispose?.(); }
   });
-  if (!parts.length) throw new Error(`${url}: no meshes`);
-  const geometry = mergeGeometries(parts, false);
-  for (const p of parts) p.dispose();
-  // table: origin offset, scale / fit, ground snap
-  const [ox, oy, oz] = spec.origin ?? [0, 0, 0];
-  geometry.translate(-ox, -oy, -oz);
-  geometry.computeBoundingBox();
-  let scale = spec.scale ?? 1;
-  if (spec.fit === 'height' && spec.size) scale *= spec.size[1] / Math.max(1e-3, geometry.boundingBox.max.y - geometry.boundingBox.min.y);
-  if (scale !== 1) geometry.scale(scale, scale, scale);
-  geometry.computeBoundingBox();
-  if (spec.snapGround) geometry.translate(0, -geometry.boundingBox.min.y, 0);
-  geometry.computeBoundingBox(); geometry.computeBoundingSphere();
-  const box = geometry.boundingBox, size = [box.max.x - box.min.x, box.max.y - box.min.y, box.max.z - box.min.z];
+  if (!parts.length && !cardParts.length) throw new Error(`${url}: no meshes`);
+  const merge = list => { if (!list.length) return null; const g = list.length === 1 ? list[0] : mergeGeometries(list, false); if (list.length > 1) for (const p of list) p.dispose(); return g; };
+  const geometry = merge(parts), cardGeometry = merge(cardParts), all = [geometry, cardGeometry].filter(Boolean);
+  // table: origin offset, scale / fit, ground snap (same transform for both geometries)
+  const [ox, oy, oz] = spec.origin ?? [0, 0, 0], boxOf = () => { const b = new THREE.Box3(); for (const g of all) { g.computeBoundingBox(); b.union(g.boundingBox); } return b; };
+  for (const g of all) g.translate(-ox, -oy, -oz);
+  let b = boxOf(), scale = spec.scale ?? 1;
+  if (spec.fit === 'height' && spec.size) scale *= spec.size[1] / Math.max(1e-3, b.max.y - b.min.y);
+  if (scale !== 1) for (const g of all) g.scale(scale, scale, scale);
+  b = boxOf();
+  if (spec.snapGround) { for (const g of all) g.translate(0, -b.min.y, 0); b = boxOf(); }
+  for (const g of all) { g.computeBoundingBox(); g.computeBoundingSphere(); }
+  const box = b, size = [box.max.x - box.min.x, box.max.y - box.min.y, box.max.z - box.min.z];
   if (spec.size && spec.size.some((v, i) => Math.abs(size[i] - v) > 0.35 * Math.max(v, 0.2))) warnings.push({ id, expected: spec.size, measured: size.map(v => +v.toFixed(2)) });
-  return { id, spec, geometry, box, size, tris: geometry.index.count / 3, url, radius: spec.radius ?? Math.max(size[0], size[2]) / 2 };
+  const tris = all.reduce((n, g) => n + g.index.count / 3, 0);
+  return { id, spec, geometry, cardGeometry, map, box, size, tris, url, radius: spec.radius ?? Math.max(size[0], size[2]) / 2 };
 }
 
 // ---- material (toon ramp + aerial fog, instancing aware) ------------------------------------------------------------------------
@@ -82,18 +90,59 @@ export async function getAerial(worldBase, island) {
   const palette = params[island.timeOfDay === 'afternoon' ? 'afternoon' : 'evening'];
   return makeAerial(island, palette.fog, params.blocks.fog.start);
 }
-export function makeMaterial({ gradientMap, aerial, name }) {
+export function makeMaterial({ gradientMap, aerial, name, map = null, alphaTest = 0, tint = null, height = 1 }) {
   const m = new THREE.MeshToonMaterial({ vertexColors: true, gradientMap, name });
+  if (map) { m.map = map; m.alphaTest = alphaTest || 0.5; m.side = THREE.DoubleSide; }
   patchAerial(m, aerial, 'lit');
   // patchAerial reads the vertex position in model space; with instancing the instance matrix has to be applied first.
   const aerialHook = m.onBeforeCompile;
   m.onBeforeCompile = (shader, renderer) => {
     aerialHook.call(m, shader, renderer);
+    if (tint) m.userData.tintUniforms = applyTint(shader, tint, height);
     shader.vertexShader = shader.vertexShader.replace('vBkPos = ( modelMatrix * vec4( transformed, 1.0 ) ).xyz;',
       'vec4 bkP = vec4( transformed, 1.0 );\n#ifdef USE_INSTANCING\nbkP = instanceMatrix * bkP;\n#endif\nvBkPos = ( modelMatrix * bkP ).xyz;');
   };
-  m.customProgramCacheKey = () => 'scatter-aerial-lit';
+  m.customProgramCacheKey = () => 'scatter-aerial-lit' + (map ? '-card' : '') + (tint ? '-tint' : '');
   return m;
+}
+/**
+ * Per-model colour grade of the leaves (props-veg.json "tint": { low, high, from, to, sat, leafOnly }), applied after the vertex colour x texture:
+ *   t = smoothstep(from, to, height / modelHeight);  rgb = mix(grey, rgb, sat) x mix(low, high, t)
+ *   the non-green parts (bark) get tint.bark = { mul: [r, g, b], sat } instead (only when leafOnly)
+ * low = colour multiplier at the bottom of the crown (slightly blue-green), high = at the top (yellow-green, brighter). Green-dominant texels only
+ * (bark / trunk stay as they are) unless leafOnly is false.
+ */
+function applyTint(shader, tint, height) {
+  const v3 = a => new THREE.Vector3(...a), bark = tint.bark ?? {};
+  shader.uniforms.uVegLow = { value: v3(tint.low ?? [1, 1, 1]) };
+  shader.uniforms.uVegHigh = { value: v3(tint.high ?? [1, 1, 1]) };
+  shader.uniforms.uVegRange = { value: new THREE.Vector4(tint.from ?? 0, tint.to ?? 1, tint.sat ?? 1, height) };
+  shader.uniforms.uVegLeaf = { value: tint.leafOnly === false ? 0 : 1 };
+  shader.uniforms.uVegBark = { value: new THREE.Vector4(...(bark.mul ?? [1, 1, 1]), bark.sat ?? 1) };
+  shader.vertexShader = shader.vertexShader.replace('#include <common>', '#include <common>\nvarying float vVegH;')
+    .replace('#include <begin_vertex>', '#include <begin_vertex>\nvVegH = transformed.y;');
+  shader.fragmentShader = shader.fragmentShader.replace('#include <common>', '#include <common>\nvarying float vVegH;\nuniform vec3 uVegLow;\nuniform vec3 uVegHigh;\nuniform vec4 uVegRange;\nuniform float uVegLeaf;\nuniform vec4 uVegBark;')
+    .replace('#include <color_fragment>', `#include <color_fragment>
+  {
+    float vgT = smoothstep( uVegRange.x, uVegRange.y, vVegH / uVegRange.w );
+    float vgLum = dot( diffuseColor.rgb, vec3( 0.2126, 0.7152, 0.0722 ) );
+    float vgW = mix( 1.0, smoothstep( -0.02, 0.06, diffuseColor.g - diffuseColor.r ), uVegLeaf );
+    vec3 vgC = mix( vec3( vgLum ), diffuseColor.rgb, uVegRange.z ) * mix( uVegLow, uVegHigh, vgT );
+    vec3 vgB = mix( vec3( vgLum ), diffuseColor.rgb, uVegBark.w ) * uVegBark.rgb;
+    diffuseColor.rgb = mix( mix( diffuseColor.rgb, vgB, uVegLeaf ), vgC, vgW );
+  }`);
+  return shader.uniforms;
+}
+/** Material cache per model: the shared one unless the model has a "tint" (own uniforms) or cards (alpha-masked texture). */
+export function makeMaterialSet({ gradientMap, aerial, name }) {
+  const shared = makeMaterial({ gradientMap, aerial, name }), cache = new Map();
+  const get = (model, card) => {
+    const key = model.id + (card ? ':card' : ':solid');
+    if (!card && !model.spec.tint) return shared;
+    if (!cache.has(key)) cache.set(key, makeMaterial({ gradientMap, aerial, name: name + '-' + key, map: card ? model.map : null, tint: model.spec.tint ?? null, height: model.size[1] }));
+    return cache.get(key);
+  };
+  return { shared, solid: m => get(m, false), card: m => get(m, true), all: () => [shared, ...cache.values()] };
 }
 
 // ---- instancing -----------------------------------------------------------------------------------------------------------------
@@ -112,6 +161,14 @@ export function makeBatch({ name, model, material, items }) {
   mesh.castShadow = false; mesh.receiveShadow = false; mesh.userData.walkable = false;
   mesh.computeBoundingSphere();
   return mesh;
+}
+
+/** One InstancedMesh per part of a model (solid geometry, alpha-card geometry), same records. materials = makeMaterialSet(). */
+export function makeBatches({ name, model, materials, items }) {
+  const out = [];
+  if (model.geometry) out.push(makeBatch({ name, model, material: materials.solid(model), items }));
+  if (model.cardGeometry) out.push(makeBatch({ name: name + '-cards', model: { geometry: model.cardGeometry }, material: materials.card(model), items }));
+  return out;
 }
 
 // ---- spatial index of rectangles ----------------------------------------------------------------------------------------------

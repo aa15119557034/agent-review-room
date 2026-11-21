@@ -60,6 +60,10 @@ function createStaticServer(root = fixture) {
       base = path.join(root, 'assets', 'vegetation-2026-11-21');
       relative = pathname.slice('/vegetation/'.length);
     }
+    // X-51 v2 model sets (built by 汐): broadleaf trees, grass + flowers, utility poles.
+    for (const [route, folder] of [['/trees-v2/', 'trees-v2-2026-11-21'], ['/grass-v2/', 'grass-v2-2026-11-21'], ['/poles-v2/', 'poles-v2-2026-11-21']]) {
+      if (pathname.startsWith(route)) { base = path.join(root, 'assets', folder); relative = pathname.slice(route.length); }
+    }
     const stationArt = /^\/(mature-sakura|station-art)\/(.*)$/.exec(pathname);
     if (stationArt) {
       try { stationArtRelease ??= stationArtReleasePath(root); }

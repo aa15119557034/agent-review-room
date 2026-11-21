@@ -151,11 +151,23 @@ node scripts\baseline.cjs --scene=combined --electron=D:\codex\2026-11-16\world-
 | 开关 | 模块 | 内容 |
 |---|---|---|
 | `?props=off` | `src/street-props.js` | 电柱、电线、标志牌、贩卖机、邮筒、消火栓、护栏 |
-| `?veg=off` | `src/vegetation-scatter.js` | 阔叶/针叶/樱/行道小树、灌木、绿篱、草簇 |
+| `?veg=off` | `src/vegetation-scatter.js` | 阔叶/针叶/樱/行道小树、灌木、绿篱、草簇与小花 |
 
 共用 `src/scatter-common.js`（GLB 读取与合并、卡通材质 + 距离雾、实例批次、场景事实查询）。
 
 **模型与权重全在资产表 `src/props-veg.json`**：GLB 路径、期望尺寸 `size`、原点偏移 `origin`、`scale`/`fit`、`snapGround`、放置半径 `radius`、每组/每树种的权重和缩放范围。代码只按「组」或「树种」取模型，不出现文件名。换模型或整包重做只改这个表；GLB 实际包围盒与 `size` 相差超过 35% 会记入 `worldBase.scatter.*.summary.sizeWarnings`。电线不是 GLB：每个电柱条目的 `attach`（挂线高度 + 横向偏移列表，列表长度即每跨根数）和 `wire`（下垂比例、线径、段数、颜色）程序生成，一个跨合并成一个网格。静态服务器路由 `/street-props/`、`/vegetation/` 指向 `assets/props-2026-11-21/`、`assets/vegetation-2026-11-21/`（`scripts/baseline.cjs`）。
+
+### v2 模型（X-51，2026-11-21）
+
+三套 v2 模型（汐出品，报告 json 在各自文件夹）接进同一张资产表，静态服务器多了 `/trees-v2/`、`/grass-v2/`、`/poles-v2/` 三个路由；模型条目可写自己的 `base` 覆盖段落的 `base`。`scatter-common.js` 的读取器现在认两类部分：无贴图的材质色（`vertexColors: true` 时再乘 GLB 自带顶点色）合成一个几何；带基色贴图的 alpha 卡片（叶卡、草卡、花卡）单独成一个几何并保留 UV，用 `alphaTest 0.5` 的卡片材质画，不做混合，所以没有排序问题。一个模型最多两个 InstancedMesh（实体 + 卡片）。
+
+- **阔叶树远近 LOD**：`vegetation.lod`（`nearDist` 60 m、`hysteresis` 8 m、`cell` 64 m、`step` 3 m、`nearMax` 100）。轻量模型的条目写 `near: "<v2 模型 id>"`。全部阔叶树仍在远处的轻量 InstancedMesh 里，按 64 m 方格排序；`worldBase.vegetation.update(camera)`（`main.js` 每帧调一次，`?veg=off` 时不存在）先用相机到方格包围盒的距离筛掉远格，相机移动不足 `step` 就什么都不做；近处的树在远 mesh 里置零矩阵、写进 v2 的近 mesh（最近的 `nearMax` 棵）。每棵树 `< nearDist` 变近、`> nearDist + hysteresis` 才变回远，不抖动。不用每树一个 THREE.LOD。
+- **树冠调色**：`vegetation.tints`（`treeLeaf`、`grass`、`flower`），模型用名字引用。着色器里 `rgb = mix(灰, rgb, sat) × mix(low, high, smoothstep(from, to, 高度/模型高))`，只作用于偏绿的像素（`leafOnly`），树皮另用 `bark: { mul, sat }`。当前 `treeLeaf`：下冠偏蓝绿（1.32, 1.46, 1.40）、树顶偏黄绿（1.85, 1.80, 1.12）、饱和度 0.6。运行时可改 `worldBase.scatter.veg.materials.all()` 里各材质 `userData.tintUniforms`（`uVegLow` / `uVegHigh` / `uVegRange` / `uVegBark`）实时看效果，定下后写回 json。
+- **草与花**：`veg-grass-tuft` 换成 grass-clump-a/b + flower-yellow/white/pink（`flower` 树种：黄 0.42、白 0.42、粉 0.16）。分区：树脚和灌木脚；站区与 Cairnwick 周围的开阔草地（密度 ×`meadowBoost` 1.7，花斑用 14 m 噪声成片，花占比 0.3～1.9 倍 `flowerShare` 0.27）；这两处焦点附近每条路两侧 0.4～2.6 m 的路肩（`grass.edge`：每 1.7 m 一次、花占 40 %，更密）。总上限 `grass.cap` 22000。
+- **电柱**：poleA / poleB 换成 pole-utility-a / b（11 m / 12 m）。`attach.height` 取顶层横担绝缘子顶（A 10.75 m、B 11.8 m），`offsets` 取三个绝缘子的横向位置（A ±0.88、B ±0.96）；一跨两端电柱型号不同时，横向偏移沿跨度线性过渡。wire-bundle.glb 不用，电线仍程序生成。
+- **电线避楼**：每一跨的每根线（每 ~1.5 m 采样）若落进任何 `bld` 地块盒（城市/天际线/立面/塔/中层楼和 massing 排除盒），或低于聚落实体高度图（房屋、墙、树）的顶，整跨不画，计入 `summary.wireBlocked`。
+- **关闭开关自检**：`?props=off&veg=off`（加 `refl=old` 跳过3分钟反射烘焙、钉死 `performance.now`/rAF 时间戳/`Math.random`，无头 Chrome + SwiftShader）下，8 个机位（art-a/b/c/d、sample-e/f/g/h）的 PNG 与改动前的提交 `c6f1f2d` 逐字节相同。单独只关一个开关没有逐像素对比（另一个开着时画面当然不同）。
+- **顺带修的旧问题**：`street-props.js` 原先把电柱朝向写到了记录副本（`p.rec.matrix`）而不是实例条目，电柱实例矩阵是 NaN，电柱本体一直没画出来（电线是正常的）；现在写到 `p.rec.item.matrix`。
 
 ### 数据来源与避让
 

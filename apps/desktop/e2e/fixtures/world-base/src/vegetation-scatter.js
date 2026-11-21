@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { loadTable, loadModels, pickWeighted, makeMaterial, makeBatch, getAerial, getContext, hash32, rngFrom, fbm, noise2, smooth, focusFalloff } from './scatter-common.js';
+import { loadTable, loadModels, pickWeighted, makeMaterialSet, makeBatches, getAerial, getContext, hash32, rngFrom, fbm, noise2, smooth, focusFalloff } from './scatter-common.js';
 
 // X-51 vegetation (2026-11-21): island-wide trees, bushes, hedges and grass tufts as InstancedMesh batches (one draw call per GLB, materials baked into
 // vertex colours, toon ramp + camera-distance fog from scatter-common.js). Models, sizes, origin offsets, radii, species weights and scale ranges live in
@@ -16,7 +16,9 @@ import { loadTable, loadModels, pickWeighted, makeMaterial, makeBatch, getAerial
 //   street     young trees along every street of the towns, alternate sides, every `street.spacing` m.
 //   bushes     one beside `bush.share` of the trees + free bushes along forest edges.
 //   hedges     a hedge row `hedge.offset` m outside the walkable rectangle all round (gaps where a road, a building or water is).
-//   grass      `grass.perTree` tufts at every tree foot + open ground within `grass.radius` m of the focus points, patchy.
+//   grass      v2 grass clumps + flowers (`grass.flowerShare` of the instances are flowers: yellow / white, a few pink), by zone: `grass.perTree` at every tree foot, open meadow
+//              within `grass.radius` m of the focus points (patchy noise, `grass.p`), the verges beside the roads there (`grass.edge`, denser, more flowers) and flower patches.
+//   LOD        broadleaf trees: the light model beyond `lod.nearDist` m (props-veg.json) from the camera, the v2 model within (see makeTreeLod / update()).
 // Caps (`cap`) thin a class uniformly when the budget (1.5 M triangles, 60 draw calls for props + vegetation) would be exceeded.
 
 export const vegEnabled = () => new URLSearchParams(location.search).get('veg') !== 'off';
@@ -29,11 +31,12 @@ export const PARAMS = {
   street: { spacing: [9, 13], offset: 1.9, keep: 0.75, minHalfW: 1.8 },
   bush: { share: 0.55, cell: 14, edge: 0.3, base: 0.05, cap: 3500, walkMargin: 2.5 },
   hedge: { offset: 1.4, overlap: 0.92, skip: 0.06 },   // segment spacing = model length x overlap
-  grass: { cell: 4, p: 0.2, perTree: 2, cap: 16000, coverMin: 0.45, radius: [[280, 900, 450], [176, -1182, 150]] },
+  grass: { cell: 4, p: 0.2, meadowBoost: 1.7, perTree: 2, cap: 22000, coverMin: 0.45, radius: [[280, 900, 450], [176, -1182, 150]], flowerShare: 0.27,
+    edge: { step: 1.7, p: 0.6, reach: [0.4, 2.6], reachFocus: 1.25, flower: 0.4, coverMin: 0.2 } },
   skipRoads: /:(mole|pier)$/,
 };
 
-const _m = new THREE.Matrix4(), _x = new THREE.Vector3(), _y = new THREE.Vector3(0, 1, 0), _z = new THREE.Vector3(), _t = new THREE.Vector3();
+const _cam = new THREE.Vector3(), _m = new THREE.Matrix4(), _x = new THREE.Vector3(), _y = new THREE.Vector3(0, 1, 0), _z = new THREE.Vector3(), _t = new THREE.Vector3();
 const facing = (x, y, z, fx, fz, sx = 1) => { const l = Math.hypot(fx, fz) || 1; fx /= l; fz /= l; return _m.clone().makeBasis(_x.set(fz * sx, 0, -fx * sx), _y, _z.set(fx, 0, fz)).setPosition(_t.set(x, y, z)); };
 
 export async function createVegetation({ scene, worldBase, island, station, dryRun = false }) {
@@ -41,7 +44,7 @@ export async function createVegetation({ scene, worldBase, island, station, dryR
   const ctx = await getContext({ worldBase, island, station, scene });
   const [aerial, table] = await Promise.all([getAerial(worldBase, island), loadTable()]);
   const model = await loadModels(table.vegetation), SP = table.vegetation.species, kindOf = sp => pickWeighted(rng, SP[sp].models), scaleOf = sp => range(SP[sp].scale);
-  const material = makeMaterial({ gradientMap: station.ctx.mat.gradientMap, aerial, name: 'vegetation' });
+  const materials = makeMaterialSet({ gradientMap: station.ctx.mat.gradientMap, aerial, name: 'vegetation' });
   const root = new THREE.Group(); root.name = 'vegetation-scatter';
   const items = {}, rejects = {}, bump = k => { rejects[k] = (rejects[k] ?? 0) + 1; return null; };
   const push = (kind, it) => (items[kind] ??= []).push(it);
@@ -153,36 +156,119 @@ export async function createVegetation({ scene, worldBase, island, station, dryR
 
   // ---- grass: tuft rings at tree feet + patches of open ground ---------------------------------------------------------------------------------------------
   const Gp = P.grass, tufts = [];
-  const tuft = (x, z, hy) => { const s = scaleOf('grass'); tufts.push({ kind: kindOf('grass'), x, y: hy - 0.02, z, yaw: rng() * Math.PI * 2, sx: s, sy: s * (0.8 + rng() * 0.5), sz: s, ...tint(1, 0.35) }); };
+  const tuft = (x, z, hy, flower = Gp.flowerShare) => { const sp = rng() < flower ? 'flower' : 'grass', s = scaleOf(sp); tufts.push({ kind: kindOf(sp), x, y: hy - 0.02, z, yaw: rng() * Math.PI * 2, sx: s, sy: s * (0.8 + rng() * 0.5), sz: s, ...tint(1, 0.35) }); };
   for (const t of [...keptTrees, ...keptBushes]) {
     if (t.street) continue;
     for (let i = 0; i < Gp.perTree; i++) { const a = rng() * Math.PI * 2, d = (t.r ?? 1) * 0.35 + 0.8 + rng() * 1.5, x = t.x + Math.cos(a) * d, z = t.z + Math.sin(a) * d; if (ctx.cover(x, z) > 0.3 && !onRoad(x, z, 0.5)) tuft(x, z, ctx.groundY(x, z)); }
   }
-  let open = 0;
+  // open meadow around the focus points: patchy, `meadowBoost` over the old density (the foreground was bare), flower patches on a 14 m noise
+  let open = 0, edge = 0;
+  const openOk = (x, z, y, r = 0.3) => {
+    if (y < T.minH || ctx.slope(x, z) > 0.6 || ctx.cover(x, z) < Gp.coverMin || ctx.isWater(x, z, 1.5)) return bump('grass-ground');
+    if (ctx.obstacle(x, z, r, ['walk', 'bld', 'prop', 'town'], { walk: 0.8 })) return bump('grass-blocked');
+    if (onRoad(x, z, 0.6) || nearProp(x, z, 0.5)) return bump('grass-road');
+    return true;
+  };
   for (const [fx, fz, R] of Gp.radius) for (let gz = fz - R; gz < fz + R; gz += Gp.cell) for (let gx = fx - R; gx < fx + R; gx += Gp.cell) {
     const x = gx + rng() * Gp.cell, z = gz + rng() * Gp.cell;
     if (Math.hypot(x - fx, z - fz) > R) continue;
-    if (rng() > Gp.p * (0.25 + noise2(x, z, 22, P.seed + 5) * 1.2) * (1 - smooth(R * 0.6, R, Math.hypot(x - fx, z - fz)) * 0.8)) continue;
+    if (rng() > Gp.p * Gp.meadowBoost * (0.25 + noise2(x, z, 22, P.seed + 5) * 1.2) * (1 - smooth(R * 0.6, R, Math.hypot(x - fx, z - fz)) * 0.8)) continue;
     if (island.town.nameAt(x, z)) continue;
     const y = ctx.groundY(x, z);
-    if (y < T.minH || ctx.slope(x, z) > 0.6 || ctx.cover(x, z) < Gp.coverMin || ctx.isWater(x, z, 1.5)) { bump('grass-ground'); continue; }
-    if (ctx.obstacle(x, z, 0.3, ['walk', 'bld', 'prop', 'town'], { walk: 0.8 })) { bump('grass-blocked'); continue; }
-    if (onRoad(x, z, 0.6) || nearProp(x, z, 0.5)) { bump('grass-road'); continue; }
-    tuft(x, z, y); open++;
+    if (openOk(x, z, y) !== true) continue;
+    tuft(x, z, y, Gp.flowerShare * (0.3 + 1.6 * smooth(0.45, 0.7, noise2(x, z, 14, P.seed + 9)))); open++;
+  }
+  // verges: both sides of every road near the focus points, `edge.reach` m beyond the kerb, thicker and with more flowers than the open meadow
+  const E = Gp.edge;
+  for (const r of ctx.roads) {
+    if (r.halfW < 1 || P.skipRoads.test(r.name)) continue;
+    for (let s = rng() * E.step; s < r.length; s += E.step) {
+      const q = r.pts[Math.round(s)]; if (!q) break;
+      if (!Gp.radius.some(([fx, fz, R]) => Math.hypot(q.x - fx, q.z - fz) < R * E.reachFocus)) continue;
+      for (const side of [-1, 1]) {
+        if (rng() > E.p * (0.35 + noise2(q.x, q.z, 18, P.seed + 7) * 1.3)) continue;
+        const d = r.halfW + E.reach[0] + rng() * (E.reach[1] - E.reach[0]), x = q.x - q.tz * side * d + (rng() - 0.5) * 0.6, z = q.z + q.tx * side * d + (rng() - 0.5) * 0.6, y = ctx.groundY(x, z);
+        if (y < T.minH || ctx.slope(x, z) > 0.6 || ctx.cover(x, z) < Gp.edge.coverMin || ctx.isWater(x, z, 1.5)) { bump('edge-ground'); continue; }
+        if (ctx.obstacle(x, z, 0.3, ['walk', 'bld', 'prop', 'town'], { walk: 0.8 })) { bump('edge-blocked'); continue; }
+        const rd = ctx.roadDist(x, z, 14, r.i ?? ctx.roads.indexOf(r)); if (rd && rd.over < 0.4) { bump('edge-road'); continue; }
+        if (nearProp(x, z, 0.5)) { bump('edge-prop'); continue; }
+        tuft(x, z, y, E.flower); edge++;
+      }
+    }
   }
   const keptTufts = tufts.length > Gp.cap ? tufts.filter(() => rng() < Gp.cap / tufts.length) : tufts;
   for (const g of keptTufts) push(g.kind, g);
 
   // ---- batches --------------------------------------------------------------------------------------------------------------------------------------
-  let drawCalls = 0, triangles = 0; const counts = {};
+  let drawCalls = 0, triangles = 0; const counts = {}, lods = [], LP = table.vegetation.lod;
   for (const [kind, list] of Object.entries(items)) {
-    const mesh = makeBatch({ name: 'vegetation-' + kind, model: model[kind], material, items: list });
-    root.add(mesh); drawCalls++; triangles += model[kind].tris * list.length; counts[kind] = list.length;
+    const near = LP && model[kind].spec.near ? model[model[kind].spec.near] : null;
+    if (near) { const lod = makeTreeLod({ far: model[kind], near, list, params: LP, materials, root, name: 'vegetation-' + kind }); lods.push(lod); drawCalls += lod.drawCalls; triangles += model[kind].tris * list.length; counts[kind] = list.length; continue; }
+    for (const mesh of makeBatches({ name: 'vegetation-' + kind, model: model[kind], materials, items: list })) { root.add(mesh); drawCalls++; }
+    triangles += model[kind].tris * list.length; counts[kind] = list.length;
   }
+  /** Called every frame with the camera; cheap unless the camera moved by `lod.step` m. Returns { near, far } counts of the LOD trees. */
+  const update = camera => {
+    camera.getWorldPosition(_cam);
+    const r = { near: 0, far: 0 }; for (const l of lods) { const c = l.update(_cam); r.near += c.near; r.far += c.far; }
+    return r;
+  };
   if (!dryRun) scene.add(root);
-  const summary = { sizeWarnings: model.warnings, trees: keptTrees.length, streetTrees, bushes: keptBushes.length, hedges: hedgeCount, grass: keptTufts.length, openGrass: open, thinned };
-  worldBase.scatter = { ...(worldBase.scatter ?? {}), veg: { root, counts, summary, drawCalls, triangles, rejects, attempts, ms: +(performance.now() - t0).toFixed(1),
+  const summary = { sizeWarnings: model.warnings, trees: keptTrees.length, streetTrees, bushes: keptBushes.length, hedges: hedgeCount, grass: keptTufts.length, openGrass: open, edgeGrass: edge, flowers: keptTufts.filter(g => SP.flower.models.some(m => m.id === g.kind)).length, thinned };
+  worldBase.scatter = { ...(worldBase.scatter ?? {}), veg: { root, counts, summary, update, lods, materials, drawCalls, triangles, rejects, attempts, ms: +(performance.now() - t0).toFixed(1),
     trees: keptTrees.map(t => ({ kind: t.kind, x: t.x, z: t.z, r: t.r })), bushes: keptBushes.map(t => ({ kind: t.kind, x: t.x, z: t.z, r: t.r })), hedges: items[hk]?.map(h => ({ x: h.x, z: h.z })) ?? [], grass: keptTufts.map(t => ({ x: t.x, z: t.z })) } };
   console.info('[world-base] vegetation', JSON.stringify({ ...summary, drawCalls, triangles, ms: worldBase.scatter.veg.ms }));
   return worldBase.scatter.veg;
+}
+
+/**
+ * Distance LOD of one far (light) model and its near (v2) model, per instance but without a mesh per tree. The far InstancedMesh holds every tree, sorted by square
+ * cell (`params.cell` m); a tree that is near is collapsed there (zero matrix) and written into the near InstancedMesh(es) (capacity `nearMax`, nearest first). The camera
+ * is only compared with the cells' boxes first, and nothing is recomputed until it moved `params.step` m. Hysteresis: near at < nearDist, far again at > nearDist + hysteresis.
+ */
+function makeTreeLod({ far: farModel, near, list, params, materials, root, name }) {
+  const cell = params.cell, key = r => Math.floor(r.x / cell) * 4096 + Math.floor(r.z / cell), nearMax = params.nearMax;
+  const sorted = [...list].sort((a, b) => key(a) - key(b));
+  const farMeshes = makeBatches({ name, model: farModel, materials, items: sorted });
+  const dummy = Array.from({ length: nearMax }, () => ({ x: 0, y: 0, z: 0 })), nearMeshes = makeBatches({ name: name + '-near', model: near, materials, items: dummy });
+  for (const m of nearMeshes) { m.count = 0; m.frustumCulled = false; }
+  for (const m of farMeshes) root.add(m); for (const m of nearMeshes) root.add(m);
+  const far = farMeshes[0], origM = far.instanceMatrix.array.slice(), origC = far.instanceColor.array.slice(), isNear = new Uint8Array(sorted.length);
+  const cells = new Map();
+  sorted.forEach((t, i) => { const k = key(t); let c = cells.get(k); if (!c) cells.set(k, (c = { minX: Infinity, maxX: -Infinity, minZ: Infinity, maxZ: -Infinity, idx: [] })); c.idx.push(i); c.minX = Math.min(c.minX, t.x); c.maxX = Math.max(c.maxX, t.x); c.minZ = Math.min(c.minZ, t.z); c.maxZ = Math.max(c.maxZ, t.z); });
+  const cellList = [...cells.values()], reach = params.nearDist + params.hysteresis;
+  let lastX = Infinity, lastZ = Infinity, nearCount = 0;
+  const update = cam => {
+    if (Math.hypot(cam.x - lastX, cam.z - lastZ) < params.step) return { near: nearCount, far: sorted.length - nearCount };
+    lastX = cam.x; lastZ = cam.z;
+    const cand = [];
+    for (const c of cellList) {
+      const dx = Math.max(c.minX - cam.x, 0, cam.x - c.maxX), dz = Math.max(c.minZ - cam.z, 0, cam.z - c.maxZ);
+      if (dx * dx + dz * dz > reach * reach) continue;
+      for (const i of c.idx) { const t = sorted[i], d = Math.hypot(t.x - cam.x, t.z - cam.z); if (d < params.nearDist || (isNear[i] && d < reach)) cand.push([d, i]); }
+    }
+    cand.sort((a, b) => a[0] - b[0]); if (cand.length > nearMax) cand.length = nearMax;
+    const chosen = new Set(cand.map(c => c[1])); let changed = false;
+    // trees that are no longer near come back, newly near ones are collapsed in the far mesh
+    for (const c of cellList) {
+      const dx = Math.max(c.minX - cam.x, 0, cam.x - c.maxX), dz = Math.max(c.minZ - cam.z, 0, cam.z - c.maxZ), inReach = dx * dx + dz * dz <= reach * reach;
+      for (const i of c.idx) {
+        if (!inReach && !isNear[i]) continue;
+        const want = chosen.has(i);
+        if (want === !!isNear[i]) continue;
+        isNear[i] = want ? 1 : 0; changed = true;
+        const m = far.instanceMatrix.array, col = far.instanceColor.array;
+        if (want) m.fill(0, i * 16, i * 16 + 16); else { m.set(origM.subarray(i * 16, i * 16 + 16), i * 16); col.set(origC.subarray(i * 3, i * 3 + 3), i * 3); }
+      }
+    }
+    if (changed) { far.instanceMatrix.needsUpdate = true; }
+    // the near meshes: the chosen trees, nearest first
+    nearCount = cand.length;
+    for (const m of nearMeshes) {
+      cand.forEach(([, i], n) => { m.instanceMatrix.array.set(origM.subarray(i * 16, i * 16 + 16), n * 16); m.instanceColor.array.set(origC.subarray(i * 3, i * 3 + 3), n * 3); });
+      m.count = nearCount; m.instanceMatrix.needsUpdate = true; m.instanceColor.needsUpdate = true;
+    }
+    return { near: nearCount, far: sorted.length - nearCount };
+  };
+  return { kind: farModel.id, update, drawCalls: farMeshes.length + nearMeshes.length, cells: cellList.length, get nearCount() { return nearCount; }, total: sorted.length, nearMeshes, farMeshes };
 }
