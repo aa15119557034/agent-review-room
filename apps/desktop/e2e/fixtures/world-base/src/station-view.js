@@ -15,6 +15,9 @@ export function createStationWalker(station, dom) {
   const target = new THREE.Vector3(), desired = new THREE.Vector3();
   let enabled = false, disposed = false, mode = 'third', yaw = 4 * Math.PI / 180, pitch = -0.14;
   let verticalSpeed = 0, grounded = true, dragging = false, lastX = 0, lastY = 0;
+  let indoorT = 0;          // 0..0.3 s，进店累加、出店递减
+  let indoorBlend = 0, lastShot = null;
+  const indoorPos = new THREE.Vector3(), indoorLook = new THREE.Vector3(), tmpQ = new THREE.Quaternion(), lookM = new THREE.Matrix4(), rawThird = new THREE.Vector3();
   const radius = 0.3, height = 1.7, eye = 1.52;
   const editable = target => target?.closest?.('input,select,textarea,[contenteditable="true"]');
   const clear = () => { keys.clear(); dragging = false; velocity.set(0, 0, 0); };
@@ -40,27 +43,52 @@ export function createStationWalker(station, dom) {
     if (document.pointerLockElement === dom) { dx = event.movementX; dy = event.movementY; }
     else if (dragging) { dx = event.clientX - lastX; dy = event.clientY - lastY; }
     lastX = event.clientX; lastY = event.clientY;
-    yaw -= dx * 0.0022;
+        if (indoorBlend < 0.5) yaw -= dx * 0.0022;   // 固定机位下不改 yaw
     pitch = THREE.MathUtils.clamp(pitch - dy * 0.0022, -1.2, 1.2);
   }, { signal });
 
-  function syncCamera() {
+  function syncCamera(dt = 0) {
     camera.rotation.set(pitch, yaw, 0, 'YXZ');
     target.copy(position); target.y += eye;
     camera.position.copy(target);
-    if (mode === 'third') {
+    if (mode === "third") {
       // No avatar mesh is created. This camera follows the same invisible body
       // as first person; switching views never teleports the body through a wall.
       desired.set(0, 0.45, 4.2).applyQuaternion(camera.quaternion).add(target);
-      // Enclose every near-plane corner, including after viewport/FOV changes.
       const view = station.camera;
       const halfHeight = view.near * Math.tan(THREE.MathUtils.degToRad(view.getEffectiveFOV()) / 2);
       const clearance = Math.hypot(view.near, halfHeight, halfHeight * view.aspect) + 0.02;
       const fraction = physics.sweepSphere(target, desired, clearance);
       camera.position.lerpVectors(target, desired, fraction);
-      // 玩家在室内时把相机夹进房间内盒：门洞会让 sweepSphere 放行（物理正确、画面错误）
-      if (station.clampCamera) station.clampCamera(position, camera.position);
+      rawThird.copy(camera.position);          // 没夹过的第三人称位置 = 混合起点
       if (fraction > 1e-6) camera.lookAt(target);
+
+      // 室内专用机位：进店切固定角度，进出都用 0.3 s 线性 + smoothstep
+      let shotNow = null;
+      if (station.indoorCamera) {
+        shotNow = station.indoorCamera.pose(position);
+        if (shotNow) lastShot = shotNow;
+        if (dt > 0) {
+          const dir = shotNow ? 1 : -1;
+          indoorT = Math.min(0.3, Math.max(0, indoorT + dir * dt));
+        }
+        const u = indoorT / 0.3;
+        indoorBlend = u * u * (3 - 2 * u);      // smoothstep
+        const shot = shotNow ?? lastShot;
+        if (indoorBlend > 1e-3 && shot) {
+          indoorPos.set(shot.pos.x, shot.pos.y, shot.pos.z);
+          indoorLook.set(shot.look.x, shot.look.y, shot.look.z);
+          camera.position.copy(rawThird).lerp(indoorPos, indoorBlend);
+          lookM.lookAt(indoorPos, indoorLook, THREE.Object3D.DEFAULT_UP);
+          tmpQ.setFromRotationMatrix(lookM);
+          camera.quaternion.slerp(tmpQ, indoorBlend);
+        }
+      }
+      // 没有固定机位、或完全回到第三人称时，才用房间盒夹相机（兜底）
+      if (station.clampCamera && indoorBlend <= 1e-3) {
+        station.clampCamera(position, camera.position);
+        if (fraction > 1e-6) camera.lookAt(target);
+      }
     }
     station.cameraToWorld(camera.position, camera.quaternion);
   }
@@ -74,18 +102,20 @@ export function createStationWalker(station, dom) {
     get pitch() { return pitch; },
     setEnabled(value) {
       enabled = Boolean(value) && !disposed;
-      if (!enabled) { clear(); if (document.pointerLockElement === dom) document.exitPointerLock(); }
+      if (!enabled) { clear(); indoorT = 0; indoorBlend = 0; lastShot = null; if (document.pointerLockElement === dom) document.exitPointerLock(); }
       else syncCamera();
     },
     setView(value) {
       if (value !== 'first' && value !== 'third') throw new Error(`Unknown station view: ${value}`);
       mode = value;
+      if (mode === 'first') { indoorT = 0; indoorBlend = 0; lastShot = null; }
       if (enabled) syncCamera();
     },
     setPose(worldFeet, yawDegrees = 4, pitchDegrees = -8) {
       station.toLocal(worldFeet, position);
       yaw = yawDegrees * Math.PI / 180; pitch = pitchDegrees * Math.PI / 180;
       verticalSpeed = 0; clear();
+      indoorT = 0; indoorBlend = 0; lastShot = null;   // setPose 是瞬移，机位状态重置
       station.toWorld(position, worldPosition);
       station.ctx.player.position.copy(position);
       if (enabled) syncCamera();
@@ -98,8 +128,14 @@ export function createStationWalker(station, dom) {
       const length = Math.hypot(forward, sideways);
       if (length > 1) { forward /= length; sideways /= length; }
       const speed = keys.has('ShiftLeft') || keys.has('ShiftRight') ? 6.4 : 3.1;
-      const vx = (-Math.sin(yaw) * forward + Math.cos(yaw) * sideways) * speed;
-      const vz = (-Math.cos(yaw) * forward - Math.sin(yaw) * sideways) * speed;
+      // 固定机位下，WASD 相对机位方向（W = 朝画面里走）
+      let moveYaw = yaw;
+      if (indoorBlend > 0.5 && lastShot) {
+        const fx = lastShot.look.x - lastShot.pos.x, fz = lastShot.look.z - lastShot.pos.z;
+        if (Math.hypot(fx, fz) > 1e-4) moveYaw = Math.atan2(-fx, -fz);
+      }
+      const vx = (-Math.sin(moveYaw) * forward + Math.cos(moveYaw) * sideways) * speed;
+      const vz = (-Math.cos(moveYaw) * forward - Math.sin(moveYaw) * sideways) * speed;
       const acceleration = Math.min(1, (grounded ? 10 : 2.5) * dt);
       velocity.x += (vx - velocity.x) * acceleration;
       velocity.z += (vz - velocity.z) * acceleration;
@@ -124,7 +160,7 @@ export function createStationWalker(station, dom) {
       if (grounded) { position.y = ground; verticalSpeed = 0; }
       station.toWorld(position, worldPosition);
       station.ctx.player.position.copy(position);
-      syncCamera();
+      syncCamera(dt);
       return worldPosition;
     },
     dispose() { if (!disposed) { walker.setEnabled(false); disposed = true; listeners.abort(); } },

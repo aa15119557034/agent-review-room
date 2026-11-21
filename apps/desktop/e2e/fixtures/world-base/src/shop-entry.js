@@ -292,7 +292,7 @@ export function clearBoundaryWalls(station, areas, margin = 0.25) {
  *
  * 修法：玩家在某个房间内时，把相机位置夹到该房间的内盒里（留出 near 平面余量）。
  */
-export function makeCameraClamp(station, rooms) {
+export function makeCameraClamp(station, rooms, lotPlans = []) {
   const boxes = [];
   for (const room of rooms) {
     if (!room?.frame || !Array.isArray(room.box)) continue;
@@ -306,16 +306,34 @@ export function makeCameraClamp(station, rooms) {
       z0: f.z + Math.min(bz0, bz1), z1: f.z + Math.max(bz0, bz1)
     });
   }
+  // lot 店：box 是 lot 局部，带旋转，用 OBB 判定 + 在 lot 局部夹取
+  for (const { geom, plan } of lotPlans) {
+    boxes.push({
+      rotY: geom.rotY, fx: geom.frame.x, fz: geom.frame.z,
+      x0: geom.lotX0, x1: geom.lotX1, z0: geom.lotZ0, z1: geom.lotZ1,
+      y0: geom.floorY, y1: geom.ceilY, doorX: plan?.doorX
+    })
+  }
   if (!boxes.length) return null;
 
   return function clampCamera(playerLocal, camLocal, margin = 0.25) {
     for (const b of boxes) {
-      const inRoom = playerLocal.x >= b.x0 && playerLocal.x <= b.x1 &&
-                     playerLocal.z >= b.z0 && playerLocal.z <= b.z1 &&
-                     playerLocal.y >= b.y0 - 0.3 && playerLocal.y <= b.y1;   // 只看 x/z 会把楼上/屋顶的玩家也拽进店里
+      // 旋转盒：先转到 lot 局部再判定/夹取（rotY=0 时等同于轴对齐）
+      const rot = b.rotY ?? 0, cc = Math.cos(rot), ss = Math.sin(rot)
+      const pl = (p) => {
+        const dx0 = p.x - (b.fx ?? 0), dz0 = p.z - (b.fz ?? 0)
+        return { u: dx0 * cc - dz0 * ss, v: dx0 * ss + dz0 * cc }
+      }
+      const pLoc = pl(playerLocal)
+      const inRoom = pLoc.u >= b.x0 && pLoc.u <= b.x1 &&
+                     pLoc.v >= b.z0 && pLoc.v <= b.z1 &&
+                     playerLocal.y >= b.y0 - 0.3 && playerLocal.y <= b.y1
       if (!inRoom) continue;
-      camLocal.x = Math.min(Math.max(camLocal.x, b.x0 + margin), b.x1 - margin);
-      camLocal.z = Math.min(Math.max(camLocal.z, b.z0 + margin), b.z1 - margin);
+      const cLoc = pl(camLocal)
+      const cu = Math.min(Math.max(cLoc.u, b.x0 + margin), b.x1 - margin)
+      const cv = Math.min(Math.max(cLoc.v, b.z0 + margin), b.z1 - margin)
+      camLocal.x = (b.fx ?? 0) + cu * cc + cv * ss
+      camLocal.z = (b.fz ?? 0) - cu * ss + cv * cc
       camLocal.y = Math.min(Math.max(camLocal.y, b.y0 + margin), b.y1 - margin);
       // clamp 完如果离玩家太近（薄房间、刚进门），改成往上抬，别硬挤在墙边切近平面
       const MIN_D = 1.2;
@@ -444,3 +462,93 @@ export function addLotShopSolid(station, lotPlans) {
 
 
 
+
+// ---------------------------------------------------------------------------
+// 室内专用机位（C酱 2026-11-20 22:09 定的方案）
+//
+// 房间只有 2.14 m 深时，第三人称夹进房间后会贴着天花板（接近俯视），取景很难看。
+// 改成：玩家进店就切到**门口斜上方的固定机位**看店内，不跟玩家；出门切回第三人称，
+// 切换用 0.3 s 插值。
+//
+// 返回 { pose(playerLocal) → { pos, look } | null }，坐标都是**站区局部**。
+// ---------------------------------------------------------------------------
+export function makeIndoorCamera(station, rooms, lotPlans = []) {
+  const shots = [];
+
+  // kind: 'laundry'（房间很浅，机位在门外往里看）| 'lot'（7–10 m 深，机位在门内往内俯视）
+  const push = (kind, f, lotX0, lotX1, lotZ0, lotZ1, floorY, ceilY, doorX) => {
+    const c = Math.cos(f.rotY), s = Math.sin(f.rotY);
+    const toS = (lx, lz) => [f.x + lx * c + lz * s, f.z - lx * s + lz * c];
+    const door = doorX ?? (lotX0 + lotX1) / 2;
+    const midX = (lotX0 + lotX1) / 2;
+    let posLZ, posY, lookLZ, lookY;
+    if (kind === 'laundry') {
+      // 洗衣店只有 2.14 m 深：机位在**门洞外 1.1 m**、离地 1.55 m，看向房间中心偏后、离地 1.0 m
+      posLZ = lotZ1 + 1.1; posY = floorY + 1.55;
+      lookLZ = lotZ0 + 1.2; lookY = floorY + 1.0;
+    } else {
+      // lot 店 7–10 m 深：机位在**门内 0.5 m**、离地 2.3 m，看向房间中心、离地 0.8 m（俯角约 15°）
+      posLZ = lotZ1 - 0.5; posY = floorY + 2.3;
+      lookLZ = (lotZ0 + lotZ1) / 2; lookY = floorY + 0.8;
+    }
+    const [px, pz] = toS(door, posLZ);
+    const [lx2, lz2] = toS(midX, lookLZ);
+    shots.push({
+      kind, f, rotY: f.rotY,
+      lotX0, lotX1, lotZ0, lotZ1, floorY, ceilY,
+      pos: { x: px, y: posY, z: pz },
+      look: { x: lx2, y: lookY, z: lz2 },
+      inside: false          // 迟滞状态：当前是否算「在店里」
+    });
+  };
+
+  for (const room of rooms) {
+    if (!room?.frame || !Array.isArray(room.box)) continue;
+    if (!axisAligned(room)) continue;
+    const [bx0, by0, bz0, bx1, by1, bz1] = room.box;
+    const f = room.frame;
+    push('laundry', f,
+      Math.min(bx0, bx1), Math.max(bx0, bx1),
+      Math.min(bz0, bz1), Math.max(bz0, bz1),
+      f.y + Math.min(by0, by1), f.y + Math.max(by0, by1),
+      room.entrances?.[0]?.x ?? 0);
+  }
+
+  for (const { geom, plan } of lotPlans) {
+    push('lot', geom.frame,
+      geom.lotX0, geom.lotX1, geom.lotZ0, geom.lotZ1,
+      geom.floorY, geom.ceilY, plan?.doorX);
+  }
+
+  if (!shots.length) return null;
+
+  const HYST = 0.3;   // 迟滞：进入要内缩 0.3 m，离开要外扩 0.3 m
+
+  // 共用的「在不在房间内」判定（pose 和 clampCamera 用同一套 y 口径）
+  const inShot = (s, playerLocal, grow) => {
+    const c = Math.cos(s.rotY), sn = Math.sin(s.rotY);
+    const dx0 = playerLocal.x - s.f.x, dz0 = playerLocal.z - s.f.z;
+    const lx = dx0 * c - dz0 * sn;
+    const lz = dx0 * sn + dz0 * c;
+    return lx >= s.lotX0 + grow && lx <= s.lotX1 - grow &&
+           lz >= s.lotZ0 + grow && lz <= s.lotZ1 - grow &&
+           playerLocal.y >= s.floorY - 0.3 && playerLocal.y <= s.ceilY;
+  };
+
+  return {
+    /** 玩家在哪个房间里？带迟滞，返回固定机位；不在任何房间返回 null */
+    pose(playerLocal) {
+      for (let i = 0; i < shots.length; i++) {
+        const s = shots[i];
+        // 没在店里：要求进入「内缩 0.3 m」的盒；已在店里：只要没出「外扩 0.3 m」的盒就留着
+        const ok = s.inside ? inShot(s, playerLocal, -HYST) : inShot(s, playerLocal, HYST);
+        if (ok) {
+          if (!s.inside) { for (const o of shots) o.inside = false; s.inside = true; }
+          return s;
+        }
+        if (s.inside) s.inside = false;
+      }
+      return null;
+    }
+  };
+}
