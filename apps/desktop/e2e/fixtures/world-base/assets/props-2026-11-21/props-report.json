@@ -1,0 +1,122 @@
+[
+  {
+    "file": "prop-pole-a.glb",
+    "triangles": 128,
+    "bytes": 9012,
+    "size_m": [
+      1.9,
+      0.48,
+      9.0
+    ]
+  },
+  {
+    "file": "prop-pole-b.glb",
+    "triangles": 240,
+    "bytes": 15452,
+    "size_m": [
+      1.9,
+      1.02,
+      9.0
+    ]
+  },
+  {
+    "file": "prop-wire-span.glb",
+    "triangles": 240,
+    "bytes": 14020,
+    "size_m": [
+      20.0,
+      1.64,
+      0.59
+    ]
+  },
+  {
+    "file": "prop-vending-drinks.glb",
+    "triangles": 96,
+    "bytes": 9244,
+    "size_m": [
+      1.0,
+      0.77,
+      1.85
+    ]
+  },
+  {
+    "file": "prop-vending-coffee.glb",
+    "triangles": 96,
+    "bytes": 9036,
+    "size_m": [
+      1.0,
+      0.77,
+      1.85
+    ]
+  },
+  {
+    "file": "prop-postbox.glb",
+    "triangles": 120,
+    "bytes": 8204,
+    "size_m": [
+      0.6,
+      0.58,
+      1.11
+    ]
+  },
+  {
+    "file": "prop-sign-speed.glb",
+    "triangles": 62,
+    "bytes": 5324,
+    "size_m": [
+      0.62,
+      0.08,
+      2.71
+    ]
+  },
+  {
+    "file": "prop-sign-blue.glb",
+    "triangles": 34,
+    "bytes": 4508,
+    "size_m": [
+      1.3,
+      0.08,
+      2.6
+    ]
+  },
+  {
+    "file": "prop-sign-warning.glb",
+    "triangles": 24,
+    "bytes": 3848,
+    "size_m": [
+      0.68,
+      0.09,
+      2.3
+    ]
+  },
+  {
+    "file": "prop-sign-stop.glb",
+    "triangles": 21,
+    "bytes": 2996,
+    "size_m": [
+      0.8,
+      0.08,
+      2.62
+    ]
+  },
+  {
+    "file": "prop-guardrail.glb",
+    "triangles": 48,
+    "bytes": 5156,
+    "size_m": [
+      2.0,
+      0.1,
+      0.82
+    ]
+  },
+  {
+    "file": "prop-hydrant.glb",
+    "triangles": 92,
+    "bytes": 6536,
+    "size_m": [
+      0.42,
+      0.3,
+      0.79
+    ]
+  }
+]
