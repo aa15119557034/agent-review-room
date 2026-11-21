@@ -1,22 +1,22 @@
 [
   {
     "file": "tree-broadleaf-a.glb",
-    "triangles": 2308,
-    "bytes": 616248,
+    "triangles": 2708,
+    "bytes": 630248,
     "size_m": [
-      3.54,
-      3.4,
-      6.5
+      3.58,
+      3.44,
+      6.57
     ]
   },
   {
     "file": "tree-broadleaf-b.glb",
-    "triangles": 2836,
-    "bytes": 634728,
+    "triangles": 3336,
+    "bytes": 652232,
     "size_m": [
-      3.94,
-      3.68,
-      7.38
+      4.01,
+      3.73,
+      7.45
     ]
   }
 ]
