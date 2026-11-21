@@ -1,0 +1,92 @@
+[
+  {
+    "file": "veg-tree-broadleaf-a.glb",
+    "triangles": 168,
+    "bytes": 14012,
+    "size_m": [
+      4.97,
+      4.64,
+      6.68
+    ]
+  },
+  {
+    "file": "veg-tree-broadleaf-b.glb",
+    "triangles": 168,
+    "bytes": 14008,
+    "size_m": [
+      4.93,
+      4.77,
+      7.12
+    ]
+  },
+  {
+    "file": "veg-tree-cherry.glb",
+    "triangles": 168,
+    "bytes": 13992,
+    "size_m": [
+      5.54,
+      4.66,
+      5.68
+    ]
+  },
+  {
+    "file": "veg-tree-conifer.glb",
+    "triangles": 92,
+    "bytes": 6352,
+    "size_m": [
+      3.61,
+      3.52,
+      9.0
+    ]
+  },
+  {
+    "file": "veg-tree-young.glb",
+    "triangles": 36,
+    "bytes": 4304,
+    "size_m": [
+      1.52,
+      1.45,
+      3.57
+    ]
+  },
+  {
+    "file": "veg-bush-a.glb",
+    "triangles": 20,
+    "bytes": 2640,
+    "size_m": [
+      1.52,
+      1.45,
+      1.45
+    ]
+  },
+  {
+    "file": "veg-bush-b.glb",
+    "triangles": 60,
+    "bytes": 5764,
+    "size_m": [
+      2.38,
+      1.77,
+      1.32
+    ]
+  },
+  {
+    "file": "veg-hedge-seg.glb",
+    "triangles": 40,
+    "bytes": 4208,
+    "size_m": [
+      2.39,
+      0.95,
+      0.93
+    ]
+  },
+  {
+    "file": "veg-grass-tuft.glb",
+    "triangles": 10,
+    "bytes": 1604,
+    "size_m": [
+      0.36,
+      0.38,
+      0.45
+    ]
+  }
+]
