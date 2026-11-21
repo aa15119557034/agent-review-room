@@ -503,7 +503,7 @@ export async function createMassing({ scene, station, island, city, skyline, par
   // trips (walkable rects, corridors, city / skyline lots, existing meshes, village, props) or null; nothing here changes what is built.
   api.rejectReason = (rect, P = {}) => {
     if (walkable.some(a => rectsOverlap(rect, grow(a, P.boundsMargin ?? 5)))) return 'bounds';
-    if (corridors.some(a => rectsOverlap(rect, grow(a, 2)))) return 'corridor';
+    if (!P.skipCorridor && corridors.some(a => rectsOverlap(rect, grow(a, 2)))) return 'corridor';
     if (buildings.some(a => rectsOverlap(rect, grow(a, P.lotMargin ?? 4)))) return 'buildings';
     if (meshBoxes.some(a => rectsOverlap(rect, grow(a, 2.5)))) return 'meshes';
     if (towns.some(a => rectsOverlap(rect, a))) return 'town';

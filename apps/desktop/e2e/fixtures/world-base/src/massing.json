@@ -42,7 +42,7 @@
     12
    ]
   ],
-  "minGround": 1,
+  "minGround": 1.5,
   "maxRelief": 3.2,
   "gap": 3.5,
   "boundsMargin": 3,
@@ -679,7 +679,7 @@
    "signLift": 0.03
   },
   "midband": {
-   "note": "Art round 26 / 26b (#254 X-51): the mid-height transition band and the landmark towers. Rules in src/midband-blocks.js, geometry = assets/blocks-2026-11-20/skyline-tower-midrise-*.glb (50 x 20 x 23 m before the vertical stretch) and skyline-tower-landmark-*.glb (20 x 20 x ~110 m) built by tower-blocks.js. Mid-rises (r26b): at most `count` blocks, each straight behind a facade row (same yaw, shifted sideways by up to `slide` x half the combined widths), nearest edge `band` m from the walkable area, `backGap` m of air to every facade slot (backing off up to `pushMax` m when staggered rows are in the way), `gap` m from towers, `lotGap` m from each other, ground relief <= maxRelief; `footprint` = the GLB's own size (never scaled), `clear` = the box tested (core of the staircase included), `frontPad` = the podium sticking out in front; `height` = the vertical stretch target (m, seeded), `tries` rounds over the facade slots. `fogGain` = fraction of the usual camera-distance fog the mid-band gets (its own materials). Landmarks (r26b): per `views` entry the tower slot best seen from that camera (`dist` m away, within `halfAngle` degrees of the view direction, least covered by facades / mid-rises / other towers, `top` = landmark height). towerBoard: size of the rooftop panel of the six older billboard towers. ?midband=off removes all of it.",
+   "note": "Art round 26 / 26b (#254 X-51): the mid-height transition band and the landmark towers. Rules in src/midband-blocks.js, geometry = assets/blocks-2026-11-20/skyline-tower-midrise-*.glb (50 x 20 x 23 m before the vertical stretch) and skyline-tower-landmark-*.glb (20 x 20 x ~110 m) built by tower-blocks.js. Mid-rises (r26b): at most `count` blocks, each straight behind a facade row (same yaw, shifted sideways by up to `slide` x half the combined widths), nearest edge `band` m from the walkable area, `backGap` m of air to every facade slot (backing off up to `pushMax` m when staggered rows are in the way), `gap` m from towers, `lotGap` m from each other, ground relief <= maxRelief; `footprint` = the GLB's own size (never scaled), `clear` = the box tested (core of the staircase included), `frontPad` = the podium sticking out in front; `height` = the vertical stretch target (m, seeded), `tries` rounds over the facade slots. `fogGain` = fraction of the usual camera-distance fog the mid-band gets (its own materials). Landmarks (r26b): per `views` entry the tower slot best seen from that camera (`dist` m away, within `halfAngle` degrees of the view direction, least covered by facades / mid-rises / other towers, `top` = landmark height). towerBoard: size of the rooftop panel of the six older billboard towers. ?midband=off removes all of it. r26d focus: per camera-view sector { view, yawRange (deg, - = left of the view direction), pull (m a lot may move toward the walkable area), want / extra (lots added when the sector holds fewer), dist, corridor:false = corridors ignored there }; the sector is the only place the rules are relaxed.",
    "count": 24,
    "tries": 12,
    "perSlot": 2,
@@ -794,7 +794,24 @@
      6
     ],
     "postAt": 0.32
-   }
+   },
+   "focus": [
+    {
+     "view": "art-a-street",
+     "yawRange": [
+      -45,
+      -10
+     ],
+     "pull": 15,
+     "want": 6,
+     "extra": 2,
+     "dist": [
+      90,
+      260
+     ],
+     "corridor": false
+    }
+   ]
   }
  }
 }
