@@ -375,6 +375,7 @@ function routineActivity(world: WorldSnapshot, actor: WorldActor, kind: WorldAct
 /** Chooses one proposal, never mutates or commits. It does not chase items in unseen rooms. */
 export function chooseWorldRoutine(
   world: WorldSnapshot, agent: ResidentName, ownEvents: readonly WorldEvent[] = [], view?: WorldResidentView,
+  options?: { skipLeisure?: boolean },
 ): WorldAction | null {
   assertRules(world);
   if (world.run.state !== "running") return null;
@@ -433,6 +434,7 @@ export function chooseWorldRoutine(
   }
   const need = chooseNeed();
   if (need) return need;
+  if (options?.skipLeisure) return null;
   const offset = world.residents.findIndex((resident) => resident.agent === agent);
   const dayStart = world.now - world.now % WORLD_MINUTES_PER_DAY;
   // The caller supplies this resident's observed history (at least this day's
