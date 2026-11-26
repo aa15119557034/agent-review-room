@@ -31,9 +31,8 @@ export const PARAMS = {
   street: { spacing: [9, 13], offset: 1.9, keep: 0.75, minHalfW: 1.8 },
   bush: { share: 0.55, cell: 14, edge: 0.3, base: 0.05, cap: 3500, walkMargin: 2.5 },
   hedge: { offset: 1.4, overlap: 0.92, skip: 0.06 },   // segment spacing = model length x overlap
-  grass: { cell: 4, p: 0.2, meadowBoost: 1.7, perTree: 2, cap: 30000, coverMin: 0.45, radius: [[280, 900, 450], [176, -1182, 150]], flowerShare: 0.27,
-    // station-local margin strips of open lawn between the last lot row and the edge of the walkable rectangle (east side only, x 64..91, z 8..126; the west strip holds the fenced allotment): the station clears the
-    // splat cover and `walk` covers the whole rectangle, so without this nothing grew on the one stretch of lawn a player can stand on
+  grass: { cell: 4, p: 0.2, meadowBoost: 1.7, perTree: 2, cap: 30000, coverMin: 0.45, radius: [[280, 900, 450], [176, -1182, 150], [60, 110, 200]], flowerShare: 0.27,
+    // Station-local east lawn. The station clears its terrain cover and includes it in the walkable rectangle.
     lawn: { x: [64, 91], z: [8, 126] },
     edge: { step: 1.7, p: 0.6, reach: [0.4, 2.6], reachFocus: 1.25, flower: 0.4, coverMin: 0.2 } },
   skipRoads: /:(mole|pier)$/,
@@ -159,29 +158,29 @@ export async function createVegetation({ scene, worldBase, island, station, dryR
 
   // ---- grass: tuft rings at tree feet + patches of open ground ---------------------------------------------------------------------------------------------
   const Gp = P.grass, tufts = [];
-  const tuft = (x, z, hy, flower = Gp.flowerShare) => { const sp = rng() < flower ? 'flower' : 'grass', s = scaleOf(sp); tufts.push({ kind: kindOf(sp), x, y: hy - 0.02, z, yaw: rng() * Math.PI * 2, sx: s, sy: s * (0.8 + rng() * 0.5), sz: s, ...tint(1, 0.35) }); };
+  const tuft = (x, z, hy, flower = Gp.flowerShare, list = tufts) => { const sp = rng() < flower ? 'flower' : 'grass', s = scaleOf(sp); list.push({ kind: kindOf(sp), x, y: hy - 0.02, z, yaw: rng() * Math.PI * 2, sx: s, sy: s * (0.8 + rng() * 0.5), sz: s, ...tint(1, 0.35) }); };
   for (const t of [...keptTrees, ...keptBushes]) {
     if (t.street) continue;
     for (let i = 0; i < Gp.perTree; i++) { const a = rng() * Math.PI * 2, d = (t.r ?? 1) * 0.35 + 0.8 + rng() * 1.5, x = t.x + Math.cos(a) * d, z = t.z + Math.sin(a) * d; if (ctx.cover(x, z) > 0.3 && !onRoad(x, z, 0.5)) tuft(x, z, ctx.groundY(x, z)); }
   }
   // open meadow around the focus points: patchy, `meadowBoost` over the old density (the foreground was bare), flower patches on a 14 m noise
   let open = 0, edge = 0;
-  const inLawn = (x, z) => { const L = Gp.lawn, lx = x - ctx.ox, lz = z - ctx.oz; return lx >= L.x[0] && lx <= L.x[1] && lz >= L.z[0] && lz <= L.z[1]; };
-  const openOk = (x, z, y, r = 0.3) => {
-    const lawn = inLawn(x, z);
+  const meadowChance = (x, z) => Gp.p * Gp.meadowBoost * (0.25 + noise2(x, z, 22, P.seed + 5) * 1.2);
+  const meadowFlowers = (x, z) => Gp.flowerShare * (0.3 + 1.6 * smooth(0.45, 0.7, noise2(x, z, 14, P.seed + 9)));
+  const openOk = (x, z, y, lawn = false) => {
     if (y < T.minH || ctx.slope(x, z) > 0.6 || (!lawn && ctx.cover(x, z) < Gp.coverMin) || ctx.isWater(x, z, 1.5)) return bump('grass-ground');
-    if (ctx.obstacle(x, z, r, lawn ? ['bld', 'prop', 'town', 'solid'] : ['walk', 'bld', 'prop', 'town'], lawn ? null : { walk: 0.8 })) return bump(lawn ? 'grass-lawn-blocked' : 'grass-blocked');
+    if (ctx.obstacle(x, z, 0.3, lawn ? ['bld', 'prop', 'town', 'solid'] : ['walk', 'bld', 'prop', 'town'], lawn ? null : { walk: 0.8 })) return bump(lawn ? 'grass-lawn-blocked' : 'grass-blocked');
     if (onRoad(x, z, 0.6) || nearProp(x, z, 0.5)) return bump('grass-road');
     return true;
   };
   for (const [fx, fz, R] of Gp.radius) for (let gz = fz - R; gz < fz + R; gz += Gp.cell) for (let gx = fx - R; gx < fx + R; gx += Gp.cell) {
     const x = gx + rng() * Gp.cell, z = gz + rng() * Gp.cell;
     if (Math.hypot(x - fx, z - fz) > R) continue;
-    if (rng() > Gp.p * Gp.meadowBoost * (0.25 + noise2(x, z, 22, P.seed + 5) * 1.2) * (1 - smooth(R * 0.6, R, Math.hypot(x - fx, z - fz)) * 0.8)) continue;
+    if (rng() > meadowChance(x, z) * (1 - smooth(R * 0.6, R, Math.hypot(x - fx, z - fz)) * 0.8)) continue;
     if (island.town.nameAt(x, z)) continue;
     const y = ctx.groundY(x, z);
     if (openOk(x, z, y) !== true) continue;
-    tuft(x, z, y, Gp.flowerShare * (0.3 + 1.6 * smooth(0.45, 0.7, noise2(x, z, 14, P.seed + 9)))); open++;
+    tuft(x, z, y, meadowFlowers(x, z)); open++;
   }
   // verges: both sides of every road near the focus points, `edge.reach` m beyond the kerb, thicker and with more flowers than the open meadow
   const E = Gp.edge;
@@ -202,6 +201,18 @@ export async function createVegetation({ scene, worldBase, island, station, dryR
     }
   }
   const keptTufts = tufts.length > Gp.cap ? tufts.filter(() => rng() < Gp.cap / tufts.length) : tufts;
+  // Sample the east lawn after the island passes so it cannot change their seeded placements.
+  const lawnX1 = ctx.ox + Gp.lawn.x[1], lawnZ1 = ctx.oz + Gp.lawn.z[1];
+  for (let gz = ctx.oz + Gp.lawn.z[0]; gz < lawnZ1 && keptTufts.length < Gp.cap; gz += Gp.cell) {
+    for (let gx = ctx.ox + Gp.lawn.x[0]; gx < lawnX1 && keptTufts.length < Gp.cap; gx += Gp.cell) {
+      const x = gx + rng() * Math.min(Gp.cell, lawnX1 - gx), z = gz + rng() * Math.min(Gp.cell, lawnZ1 - gz);
+      if (rng() > meadowChance(x, z) || island.town.nameAt(x, z)) continue;
+      const y = ctx.groundY(x, z);
+      if (openOk(x, z, y, true) !== true) continue;
+      tuft(x, z, y, meadowFlowers(x, z), keptTufts);
+      open++;
+    }
+  }
   for (const g of keptTufts) push(g.kind, g);
 
   // ---- batches --------------------------------------------------------------------------------------------------------------------------------------
