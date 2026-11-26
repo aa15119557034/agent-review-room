@@ -74,9 +74,13 @@ export function addStationLawn({ station, bounds, heightAt, canGrow, shadeAt, pa
       Object.assign(shader.uniforms, uniforms, { uLawnObject: { value: transform } });
       shader.vertexShader = 'varying vec2 vLawnXZ;\n' + vertexDeclarations + shader.vertexShader
         .replace('#include <begin_vertex>', '#include <begin_vertex>\n' + vertex);
+      // The painted lawn supplies its own light patches. Fade direct sun by the
+      // same coverage before the shadow fill and toon bands consume it.
       shader.fragmentShader = 'varying vec2 vLawnXZ;\n' + sample + '\n' + fragmentDeclarations + shader.fragmentShader
         .replace('#include <color_fragment>', '#include <color_fragment>\n' + color)
-        .replace('#include <normal_fragment_begin>', '#include <normal_fragment_begin>\n' + normal);
+        .replace('#include <normal_fragment_begin>', '#include <normal_fragment_begin>\n' + normal)
+        .replace('#include <lights_fragment_end>', 'reflectedLight.directDiffuse *= 1.0 - stationLawn.x;\n'
+          + '#include <lights_fragment_end>');
     };
     material.customProgramCacheKey = () => cache + ':' + key;
     material.needsUpdate = true;
