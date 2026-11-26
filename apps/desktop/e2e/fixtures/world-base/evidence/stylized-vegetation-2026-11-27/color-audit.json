@@ -1,0 +1,358 @@
+{
+  "config": {
+    "grade-on": {
+      "baseFog": [
+        0.00016,
+        0.00263,
+        1,
+        0
+      ],
+      "testFog": [
+        0,
+        0.00263,
+        1,
+        0
+      ],
+      "patchedPrograms": [
+        "massing-blocks-sign",
+        "massing-blocks-flat",
+        "massing-blocks-atlas",
+        "massing-blocks-tower-flat",
+        "massing-blocks-tower-atlas",
+        "street-props",
+        "vegetation",
+        "vegetation-broadleafA:card",
+        "vegetation-broadleafA3:card",
+        "vegetation-broadleafB:card",
+        "vegetation-broadleafB3:card",
+        "vegetation-conifer:card",
+        "vegetation-conifer2:card",
+        "vegetation-bushB:card",
+        "vegetation-bushA:card",
+        "vegetation-hedge:card",
+        "vegetation-grassA:solid",
+        "vegetation-grassB:solid",
+        "vegetation-flowerYellow:card",
+        "vegetation-flowerWhite:card",
+        "vegetation-flowerPink:card"
+      ],
+      "gradeActive": true,
+      "glError": 0,
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+    },
+    "grade-off": {
+      "baseFog": [
+        0.00016,
+        0.00263,
+        1,
+        0
+      ],
+      "testFog": [
+        0,
+        0.00263,
+        1,
+        0
+      ],
+      "patchedPrograms": [
+        "massing-blocks-sign",
+        "massing-blocks-flat",
+        "massing-blocks-atlas",
+        "massing-blocks-tower-flat",
+        "massing-blocks-tower-atlas",
+        "street-props",
+        "vegetation",
+        "vegetation-broadleafA:card",
+        "vegetation-broadleafA3:card",
+        "vegetation-broadleafB:card",
+        "vegetation-broadleafB3:card",
+        "vegetation-conifer:card",
+        "vegetation-conifer2:card",
+        "vegetation-bushB:card",
+        "vegetation-bushA:card",
+        "vegetation-hedge:card",
+        "vegetation-grassA:solid",
+        "vegetation-grassB:solid",
+        "vegetation-flowerYellow:card",
+        "vegetation-flowerWhite:card",
+        "vegetation-flowerPink:card"
+      ],
+      "gradeActive": false,
+      "glError": 0,
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+    }
+  },
+  "views": {
+    "handoff": [
+      {
+        "grade": "grade-on",
+        "fog": "standard-fog",
+        "regions": {
+          "foreground": {
+            "rect": [
+              80,
+              653,
+              1020,
+              890
+            ],
+            "meanHSV_S": 0.2906,
+            "lumaP50": 103.43,
+            "meanAbsoluteRGBDeltaFromStandard": 0.0
+          },
+          "farther_blueGreen": {
+            "rect": [
+              771,
+              532,
+              927,
+              566
+            ],
+            "meanHSV_S": 0.5252,
+            "lumaP50": 67.07,
+            "meanAbsoluteRGBDeltaFromStandard": 0.0
+          }
+        }
+      },
+      {
+        "grade": "grade-off",
+        "fog": "standard-fog",
+        "regions": {
+          "foreground": {
+            "rect": [
+              80,
+              653,
+              1020,
+              890
+            ],
+            "meanHSV_S": 0.4885,
+            "lumaP50": 110.72,
+            "meanAbsoluteRGBDeltaFromStandard": 9.784
+          },
+          "farther_blueGreen": {
+            "rect": [
+              771,
+              532,
+              927,
+              566
+            ],
+            "meanHSV_S": 0.4413,
+            "lumaP50": 80.14,
+            "meanAbsoluteRGBDeltaFromStandard": 12.95
+          }
+        }
+      },
+      {
+        "grade": "grade-on",
+        "fog": "no-fog",
+        "regions": {
+          "foreground": {
+            "rect": [
+              80,
+              653,
+              1020,
+              890
+            ],
+            "meanHSV_S": 0.2907,
+            "lumaP50": 103.43,
+            "meanAbsoluteRGBDeltaFromStandard": 0.007
+          },
+          "farther_blueGreen": {
+            "rect": [
+              771,
+              532,
+              927,
+              566
+            ],
+            "meanHSV_S": 0.5247,
+            "lumaP50": 67.1,
+            "meanAbsoluteRGBDeltaFromStandard": 0.046
+          }
+        }
+      },
+      {
+        "grade": "grade-off",
+        "fog": "no-fog",
+        "regions": {
+          "foreground": {
+            "rect": [
+              80,
+              653,
+              1020,
+              890
+            ],
+            "meanHSV_S": 0.4886,
+            "lumaP50": 110.72,
+            "meanAbsoluteRGBDeltaFromStandard": 9.786
+          },
+          "farther_blueGreen": {
+            "rect": [
+              771,
+              532,
+              927,
+              566
+            ],
+            "meanHSV_S": 0.4405,
+            "lumaP50": 80.21,
+            "meanAbsoluteRGBDeltaFromStandard": 12.984
+          }
+        }
+      }
+    ],
+    "corner": [
+      {
+        "grade": "grade-on",
+        "fog": "standard-fog",
+        "regions": {
+          "lawn_left": {
+            "rect": [
+              135,
+              764,
+              420,
+              861
+            ],
+            "meanHSV_S": 0.2461,
+            "lumaP50": 89.8,
+            "meanAbsoluteRGBDeltaFromStandard": 0.0
+          },
+          "lawn_right": {
+            "rect": [
+              800,
+              760,
+              1100,
+              850
+            ],
+            "meanHSV_S": 0.4346,
+            "lumaP50": 77.39,
+            "meanAbsoluteRGBDeltaFromStandard": 0.0
+          },
+          "hedge": {
+            "rect": [
+              1004,
+              618,
+              1218,
+              687
+            ],
+            "meanHSV_S": 0.4974,
+            "lumaP50": 117.36,
+            "meanAbsoluteRGBDeltaFromStandard": 0.0
+          }
+        }
+      },
+      {
+        "grade": "grade-off",
+        "fog": "standard-fog",
+        "regions": {
+          "lawn_left": {
+            "rect": [
+              135,
+              764,
+              420,
+              861
+            ],
+            "meanHSV_S": 0.3245,
+            "lumaP50": 100.38,
+            "meanAbsoluteRGBDeltaFromStandard": 8.324
+          },
+          "lawn_right": {
+            "rect": [
+              800,
+              760,
+              1100,
+              850
+            ],
+            "meanHSV_S": 0.3923,
+            "lumaP50": 89.82,
+            "meanAbsoluteRGBDeltaFromStandard": 12.066
+          },
+          "hedge": {
+            "rect": [
+              1004,
+              618,
+              1218,
+              687
+            ],
+            "meanHSV_S": 0.4368,
+            "lumaP50": 120.33,
+            "meanAbsoluteRGBDeltaFromStandard": 7.878
+          }
+        }
+      },
+      {
+        "grade": "grade-on",
+        "fog": "no-fog",
+        "regions": {
+          "lawn_left": {
+            "rect": [
+              135,
+              764,
+              420,
+              861
+            ],
+            "meanHSV_S": 0.2474,
+            "lumaP50": 89.73,
+            "meanAbsoluteRGBDeltaFromStandard": 0.109
+          },
+          "lawn_right": {
+            "rect": [
+              800,
+              760,
+              1100,
+              850
+            ],
+            "meanHSV_S": 0.4376,
+            "lumaP50": 77.31,
+            "meanAbsoluteRGBDeltaFromStandard": 0.191
+          },
+          "hedge": {
+            "rect": [
+              1004,
+              618,
+              1218,
+              687
+            ],
+            "meanHSV_S": 0.4976,
+            "lumaP50": 117.38,
+            "meanAbsoluteRGBDeltaFromStandard": 0.019
+          }
+        }
+      },
+      {
+        "grade": "grade-off",
+        "fog": "no-fog",
+        "regions": {
+          "lawn_left": {
+            "rect": [
+              135,
+              764,
+              420,
+              861
+            ],
+            "meanHSV_S": 0.3256,
+            "lumaP50": 100.31,
+            "meanAbsoluteRGBDeltaFromStandard": 8.285
+          },
+          "lawn_right": {
+            "rect": [
+              800,
+              760,
+              1100,
+              850
+            ],
+            "meanHSV_S": 0.3947,
+            "lumaP50": 89.74,
+            "meanAbsoluteRGBDeltaFromStandard": 11.917
+          },
+          "hedge": {
+            "rect": [
+              1004,
+              618,
+              1218,
+              687
+            ],
+            "meanHSV_S": 0.437,
+            "lumaP50": 120.33,
+            "meanAbsoluteRGBDeltaFromStandard": 7.884
+          }
+        }
+      }
+    ]
+  }
+}
