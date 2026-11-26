@@ -64,7 +64,7 @@ float wbGStep3(float x, float w){
 }`;
 
 /** Terrain and the transition ring (which copied the terrain shader). */
-export function patchGroundShader(material, p, label) {
+export function patchGroundShader(material, p, label, painted = null) {
   let s = material.fragmentShader;
   material.uniforms.uWbGround = material.uniforms.uWbGround || { value: 1 };
   s = insert(s, 'void main(){', `uniform float uWbGround;\n${STEP3}\nvoid main(){`, label + ' entry');
@@ -76,6 +76,25 @@ export function patchGroundShader(material, p, label) {
   s = insert(s, 'vec3 gDetail = mix(mg.c / uMean[3], mg2.c / uMean[3], 0.45);',
     `vec3 gDetail = mix(mg.c / uMean[3], mg2.c / uMean[3], 0.45);
   gDetail = mix(gDetail, vec3(1.0), uWbGround * ${f(p.thatchFlatten)});`, label + ' thatch');
+  if (painted) {
+    // Keep the paint in the original sward mask before sand, rock and paving are composed.
+    // A world-space field keeps patches stable at every distance from the camera.
+    const floor = 'vec3 meadow = mix(swardFar * mix(vec3(1.0), gDetail, 0.35), swardNear, nearK);';
+    s = insert(s, floor, `${floor}
+  vec2 paintXZ = vec2(P.x + 0.38 * P.z, P.z * 0.76);
+  float paintField = ntexA(paintXZ * 0.52).r * 0.70 + ntexA(paintXZ * 1.45 + 13.0).b * 0.30;
+  float warmPatch = smoothstep(0.38, 0.64, paintField);
+  float paintCover = smoothstep(0.14, 0.64, splat.a) * uWbGround;
+  meadow = mix(meadow, mix(${v3(painted.cool)}, ${v3(painted.warm)}, warmPatch), paintCover);`, label + ' painted meadow');
+    s = insert(s, 'm.n = mg.n * 0.6 * nearK;', 'm.n = mg.n * 0.6 * nearK * (1.0 - 0.9 * paintCover);', label + ' smooth sward normal');
+    if (label === 'terrain') {
+      // Glancing depth samples on smooth ground can look like repeated contours
+      // to the post outline. Keep the ink mask for cliffs, not the sward or sand.
+      s = insert(s, 'gl_FragColor = vec4(col, 1.0);',
+        'gl_FragColor = vec4(col, mix(1.0, smoothstep(0.32, 0.75, rockAmt), uWbGround));',
+        label + ' natural ground outline mask');
+    }
+  }
   // far flower wash: same pastel pull as the petals
   s = insert(s, 'vec3 fcol = texture(uTintTex, uv).rgb;',
     `vec3 fcol = texture(uTintTex, uv).rgb;

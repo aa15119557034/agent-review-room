@@ -17,8 +17,8 @@ import { addStationLawn } from './transition.js';
 //   street     young trees along every street of the towns, alternate sides, every `street.spacing` m.
 //   bushes     one beside `bush.share` of the trees + free bushes along forest edges.
 //   hedges     a trimmed row outside the walkable rectangle, layered with lower shrubs where the border has room.
-//   grass      v2 grass clumps + flowers (`grass.flowerShare` of the instances are flowers: yellow / white, a few pink), by zone: `grass.perTree` at every tree foot, open meadow
-//              within `grass.radius` m of the focus points (patchy noise, `grass.p`), the verges beside the roads there (`grass.edge`, denser, more flowers) and flower patches.
+//   grass      small clumps and flowers at tree feet, road verges and town walls. The original
+//              open-meadow scattering is retained for the comparison with ?ground=off.
 //   LOD        trees with a named near model use the light model beyond the configured camera distance.
 // Caps (`cap`) thin a class uniformly when the budget (1.5 M triangles, 60 draw calls for props + vegetation) would be exceeded.
 
@@ -186,8 +186,9 @@ export async function createVegetation({ scene, worldBase, island, station, dryR
     }
   }
 
-  // ---- grass: tuft rings at tree feet + patches of open ground ---------------------------------------------------------------------------------------------
+  // ---- grass: tuft rings at tree feet and clusters along roads and walls ----
   const Gp = P.grass, tufts = [];
+  const paintedSward = worldBase.ground?.islandSward;
   const makeTuft = (x, z, hy, flower = Gp.flowerShare) => {
     const sp = rng() < flower ? 'flower' : 'grass', s = scaleOf(sp);
     const kind = kindOf(sp), yaw = rng() * Math.PI * 2, h = s * (0.8 + rng() * 0.5);
@@ -195,8 +196,19 @@ export async function createVegetation({ scene, worldBase, island, station, dryR
   };
   for (const t of [...keptTrees, ...keptBushes]) {
     if (t.street) continue;
-    for (let i = 0; i < Gp.perTree; i++) { const a = rng() * Math.PI * 2, d = (t.r ?? 1) * 0.35 + 0.8 + rng() * 1.5, x = t.x + Math.cos(a) * d, z = t.z + Math.sin(a) * d; if (ctx.cover(x, z) > 0.3 && !onRoad(x, z, 0.5)) tufts.push(makeTuft(x, z, ctx.groundY(x, z))); }
+    const heading = paintedSward ? rng() * Math.PI * 2 : 0;
+    const groups = paintedSward && t.r >= 1.65 && focusFalloff(ctx, t.x, t.z).d < 120 ? 2 : 1;
+    for (let i = 0; i < Gp.perTree * groups; i++) {
+      const angle = paintedSward
+        ? heading + Math.floor(i / Gp.perTree) * Math.PI + (i % Gp.perTree - 0.5) * 0.26
+        : rng() * Math.PI * 2;
+      const radius = (t.r ?? 1) * 0.35;
+      const distance = paintedSward ? radius + 0.53 + rng() * 0.55 : radius + 0.8 + rng() * 1.5;
+      const x = t.x + Math.cos(angle) * distance, z = t.z + Math.sin(angle) * distance;
+      if (ctx.cover(x, z) > 0.3 && !onRoad(x, z, 0.5)) tufts.push(makeTuft(x, z, ctx.groundY(x, z)));
+    }
   }
+  const rootGrass = tufts.length;
   // open meadow around the focus points: patchy, `meadowBoost` over the old density (the foreground was bare), flower patches on a 14 m noise
   let open = 0, edge = 0;
   const meadowWeight = (x, z) => 0.25 + noise2(x, z, 22, P.seed + 5) * 1.2;
@@ -207,15 +219,17 @@ export async function createVegetation({ scene, worldBase, island, station, dryR
     if (onRoad(x, z, 0.6) || nearProp(x, z, 0.5)) return 'grass-road';
     return null;
   };
-  for (const [fx, fz, R] of Gp.radius) for (let gz = fz - R; gz < fz + R; gz += Gp.cell) for (let gx = fx - R; gx < fx + R; gx += Gp.cell) {
-    const x = gx + rng() * Gp.cell, z = gz + rng() * Gp.cell;
-    if (Math.hypot(x - fx, z - fz) > R) continue;
-    if (rng() > Gp.p * Gp.meadowBoost * meadowWeight(x, z) * (1 - smooth(R * 0.6, R, Math.hypot(x - fx, z - fz)) * 0.8)) continue;
-    if (island.town.nameAt(x, z)) continue;
-    const y = ctx.groundY(x, z);
-    const reason = openReject(x, z, y);
-    if (reason) { bump(reason); continue; }
-    tufts.push(makeTuft(x, z, y, meadowFlowers(x, z))); open++;
+  if (!paintedSward) {
+    for (const [fx, fz, R] of Gp.radius) for (let gz = fz - R; gz < fz + R; gz += Gp.cell) for (let gx = fx - R; gx < fx + R; gx += Gp.cell) {
+      const x = gx + rng() * Gp.cell, z = gz + rng() * Gp.cell;
+      if (Math.hypot(x - fx, z - fz) > R) continue;
+      if (rng() > Gp.p * Gp.meadowBoost * meadowWeight(x, z) * (1 - smooth(R * 0.6, R, Math.hypot(x - fx, z - fz)) * 0.8)) continue;
+      if (island.town.nameAt(x, z)) continue;
+      const y = ctx.groundY(x, z);
+      const reason = openReject(x, z, y);
+      if (reason) { bump(reason); continue; }
+      tufts.push(makeTuft(x, z, y, meadowFlowers(x, z))); open++;
+    }
   }
   // verges: both sides of every road near the focus points, `edge.reach` m beyond the kerb, thicker and with more flowers than the open meadow
   const E = Gp.edge;
@@ -235,6 +249,40 @@ export async function createVegetation({ scene, worldBase, island, station, dryR
       }
     }
   }
+  const beforeWalls = tufts.length;
+  if (paintedSward) {
+    const occupied = new Set(), wallRng = rngFrom(hash32(P.seed, 64));
+    const sides = [[-1, 0], [1, 0], [0, -1], [0, 1]];
+    const addWallClump = (wallX, wallZ, dx, dz) => {
+      const spacing = 3.4;
+      const key = `${Math.floor(wallX / spacing)},${Math.floor(wallZ / spacing)}`;
+      if (occupied.has(key) || wallRng() > 0.22) return;
+      let placed = false;
+      for (const tangent of [-0.28, 0.28]) {
+        const x = wallX + dx * 0.86 + dz * tangent, z = wallZ + dz * 0.86 - dx * tangent;
+        const y = ctx.groundY(x, z);
+        if (y < T.minH || ctx.cover(x, z) < E.coverMin || ctx.slope(x, z) > 0.6 || ctx.isWater(x, z, 1.2)) continue;
+        if (onRoad(x, z, 0.52) || nearProp(x, z, 0.35) || room(x, z, 0.3, { walk: 0.8 })) continue;
+        tufts.push(makeTuft(x, z, y, 0.18));
+        placed = true;
+      }
+      if (placed) occupied.add(key);
+    };
+    for (const s of [...island.town.solids].sort((a, b) => a.x0 - b.x0 || a.z0 - b.z0)) {
+      for (let iz = 0; iz < s.nz; iz++) for (let ix = 0; ix < s.nx; ix++) {
+        const height = s.grid[iz * s.nx + ix];
+        if (!height) continue;
+        const x = s.x0 + (ix + 0.5) * s.cell, z = s.z0 + (iz + 0.5) * s.cell;
+        for (const [dx, dz] of sides) {
+          const nx = ix + dx, nz = iz + dz;
+          if (nx >= 0 && nz >= 0 && nx < s.nx && nz < s.nz && s.grid[nz * s.nx + nx]) continue;
+          if (s.y0 + height * s.step < ctx.groundY(x, z) + 0.8) break;
+          addWallClump(x + dx * s.cell / 2, z + dz * s.cell / 2, dx, dz);
+        }
+      }
+    }
+  }
+  const wallGrass = tufts.length - beforeWalls;
   const keptTufts = tufts.length > Gp.cap ? tufts.filter(() => rng() < Gp.cap / tufts.length) : tufts;
   // The station lawn has a separate seed and leaves the existing island batches intact.
   const stationLawn = dryRun ? null : addStationLawn({
@@ -273,7 +321,7 @@ export async function createVegetation({ scene, worldBase, island, station, dryR
     return r;
   };
   if (!dryRun) scene.add(root);
-  const summary = { sizeWarnings: model.warnings, trees: keptTrees.length, streetTrees, bushes: keptBushes.length + hedgeBushes.length, hedges: hedgeCount, hedgeBushes: hedgeBushes.length, grass: keptTufts.length, openGrass: open, edgeGrass: edge, flowers: keptTufts.filter(g => SP.flower.models.some(m => m.id === g.kind)).length, thinned, stationLawn };
+  const summary = { sizeWarnings: model.warnings, trees: keptTrees.length, streetTrees, bushes: keptBushes.length + hedgeBushes.length, hedges: hedgeCount, hedgeBushes: hedgeBushes.length, grass: keptTufts.length, rootGrass, openGrass: open, edgeGrass: edge, wallGrass, flowers: keptTufts.filter(g => SP.flower.models.some(m => m.id === g.kind)).length, thinned, stationLawn };
   worldBase.scatter = { ...(worldBase.scatter ?? {}), veg: { root, counts, summary, update, lods, materials, drawCalls, triangles, rejects, attempts, ms: +(performance.now() - t0).toFixed(1),
     trees: keptTrees.map(t => ({ kind: t.kind, x: t.x, z: t.z, r: t.r })), bushes: [...keptBushes, ...hedgeBushes].map(t => ({ kind: t.kind, x: t.x, z: t.z, r: t.r })), hedges: items[hk]?.map(h => ({ x: h.x, z: h.z })) ?? [], grass: keptTufts.map(t => ({ x: t.x, z: t.z })) } };
   console.info('[world-base] vegetation', JSON.stringify({ ...summary, drawCalls, triangles, ms: worldBase.scatter.veg.ms }));
