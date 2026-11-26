@@ -247,6 +247,12 @@ export async function createVegetation({ scene, worldBase, island, station, dryR
       return !island.town.nameAt(wx, wz) && !openReject(wx, wz, ctx.groundY(wx, wz), true);
     },
     shadeAt: (x, z) => smooth(0.31, 0.69, 0.7 * noise2(x, z, 14, P.seed + 17) + 0.3 * noise2(x, z, 4, P.seed + 19)),
+    // Broad, oblique patches in station space give the paint a canopy-shadow shape.
+    paintAt: (x, z) => {
+      const u = x + 0.43 * z, v = z * 0.72;
+      const field = 0.77 * noise2(u, v, 13, P.seed + 53) + 0.23 * noise2(u, v, 5, P.seed + 59);
+      return smooth(0.39, 0.62, field);
+    },
   });
   for (const g of keptTufts) push(g.kind, g);
 

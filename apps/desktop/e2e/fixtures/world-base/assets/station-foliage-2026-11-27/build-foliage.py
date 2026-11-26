@@ -237,8 +237,9 @@ def hedge(mat_bark, mat_foliage):
     twig, leaves = Mesh(), Mesh()
     specs = [(-.80, -.13, .49, .46), (-.58, .18, .61, .49), (-.16, -.12, .54, .52),
              (.19, .16, .60, .47), (.57, -.20, .49, .55), (.86, .11, .61, .42)]
-    core_palette = (linear('3d614d'), linear('81a760'))
-    leaf_palette = (linear('426e59'), linear('a6cc7c'))
+    # The warm evening key already adds yellow. Keep the exposed top green and push the shaded base cooler.
+    core_palette = (linear('2d5745'), linear('559252'))
+    leaf_palette = (linear('31654d'), linear('73bb63'))
     for x, y, z, _ in specs:
         twig.crown((x, y*.62, z*.68), (.39, .45, .51), core_palette, 5, x)
     inner = [(x*.94, y*.75, z*.62, size*.81) for x, y, z, size in specs]

@@ -21,7 +21,7 @@ export function stationGroundGrassWeight(name, x, z) {
 
 
 /** A short sward on the station's open lawn. Its ground and blades share the same map. */
-export function addStationLawn({ station, bounds, heightAt, canGrow, shadeAt, random }) {
+export function addStationLawn({ station, bounds, heightAt, canGrow, shadeAt, paintAt, random }) {
   const [x0, x1] = bounds.x, [z0, z1] = bounds.z;
   const root = station.root;
   const base = root.getObjectByName('env-terrain-ground');
@@ -42,7 +42,7 @@ export function addStationLawn({ station, bounds, heightAt, canGrow, shadeAt, ra
       const index = (row * nx + column) * 2;
       const tone = shadeAt(x, z);
       data[index] = Math.round(255 * lawnWeight(x, z, tone));
-      data[index + 1] = Math.round(255 * tone);
+      data[index + 1] = Math.round(255 * paintAt(x, z));
     }
   }
   const field = new THREE.DataTexture(data, nx, nz, THREE.RGFormat);
@@ -51,8 +51,8 @@ export function addStationLawn({ station, bounds, heightAt, canGrow, shadeAt, ra
   const uniforms = {
     uLawnField: { value: field },
     uLawnRect: { value: new THREE.Vector4(x0, z0, x1 - x0, z1 - z0) },
-    uLawnCool: { value: new THREE.Color('#2c806b') },
-    uLawnWarm: { value: new THREE.Color('#93b13f') },
+    uLawnCool: { value: new THREE.Color('#246c67') },
+    uLawnWarm: { value: new THREE.Color('#aec14a') },
   };
   const sample = [
     'uniform sampler2D uLawnField;',
