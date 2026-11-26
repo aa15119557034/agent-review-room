@@ -93,7 +93,9 @@ export async function getAerial(worldBase, island) {
 export function makeMaterial({ gradientMap, aerial, name, map = null, alphaTest = 0, tint = null, height = 1 }) {
   const m = new THREE.MeshToonMaterial({ vertexColors: true, gradientMap, name });
   if (map) { m.map = map; m.alphaTest = alphaTest || 0.5; m.side = THREE.DoubleSide; }
-  patchAerial(m, aerial, 'lit');
+  const vegetation = name === 'vegetation' || name.startsWith('vegetation-');
+  // Preserve distant leaf color where the warm evening haze is tuned for buildings.
+  patchAerial(m, aerial, 'lit', vegetation ? 0.45 : 1);
   // patchAerial reads the vertex position in model space; with instancing the instance matrix has to be applied first.
   const aerialHook = m.onBeforeCompile;
   m.onBeforeCompile = (shader, renderer) => {
@@ -102,7 +104,6 @@ export function makeMaterial({ gradientMap, aerial, name, map = null, alphaTest 
     shader.vertexShader = shader.vertexShader.replace('vBkPos = ( modelMatrix * vec4( transformed, 1.0 ) ).xyz;',
       'vec4 bkP = vec4( transformed, 1.0 );\n#ifdef USE_INSTANCING\nbkP = instanceMatrix * bkP;\n#endif\nvBkPos = ( modelMatrix * bkP ).xyz;');
   };
-  const vegetation = name === 'vegetation' || name.startsWith('vegetation-');
   m.customProgramCacheKey = () => 'scatter-aerial-lit' + (vegetation ? '-vegetation' : '') + (map ? '-card' : '') + (tint ? '-tint' : '');
   return m;
 }

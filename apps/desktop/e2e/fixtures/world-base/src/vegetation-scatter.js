@@ -16,7 +16,7 @@ import { addStationLawn } from './transition.js';
 //              far forests, cherry a few percent near the settlements (more near roads), otherwise broadleaf a / b.
 //   street     young trees along every street of the towns, alternate sides, every `street.spacing` m.
 //   bushes     one beside `bush.share` of the trees + free bushes along forest edges.
-//   hedges     a hedge row `hedge.offset` m outside the walkable rectangle all round (gaps where a road, a building or water is).
+//   hedges     a trimmed row outside the walkable rectangle, layered with lower shrubs where the border has room.
 //   grass      v2 grass clumps + flowers (`grass.flowerShare` of the instances are flowers: yellow / white, a few pink), by zone: `grass.perTree` at every tree foot, open meadow
 //              within `grass.radius` m of the focus points (patchy noise, `grass.p`), the verges beside the roads there (`grass.edge`, denser, more flowers) and flower patches.
 //   LOD        trees with a named near model use the light model beyond the configured camera distance.
@@ -31,7 +31,7 @@ export const PARAMS = {
     conifer: { slope: 0.3, height: 140, farShare: 0.82 }, cherry: { near: 0.06, byRoad: 0.14, roadReach: 45 } },
   street: { spacing: [9, 13], offset: 1.9, keep: 0.75, minHalfW: 1.8 },
   bush: { share: 0.55, cell: 14, edge: 0.3, base: 0.05, cap: 3500, walkMargin: 2.5 },
-  hedge: { offset: 1.4, overlap: 0.92, skip: 0.06 },   // segment spacing = model length x overlap
+  hedge: { offset: 1.4, overlap: 0.92 },   // segment spacing = model length x overlap
   // World-space grass focuses include the extra meadow around (60, 110).
   grass: { cell: 4, p: 0.2, meadowBoost: 1.7, perTree: 2, cap: 30000, coverMin: 0.45, radius: [[280, 900, 450], [176, -1182, 150], [60, 110, 200]], flowerShare: 0.27,
     // Station-local east lawn. The station clears its terrain cover and includes it in the walkable rectangle.
@@ -41,7 +41,7 @@ export const PARAMS = {
 };
 
 const _cam = new THREE.Vector3(), _m = new THREE.Matrix4(), _x = new THREE.Vector3(), _y = new THREE.Vector3(0, 1, 0), _z = new THREE.Vector3(), _t = new THREE.Vector3();
-const facing = (x, y, z, fx, fz, sx = 1) => { const l = Math.hypot(fx, fz) || 1; fx /= l; fz /= l; return _m.clone().makeBasis(_x.set(fz * sx, 0, -fx * sx), _y, _z.set(fx, 0, fz)).setPosition(_t.set(x, y, z)); };
+const facing = (x, y, z, fx, fz, sy) => _m.clone().makeBasis(_x.set(fz, 0, -fx), _y.set(0, sy, 0), _z.set(fx, 0, fz)).setPosition(_t.set(x, y, z));
 
 export async function createVegetation({ scene, worldBase, island, station, dryRun = false }) {
   const t0 = performance.now(), P = PARAMS, T = P.tree, rng = rngFrom(hash32(P.seed, 1));
@@ -138,22 +138,50 @@ export async function createVegetation({ scene, worldBase, island, station, dryR
   for (const b of keptBushes) push(b.kind, b);
 
   // ---- hedges along the walkable rectangle ---------------------------------------------------------------------------------------------------------
-  let hedgeCount = 0; const hk = kindOf('hedge');
+  let hedgeCount = 0; const hk = kindOf('hedge'), hedgeBushes = [];
   {
     const b = station.bounds, o = station.root.position, H = P.hedge, d = H.offset;
     const x0 = b.x0 + o.x - d, x1 = b.x1 + o.x + d, z0 = b.z0 + o.z - d, z1 = b.z1 + o.z + d;
     const step = model[hk].size[0] * H.overlap;
+    const borderTrees = keptTrees.filter(t => t.x >= x0 - 7 && t.x <= x1 + 7 && t.z >= z0 - 7 && t.z <= z1 + 7);
+    const hedgeRng = rngFrom(hash32(P.seed, 43));
+    const tryHedgeBush = (x, z, hedgeY, scale) => {
+      const kind = pickWeighted(hedgeRng, SP.bush.models), size = model[kind].size;
+      const r = Math.hypot(size[0], size[2]) * scale / 2, y = ctx.groundY(x, z);
+      if (y < T.minH || Math.abs(y - hedgeY) > 0.45 || ctx.isWater(x, z, 1) || ctx.slope(x, z) > 0.6) return;
+      if (room(x, z, r, { corr: 1.5 }) || onRoad(x, z, r + 1.2) || nearProp(x, z, r + 0.4)) return;
+      if (borderTrees.some(t => Math.hypot(t.x - x, t.z - z) < r + 0.55)) return;
+      if (hedgeBushes.some(bush => Math.hypot(bush.x - x, bush.z - z) < 2.4)) return;
+      const shrub = { kind, r, x, y: y - 0.06, z, yaw: hedgeRng() * Math.PI * 2, sx: scale, sy: scale * 0.95, sz: scale, tint: 0.94 };
+      hedgeBushes.push(shrub);
+      push(kind, shrub);
+    };
     const edges = [[x0, z0, x1, z0, 0, -1], [x1, z0, x1, z1, 1, 0], [x1, z1, x0, z1, 0, 1], [x0, z1, x0, z0, -1, 0]]; // from, to, outward normal
     for (const [ax, az, bx, bz, nx, nz] of edges) {
       const len = Math.hypot(bx - ax, bz - az), ux = (bx - ax) / len, uz = (bz - az) / len;
       for (let s = step / 2; s < len - step / 2; s += step) {
         const x = ax + ux * s, z = az + uz * s;
-        if (rng() < H.skip) continue;
+        // Keep the original sampling sequence for the seeded grass pass below.
+        const wasGap = rng() < 0.06;
         const y = ctx.groundY(x, z);
         if (y < T.minH || ctx.isWater(x, z, 1) || ctx.slope(x, z) > 0.8) { bump('hedge-ground'); continue; }
         if (ctx.obstacle(x, z, 1.0, ['walk', 'bld', 'corr', 'prop', 'town'], { corr: 1.5 })) { bump('hedge-blocked'); continue; }
         if (onRoad(x, z, 2.2) || nearProp(x, z, 1.0)) { bump('hedge-road'); continue; }
-        push(hk, { matrix: facing(x, y - 0.03, z, nx, nz), ...tint(1, 0.2), hedge: true, x, z, y, r: 1.2 }); hedgeCount++;
+        const height = 0.68 + 0.62 * noise2(x, z, 6.7, P.seed + 29);
+        const color = wasGap ? { tint: 1 } : tint(1, 0.2);
+        push(hk, { matrix: facing(x, y - 0.03, z, nx, nz, height), ...color, hedge: true, x, z, y, r: 1.2 });
+        hedgeCount++;
+        // Keep most of the clipped row open to view and add depth at selected clusters and tree feet.
+        const nearCorner = Math.min(s, len - s) < 6;
+        const nearTree = borderTrees.some(t => Math.hypot(t.x - x, t.z - z) < 5);
+        const cluster = noise2(x, z, 9, P.seed + 37) > 0.61;
+        if ((nearCorner || nearTree || cluster) && hedgeRng() > 0.26) {
+          const shift = (hedgeRng() - 0.5) * step;
+          tryHedgeBush(x + ux * shift - nx * 0.64, z + uz * shift - nz * 0.64, y, 0.41 + hedgeRng() * 0.09);
+        }
+        if ((nearCorner || nearTree) && hedgeRng() > 0.32) {
+          tryHedgeBush(x + nx * 1.25, z + nz * 1.25, y, 0.65 + hedgeRng() * 0.14);
+        }
       }
     }
   }
@@ -237,9 +265,9 @@ export async function createVegetation({ scene, worldBase, island, station, dryR
     return r;
   };
   if (!dryRun) scene.add(root);
-  const summary = { sizeWarnings: model.warnings, trees: keptTrees.length, streetTrees, bushes: keptBushes.length, hedges: hedgeCount, grass: keptTufts.length, openGrass: open, edgeGrass: edge, flowers: keptTufts.filter(g => SP.flower.models.some(m => m.id === g.kind)).length, thinned, stationLawn };
+  const summary = { sizeWarnings: model.warnings, trees: keptTrees.length, streetTrees, bushes: keptBushes.length + hedgeBushes.length, hedges: hedgeCount, hedgeBushes: hedgeBushes.length, grass: keptTufts.length, openGrass: open, edgeGrass: edge, flowers: keptTufts.filter(g => SP.flower.models.some(m => m.id === g.kind)).length, thinned, stationLawn };
   worldBase.scatter = { ...(worldBase.scatter ?? {}), veg: { root, counts, summary, update, lods, materials, drawCalls, triangles, rejects, attempts, ms: +(performance.now() - t0).toFixed(1),
-    trees: keptTrees.map(t => ({ kind: t.kind, x: t.x, z: t.z, r: t.r })), bushes: keptBushes.map(t => ({ kind: t.kind, x: t.x, z: t.z, r: t.r })), hedges: items[hk]?.map(h => ({ x: h.x, z: h.z })) ?? [], grass: keptTufts.map(t => ({ x: t.x, z: t.z })) } };
+    trees: keptTrees.map(t => ({ kind: t.kind, x: t.x, z: t.z, r: t.r })), bushes: [...keptBushes, ...hedgeBushes].map(t => ({ kind: t.kind, x: t.x, z: t.z, r: t.r })), hedges: items[hk]?.map(h => ({ x: h.x, z: h.z })) ?? [], grass: keptTufts.map(t => ({ x: t.x, z: t.z })) } };
   console.info('[world-base] vegetation', JSON.stringify({ ...summary, drawCalls, triangles, ms: worldBase.scatter.veg.ms }));
   return worldBase.scatter.veg;
 }

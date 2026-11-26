@@ -137,16 +137,21 @@ class Mesh:
         return obj
 
 
-def clusters(mesh, specs, near, needle, palette, seed):
+def clusters(mesh, specs, near, needle, palette, seed, far_count=6, crown_light=None):
     rng = Random(seed)
     for index, (x, y, z, size) in enumerate(specs):
-        count = 18 if near else (5 if needle else 6)
+        count = 18 if near else far_count
         for i in range(count):
             a = i * 2.399963 + index * .72 + rng.uniform(-.21, .21)
             radial = size * rng.uniform(.18, .65)
             hz = rng.uniform(-.32, .42) * size
             center = (x + cos(a) * radial, y + sin(a) * radial * .82, z + hz)
-            lit = min(.95, max(.12, .53 + hz / size * .47 + .13 * cos(a - .7) + rng.uniform(-.09, .09)))
+            lit = .53 + hz / size * .47 + .13 * cos(a - .7) + rng.uniform(-.09, .09)
+            if crown_light:
+                floor, top = crown_light
+                gradient = min(1, max(0, (center[2] - floor) / (top - floor)))
+                lit += -.15 + .35 * gradient
+            lit = min(.95, max(.12, lit))
             w = size * rng.uniform(.75, 1.03) * (1.0 if near else 1.14)
             h = size * rng.uniform(.47, .76) * (.86 if needle else 1)
             mesh.card(center, w, h, a + rng.uniform(-.56, .56), rng.uniform(-.52, .58),
@@ -158,9 +163,9 @@ def broadleaf(seed, mat_bark, mat_foliage, near, variant=False):
     trunk, leaves, masses = Mesh(), Mesh(), Mesh()
     trunk.fork([(0, 0, 0), (.12, -.09, 1.42), (.33, .04, 2.81), (.51, .13, 4.42), (.48, .24, 5.42)],
                [.27, .22, .16, .09, .028], 8 if near else 6, BARK)
-    boughs = [(1.22, -.52, 4.67, .92), (-.57, -.72, 4.05, .80), (-1.16, .57, 4.86, 1.06),
-              (.10, 1.10, 5.12, .94), (1.20, .78, 5.46, .85), (.42, -.34, 6.00, .94),
-              (-.50, .13, 5.57, 1.05)]
+    boughs = [(1.14, -.45, 4.77, 1.02), (-.59, -.75, 4.41, .94), (-1.02, .47, 4.95, 1.10),
+              (.16, .89, 5.27, 1.04), (1.12, .62, 5.45, 1.01), (.38, -.30, 5.99, .94),
+              (-.50, .17, 5.58, 1.09)]
     if variant:
         boughs = [(x * 1.08 + .19 * sin(i), y * 1.06, z + .35 + .10 * cos(i), s * (1.10 if i % 2 else .94))
                   for i, (x, y, z, s) in enumerate(boughs)]
@@ -170,11 +175,17 @@ def broadleaf(seed, mat_bark, mat_foliage, near, variant=False):
             trunk.fork([branch_start, (x*.53, y*.48, z-.60), (x, y, z)], [.096, .050, .013], 5, BARK)
         else:
             trunk.fork([branch_start, (x, y, z)], [.088, .013], 3, BARK)
-    palette = (linear('446e55'), linear('b4ca73'))
-    for i, (x, y, z, size) in enumerate(boughs):
-        if near or i % 2 == 0:
-            masses.crown((x, y, z-.11), (size*.81, size*.70, size*.64), palette, 7 if near else 5, i*.86)
-    clusters(leaves, boughs, near, False, palette, rng.randrange(1 << 31))
+    # Connect the foliage above the main forks while keeping the underside open.
+    canopy = boughs + [(.39, .05, 5.29, 1.07), (.18, -.54, 4.99, .91)]
+    leaf_palette = (linear('47745c'), linear('a5c884'))
+    core_palette = (linear('3d614d'), linear('708955'))
+    for i, (x, y, z, size) in enumerate(canopy):
+        if near or i in (0, 2, 4, 6):
+            masses.crown((x, y, z-.05), (size*.53, size*.47, size*.43), core_palette,
+                         5, i*.86)
+    shift = .30 if variant else 0
+    clusters(leaves, canopy, near, False, leaf_palette, rng.randrange(1 << 31), far_count=5,
+             crown_light=(4.3 + shift, 6.6 + shift))
     return [trunk.object('forked-trunk', mat_bark, True), masses.object('broadleaf-crown-planes', mat_bark, True),
             leaves.object('broadleaf-sprays', mat_foliage, False)]
 
@@ -200,7 +211,7 @@ def cedar(mat_bark, mat_foliage, near):
     for i, (x, y, z, size) in enumerate(boughs):
         if near or i % 3 == 0:
             masses.crown((x, y, z-.09), (size*.80, size*.63, size*.33), palette, 6 if near else 4, i*.97)
-    clusters(leaves, boughs, near, True, palette, 769122)
+    clusters(leaves, boughs, near, True, palette, 769122, far_count=5)
     trunk.footprint(.71, .72)
     leaves.footprint(.71, .72)
     masses.footprint(.71, .72)
