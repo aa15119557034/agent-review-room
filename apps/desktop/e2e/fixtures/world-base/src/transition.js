@@ -27,22 +27,22 @@ export function addStationLawn({ station, bounds, heightAt, canGrow, shadeAt, ra
   const base = root.getObjectByName('env-terrain-ground');
   if (!base?.isMesh) throw new Error('Station lawn needs the original station ground mesh');
 
-  // Half-metre support keeps the grade and the blades clear of the same paved edges.
+  // The colour field crosses blade blockers on eligible ground. Fade the tint
+  // and blade density together before the outer edge so the lawn reads as part of the terrain.
   const nx = Math.ceil((x1 - x0) / 0.5), nz = Math.ceil((z1 - z0) / 0.5);
   const data = new Uint8Array(nx * nz * 2);
-  const coverage = (x, z) => {
+  const lawnWeight = (x, z, tone) => {
     const distance = Math.min(x - x0, x1 - x, z - z0, z1 - z);
-    const ground = stationGroundGrassWeight(base.name, x, z);
-    return ground > 0 && canGrow(x, z) ? ground * smoothstep(0.1, 1.6, distance) : 0;
+    const feather = 5.8 + 1.4 * tone;
+    return stationGroundGrassWeight(base.name, x, z) * smoothstep(0, feather, distance);
   };
-  // Keep the broad warm and cool areas, with shorter patches shared by the soil and blades.
-  const toneAt = (x, z) => 0.78 * shadeAt(x, z) + 0.22 * shadeAt(3.5 * x, 3.5 * z);
   for (let row = 0; row < nz; row++) {
     for (let column = 0; column < nx; column++) {
       const x = x0 + (column + 0.5) * (x1 - x0) / nx, z = z0 + (row + 0.5) * (z1 - z0) / nz;
       const index = (row * nx + column) * 2;
-      data[index] = Math.round(255 * coverage(x, z));
-      data[index + 1] = Math.round(255 * toneAt(x, z));
+      const tone = shadeAt(x, z);
+      data[index] = Math.round(255 * lawnWeight(x, z, tone));
+      data[index + 1] = Math.round(255 * tone);
     }
   }
   const field = new THREE.DataTexture(data, nx, nz, THREE.RGFormat);
@@ -51,8 +51,8 @@ export function addStationLawn({ station, bounds, heightAt, canGrow, shadeAt, ra
   const uniforms = {
     uLawnField: { value: field },
     uLawnRect: { value: new THREE.Vector4(x0, z0, x1 - x0, z1 - z0) },
-    uLawnCool: { value: new THREE.Color('#3c7848') },
-    uLawnWarm: { value: new THREE.Color('#a7b953') },
+    uLawnCool: { value: new THREE.Color('#2c806b') },
+    uLawnWarm: { value: new THREE.Color('#93b13f') },
   };
   const sample = [
     'uniform sampler2D uLawnField;',
@@ -64,7 +64,7 @@ export function addStationLawn({ station, bounds, heightAt, canGrow, shadeAt, ra
     '  if (any(lessThan(uv,vec2(0.0))) || any(greaterThan(uv,vec2(1.0)))) return vec2(0.0);',
     '  return texture2D(uLawnField,uv).rg;',
     '}',
-    'vec3 lawnColor(vec2 lawn) { return mix(uLawnCool,uLawnWarm,smoothstep(0.08,0.92,lawn.y)); }',
+    'vec3 lawnColor(vec2 lawn) { return mix(uLawnCool,uLawnWarm,smoothstep(0.16,0.84,lawn.y)); }',
   ].join('\n');
   const transform = root.matrixWorld.clone().invert().multiply(base.matrixWorld);
   function patchMaterial(material, key, vertexDeclarations, vertex, fragmentDeclarations, color, normal = '') {
@@ -121,21 +121,37 @@ export function addStationLawn({ station, bounds, heightAt, canGrow, shadeAt, ra
       'vLawnXZ=lawnRoot.xz;',
       'vec3 lawnWorld=(modelMatrix*lawnRoot).xyz;',
       'float lawnFade=1.0-smoothstep(10.0,25.0,distance(cameraPosition.xz,lawnWorld.xz));',
-      'vLawnTip=position.y/0.125;',
+      'vLawnTip=position.y/0.125*lawnFade;',
       'transformed.xyz*=lawnFade;',
     ].join('\n'),
     'varying float vLawnTip;\n',
-    'vec2 stationLawn=readLawn(vLawnXZ); diffuseColor.rgb=lawnColor(stationLawn)*mix(vec3(0.97),vec3(1.19,1.17,1.07),vLawnTip);',
+    'vec2 stationLawn=readLawn(vLawnXZ); diffuseColor.rgb=lawnColor(stationLawn)*mix(vec3(1.0),vec3(1.13,1.10,1.02),vLawnTip);',
     'normal*=faceDirection;',
   );
   material.addEventListener('dispose', () => field.dispose());
-  const step = 0.27, cells = [];
+  const step = 3.2, cells = [];
+  let groups = 0;
   for (let z = z0; z < z1; z += step) {
     for (let x = x0; x < x1; x += step) {
-      const px = x + random()*Math.min(step,x1-x), pz = z + random()*Math.min(step,z1-z);
-      const weight = coverage(px, pz);
-      const tone = toneAt(px, pz);
-      if (random() < weight * (0.51 + 0.36 * tone)) cells.push([px, pz, heightAt(px, pz), random(), random(), tone]);
+      const cx = x + random() * Math.min(step, x1 - x), cz = z + random() * Math.min(step, z1 - z);
+      const path = pathDist(cx, cz);
+      const pathClearance = (path.d - 1) * path.w;
+      const borderClearance = station.bounds.x1 - cx;
+      const pathShoulder = pathClearance >= 1.4 && pathClearance <= 3.5;
+      const plantedBorder = borderClearance >= 3.2 && borderClearance <= 7.6;
+      if (!pathShoulder && !plantedBorder) continue;
+
+      const start = cells.length, radius = 0.35 + 0.48 * random();
+      const patchesInGroup = 5 + Math.floor(6 * random());
+      for (let i = 0; i < patchesInGroup; i++) {
+        const turn = random(), angle = turn * 2 * Math.PI, spread = radius * Math.sqrt(random());
+        const px = cx + Math.cos(angle) * spread, pz = cz + Math.sin(angle) * spread;
+        const weight = lawnWeight(px, pz, shadeAt(px, pz));
+        if (random() >= weight || !canGrow(px, pz)) continue;
+        const height = (0.78 + random() * 0.56) * (0.55 + 0.45 * weight);
+        cells.push([px, pz, heightAt(px, pz), turn, height]);
+      }
+      if (cells.length > start) groups++;
     }
   }
   const mesh = new THREE.InstancedMesh(geometry, material, cells.length);
@@ -143,14 +159,14 @@ export function addStationLawn({ station, bounds, heightAt, canGrow, shadeAt, ra
   mesh.receiveShadow = true;
   const rotation = new THREE.Matrix4();
   const scale = new THREE.Vector3();
-  cells.forEach(([x, z, y, turn, height, tone], index) => {
+  cells.forEach(([x, z, y, turn, height], index) => {
     const width = 0.8 + turn * 0.6;
-    rotation.makeRotationY(turn * 2 * Math.PI).scale(scale.set(width, 0.62 + height * 0.55 + tone * 0.18, width));
+    rotation.makeRotationY(turn * 2 * Math.PI).scale(scale.set(width, height, width));
     mesh.setMatrixAt(index, rotation.setPosition(x, y - 0.01, z));
   });
   mesh.computeBoundingSphere();
   root.add(mesh);
-  return { patches: cells.length, blades: cells.length * blades.length, triangles: cells.length * indices.length / 3 };
+  return { groups, patches: cells.length, blades: cells.length * blades.length, triangles: cells.length * indices.length / 3 };
 }
 
 /** A narrow, explicit join between the station's ground and the island heightfield. */

@@ -237,10 +237,12 @@ def hedge(mat_bark, mat_foliage):
     twig, leaves = Mesh(), Mesh()
     specs = [(-.80, -.13, .49, .46), (-.58, .18, .61, .49), (-.16, -.12, .54, .52),
              (.19, .16, .60, .47), (.57, -.20, .49, .55), (.86, .11, .61, .42)]
+    core_palette = (linear('3d614d'), linear('81a760'))
+    leaf_palette = (linear('426e59'), linear('a6cc7c'))
     for x, y, z, _ in specs:
-        twig.crown((x, y*.62, z*.68), (.39, .45, .51), (linear('465e43'), linear('879f65')), 5, x)
+        twig.crown((x, y*.62, z*.68), (.39, .45, .51), core_palette, 5, x)
     inner = [(x*.94, y*.75, z*.62, size*.81) for x, y, z, size in specs]
-    clusters(leaves, specs + inner, False, False, (linear('4c6f4c'), linear('a2b86e')), 401277)
+    clusters(leaves, specs + inner, False, False, leaf_palette, 401277, crown_light=(.30, .83))
     twig.footprint(.82, .58)
     leaves.footprint(.82, .58)
     return [twig.object('hedge-stems', mat_bark, True), leaves.object('hedge-sprays', mat_foliage, False)]
