@@ -31,7 +31,10 @@ export const PARAMS = {
   street: { spacing: [9, 13], offset: 1.9, keep: 0.75, minHalfW: 1.8 },
   bush: { share: 0.55, cell: 14, edge: 0.3, base: 0.05, cap: 3500, walkMargin: 2.5 },
   hedge: { offset: 1.4, overlap: 0.92, skip: 0.06 },   // segment spacing = model length x overlap
-  grass: { cell: 4, p: 0.2, meadowBoost: 1.7, perTree: 2, cap: 30000, coverMin: 0.45, radius: [[280, 900, 450], [176, -1182, 150], [60, 110, 200]], flowerShare: 0.27,
+  grass: { cell: 4, p: 0.2, meadowBoost: 1.7, perTree: 2, cap: 30000, coverMin: 0.45, radius: [[280, 900, 450], [176, -1182, 150]], flowerShare: 0.27,
+    // station-local margin strips of open lawn between the last lot row and the edge of the walkable rectangle (east side only, x 64..91, z 8..126; the west strip holds the fenced allotment): the station clears the
+    // splat cover and `walk` covers the whole rectangle, so without this nothing grew on the one stretch of lawn a player can stand on
+    lawn: { x: [64, 91], z: [8, 126] },
     edge: { step: 1.7, p: 0.6, reach: [0.4, 2.6], reachFocus: 1.25, flower: 0.4, coverMin: 0.2 } },
   skipRoads: /:(mole|pier)$/,
 };
@@ -163,9 +166,11 @@ export async function createVegetation({ scene, worldBase, island, station, dryR
   }
   // open meadow around the focus points: patchy, `meadowBoost` over the old density (the foreground was bare), flower patches on a 14 m noise
   let open = 0, edge = 0;
+  const inLawn = (x, z) => { const L = Gp.lawn, lx = x - ctx.ox, lz = z - ctx.oz; return lx >= L.x[0] && lx <= L.x[1] && lz >= L.z[0] && lz <= L.z[1]; };
   const openOk = (x, z, y, r = 0.3) => {
-    if (y < T.minH || ctx.slope(x, z) > 0.6 || ctx.cover(x, z) < Gp.coverMin || ctx.isWater(x, z, 1.5)) return bump('grass-ground');
-    if (ctx.obstacle(x, z, r, ['walk', 'bld', 'prop', 'town'], { walk: 0.8 })) return bump('grass-blocked');
+    const lawn = inLawn(x, z);
+    if (y < T.minH || ctx.slope(x, z) > 0.6 || (!lawn && ctx.cover(x, z) < Gp.coverMin) || ctx.isWater(x, z, 1.5)) return bump('grass-ground');
+    if (ctx.obstacle(x, z, r, lawn ? ['bld', 'prop', 'town', 'solid'] : ['walk', 'bld', 'prop', 'town'], lawn ? null : { walk: 0.8 })) return bump(lawn ? 'grass-lawn-blocked' : 'grass-blocked');
     if (onRoad(x, z, 0.6) || nearProp(x, z, 0.5)) return bump('grass-road');
     return true;
   };
