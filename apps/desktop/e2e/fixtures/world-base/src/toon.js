@@ -93,13 +93,7 @@ export function installLitToon(p, boxes) {
   float tbFull = dot( directionalLights[ 0 ].color, vec3( 0.2126, 0.7152, 0.0722 ) ) * RECIPROCAL_PI;
   float tbU = dot( reflectedLight.directDiffuse, vec3( 0.2126, 0.7152, 0.0722 ) ) / ( tbLum * max( tbFull, 1e-3 ) );
 ${indoorGlsl(boxes)}
-  float tbTone = tbU;
-#ifdef TOON_TREE_CROWN
-  // Model the broad faces of the smooth crown using its normal against the sun.
-  // The incoming direct light still controls whether a face can reach a lit band.
-  tbTone *= mix( 0.45, 1.0, saturate( dot( normal, directionalLights[ 0 ].direction ) * 0.5 + 0.5 ) );
-#endif
-  float tbQ = ${f(l0)} + ( ${f(l1 - l0)} ) * smoothstep( ${f(e1 - w)}, ${f(e1 + w)}, tbTone ) + ( ${f(l2 - l1)} ) * smoothstep( ${f(e2 - w)}, ${f(e2 + w)}, tbTone );
+  float tbQ = ${f(l0)} + ( ${f(l1 - l0)} ) * smoothstep( ${f(e1 - w)}, ${f(e1 + w)}, tbU ) + ( ${f(l2 - l1)} ) * smoothstep( ${f(e2 - w)}, ${f(e2 + w)}, tbU );
   float tbK = ${f(p.lit.strength)} * uTbK * ( 1.0 - stIn );
   reflectedLight.directDiffuse *= mix( 1.0, tbQ / max( tbU, 0.02 ), tbK );
   // thin warm rim on the sunward side (outdoors only)
@@ -127,6 +121,10 @@ ${signs ? `#if defined( TOON_SIGN ) && ! defined( TOON_NOLINE )
   tmM = ${f(SIGN_MASK)};
 #endif
 ` : ''}  gl_FragColor.a = tmM;
+#ifdef TOON_TREE_CROWN
+  // The post pass keeps the silhouette and fades contact shading on painted crowns.
+  gl_FragColor.a = mix( tmM, 2.5, vStationCrown * uTbK );
+#endif
 }
 #endif`;
   }

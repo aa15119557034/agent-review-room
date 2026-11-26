@@ -1,5 +1,5 @@
 """Build original station plants. Run with Blender 5.2 in background mode."""
-from math import cos, pi, sin
+from math import atan2, cos, pi, sin, sqrt
 from pathlib import Path
 from random import Random
 from struct import pack, unpack_from
@@ -8,6 +8,8 @@ import sys
 
 import bpy
 from mathutils import Vector
+from mathutils.bvhtree import BVHTree
+from mathutils.geometry import barycentric_transform
 
 
 ROOT = Path(__file__).parent
@@ -158,6 +160,93 @@ def clusters(mesh, specs, near, needle, palette, seed, far_count=6, crown_light=
                       mix(palette[0], palette[1], lit), needle)
 
 
+def crown_edge_accents(lobes):
+    """Two interlocking solid leaf shapes at each of four outer shoulders."""
+    accents = []
+    for i, rise, width in ((0, .12, .34), (1, -.05, .31), (2, .35, .29), (5, .77, .27)):
+        origin = Vector(lobes[i+2][0])
+        direction = Vector((origin.x-.16, origin.y-.07, rise)).normalized()
+        tangent = Vector((-direction.y, direction.x, 0)).normalized()
+        tip = 0
+        for center, extent, yaw in lobes:
+            shift = origin - Vector(center)
+            c, s = cos(yaw), sin(yaw)
+            start = Vector(((shift.x*c+shift.y*s)/extent[0],
+                            (-shift.x*s+shift.y*c)/extent[1], shift.z/extent[2]))
+            ray = Vector(((direction.x*c+direction.y*s)/extent[0],
+                          (-direction.x*s+direction.y*c)/extent[1], direction.z/extent[2]))
+            a, b = ray.length_squared, start.dot(ray)
+            discriminant = b*b - a*(start.length_squared-1)
+            if discriminant >= 0:
+                tip = max(tip, (-b + sqrt(discriminant))/a)
+        yaw = atan2(direction.y, direction.x)
+        primary = origin + direction*(tip-.07)
+        secondary = origin + direction*(tip-.12) + tangent*.21 + Vector((0,0,.10))
+        accents.append((primary, (width,.19,.15), yaw-.21))
+        accents.append((secondary, (width*.76,.145,.125), yaw+.46))
+    return accents
+
+
+def crown_normal_proxy(mesh, custom=False):
+    """Sample the high-resolution crown, with normals smoothed across voxel and accent edges."""
+    mesh.calc_loop_triangles()
+    vertices = [v.co.copy() for v in mesh.vertices]
+    triangles = [tuple(t.vertices) for t in mesh.loop_triangles]
+    normals = [v.normal.copy() for v in mesh.vertices]
+    if custom:
+        for loop in mesh.loops:
+            normals[loop.vertex_index] = mesh.corner_normals[loop.index].vector.copy()
+    neighbors = [[] for _ in vertices]
+    for edge in mesh.edges:
+        a, b = edge.vertices
+        neighbors[a].append(b)
+        neighbors[b].append(a)
+    for _ in range(0 if custom else 7):
+        normals = [n.lerp(sum((normals[i] for i in adjacent), Vector()).normalized(), .68).normalized()
+                   for n, adjacent in zip(normals, neighbors)]
+    surface = BVHTree.FromPolygons(vertices, triangles, all_triangles=True)
+
+    def normal_at(point):
+        hit, _, index, _ = surface.find_nearest(point)
+        triangle = triangles[index]
+        return barycentric_transform(hit, *(vertices[i] for i in triangle),
+                                     *(normals[i] for i in triangle)).normalized()
+    return normal_at
+
+
+def fit_crown_surface(obj, target, normal_at, fitted_normals=False):
+    low = [min(v.co[i] for v in obj.data.vertices) for i in range(3)]
+    high = [max(v.co[i] for v in obj.data.vertices) for i in range(3)]
+    scale = [(target[1][i]-target[0][i])/(high[i]-low[i]) for i in range(3)]
+    color = obj.data.color_attributes.get('PlantColor') or obj.data.color_attributes.new(
+        name='PlantColor', type='FLOAT_COLOR', domain='POINT')
+    obj.data.color_attributes.active_color = color
+    shade, light = linear('426e50'), linear('80a95f')
+    normals = []
+    for v in obj.data.vertices:
+        uvw = [(v.co[i]-low[i])/(high[i]-low[i]) for i in range(3)]
+        point = Vector([target[0][i] + uvw[i]*(target[1][i]-target[0][i]) for i in range(3)])
+        if fitted_normals:
+            normals.append(normal_at(point))
+        else:
+            n = normal_at(v.co)
+            normals.append(Vector((n.x/scale[0], n.y/scale[1], n.z/scale[2])).normalized())
+        v.co = point
+        color.data[v.index].color = (*mix(shade, light, .20 + .58*uvw[2] + .07*uvw[0]), 1.0)
+    for poly in obj.data.polygons:
+        poly.use_smooth = True
+    obj.data.normals_split_custom_set_from_vertices(normals)
+    obj.data.update()
+
+
+def simplify_crown(obj, triangles):
+    obj.data.calc_loop_triangles()
+    simplify = obj.modifiers.new('Crown triangle budget', 'DECIMATE')
+    simplify.ratio = triangles / len(obj.data.loop_triangles)
+    simplify.use_collapse_triangulate = True
+    bpy.ops.object.modifier_apply(modifier=simplify.name)
+
+
 def build_crown_surface(boughs, near, variant, mat):
     """Fuse an offset main crown and several bough lobes, then simplify the same surface for both LODs."""
     block = Mesh()
@@ -172,7 +261,7 @@ def build_crown_surface(boughs, near, variant, mat):
         yaw = (.45 if variant else -.08) + sin(i * 3.14 / 3) * .42
         lobes.append(((x + .06*sin(i), y, z + .13),
                       (size*(1.12 if variant else 1.25), size*.88, size*(.72 if i < 5 else .86)), yaw))
-    for index, (center, axes, yaw) in enumerate(lobes):
+    for index, (center, axes, yaw) in enumerate(lobes + crown_edge_accents(lobes)):
         segments, rings = 14, 7
         cx, cy, cz = center
         sx, sy, sz = axes
@@ -198,38 +287,28 @@ def build_crown_surface(boughs, near, variant, mat):
             last = bottom+1+(rings-2)*segments
             block.faces.append((last+i, last+j, top))
     obj = block.object('broadleaf-smooth-crown', mat, True)
+    obj['stationCrown'] = True
     bpy.context.view_layer.objects.active = obj
     union = obj.modifiers.new('Fuse overlapping crown lobes', 'REMESH')
     union.mode = 'VOXEL'
-    union.voxel_size = .105
+    union.voxel_size = .075
     union.use_smooth_shade = True
     bpy.ops.object.modifier_apply(modifier=union.name)
     fair = obj.modifiers.new('Soften lobe junctions', 'SMOOTH')
     fair.factor = .58
-    fair.iterations = 7
+    fair.iterations = 6
     bpy.ops.object.modifier_apply(modifier=fair.name)
-    obj.data.calc_loop_triangles()
-    simplify = obj.modifiers.new('Crown triangle budget', 'DECIMATE')
-    simplify.ratio = (524 if near else 192) / len(obj.data.loop_triangles)
-    simplify.use_collapse_triangulate = True
-    bpy.ops.object.modifier_apply(modifier=simplify.name)
+    normal_at = crown_normal_proxy(obj.data)
+    simplify_crown(obj, 524)
 
     # Fit both LODs to the approved near-crown envelope in Blender's Z-up coordinates.
     target = ((-2.418837,-2.181387,3.710542),(2.608605,2.398043,7.354254)) if variant else (
         (-2.501849,-1.938309,3.576386),(2.692011,2.223131,6.964900))
-    low = [min(v.co[i] for v in obj.data.vertices) for i in range(3)]
-    high = [max(v.co[i] for v in obj.data.vertices) for i in range(3)]
-    color = obj.data.color_attributes.get('PlantColor') or obj.data.color_attributes.new(
-        name='PlantColor', type='FLOAT_COLOR', domain='POINT')
-    obj.data.color_attributes.active_color = color
-    shade, light = linear('426e50'), linear('80a95f')
-    for v in obj.data.vertices:
-        uvw = [(v.co[i]-low[i])/(high[i]-low[i]) for i in range(3)]
-        v.co = [target[0][i] + uvw[i]*(target[1][i]-target[0][i]) for i in range(3)]
-        color.data[v.index].color = (*mix(shade, light, .20 + .58*uvw[2] + .07*uvw[0]), 1.0)
-    for poly in obj.data.polygons:
-        poly.use_smooth = True
-    obj.data.update()
+    fit_crown_surface(obj, target, normal_at)
+    if not near:
+        near_normals = crown_normal_proxy(obj.data, custom=True)
+        simplify_crown(obj, 192)
+        fit_crown_surface(obj, target, near_normals, fitted_normals=True)
     return obj
 
 
@@ -252,125 +331,107 @@ def broadleaf(mat_bark, near, variant=False):
     return [trunk.object('forked-trunk', mat_bark, True), build_crown_surface(boughs, near, variant, mat_bark)]
 
 
-def cedar_shelf(mesh, center, axes, phase, palette, near):
-    """A closed, lobed bough shelf. Adjacent shelves overlap around the stem."""
+def cedar_lobe(mesh, center, axes, yaw, sweep, color):
+    """Round leaf volume, with a gentle droop towards the branch tip."""
     cx, cy, cz = center
     sx, sy, sz = axes
-    sides = 16 if near else 8
-    rings = [(-.78, .36, .01), (-.42, .87, .13), (-.07, 1.0, .38),
-             (.43, .79, .72), (.82, .36, 1.0)]
-    if not near:
-        rings = rings[::2]
-    first = len(mesh.points)
-    for i, (rise, width, light) in enumerate(rings):
-        points, colors = [], []
-        for j in range(sides):
-            angle = TAU * j / sides
-            u, v = cos(angle), sin(angle)
-            lobe = 1 + .16 * cos(3 * (angle - phase)) + .13 * cos(2 * angle + phase) + .07 * sin(5 * angle - phase)
-            shift = .20 * rise
-            drape = width * (.20 * cos(angle - phase) - .09 * cos(3 * (angle - phase)))
-            points.append((cx + sx * (u * width * lobe + shift * cos(phase)),
-                           cy + sy * (v * width * lobe + shift * sin(phase)),
-                           cz + sz * (rise - drape)))
-            colors.append(mix(palette[0], palette[1], light))
-        start = mesh.vertices(points, colors)
-        if i:
-            for j in range(sides):
-                k = (j + 1) % sides
-                mesh.faces.append((start - sides + j, start - sides + k, start + k, start + j))
-    end = len(mesh.points) - sides
-    lower = mesh.vertices([(cx - .12*sx*cos(phase), cy - .12*sy*sin(phase), cz - .96*sz)], [palette[0]])
-    upper = mesh.vertices([(cx + .20*sx*cos(phase), cy + .20*sy*sin(phase), cz + .99*sz)], [palette[1]])
-    for j in range(sides):
-        k = (j + 1) % sides
-        mesh.faces.extend([(lower, first + k, first + j), (upper, end + j, end + k)])
-
-
-def cedar_leader(mesh, palette, near):
-    # Follow the upright leader through connected, alternating branch shoulders.
-    # Extra rings on the near mesh smooth the loft; the far mesh uses the same silhouette anchors.
-    profile = [
-        (.10, .16, 3.06, .49, .42, .76, .16),
-        (.14, .20, 3.50, 1.24, 1.15, .82, .31),
-        (.32, .30, 3.93, 1.69, 1.53, 1.59, .48),
-        (.41, .29, 4.29, 1.50, 1.38, 1.91, .31),
-        (.18, .23, 4.58, 1.27, 1.19, 2.65, .36),
-        (-.17, .11, 4.96, 1.51, 1.33, 2.85, .50),
-        (.03, .15, 5.35, 1.32, 1.23, 3.35, .57),
-        (.39, .12, 5.73, 1.28, 1.15, 4.02, .48),
-        (.53, .23, 6.10, 1.25, 1.19, 4.74, .59),
-        (.29, .30, 6.53, 1.01, .98, 5.28, .62),
-        (.15, .22, 6.94, .94, .87, 6.39, .56),
-        (.19, .25, 7.30, .72, .79, 6.90, .74),
-        (.42, .34, 7.69, .68, .61, 7.65, .77),
-        (.28, .28, 8.08, .50, .49, 8.24, .82),
-        (.35, .29, 8.42, .35, .34, 8.91, .93),
-        (.48, .31, 8.72, .18, .16, 9.52, 1.0),
-    ]
-    if not near:
-        profile = [row for i, row in enumerate(profile) if i not in (1, 3, 6, 9, 11, 14)]
-    sides = 16 if near else 8
-    first = len(mesh.points)
-    for i, (x, y, z, sx, sy, phase, light) in enumerate(profile):
+    c, s = cos(yaw), sin(yaw)
+    sides, rows = 20, 12
+    bottom = mesh.vertices([(cx, cy, cz - sz)], [color])
+    for row in range(1, rows):
+        p = -TAU/4 + row*TAU/(2*rows)
         points = []
         for j in range(sides):
             angle = TAU*j/sides
-            reach = 1 + .14*cos(3*(angle - phase)) + .09*cos(2*angle + phase)
-            drape = .12 * (sx + sy) * sin(angle - phase) + .065 * cos(3*angle + phase)
-            points.append((x + sx*cos(angle)*reach, y + sy*sin(angle)*reach, z + drape))
-        start = mesh.vertices(points, [mix(palette[0], palette[1], light)] * sides)
-        if i:
+            x = sx*cos(p)*cos(angle)
+            y = sy*cos(p)*sin(angle)
+            points.append((cx + c*x - s*y, cy + s*x + c*y, cz + sz*sin(p) + sweep*x/sx))
+        start = mesh.vertices(points, [color] * sides)
+        if row == 1:
             for j in range(sides):
-                k = (j + 1) % sides
-                mesh.faces.append((start - sides + j, start - sides + k, start + k, start + j))
-    last = len(mesh.points) - sides
-    base = mesh.vertices([(.09,.13,2.93)], [palette[0]])
-    peak = mesh.vertices([(.43,.31,8.98)], [palette[1]])
+                mesh.faces.append((bottom, start + (j+1)%sides, start+j))
+        else:
+            for j in range(sides):
+                k = (j+1)%sides
+                mesh.faces.append((start-sides+j, start-sides+k, start+k, start+j))
+    top = mesh.vertices([(cx, cy, cz + sz)], [color])
     for j in range(sides):
-        k = (j + 1) % sides
-        mesh.faces.extend([(base, first + k, first + j), (peak, last + j, last + k)])
+        mesh.faces.append((start+j, start+(j+1)%sides, top))
 
 
-def cedar(mat_bark, mat_foliage, near):
-    trunk, leaves, masses = Mesh(), Mesh(), Mesh()
+def cedar(mat_bark, near):
+    trunk, envelope = Mesh(), Mesh()
     trunk.fork([(0, 0, 0), (.10, -.04, 1.76), (.20, .10, 3.75), (.22, .27, 5.76),
                 (.38, .20, 7.41), (.35, .31, 8.53)],
                [.23, .19, .15, .10, .062, .012], 7 if near else 5, BARK)
-    # Two low shelves branch out independently along the taller connected crown.
-    shelves = [
-        ((.36, -.36, 2.54), (2.34, 1.90, .72), .54),
-        ((-.65, .20, 3.32), (1.75, 1.44, .71), 2.21),
-    ]
-    palette = (linear('2a5548'), linear('659b56'))
-    cedar_leader(masses, palette, near)
-    for center, size, phase in shelves:
-        cedar_shelf(masses, center, size, phase, palette, near)
-        if near:
-            x, y, z = center
-            sx, sy, sz = size
-            a = phase + .6
-            trunk.fork([(.18, .12, z - sz*.78), (x*.45, y*.45, z - sz*.38),
-                        (x + .66*sx*cos(a), y + .66*sy*sin(a), z - sz*.27)],
-                       [.067, .046, .012], 4, BARK)
-            # Small fringe sprays are held at the lower branch extremities.
-            for a in (phase - .23, phase + 2.37):
-                leaf_center = (x + .89*sx*cos(a), y + .89*sy*sin(a), z - sz*.18)
-                leaves.card(leaf_center, .20, .145, a + .50, .35, mix(*palette, .46), True)
-
-    parts = [trunk, masses] + ([leaves] if near else [])
-    points = [p for part in parts for p in part.points]
-    mins = tuple(min(p[i] for p in points) for i in range(3))
-    spans = tuple(max(p[i] for p in points) - mins[i] for i in range(3))
-    dimensions = (3.983, 3.660, 9.020) if near else (4.090, 3.378, 9.020)
-    scale = [size / span for size, span in zip(dimensions, spans)]
-    for part in parts:
-        part.points = [(x*scale[0], y*scale[1], (z - mins[2])*scale[2]) for x, y, z in part.points]
-    objects = [trunk.object('cedar-boughs', mat_bark, True),
-               masses.object('cedar-canopy-planes', mat_bark, True)]
     if near:
-        objects.append(leaves.object('cedar-needle-sprays', mat_foliage, False))
-    return objects
+        trunk.fork([(.15, .05, 2.02), (.51, -.13, 2.35), (1.27, -.42, 2.48)],
+                   [.067, .046, .012], 4, BARK)
+        trunk.fork([(.19, .11, 2.78), (-.36, .26, 3.04), (-1.13, .39, 3.16)],
+                   [.067, .046, .012], 4, BARK)
+
+    # Swept basal boughs connect to a tapering, leaning crown. Use the same
+    # high-resolution envelope for both LODs so its lobe normals stay coherent.
+    lobes = [
+        ((.36, -.24, 2.48), (1.95, 1.38, .57), -.15, -.22),
+        ((-.79, .38, 3.12), (1.50, 1.12, .61), .37, .16),
+        ((.22, .07, 3.73), (1.52, 1.33, .86), .28, -.13),
+        ((.70, .17, 4.63), (1.28, 1.08, .78), -.41, -.09),
+        ((-.22, .12, 5.35), (1.20, 1.03, .96), .27, .12),
+        ((.37, .21, 6.32), (1.07, .92, 1.12), .36, -.13),
+        ((.22, .25, 7.28), (.83, .75, .99), -.17, .05),
+        ((.46, .29, 8.16), (.57, .51, .79), -.37, -.08),
+        ((.47, .32, 8.71), (.26, .26, .40), -.17, .01),
+    ]
+    shade, light = linear('2a5548'), linear('659b56')
+    for center, axes, yaw, sweep in lobes:
+        cedar_lobe(envelope, center, axes, yaw, sweep, shade)
+    crown = envelope.object('cedar-smooth-crown', mat_bark, True)
+    crown['stationCrown'] = True
+    crown['stationCrown'] = True
+    bpy.context.view_layer.objects.active = crown
+    fuse = crown.modifiers.new('Join cedar bough volumes', 'REMESH')
+    fuse.mode = 'VOXEL'
+    fuse.voxel_size = .085
+    fuse.use_smooth_shade = True
+    bpy.ops.object.modifier_apply(modifier=fuse.name)
+    fair = crown.modifiers.new('Fair the crown before normal transfer', 'SMOOTH')
+    fair.factor = .62
+    fair.iterations = 13
+    bpy.ops.object.modifier_apply(modifier=fair.name)
+    normal_at = crown_normal_proxy(crown.data)
+
+    crown.data.calc_loop_triangles()
+    reduce = crown.modifiers.new('Cedar triangle budget', 'DECIMATE')
+    reduce.ratio = (800 if near else 256) / len(crown.data.loop_triangles)
+    reduce.use_collapse_triangulate = True
+    bpy.ops.object.modifier_apply(modifier=reduce.name)
+    normals = [normal_at(v.co) for v in crown.data.vertices]
+
+    # Match the registered Blender Z-up extents and place the base exactly at z=0.
+    points = [*trunk.points, *(v.co for v in crown.data.vertices)]
+    low = [min(p[i] for p in points) for i in range(3)]
+    high = [max(p[i] for p in points) for i in range(3)]
+    wanted = (3.983, 3.660, 9.020) if near else (4.090, 3.378, 9.020)
+    scale = [size / (hi-lo) for size, lo, hi in zip(wanted, low, high)]
+
+    def fit(x, y, z):
+        return x*scale[0], y*scale[1], (z-low[2])*scale[2]
+
+    trunk.points = [fit(*p) for p in trunk.points]
+    color = crown.data.color_attributes.get('PlantColor') or crown.data.color_attributes.new(
+        name='PlantColor', type='FLOAT_COLOR', domain='POINT')
+    crown.data.color_attributes.active_color = color
+    for v in crown.data.vertices:
+        v.co = fit(*v.co)
+        tone = .20 + .64*max(0., min(1., (v.co.z - 2.)/6.8))
+        color.data[v.index].color = (*mix(shade, light, tone), 1.)
+    for poly in crown.data.polygons:
+        poly.use_smooth = True
+    crown.data.update()
+    fitted_normals = [Vector(tuple(n[i]/scale[i] for i in range(3))).normalized() for n in normals]
+    crown.data.normals_split_custom_set_from_vertices(fitted_normals)
+    return [trunk.object('cedar-boughs', mat_bark, True), crown]
 
 
 def shrub(mat_bark, mat_foliage, seed):
@@ -444,7 +505,7 @@ def export_glb(name, objects):
     bpy.context.view_layer.objects.active = objects[0]
     target = ROOT / f'{name}.glb'
     bpy.ops.export_scene.gltf(filepath=str(target), export_format='GLB', use_selection=True, use_active_scene=True,
-                              export_apply=True, export_yup=True, export_vertex_color='ACTIVE')
+                              export_apply=True, export_yup=True, export_vertex_color='ACTIVE', export_extras=True)
     if any(mat and mat.name == 'original-foliage-alpha' for obj in objects for mat in obj.data.materials):
         data = target.read_bytes()
         size = unpack_from('<I', data, 12)[0]
@@ -469,7 +530,7 @@ def build_source():
         add_source_scene(style, broadleaf(bark, True, variant))
         add_source_scene(style+'-far', broadleaf(bark, False, variant))
     for near in (True, False):
-        add_source_scene('station-cedar' if near else 'station-cedar-far', cedar(bark, sprays, near))
+        add_source_scene('station-cedar' if near else 'station-cedar-far', cedar(bark, near))
     for kind, seed in [('bank-shrub-a', 418), ('bank-shrub-b', 919)]:
         add_source_scene(kind, shrub(bark, sprays, seed))
     add_source_scene('edge-hedge', hedge(bark, sprays))
