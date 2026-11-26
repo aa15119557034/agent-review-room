@@ -75,6 +75,14 @@ export function addStationLawn({ station, bounds, heightAt, canGrow, shadeAt, pa
     SWARD_WARMTH,
     'vec3 lawnColor(vec2 lawn) { return mix(uLawnCool,uLawnWarm,swardWarmth(lawn.y)); }',
   ].join('\n');
+  const lightChunk = THREE.ShaderChunk.lights_fragment_begin;
+  const directionalShadow = /directLight\.color \*= ([^;\n]*getShadow\( directionalShadowMap\[ i \][^;\n]*);/;
+  if (!directionalShadow.test(lightChunk)) throw new Error('Pinned Three.js directional shadow chunk changed');
+  const lawnLights = lightChunk.replace(directionalShadow, `
+    lawnDirectionalShadow = $1;
+    directLight.color *= lawnDirectionalShadow;
+    if (UNROLLED_LOOP_INDEX == 0) lawnSun = lawnDirectionalShadow;
+  `);
   const transform = root.matrixWorld.clone().invert().multiply(base.matrixWorld);
   function patchMaterial(material, key, vertexDeclarations, vertex, fragmentDeclarations, color, normal = '') {
     const compile = material.onBeforeCompile, cache = material.customProgramCacheKey();
@@ -83,13 +91,17 @@ export function addStationLawn({ station, bounds, heightAt, canGrow, shadeAt, pa
       Object.assign(shader.uniforms, uniforms, { uLawnObject: { value: transform } });
       shader.vertexShader = 'varying vec2 vLawnXZ;\n' + vertexDeclarations + shader.vertexShader
         .replace('#include <begin_vertex>', '#include <begin_vertex>\n' + vertex);
-      // The painted lawn supplies its own light patches. Fade direct sun by the
-      // same coverage before the shadow fill and toon bands consume it.
+      // Keep the painted light patches and reuse the sun's shadow tap to shade them.
       shader.fragmentShader = 'varying vec2 vLawnXZ;\n' + sample + '\n' + palette + '\n' + fragmentDeclarations + shader.fragmentShader
         .replace('#include <color_fragment>', '#include <color_fragment>\n' + color)
         .replace('#include <normal_fragment_begin>', '#include <normal_fragment_begin>\n' + normal)
-        .replace('#include <lights_fragment_end>', 'reflectedLight.directDiffuse *= 1.0 - stationLawn.x;\n'
-          + '#include <lights_fragment_end>');
+        .replace('#include <lights_fragment_begin>', 'float lawnSun = 1.0;\nfloat lawnDirectionalShadow;\n' + lawnLights)
+        .replace('#include <lights_fragment_end>', `
+          reflectedLight.directDiffuse *= 1.0 - stationLawn.x;
+          #include <lights_fragment_end>
+          float lawnShade = mix(0.98, 0.94, swardWarmth(stationLawn.y));
+          reflectedLight.indirectDiffuse *= mix(1.0, mix(lawnShade, 1.13, lawnSun), stationLawn.x);
+        `);
     };
     material.customProgramCacheKey = () => cache + ':' + key;
     material.needsUpdate = true;

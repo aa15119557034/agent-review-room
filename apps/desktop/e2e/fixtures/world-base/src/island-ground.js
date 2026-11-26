@@ -114,17 +114,23 @@ void main(){`, label + ' station paint');
     tone *= mix(0.46, 1.0, sunlit);
     tone *= mix(1.0, 0.70, smoothstep(240.0, 650.0, dist));
     float warmth = 0.64 * swardWarmth(tone);
+    float light = mix(0.39, 0.46, sunlit);
     if (uWbStationSwardRect.z > 0.0) {
       vec2 lawnXY = localXZ - uWbStationSwardRect.xy;
       vec2 beyondLawn = max(max(-lawnXY, lawnXY - uWbStationSwardRect.zw), vec2(0.0));
-      float overlap = 1.0 - smoothstep(0.0, 18.0, length(beyondLawn));
+      float lawnDistance = length(beyondLawn);
+      float overlap = 1.0 - smoothstep(0.0, 18.0, lawnDistance);
       if (overlap > 0.0) {
         float stationTone = texture(uWbStationSwardField, clamp(lawnXY / uWbStationSwardRect.zw, 0.0, 1.0)).g;
         warmth = mix(warmth, swardWarmth(stationTone), overlap);
       }
+      // Keep the cool face of the slope near the station within the lawn's shade range.
+      float shoulder = 1.0 - smoothstep(20.0, 43.0, lawnDistance);
+      light = mix(light, max(light, 0.63 + 0.02 * sunlit), shoulder);
+      warmth = max(warmth, 0.12 * shoulder * sunlit);
     }
     vec3 paint = mix(${v3(new Color(SWARD_COOL).toArray())}, ${v3(new Color(SWARD_WARM).toArray())}, warmth);
-    vec3 paintLit = paint * mix(0.39, 0.46, sunlit) * mix(0.92, 1.0, cs);
+    vec3 paintLit = paint * light * mix(0.92, 1.0, cs);
     paintLit = mix(paintLit, fcol * (uSunColor * dif * sh + amb), saturate(tintAmt));
     col = mix(col, paintLit, paintCover * soft);
   }`, label + ' continuous sward lighting');
