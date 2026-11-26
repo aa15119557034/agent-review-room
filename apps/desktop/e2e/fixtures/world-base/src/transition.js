@@ -19,6 +19,131 @@ export function stationGroundGrassWeight(name, x, z) {
   return pathWeight * smoothstep(1.4, 2.4, roadDist(x, z));
 }
 
+
+/** A short sward on the station's open lawn. Its ground and blades share the same map. */
+export function addStationLawn({ station, bounds, heightAt, canGrow, shadeAt, random }) {
+  const [x0, x1] = bounds.x, [z0, z1] = bounds.z;
+  const root = station.root;
+  const base = root.getObjectByName('env-terrain-ground');
+  if (!base?.isMesh) throw new Error('Station lawn needs the original station ground mesh');
+
+  // Half-metre support keeps the grade and the blades clear of the same paved edges.
+  const nx = Math.ceil((x1 - x0) / 0.5), nz = Math.ceil((z1 - z0) / 0.5);
+  const data = new Uint8Array(nx * nz * 2);
+  const coverage = (x, z) => {
+    const distance = Math.min(x - x0, x1 - x, z - z0, z1 - z);
+    const ground = stationGroundGrassWeight(base.name, x, z);
+    return ground > 0 && canGrow(x, z) ? ground * smoothstep(0.1, 1.6, distance) : 0;
+  };
+  for (let row = 0; row < nz; row++) {
+    for (let column = 0; column < nx; column++) {
+      const x = x0 + (column + 0.5) * (x1 - x0) / nx, z = z0 + (row + 0.5) * (z1 - z0) / nz;
+      const index = (row * nx + column) * 2;
+      data[index] = Math.round(255 * coverage(x, z));
+      data[index + 1] = Math.round(255 * shadeAt(x, z));
+    }
+  }
+  const field = new THREE.DataTexture(data, nx, nz, THREE.RGFormat);
+  field.minFilter = field.magFilter = THREE.LinearFilter;
+  field.needsUpdate = true;
+  const uniforms = {
+    uLawnField: { value: field },
+    uLawnRect: { value: new THREE.Vector4(x0, z0, x1 - x0, z1 - z0) },
+    uLawnCool: { value: new THREE.Color('#587856') },
+    uLawnWarm: { value: new THREE.Color('#a6ad64') },
+  };
+  const sample = [
+    'uniform sampler2D uLawnField;',
+    'uniform vec4 uLawnRect;',
+    'uniform vec3 uLawnCool;',
+    'uniform vec3 uLawnWarm;',
+    'vec2 readLawn(vec2 positionXZ) {',
+    '  vec2 uv = (positionXZ-uLawnRect.xy)/uLawnRect.zw;',
+    '  if (any(lessThan(uv,vec2(0.0))) || any(greaterThan(uv,vec2(1.0)))) return vec2(0.0);',
+    '  return texture2D(uLawnField,uv).rg;',
+    '}',
+    'vec3 lawnColor(vec2 lawn) { return mix(uLawnCool,uLawnWarm,lawn.y); }',
+  ].join('\n');
+  const transform = root.matrixWorld.clone().invert().multiply(base.matrixWorld);
+  function patchMaterial(material, key, vertexDeclarations, vertex, fragmentDeclarations, color, normal = '') {
+    const compile = material.onBeforeCompile, cache = material.customProgramCacheKey();
+    material.onBeforeCompile = function (shader, renderer) {
+      compile.call(this, shader, renderer);
+      Object.assign(shader.uniforms, uniforms, { uLawnObject: { value: transform } });
+      shader.vertexShader = 'varying vec2 vLawnXZ;\n' + vertexDeclarations + shader.vertexShader
+        .replace('#include <begin_vertex>', '#include <begin_vertex>\n' + vertex);
+      shader.fragmentShader = 'varying vec2 vLawnXZ;\n' + sample + '\n' + fragmentDeclarations + shader.fragmentShader
+        .replace('#include <color_fragment>', '#include <color_fragment>\n' + color)
+        .replace('#include <normal_fragment_begin>', '#include <normal_fragment_begin>\n' + normal);
+    };
+    material.customProgramCacheKey = () => cache + ':' + key;
+    material.needsUpdate = true;
+  }
+  patchMaterial(
+    base.material, 'x51-lawn-ground', 'uniform mat4 uLawnObject;\n',
+    'vLawnXZ=(uLawnObject*vec4(position,1.0)).xz;', '',
+    'vec2 stationLawn=readLawn(vLawnXZ); diffuseColor.rgb=mix(diffuseColor.rgb,lawnColor(stationLawn),0.94*stationLawn.x);',
+  );
+  const blend = station.groundBlend.meshes.find(mesh => mesh.name === 'env-terrain-ground-island-blend');
+  if (blend) {
+    Object.assign(blend.material.uniforms, uniforms);
+    blend.material.fragmentShader = sample + '\n' + blend.material.fragmentShader.replace(
+      'vec4(col, edgeAlpha)', 'vec4(col, edgeAlpha*(1.0-readLawn(vStationGround.xz).x))',
+    );
+    blend.material.needsUpdate = true;
+  }
+
+  // Short tapered ribbons using the same root, bend and tip construction as the edge tufts.
+  const positions = [], indices = [];
+  const blades = [[-0.07, 0.02, 0.10, 0.27], [0.05, -0.06, 0.125, 1.98], [0.03, 0.075, 0.12, 4.19]];
+  for (const [x, z, height, angle] of blades) {
+    const sx = Math.cos(angle), sz = Math.sin(angle), start = positions.length / 3;
+    const mx = x - 0.024*sz, mz = z + 0.024*sx;
+    positions.push(x - 0.022*sx, 0, z - 0.022*sz, x + 0.022*sx, 0, z + 0.022*sz,
+      mx + 0.014*sx, height*0.65, mz + 0.014*sz, mx - 0.014*sx, height*0.65, mz - 0.014*sz,
+      x - 0.068*sz, height, z + 0.068*sx);
+    indices.push(start, start + 1, start + 2, start, start + 2, start + 3, start + 3, start + 2, start + 4);
+  }
+  const geometry = new THREE.BufferGeometry();
+  geometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+  geometry.setAttribute('normal', new THREE.Float32BufferAttribute(Array.from({length: positions.length / 3}, () => [0,1,0]).flat(), 3));
+  geometry.setIndex(indices);
+  const material = station.ctx.mat.toon('#ffffff', { name: 'station-lawn-blades', paint: 0, side: 'double' });
+  patchMaterial(
+    material, 'x51-lawn-blades', 'varying float vLawnTip;\n', [
+      'vec4 lawnRoot=instanceMatrix*vec4(0.0,0.0,0.0,1.0);',
+      'vLawnXZ=lawnRoot.xz;',
+      'vec3 lawnWorld=(modelMatrix*lawnRoot).xyz;',
+      'float lawnFade=1.0-smoothstep(23.0,41.0,distance(cameraPosition.xz,lawnWorld.xz));',
+      'vLawnTip=position.y/0.14;',
+      'transformed.xyz*=lawnFade;',
+    ].join('\n'),
+    'varying float vLawnTip;\n',
+    'vec2 stationLawn=readLawn(vLawnXZ); diffuseColor.rgb=lawnColor(stationLawn)*mix(vec3(1.0),vec3(1.17,1.14,1.04),vLawnTip);',
+    'normal*=faceDirection;',
+  );
+  material.addEventListener('dispose', () => field.dispose());
+  const step = 0.31, cells = [];
+  for (let z = z0; z < z1; z += step) {
+    for (let x = x0; x < x1; x += step) {
+      const px = x + random()*Math.min(step,x1-x), pz = z + random()*Math.min(step,z1-z);
+      if (random() < coverage(px, pz) * 0.94) cells.push([px, pz, heightAt(px, pz), random(), random()]);
+    }
+  }
+  const mesh = new THREE.InstancedMesh(geometry, material, cells.length);
+  mesh.name = 'station-lawn-short-grass';
+  mesh.receiveShadow = true;
+  const rotation = new THREE.Matrix4();
+  const scale = new THREE.Vector3();
+  cells.forEach(([x, z, y, turn, height], index) => {
+    rotation.makeRotationY(turn*2*Math.PI).scale(scale.set(0.85 + turn*0.8, 0.66 + height*0.5, 0.85 + turn*0.8));
+    mesh.setMatrixAt(index, rotation.setPosition(x, y - 0.015, z));
+  });
+  mesh.computeBoundingSphere();
+  root.add(mesh);
+  return { patches: cells.length, blades: cells.length * blades.length, triangles: cells.length * indices.length / 3 };
+}
+
 /** A narrow, explicit join between the station's ground and the island heightfield. */
 export function createGroundTransition({ rect, stationHeight, islandHeight, terrainMaterial, width = 2, spacing = 1 }) {
   const inner = [[rect.minX, rect.minZ], [rect.maxX, rect.minZ], [rect.maxX, rect.maxZ], [rect.minX, rect.maxZ]];

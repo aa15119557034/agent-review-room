@@ -102,7 +102,8 @@ export function makeMaterial({ gradientMap, aerial, name, map = null, alphaTest 
     shader.vertexShader = shader.vertexShader.replace('vBkPos = ( modelMatrix * vec4( transformed, 1.0 ) ).xyz;',
       'vec4 bkP = vec4( transformed, 1.0 );\n#ifdef USE_INSTANCING\nbkP = instanceMatrix * bkP;\n#endif\nvBkPos = ( modelMatrix * bkP ).xyz;');
   };
-  m.customProgramCacheKey = () => 'scatter-aerial-lit' + (map ? '-card' : '') + (tint ? '-tint' : '');
+  const vegetation = name === 'vegetation' || name.startsWith('vegetation-');
+  m.customProgramCacheKey = () => 'scatter-aerial-lit' + (vegetation ? '-vegetation' : '') + (map ? '-card' : '') + (tint ? '-tint' : '');
   return m;
 }
 /**

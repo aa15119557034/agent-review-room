@@ -37,9 +37,9 @@ const f = (x) => Number(x).toFixed(4);
 const vec3 = (v) => `vec3( ${v.map(f).join(', ')} )`;
 
 /** Must run before any material is created (the setter below sees their own onBeforeCompile hooks). Hands the two shared
- *  uniforms to every program that compiles with the lit chunk, and marks tree crowns (sakura masses and cards) as no-outline.
+ *  uniforms to every program that compiles with the lit chunk, and lets fine foliage skip the outline.
  *  The wrapper keeps toString() of the original so three's default program cache keys stay distinct. */
-const NOLINE_NAMES = /^sakura:(blob|cards)$/;
+const NOLINE_NAMES = /^(sakura:(blob|cards)|station-lawn-blades|vegetation(?:-.*)?)$/;
 export function installToonHook() {
   const proto = THREE.Material.prototype;
   if (Object.getOwnPropertyDescriptor(proto, 'onBeforeCompile').get) return;
