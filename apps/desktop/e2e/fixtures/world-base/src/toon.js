@@ -59,7 +59,8 @@ export function installToonHook() {
       if (flatEligible(material) && shader.fragmentShader && !shader.fragmentShader.includes('TOON_FLAT')) {
         shader.fragmentShader = `#define TOON_FLAT\n${shader.fragmentShader}`;
       }
-      if (NOLINE_NAMES.test(material.name) && shader.fragmentShader && !shader.fragmentShader.includes('TOON_NOLINE')) {
+      if (NOLINE_NAMES.test(material.name) && !material.defines?.TOON_TREE_CROWN
+          && shader.fragmentShader && !shader.fragmentShader.includes('TOON_NOLINE')) {
         shader.fragmentShader = `#define TOON_NOLINE\n${shader.fragmentShader}`;
       }
       return result;
@@ -92,7 +93,13 @@ export function installLitToon(p, boxes) {
   float tbFull = dot( directionalLights[ 0 ].color, vec3( 0.2126, 0.7152, 0.0722 ) ) * RECIPROCAL_PI;
   float tbU = dot( reflectedLight.directDiffuse, vec3( 0.2126, 0.7152, 0.0722 ) ) / ( tbLum * max( tbFull, 1e-3 ) );
 ${indoorGlsl(boxes)}
-  float tbQ = ${f(l0)} + ( ${f(l1 - l0)} ) * smoothstep( ${f(e1 - w)}, ${f(e1 + w)}, tbU ) + ( ${f(l2 - l1)} ) * smoothstep( ${f(e2 - w)}, ${f(e2 + w)}, tbU );
+  float tbTone = tbU;
+#ifdef TOON_TREE_CROWN
+  // Model the broad faces of the smooth crown using its normal against the sun.
+  // The incoming direct light still controls whether a face can reach a lit band.
+  tbTone *= mix( 0.45, 1.0, saturate( dot( normal, directionalLights[ 0 ].direction ) * 0.5 + 0.5 ) );
+#endif
+  float tbQ = ${f(l0)} + ( ${f(l1 - l0)} ) * smoothstep( ${f(e1 - w)}, ${f(e1 + w)}, tbTone ) + ( ${f(l2 - l1)} ) * smoothstep( ${f(e2 - w)}, ${f(e2 + w)}, tbTone );
   float tbK = ${f(p.lit.strength)} * uTbK * ( 1.0 - stIn );
   reflectedLight.directDiffuse *= mix( 1.0, tbQ / max( tbU, 0.02 ), tbK );
   // thin warm rim on the sunward side (outdoors only)

@@ -90,8 +90,9 @@ export async function getAerial(worldBase, island) {
   const palette = params[island.timeOfDay === 'afternoon' ? 'afternoon' : 'evening'];
   return makeAerial(island, palette.fog, params.blocks.fog.start);
 }
-export function makeMaterial({ gradientMap, aerial, name, map = null, alphaTest = 0, tint = null, height = 1 }) {
+export function makeMaterial({ gradientMap, aerial, name, map = null, alphaTest = 0, tint = null, height = 1, toonCrown = false }) {
   const m = new THREE.MeshToonMaterial({ vertexColors: true, gradientMap, name });
+  if (toonCrown) m.defines.TOON_TREE_CROWN = 1;
   if (map) { m.map = map; m.alphaTest = alphaTest || 0.5; m.side = THREE.DoubleSide; }
   const vegetation = name === 'vegetation' || name.startsWith('vegetation-');
   // Preserve distant leaf color where the warm evening haze is tuned for buildings.
@@ -135,13 +136,17 @@ function applyTint(shader, tint, height) {
   }`);
   return shader.uniforms;
 }
-/** Material cache per model: the shared one unless the model has a "tint" (own uniforms) or cards (alpha-masked texture). */
+/** Cache materials by model when tint, tree shading or alpha-masked cards need their own program. */
 export function makeMaterialSet({ gradientMap, aerial, name }) {
   const shared = makeMaterial({ gradientMap, aerial, name }), cache = new Map();
   const get = (model, card) => {
     const key = model.id + (card ? ':card' : ':solid');
-    if (!card && !model.spec.tint) return shared;
-    if (!cache.has(key)) cache.set(key, makeMaterial({ gradientMap, aerial, name: name + '-' + key, map: card ? model.map : null, tint: model.spec.tint ?? null, height: model.size[1] }));
+    const toonCrown = !card && model.spec.toonCrown;
+    if (!card && !model.spec.tint && !toonCrown) return shared;
+    if (!cache.has(key)) cache.set(key, makeMaterial({
+      gradientMap, aerial, name: name + '-' + key, map: card ? model.map : null,
+      tint: model.spec.tint ?? null, height: model.size[1], toonCrown,
+    }));
     return cache.get(key);
   };
   return { shared, solid: m => get(m, false), card: m => get(m, true), all: () => [shared, ...cache.values()] };
