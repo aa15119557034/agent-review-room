@@ -138,7 +138,7 @@ async function init() {
   const islandSward = vegOn ? groundParams?.swardPaint : null;
   if (groundParams) {
     worldBase.ground = { drifts: applyFlowerDrifts(island.terrain, island.terrain.meta.world ?? 6144, groundParams.drift), islandSward };
-    island.meadow.wbPetals = (vertexShader) => patchPetals(vertexShader, groundParams);
+    island.meadow.wbPetals = (vertexShader) => patchPetals(vertexShader, groundParams, Boolean(islandSward));
     if (islandSward) island.meadow.hide = { ...island.meadow.hide, grass: true };
   }
   look.applyIsland(island);

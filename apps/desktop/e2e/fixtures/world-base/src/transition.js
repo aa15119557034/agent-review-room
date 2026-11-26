@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { SWARD_COOL, SWARD_WARM, SWARD_WARMTH } from './island-ground.js';
 import { ownedByOthers, inCorridor, inRect, roadDist, pathDist, smoothstep,
   VACANT_W, ALLOT_W, NANO_E, LEV } from '../upstream/sakuragaoka/src/world/environment/common.js';
 
@@ -21,7 +22,7 @@ export function stationGroundGrassWeight(name, x, z) {
 
 
 /** A short sward on the station's open lawn. Its ground and blades share the same map. */
-export function addStationLawn({ station, bounds, heightAt, canGrow, shadeAt, paintAt, random }) {
+export function addStationLawn({ station, bounds, heightAt, canGrow, shadeAt, paintAt, random, groundMaterials = [] }) {
   const [x0, x1] = bounds.x, [z0, z1] = bounds.z;
   const root = station.root;
   const base = root.getObjectByName('env-terrain-ground');
@@ -51,20 +52,28 @@ export function addStationLawn({ station, bounds, heightAt, canGrow, shadeAt, pa
   const uniforms = {
     uLawnField: { value: field },
     uLawnRect: { value: new THREE.Vector4(x0, z0, x1 - x0, z1 - z0) },
-    uLawnCool: { value: new THREE.Color('#3c8569') },
-    uLawnWarm: { value: new THREE.Color('#b2c449') },
+    uLawnCool: { value: new THREE.Color(SWARD_COOL) },
+    uLawnWarm: { value: new THREE.Color(SWARD_WARM) },
   };
+  for (const material of groundMaterials) {
+    material.uniforms.uWbStationSwardField.value = field;
+    material.uniforms.uWbStationSwardRect.value.copy(uniforms.uLawnRect.value);
+    material.uniforms.uWbWorldToStation.value.copy(root.matrixWorld).invert();
+  }
   const sample = [
     'uniform sampler2D uLawnField;',
     'uniform vec4 uLawnRect;',
-    'uniform vec3 uLawnCool;',
-    'uniform vec3 uLawnWarm;',
     'vec2 readLawn(vec2 positionXZ) {',
     '  vec2 uv = (positionXZ-uLawnRect.xy)/uLawnRect.zw;',
     '  if (any(lessThan(uv,vec2(0.0))) || any(greaterThan(uv,vec2(1.0)))) return vec2(0.0);',
     '  return texture2D(uLawnField,uv).rg;',
     '}',
-    'vec3 lawnColor(vec2 lawn) { return mix(uLawnCool,uLawnWarm,smoothstep(0.16,0.84,lawn.y)); }',
+  ].join('\n');
+  const palette = [
+    'uniform vec3 uLawnCool;',
+    'uniform vec3 uLawnWarm;',
+    SWARD_WARMTH,
+    'vec3 lawnColor(vec2 lawn) { return mix(uLawnCool,uLawnWarm,swardWarmth(lawn.y)); }',
   ].join('\n');
   const transform = root.matrixWorld.clone().invert().multiply(base.matrixWorld);
   function patchMaterial(material, key, vertexDeclarations, vertex, fragmentDeclarations, color, normal = '') {
@@ -76,7 +85,7 @@ export function addStationLawn({ station, bounds, heightAt, canGrow, shadeAt, pa
         .replace('#include <begin_vertex>', '#include <begin_vertex>\n' + vertex);
       // The painted lawn supplies its own light patches. Fade direct sun by the
       // same coverage before the shadow fill and toon bands consume it.
-      shader.fragmentShader = 'varying vec2 vLawnXZ;\n' + sample + '\n' + fragmentDeclarations + shader.fragmentShader
+      shader.fragmentShader = 'varying vec2 vLawnXZ;\n' + sample + '\n' + palette + '\n' + fragmentDeclarations + shader.fragmentShader
         .replace('#include <color_fragment>', '#include <color_fragment>\n' + color)
         .replace('#include <normal_fragment_begin>', '#include <normal_fragment_begin>\n' + normal)
         .replace('#include <lights_fragment_end>', 'reflectedLight.directDiffuse *= 1.0 - stationLawn.x;\n'

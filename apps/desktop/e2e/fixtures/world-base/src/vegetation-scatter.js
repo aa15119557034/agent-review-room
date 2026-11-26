@@ -288,6 +288,7 @@ export async function createVegetation({ scene, worldBase, island, station, dryR
   const stationLawn = dryRun ? null : addStationLawn({
     station,
     bounds: Gp.lawn,
+    groundMaterials: paintedSward ? [island.terrain.material, island.transition.material] : [],
     random: rngFrom(hash32(P.seed, 51)),
     heightAt: (x, z) => ctx.groundY(x + ctx.ox, z + ctx.oz) - ctx.oy,
     canGrow: (x, z) => {
