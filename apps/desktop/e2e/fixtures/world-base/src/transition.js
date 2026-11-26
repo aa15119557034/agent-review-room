@@ -51,8 +51,8 @@ export function addStationLawn({ station, bounds, heightAt, canGrow, shadeAt, pa
   const uniforms = {
     uLawnField: { value: field },
     uLawnRect: { value: new THREE.Vector4(x0, z0, x1 - x0, z1 - z0) },
-    uLawnCool: { value: new THREE.Color('#246c67') },
-    uLawnWarm: { value: new THREE.Color('#aec14a') },
+    uLawnCool: { value: new THREE.Color('#3c8569') },
+    uLawnWarm: { value: new THREE.Color('#b2c449') },
   };
   const sample = [
     'uniform sampler2D uLawnField;',

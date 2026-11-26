@@ -250,8 +250,10 @@ export async function createVegetation({ scene, worldBase, island, station, dryR
     // Broad, oblique patches in station space give the paint a canopy-shadow shape.
     paintAt: (x, z) => {
       const u = x + 0.43 * z, v = z * 0.72;
-      const field = 0.77 * noise2(u, v, 13, P.seed + 53) + 0.23 * noise2(u, v, 5, P.seed + 59);
-      return smooth(0.39, 0.62, field);
+      const field = 0.74 * noise2(u, v, 13, P.seed + 53)
+        + 0.18 * noise2(u, v, 5, P.seed + 59)
+        + 0.08 * noise2(u, v * 1.65, 2.8, P.seed + 61);
+      return 0.60 * smooth(0.417, 0.5, field) + 0.40 * smooth(0.54, 0.61, field);
     },
   });
   for (const g of keptTufts) push(g.kind, g);

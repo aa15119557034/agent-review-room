@@ -1,0 +1,63 @@
+{
+  "camera": {
+    "handoff": [
+      66.8,
+      119.1,
+      273
+    ],
+    "alternate": [
+      76.5,
+      65.2,
+      350
+    ]
+  },
+  "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "imageROI": [
+    80,
+    653,
+    1020,
+    890
+  ],
+  "stats": [
+    {
+      "scene": "上一轮 · 深蓝绿前景",
+      "lumaP10P50P90": [
+        57.56,
+        81.82,
+        114.28
+      ],
+      "lumaBelow90Percent": 66.09,
+      "coolGreenCoverageByMinHue": {
+        "105": 58.22,
+        "112": 53.04,
+        "120": 47.71,
+        "128": 41.74,
+        "135": 35.96
+      }
+    },
+    {
+      "scene": "新版 · 提亮的青绿树影",
+      "lumaP10P50P90": [
+        85.04,
+        98.81,
+        113.14
+      ],
+      "lumaBelow90Percent": 16.54,
+      "coolGreenCoverageByMinHue": {
+        "105": 44.02,
+        "112": 36.26,
+        "120": 24.08,
+        "128": 13.07,
+        "135": 9.88
+      }
+    }
+  ],
+  "aMainStreetMaxRgbDelta": 0,
+  "stationLawn": {
+    "groups": 71,
+    "patches": 390,
+    "blades": 1170,
+    "triangles": 3510
+  },
+  "islandGrassPointsIdentical": 21022
+}
