@@ -1,6 +1,8 @@
 import * as THREE from 'three';
-import { loadTable, loadModels, pickWeighted, makeMaterialSet, makeBatches, getAerial, getContext, hash32, rngFrom, fbm, noise2, smooth, focusFalloff } from './scatter-common.js';
+import { loadTable, loadModels, pickWeighted, makeMaterial, makeMaterialSet, makeBatch, makeBatches, getAerial, getContext, hash32, rngFrom, fbm, noise2, smooth, focusFalloff } from './scatter-common.js';
 import { addStationLawn } from './transition.js';
+import { SWARD_DAPPLE } from './island-ground.js';
+import { VALUE_NOISE_2D } from '../upstream/petalwake/src/shaders/common.js';
 
 // X-51 vegetation (2026-11-21): island-wide trees, bushes, hedges and grass tufts as InstancedMesh batches (one draw call per GLB, materials baked into
 // vertex colours, toon ramp + camera-distance fog from scatter-common.js). Models, sizes, origin offsets, radii, species weights and scale ranges live in
@@ -43,13 +45,14 @@ export const PARAMS = {
 const _cam = new THREE.Vector3(), _m = new THREE.Matrix4(), _x = new THREE.Vector3(), _y = new THREE.Vector3(0, 1, 0), _z = new THREE.Vector3(), _t = new THREE.Vector3();
 const facing = (x, y, z, fx, fz, sy) => _m.clone().makeBasis(_x.set(fz, 0, -fx), _y.set(0, sy, 0), _z.set(fx, 0, fz)).setPosition(_t.set(x, y, z));
 
+const meadowBlockers = ['walk', 'bld', 'corr', 'prop', 'town', 'solid'];
+function canPlantMeadow(ctx, x, z, clearance) {
+  const road = ctx.roadDist(x, z);
+  return ctx.cover(x, z) >= 0.6 && ctx.slope(x, z) <= 0.92 && !ctx.isWater(x, z, 0.6)
+    && (!road || road.over >= 0.55 + clearance) && !ctx.obstacle(x, z, clearance, meadowBlockers);
+}
+
 function plantFlowerBeds(ctx, habitats, grassModels, seed) {
-  const blockers = ['walk', 'bld', 'corr', 'prop', 'town', 'solid'];
-  const canPlant = (x, z, clearance) => {
-    const road = ctx.roadDist(x, z);
-    return ctx.cover(x, z) >= 0.6 && ctx.slope(x, z) <= 0.92 && !ctx.isWater(x, z, 0.6)
-      && (!road || road.over >= 0.55 + clearance) && !ctx.obstacle(x, z, clearance, blockers);
-  };
   return habitats.map(({ name, clusters }, habitatIndex) => {
     const flowers = [], grass = [], counts = [];
     for (const [index, [cx, cz, radius, count, primary, accent]] of clusters.entries()) {
@@ -60,7 +63,7 @@ function plantFlowerBeds(ctx, habitats, grassModels, seed) {
         const theta = start + i * 2.399963 + (r() - 0.5) * 0.32;
         const reach = radius * Math.pow(r(), 0.76);
         const x = cx + Math.cos(theta) * reach, z = cz + Math.sin(theta) * reach;
-        if (roots.some(p => Math.hypot(p.x - x, p.z - z) < 0.105) || !canPlant(x, z, 0.16)) continue;
+        if (roots.some(p => Math.hypot(p.x - x, p.z - z) < 0.105) || !canPlantMeadow(ctx, x, z, 0.16)) continue;
         const species = r() < 0.14 ? accent : primary;
         const headScale = 1.24 + 0.49 * r();
         roots.push({ x, y: ctx.groundY(x, z), z, species, headScale });
@@ -74,7 +77,7 @@ function plantFlowerBeds(ctx, habitats, grassModels, seed) {
         const theta = start + i * 2.399963 + (r() - 0.5) * 0.4;
         const reach = radius * (0.14 + r() * 0.72);
         const x = cx + Math.cos(theta) * reach, z = cz + Math.sin(theta) * reach;
-        if (!canPlant(x, z, 0.4)) continue;
+        if (!canPlantMeadow(ctx, x, z, 0.4)) continue;
         const kind = pickWeighted(r, grassModels), s = 0.89 + 0.34 * r();
         grass.push({ kind, x, y: ctx.groundY(x, z) - 0.017, z, yaw: r() * Math.PI * 2,
           sx: s, sy: 0.30 + 0.15 * r(), sz: s, tint: 0.82 + 0.15 * r() });
@@ -82,6 +85,92 @@ function plantFlowerBeds(ctx, habitats, grassModels, seed) {
     }
     return { name, flowers, grass, counts };
   });
+}
+
+function plantGrassBands(ctx, habitats, seed) {
+  const up = new THREE.Vector3(0, 1, 0), normal = new THREE.Vector3();
+  const tilt = new THREE.Quaternion(), rotate = new THREE.Quaternion();
+  const position = new THREE.Vector3(), scale = new THREE.Vector3();
+  return habitats.map(({ name, clusters, grassBands }, habitatIndex) => {
+    const grass = [], counts = [];
+    for (const [index, [cx, cz, length, width, angle, count, height]] of grassBands.entries()) {
+      const r = rngFrom(hash32(seed, 112 + habitatIndex, index));
+      const c = Math.cos(angle), s = Math.sin(angle), tufts = [];
+      for (let i = 0; i < count * 6 && tufts.length < count; i++) {
+        const theta = i * 2.399963 + r() * 0.63;
+        const radius = i === 0 ? 0 : 0.34 + 0.66 * Math.sqrt(r());
+        const u = Math.cos(theta) * radius * length, v = Math.sin(theta) * radius * width;
+        const x = cx + u * c - v * s, z = cz + u * s + v * c;
+        if (!canPlantMeadow(ctx, x, z, 0.58) || clusters.some(([fx, fz, fr]) => Math.hypot(fx - x, fz - z) < fr + 0.28)) continue;
+        if (tufts.some(t => Math.hypot(t.x - x, t.z - z) < 0.24)) continue;
+        const kind = r() < 0.48 ? 'meadowFan' : 'meadowSweep';
+        const yaw = angle + (r() - 0.5) * 2.3 + (i % 2) * Math.PI;
+        const size = 0.74 + 0.32 * r(), bladeHeight = height * (0.74 + 0.28 * r());
+        const y = ctx.groundY(x, z) - 0.045;
+        ctx.terrain.normalAt(x, z, normal, 0.56).lerp(up, 0.51).normalize();
+        tilt.setFromUnitVectors(up, normal).multiply(rotate.setFromAxisAngle(up, yaw));
+        const matrix = new THREE.Matrix4().compose(position.set(x, y, z), tilt, scale.set(size, bladeHeight, size));
+        const tint = 0.78 + 0.21 * r();
+        tufts.push({ kind, x, y, z, matrix, tint, tr: 0.88 + 0.11 * r(), tb: 0.94 + 0.1 * r() });
+      }
+      grass.push(...tufts);
+      counts.push(tufts.length);
+    }
+    return { name, grass, counts };
+  });
+}
+
+function plantShortSward(ctx, habitats, seed) {
+  const up = new THREE.Vector3(0, 1, 0), normal = new THREE.Vector3();
+  const tilt = new THREE.Quaternion(), rotate = new THREE.Quaternion();
+  const position = new THREE.Vector3(), scale = new THREE.Vector3();
+  const step = 0.88, cell = 12;
+  return habitats.map(({ name, bounds: [x0, z0, x1, z1], clusters, swardAreas }, habitatIndex) => {
+    const patches = swardAreas.map(([x, z, length, width, angle, density]) =>
+      ({ x, z, length, width, density, c: Math.cos(angle), s: Math.sin(angle) }));
+    const cells = new Map();
+    for (let gz = Math.ceil(z0 / step); gz * step < z1; gz++) for (let gx = Math.ceil(x0 / step); gx * step < x1; gx++) {
+      const r = rngFrom(hash32(seed, gx, gz, habitatIndex + 135));
+      const x = (gx + (r() - 0.5) * 0.83) * step, z = (gz + (r() - 0.5) * 0.83) * step;
+      const field = noise2(x, z, 3.0, seed + 39);
+      let cover = 0;
+      for (const area of patches) {
+        const dx = x - area.x, dz = z - area.z;
+        const u = (dx * area.c + dz * area.s) / area.length;
+        const v = (dz * area.c - dx * area.s) / area.width;
+        cover = Math.max(cover, area.density * (1 - smooth(0.45, 1.03, u * u + v * v + 0.22 * (field - 0.5))));
+      }
+      if (r() > cover * (0.51 + 0.60 * field) || !canPlantMeadow(ctx, x, z, 0.90)) continue;
+      // Short, sparse blades under the flowers support the bed while leaving its color visible.
+      const underFlowers = clusters.some(([fx, fz, fr]) => Math.hypot(fx - x, fz - z) < fr);
+      const kind = r() < (underFlowers ? 0.88 : 0.52) ? 'swardLow' : 'swardBowed';
+      const yaw = r() * Math.PI * 2, size = 0.84 + 0.20 * r();
+      const bladeHeight = (underFlowers ? 0.56 : 0.82) * (0.77 + 0.26 * field + 0.26 * r());
+      const y = ctx.groundY(x, z) - 0.048;
+      ctx.terrain.normalAt(x, z, normal, 0.60).lerp(up, 0.26).normalize();
+      tilt.setFromUnitVectors(up, normal).multiply(rotate.setFromAxisAngle(up, yaw));
+      const matrix = new THREE.Matrix4().compose(position.set(x, y, z), tilt, scale.set(size, bladeHeight, size));
+      const key = `${Math.floor(x / cell)}:${Math.floor(z / cell)}:${kind}`;
+      if (!cells.has(key)) cells.set(key, { kind, items: [] });
+      cells.get(key).items.push({ x, y, z, matrix, tint: 0.87 + 0.18 * r(), tr: 0.93 + 0.11 * field, tb: 1.03 - 0.14 * field });
+    }
+    return { name, cells };
+  });
+}
+
+function shortSwardMaterial(gradientMap, aerial, time) {
+  const material = makeMaterial({ gradientMap, aerial, name: 'vegetation-short-sward' });
+  const before = material.onBeforeCompile, cacheKey = material.customProgramCacheKey;
+  material.onBeforeCompile = (shader, renderer) => {
+    before.call(material, shader, renderer);
+    shader.uniforms.uSwardTime = time;
+    shader.fragmentShader = shader.fragmentShader
+      .replace('void main()', `uniform float uSwardTime;\n${VALUE_NOISE_2D}\n${SWARD_DAPPLE}\nvoid main()`)
+      .replace('#include <color_fragment>', `#include <color_fragment>
+        diffuseColor.rgb *= mix(vec3(1.0), vec3(0.70, 0.86, 0.98), swardDapple(vBkPos.xz, uSwardTime));`);
+  };
+  material.customProgramCacheKey = () => `${cacheKey.call(material)}|short-sward-dapple`;
+  return material;
 }
 
 export async function createVegetation({ scene, worldBase, island, station, flowerBeds = [], dryRun = false }) {
@@ -352,10 +441,9 @@ export async function createVegetation({ scene, worldBase, island, station, flow
   });
   for (const g of keptTufts) push(g.kind, g);
   const beds = plantFlowerBeds(ctx, habitats, SP.grass.models, P.seed);
-  for (const bed of beds) {
-    if (!dryRun) island.meadow.addFlowerBed(bed.name, bed.flowers);
-    for (const g of bed.grass) push(g.kind, g);
-  }
+  const grassBands = plantGrassBands(ctx, habitats, P.seed);
+  const meadowSward = plantShortSward(ctx, habitats, P.seed);
+  if (!dryRun) for (const bed of beds) island.meadow.addFlowerBed(bed.name, bed.flowers);
 
   // ---- batches --------------------------------------------------------------------------------------------------------------------------------------
   let drawCalls = 0, triangles = 0; const counts = {}, lods = [], LP = table.vegetation.lod;
@@ -365,6 +453,28 @@ export async function createVegetation({ scene, worldBase, island, station, flow
     for (const mesh of makeBatches({ name: 'vegetation-' + kind, model: model[kind], materials, items: list })) { root.add(mesh); drawCalls++; }
     triangles += model[kind].tris * list.length; counts[kind] = list.length;
   }
+  // Root grass and the folded blades are visible only in their own habitats, even in reflection views.
+  for (const [index, { name, grass }] of grassBands.entries()) {
+    const patchItems = {};
+    for (const tuft of [...beds[index].grass, ...grass]) (patchItems[tuft.kind] ??= []).push(tuft);
+    for (const [kind, list] of Object.entries(patchItems)) {
+      const batches = makeBatches({ name: `vegetation-${name}-${kind}`, model: model[kind], materials, items: list });
+      root.add(...batches);
+      drawCalls += batches.length;
+      triangles += model[kind].tris * list.length;
+      counts[kind] = (counts[kind] ?? 0) + list.length;
+    }
+  }
+  if (meadowSward.length) {
+    const material = shortSwardMaterial(station.ctx.mat.gradientMap, aerial, island.U.uTime);
+    for (const { name, cells } of meadowSward) for (const [key, { kind, items: tiles }] of cells) {
+      const mesh = makeBatch({ name: `vegetation-${name}-sward-${key}`, model: model[kind], material, items: tiles });
+      root.add(mesh);
+      drawCalls++;
+      triangles += model[kind].tris * tiles.length;
+      counts[kind] = (counts[kind] ?? 0) + tiles.length;
+    }
+  }
   /** Called every frame with the camera; cheap unless the camera moved by `lod.step` m. Returns { near, far } counts of the LOD trees. */
   const update = camera => {
     camera.getWorldPosition(_cam);
@@ -373,7 +483,9 @@ export async function createVegetation({ scene, worldBase, island, station, flow
   };
   if (!dryRun) scene.add(root);
   const summary = { sizeWarnings: model.warnings, trees: keptTrees.length, streetTrees, bushes: keptBushes.length + hedgeBushes.length, hedges: hedgeCount, hedgeBushes: hedgeBushes.length, grass: keptTufts.length, rootGrass, openGrass: open, edgeGrass: edge, wallGrass, flowers: keptTufts.filter(g => flowerKinds.has(g.kind)).length, thinned, stationLawn,
-    flowerBeds: beds.map(({ name, grass, counts }) => ({ name, flowersPerCluster: counts, grass: grass.length })) };
+    flowerBeds: beds.map(({ name, grass, counts }) => ({ name, flowersPerCluster: counts, grass: grass.length })),
+    grassBands: grassBands.map(({ name, counts }) => ({ name, tuftsPerBand: counts })),
+    meadowSward: meadowSward.map(({ name, cells }) => ({ name, cells: cells.size, tiles: [...cells.values()].reduce((n, c) => n + c.items.length, 0) })) };
   worldBase.scatter = { ...(worldBase.scatter ?? {}), veg: { root, counts, summary, update, lods, materials, drawCalls, triangles, rejects, attempts, ms: +(performance.now() - t0).toFixed(1),
     trees: keptTrees.map(t => ({ kind: t.kind, x: t.x, z: t.z, r: t.r })), bushes: [...keptBushes, ...hedgeBushes].map(t => ({ kind: t.kind, x: t.x, z: t.z, r: t.r })), hedges: items[hk]?.map(h => ({ x: h.x, z: h.z })) ?? [], grass: keptTufts.map(t => ({ x: t.x, z: t.z })) } };
   console.info('[world-base] vegetation', JSON.stringify({ ...summary, drawCalls, triangles, ms: worldBase.scatter.veg.ms }));

@@ -13,6 +13,7 @@ import { addStationTexturedProps } from './textured-props.js';
 import { addArtR1Station } from './art-r1.js';
 import { loadMatureSakura } from './mature-sakura.js';
 import { loadKonbiniFixtures } from './konbini-fixtures.js';
+import { addRailLeafSprays } from './rail-leaf-sprays.js';
 
 // Keep the upstream dependency order. Characters and camera-centred petal shaders
 // are deliberately omitted; the shared island supplies its own petal field.
@@ -211,6 +212,7 @@ export async function createStation({ scene, renderer, camera, offset = [280, 8,
   gravel.wrapS = gravel.wrapT = THREE.RepeatWrapping;
   gravel.repeat.set(1.9, 1.9);
   const streetscape = addStreetscape({ ctx, root });
+  await addRailLeafSprays(ctx);
   const artR1 = addArtR1Station({ ctx });
   onProgress('textured-props');
   const texturedProps = await addStationTexturedProps({ ctx, root });

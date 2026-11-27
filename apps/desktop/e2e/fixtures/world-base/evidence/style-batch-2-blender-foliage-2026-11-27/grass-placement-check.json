@@ -1,0 +1,299 @@
+{
+  "redSplatAndAllChannelsIdenticalTo5d4ae7a": 4194304,
+  "beds": [
+    {
+      "name": "hillside",
+      "count": 348,
+      "grass": 135,
+      "checks": [
+        {
+          "count": 27,
+          "radius": 0.67,
+          "inner": 11
+        },
+        {
+          "count": 34,
+          "radius": 0.83,
+          "inner": 10
+        },
+        {
+          "count": 22,
+          "radius": 0.91,
+          "inner": 12
+        },
+        {
+          "count": 37,
+          "radius": 1.35,
+          "inner": 17
+        },
+        {
+          "count": 24,
+          "radius": 1.12,
+          "inner": 8
+        },
+        {
+          "count": 35,
+          "radius": 1.4,
+          "inner": 11
+        },
+        {
+          "count": 21,
+          "radius": 0.91,
+          "inner": 10
+        },
+        {
+          "count": 34,
+          "radius": 1.29,
+          "inner": 11
+        },
+        {
+          "count": 27,
+          "radius": 1.05,
+          "inner": 12
+        },
+        {
+          "count": 33,
+          "radius": 1.34,
+          "inner": 17
+        },
+        {
+          "count": 28,
+          "radius": 1.16,
+          "inner": 9
+        },
+        {
+          "count": 26,
+          "radius": 0.64,
+          "inner": 8
+        }
+      ],
+      "maxMask": 0,
+      "minCover": 0.9853160434477501,
+      "minTownRoadMargin": null,
+      "bounds": {
+        "min": [
+          1030.8245418283427,
+          58.836792862486554,
+          567.4812063926527
+        ],
+        "max": [
+          1071.8045453871596,
+          68.57659993009486,
+          590.3043717140232
+        ]
+      }
+    },
+    {
+      "name": "tower",
+      "count": 359,
+      "grass": 142,
+      "checks": [
+        {
+          "count": 28,
+          "radius": 1,
+          "inner": 10
+        },
+        {
+          "count": 33,
+          "radius": 1.19,
+          "inner": 12
+        },
+        {
+          "count": 34,
+          "radius": 1.21,
+          "inner": 15
+        },
+        {
+          "count": 31,
+          "radius": 1.13,
+          "inner": 12
+        },
+        {
+          "count": 22,
+          "radius": 0.87,
+          "inner": 9
+        },
+        {
+          "count": 37,
+          "radius": 1.38,
+          "inner": 16
+        },
+        {
+          "count": 34,
+          "radius": 1.32,
+          "inner": 16
+        },
+        {
+          "count": 26,
+          "radius": 1.06,
+          "inner": 12
+        },
+        {
+          "count": 22,
+          "radius": 0.96,
+          "inner": 9
+        },
+        {
+          "count": 32,
+          "radius": 1.2,
+          "inner": 12
+        },
+        {
+          "count": 38,
+          "radius": 1.4,
+          "inner": 20
+        },
+        {
+          "count": 22,
+          "radius": 0.86,
+          "inner": 9
+        }
+      ],
+      "maxMask": 0.009307526331990987,
+      "minCover": 0.7007879614646835,
+      "minTownRoadMargin": 1.6753829549823256,
+      "bounds": {
+        "min": [
+          162.72825073929357,
+          132.79160252813685,
+          -1244.0024750790622
+        ],
+        "max": [
+          195.43943046110675,
+          138.45271323034086,
+          -1216.175923055686
+        ]
+      }
+    }
+  ],
+  "blenderGrass": [
+    {
+      "name": "hillside",
+      "total": 60,
+      "tuftsPerBand": [
+        4,
+        6,
+        7,
+        5,
+        5,
+        6,
+        8,
+        6,
+        8,
+        5
+      ],
+      "byKind": {
+        "meadowFan": 23,
+        "meadowSweep": 37
+      },
+      "closestRoad": null,
+      "townMask": 0,
+      "frustumChecks": {
+        "art-b-konbini": false,
+        "sample-g-rail": false,
+        "sample-f-hillside": true,
+        "sample-h-north": false
+      }
+    },
+    {
+      "name": "tower",
+      "total": 57,
+      "tuftsPerBand": [
+        6,
+        6,
+        6,
+        6,
+        8,
+        6,
+        6,
+        8,
+        5
+      ],
+      "byKind": {
+        "meadowFan": 21,
+        "meadowSweep": 36
+      },
+      "closestRoad": 1.166689298851988,
+      "townMask": 0.07626342805450778,
+      "frustumChecks": {
+        "art-b-konbini": false,
+        "sample-g-rail": false,
+        "sample-f-hillside": true,
+        "sample-h-north": true
+      }
+    }
+  ],
+  "flowerPositionsAndBaseGrassIdenticalToD305eb75": true,
+  "shortSward": [
+    {
+      "name": "hillside",
+      "cells": 25,
+      "tiles": 538,
+      "blades": 15279,
+      "triangles": 427812,
+      "closestRoad": null,
+      "maxMask": 0,
+      "frustumTallies": {
+        "art-b-konbini": {
+          "cells": 0,
+          "tiles": 0,
+          "triangles": 0,
+          "tileCentersWithin20m": 0
+        },
+        "sample-g-rail": {
+          "cells": 0,
+          "tiles": 0,
+          "triangles": 0,
+          "tileCentersWithin20m": 0
+        },
+        "sample-f-hillside": {
+          "cells": 25,
+          "tiles": 538,
+          "triangles": 427812,
+          "tileCentersWithin20m": 242
+        },
+        "sample-h-north": {
+          "cells": 0,
+          "tiles": 0,
+          "triangles": 0,
+          "tileCentersWithin20m": 0
+        }
+      }
+    },
+    {
+      "name": "tower",
+      "cells": 20,
+      "tiles": 469,
+      "blades": 13338,
+      "triangles": 373464,
+      "closestRoad": 1.4772598117732736,
+      "maxMask": 0.011511518889381246,
+      "frustumTallies": {
+        "art-b-konbini": {
+          "cells": 0,
+          "tiles": 0,
+          "triangles": 0,
+          "tileCentersWithin20m": 0
+        },
+        "sample-g-rail": {
+          "cells": 0,
+          "tiles": 0,
+          "triangles": 0,
+          "tileCentersWithin20m": 0
+        },
+        "sample-f-hillside": {
+          "cells": 20,
+          "tiles": 469,
+          "triangles": 373464,
+          "tileCentersWithin20m": 0
+        },
+        "sample-h-north": {
+          "cells": 20,
+          "tiles": 469,
+          "triangles": 373464,
+          "tileCentersWithin20m": 154
+        }
+      }
+    }
+  ]
+}

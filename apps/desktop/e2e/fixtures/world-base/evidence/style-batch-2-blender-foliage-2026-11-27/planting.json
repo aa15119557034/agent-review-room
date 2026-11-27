@@ -1,0 +1,288 @@
+[
+  {
+    "time": "evening",
+    "beds": [
+      {
+        "name": "hillside",
+        "flowersPerCluster": [
+          27,
+          34,
+          22,
+          37,
+          24,
+          35,
+          21,
+          34,
+          27,
+          33,
+          28,
+          26
+        ],
+        "grass": 135
+      },
+      {
+        "name": "tower",
+        "flowersPerCluster": [
+          28,
+          33,
+          34,
+          31,
+          22,
+          37,
+          34,
+          26,
+          22,
+          32,
+          38,
+          22
+        ],
+        "grass": 142
+      }
+    ],
+    "grassBands": [
+      {
+        "name": "hillside",
+        "tuftsPerBand": [
+          4,
+          6,
+          7,
+          5,
+          5,
+          6,
+          8,
+          6,
+          8,
+          5
+        ]
+      },
+      {
+        "name": "tower",
+        "tuftsPerBand": [
+          6,
+          6,
+          6,
+          6,
+          8,
+          6,
+          6,
+          8,
+          5
+        ]
+      }
+    ],
+    "meadowSward": [
+      {
+        "name": "hillside",
+        "cells": 25,
+        "tiles": 538
+      },
+      {
+        "name": "tower",
+        "cells": 20,
+        "tiles": 469
+      }
+    ],
+    "meshes": {
+      "meadow-flower-bed-hillside": 348,
+      "meadow-flower-bed-tower": 359,
+      "env-flora-rail-bank-east-shrubs": 8,
+      "env-flora-rail-bank-east-tuft": 74,
+      "env-flora-rail-bank-east-flower": 68,
+      "foliage-rail-spray-spreading": 4,
+      "foliage-rail-spray-rising": 3,
+      "foliage-rail-spray-tipped": 4,
+      "vegetation-hillside-meadowFan": 23,
+      "vegetation-hillside-meadowSweep": 37,
+      "vegetation-tower-meadowFan": 21,
+      "vegetation-tower-meadowSweep": 36,
+      "vegetation-hillside-sward-86:46:swardLow": 5,
+      "vegetation-hillside-sward-86:46:swardBowed": 3,
+      "vegetation-hillside-sward-87:46:swardBowed": 3,
+      "vegetation-hillside-sward-87:46:swardLow": 2,
+      "vegetation-hillside-sward-87:47:swardLow": 59,
+      "vegetation-hillside-sward-87:47:swardBowed": 43,
+      "vegetation-hillside-sward-88:46:swardBowed": 1,
+      "vegetation-hillside-sward-86:47:swardBowed": 17,
+      "vegetation-hillside-sward-88:47:swardBowed": 29,
+      "vegetation-hillside-sward-88:47:swardLow": 34,
+      "vegetation-hillside-sward-89:47:swardLow": 1,
+      "vegetation-hillside-sward-86:47:swardLow": 22,
+      "vegetation-hillside-sward-85:47:swardLow": 6,
+      "vegetation-hillside-sward-85:47:swardBowed": 3,
+      "vegetation-hillside-sward-85:48:swardBowed": 15,
+      "vegetation-hillside-sward-86:48:swardBowed": 65,
+      "vegetation-hillside-sward-86:48:swardLow": 76,
+      "vegetation-hillside-sward-87:48:swardLow": 58,
+      "vegetation-hillside-sward-87:48:swardBowed": 50,
+      "vegetation-hillside-sward-88:48:swardBowed": 1,
+      "vegetation-hillside-sward-85:48:swardLow": 5,
+      "vegetation-hillside-sward-86:49:swardBowed": 18,
+      "vegetation-hillside-sward-87:49:swardLow": 5,
+      "vegetation-hillside-sward-86:49:swardLow": 14,
+      "vegetation-hillside-sward-87:49:swardBowed": 3,
+      "vegetation-tower-sward-14:-104:swardBowed": 23,
+      "vegetation-tower-sward-14:-104:swardLow": 11,
+      "vegetation-tower-sward-16:-104:swardLow": 15,
+      "vegetation-tower-sward-16:-104:swardBowed": 19,
+      "vegetation-tower-sward-13:-104:swardLow": 7,
+      "vegetation-tower-sward-13:-104:swardBowed": 5,
+      "vegetation-tower-sward-15:-104:swardLow": 8,
+      "vegetation-tower-sward-15:-104:swardBowed": 3,
+      "vegetation-tower-sward-13:-103:swardBowed": 21,
+      "vegetation-tower-sward-13:-103:swardLow": 26,
+      "vegetation-tower-sward-14:-103:swardBowed": 40,
+      "vegetation-tower-sward-14:-103:swardLow": 51,
+      "vegetation-tower-sward-15:-103:swardLow": 50,
+      "vegetation-tower-sward-15:-103:swardBowed": 48,
+      "vegetation-tower-sward-16:-103:swardBowed": 19,
+      "vegetation-tower-sward-16:-103:swardLow": 16,
+      "vegetation-tower-sward-14:-102:swardLow": 38,
+      "vegetation-tower-sward-15:-102:swardBowed": 30,
+      "vegetation-tower-sward-15:-102:swardLow": 22,
+      "vegetation-tower-sward-14:-102:swardBowed": 17
+    }
+  },
+  {
+    "time": "night",
+    "beds": [
+      {
+        "name": "hillside",
+        "flowersPerCluster": [
+          27,
+          34,
+          22,
+          37,
+          24,
+          35,
+          21,
+          34,
+          27,
+          33,
+          28,
+          26
+        ],
+        "grass": 135
+      },
+      {
+        "name": "tower",
+        "flowersPerCluster": [
+          28,
+          33,
+          34,
+          31,
+          22,
+          37,
+          34,
+          26,
+          22,
+          32,
+          38,
+          22
+        ],
+        "grass": 142
+      }
+    ],
+    "grassBands": [
+      {
+        "name": "hillside",
+        "tuftsPerBand": [
+          4,
+          6,
+          7,
+          5,
+          5,
+          6,
+          8,
+          6,
+          8,
+          5
+        ]
+      },
+      {
+        "name": "tower",
+        "tuftsPerBand": [
+          6,
+          6,
+          6,
+          6,
+          8,
+          6,
+          6,
+          8,
+          5
+        ]
+      }
+    ],
+    "meadowSward": [
+      {
+        "name": "hillside",
+        "cells": 25,
+        "tiles": 538
+      },
+      {
+        "name": "tower",
+        "cells": 20,
+        "tiles": 469
+      }
+    ],
+    "meshes": {
+      "meadow-flower-bed-hillside": 348,
+      "meadow-flower-bed-tower": 359,
+      "env-flora-rail-bank-east-shrubs": 8,
+      "env-flora-rail-bank-east-tuft": 74,
+      "env-flora-rail-bank-east-flower": 68,
+      "foliage-rail-spray-spreading": 4,
+      "foliage-rail-spray-rising": 3,
+      "foliage-rail-spray-tipped": 4,
+      "vegetation-hillside-meadowFan": 23,
+      "vegetation-hillside-meadowSweep": 37,
+      "vegetation-tower-meadowFan": 21,
+      "vegetation-tower-meadowSweep": 36,
+      "vegetation-hillside-sward-86:46:swardLow": 5,
+      "vegetation-hillside-sward-86:46:swardBowed": 3,
+      "vegetation-hillside-sward-87:46:swardBowed": 3,
+      "vegetation-hillside-sward-87:46:swardLow": 2,
+      "vegetation-hillside-sward-87:47:swardLow": 59,
+      "vegetation-hillside-sward-87:47:swardBowed": 43,
+      "vegetation-hillside-sward-88:46:swardBowed": 1,
+      "vegetation-hillside-sward-86:47:swardBowed": 17,
+      "vegetation-hillside-sward-88:47:swardBowed": 29,
+      "vegetation-hillside-sward-88:47:swardLow": 34,
+      "vegetation-hillside-sward-89:47:swardLow": 1,
+      "vegetation-hillside-sward-86:47:swardLow": 22,
+      "vegetation-hillside-sward-85:47:swardLow": 6,
+      "vegetation-hillside-sward-85:47:swardBowed": 3,
+      "vegetation-hillside-sward-85:48:swardBowed": 15,
+      "vegetation-hillside-sward-86:48:swardBowed": 65,
+      "vegetation-hillside-sward-86:48:swardLow": 76,
+      "vegetation-hillside-sward-87:48:swardLow": 58,
+      "vegetation-hillside-sward-87:48:swardBowed": 50,
+      "vegetation-hillside-sward-88:48:swardBowed": 1,
+      "vegetation-hillside-sward-85:48:swardLow": 5,
+      "vegetation-hillside-sward-86:49:swardBowed": 18,
+      "vegetation-hillside-sward-87:49:swardLow": 5,
+      "vegetation-hillside-sward-86:49:swardLow": 14,
+      "vegetation-hillside-sward-87:49:swardBowed": 3,
+      "vegetation-tower-sward-14:-104:swardBowed": 23,
+      "vegetation-tower-sward-14:-104:swardLow": 11,
+      "vegetation-tower-sward-16:-104:swardLow": 15,
+      "vegetation-tower-sward-16:-104:swardBowed": 19,
+      "vegetation-tower-sward-13:-104:swardLow": 7,
+      "vegetation-tower-sward-13:-104:swardBowed": 5,
+      "vegetation-tower-sward-15:-104:swardLow": 8,
+      "vegetation-tower-sward-15:-104:swardBowed": 3,
+      "vegetation-tower-sward-13:-103:swardBowed": 21,
+      "vegetation-tower-sward-13:-103:swardLow": 26,
+      "vegetation-tower-sward-14:-103:swardBowed": 40,
+      "vegetation-tower-sward-14:-103:swardLow": 51,
+      "vegetation-tower-sward-15:-103:swardLow": 50,
+      "vegetation-tower-sward-15:-103:swardBowed": 48,
+      "vegetation-tower-sward-16:-103:swardBowed": 19,
+      "vegetation-tower-sward-16:-103:swardLow": 16,
+      "vegetation-tower-sward-14:-102:swardLow": 38,
+      "vegetation-tower-sward-15:-102:swardBowed": 30,
+      "vegetation-tower-sward-15:-102:swardLow": 22,
+      "vegetation-tower-sward-14:-102:swardBowed": 17
+    }
+  }
+]
