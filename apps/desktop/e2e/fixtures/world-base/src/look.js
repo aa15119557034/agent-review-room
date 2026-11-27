@@ -322,15 +322,14 @@ export function createLook(renderer, camera) {
     if (uGradeOn > 0.5) col = wbGrade(col, wbSky);`, 'grade stage');
   }
 
-  function applyCascade(island, water, { shelves, ledge }) {
-    const ground = island.terrain.material;
+  function applyCascade(island, ground, water, { shelves, ledge }) {
     ground.uniforms.uCascadeFoot = { value: new THREE.Vector2(island.river.fall.base.x, island.river.fall.base.z) };
     ground.uniforms.uCascadeLedge = { value: new THREE.Vector3(...ledge.world).add(new THREE.Vector3(ledge.outward[0], 0, ledge.outward[1])) };
     ground.fragmentShader = insert(ground.fragmentShader, 'void main(){',
-      'uniform vec2 uCascadeFoot;\nuniform vec3 uCascadeLedge;\nvoid main(){', 'cascade rock entry');
+      'uniform vec2 uCascadeFoot;\nuniform vec3 uCascadeLedge;\nuniform float uCascadeLod;\nvoid main(){', 'cascade rock entry');
     ground.fragmentShader = insert(ground.fragmentShader, 'float pebW = lowW * smoothstep(0.25, 0.6, cliffy);',
       `float pebW = lowW * smoothstep(0.25, 0.6, cliffy);
-  float gorge = 1.0 - smoothstep(55.0, 145.0, distance(P.xz, uCascadeFoot));`, 'cascade terrain region');
+  float gorge = (1.0 - smoothstep(55.0, 145.0, distance(P.xz, uCascadeFoot))) * uCascadeLod;`, 'cascade terrain region');
     ground.fragmentShader = insert(ground.fragmentShader, 'ms.r = mix(0.55, 0.12, wetLine);',
       `ms.r = mix(0.55, 0.12, wetLine);
     if (gorge > 0.0){
@@ -367,7 +366,7 @@ export function createLook(renderer, camera) {
     // The station's live shadow camera does not reach this gorge. Seat the
     // overhang with a local contact term and a soft continuation down-sun.
     ground.fragmentShader = insert(ground.fragmentShader,
-      'float sh = shadowBaked * cs * riderShadow(P) * townShadow(P, N);', `float sh = shadowBaked * cs * riderShadow(P) * townShadow(P, N);
+      'float sh = shadowBaked * cs * riderShadow(P) * sceneryShadow;', `float sh = shadowBaked * cs * riderShadow(P) * sceneryShadow;
   if (gorge > 0.0){
     vec3 above = uCascadeLedge - P;
     float travel = dot(above, uSunDir);
@@ -376,9 +375,9 @@ export function createLook(renderer, camera) {
                   smoothstep(0.0, 1.0, travel) * (1.0 - smoothstep(2.5, 9.0, travel));
     sh *= 1.0 - shade * rockAmt * 0.64;
   }`, 'cascade ledge contact light');
-    ground.fragmentShader = insert(ground.fragmentShader, 'vec3 col = m.c * (uSunColor * dif * sh + amb);',
+    ground.fragmentShader = insert(ground.fragmentShader, 'vec3 col = m.c * (uSunColor * dif * sh + amb',
       `amb *= mix(vec3(1.0), vec3(0.80, 0.87, 1.12), gorge * rockAmt * (1.0 - smoothstep(0.12, 0.56, dif * sh)));
-  vec3 col = m.c * (uSunColor * dif * sh + amb);`, 'cascade cool shadow');
+  vec3 col = m.c * (uSunColor * dif * sh + amb`, 'cascade cool shadow');
     ground.needsUpdate = true;
 
     // The fjord shares its water mesh with the open sea. Fade this palette out
@@ -391,6 +390,7 @@ export function createLook(renderer, camera) {
     water.fragmentShader = insert(water.fragmentShader, 'void main(){', `
 uniform vec4 uCascadeToe[${toes.length}];
 uniform vec3 uCascadeToeDir[${toes.length}];
+uniform float uCascadeLod;
 float cascadeBed(vec2 p, float bed){
   for (int i = 0; i < ${toes.length}; ++i){
     vec4 shelf = uCascadeToe[i];
@@ -405,8 +405,8 @@ float cascadeBed(vec2 p, float bed){
 }
 void main(){`, 'cascade rock toes');
     water.fragmentShader = insert(water.fragmentShader, 'float bedH = terrainH(refr);', `float bedH = terrainH(refr);
-  float cascade = 1.0 - smoothstep(55.0, 145.0, distance(P.xz, uFallBase.xy));
-  if (cascade > 0.0) bedH = cascadeBed(refr, bedH);`, 'cascade region');
+  float cascade = (1.0 - smoothstep(55.0, 145.0, distance(P.xz, uFallBase.xy))) * uCascadeLod;
+  if (cascade > 0.0) bedH = mix(bedH, cascadeBed(refr, bedH), uCascadeLod);`, 'cascade region');
     water.fragmentShader = insert(water.fragmentShader, 'vec3 body = bedLit * absorb + scat * (1.0 - absorb * 0.9);', `vec3 body = bedLit * absorb + scat * (1.0 - absorb * 0.9);
   if (cascade > 0.0){
     vec3 cascadeLight = uSunColor * (0.10 + 0.34 * sunVis) + uAmbSky * 0.60;
@@ -442,8 +442,9 @@ void main(){`, 'cascade rock toes');
     float wave = 1.0 - smoothstep(ringWidth, ringWidth + 0.078, min(cycle, 1.0 - cycle));
     float splash = wave * smoothstep(0.39, 0.62, plume * 0.68 + bubbles * 0.32);
     splash *= smoothstep(2.0, 5.0, fd) * (1.0 - smoothstep(13.0, 22.0, fd));
-    foam = max(foam, max(rim, splash * 0.88));
-    col = mix(col, vec3(0.045, 0.28, 0.25) * (uSunColor * 0.26 + uAmbSky * 0.54), boil * 0.36);`, 'cascade impact lace');
+    float distantFoam = smoothstep(0.75 - boil * 0.75, 0.95 - boil * 0.55, bubbles + ring * 0.12 * (1.0 - boil));
+    foam = max(foam, mix(distantFoam, max(rim, splash * 0.88), uCascadeLod));
+    col = mix(col, vec3(0.045, 0.28, 0.25) * (uSunColor * 0.26 + uAmbSky * 0.54), boil * 0.36 * uCascadeLod);`, 'cascade impact lace');
 
     const fall = island.river.fallMat;
     fall.fragmentShader = insert(fall.fragmentShader, 'float body = mix(1.0, 0.74, smoothstep(0.05, 0.7, k));', `float ribbons = smoothstep(0.26, 0.74, clumps * 0.7 + strands * 0.3);
@@ -456,7 +457,7 @@ void main(){`, 'cascade rock toes');
     fall.needsUpdate = true;
   }
 
-  function applyIsland(island, cascadeRocks) {
+  function applyIsland(island) {
     // Quantize terrain's calibrated diffuse, including its grass wrap-lighting.
     // The town's raw-normal bands otherwise lift sunlit terrain straight to 1.
     for (const [material, needle, band] of [
@@ -547,11 +548,41 @@ void main(){`, 'cascade rock toes');
       `float wbShoreFoam = max(surfBand * 0.9, max(lace, churn));
   wbShoreFoam *= mix(1.0, 0.35, smoothstep(0.75, 3.0, wbWaterFootprint));
   float foam = max(cap, wbShoreFoam);`, 'shore foam coverage');
-    applyCascade(island, water, cascadeRocks);
     water.needsUpdate = true;
   }
+
+  function installCascadeLook(scene, island, rocks) {
+    const terrainMesh = island.terrain.mainView.mesh, waterMesh = island.water.mesh;
+    const terrain = terrainMesh.material, water = waterMesh.material;
+    const cascadeTerrain = terrain.clone(), cascadeWater = water.clone();
+    // Reuse live clock, light and terrain records. The cascade-only uniforms
+    // are added to these copies, leaving the off-site programs untouched.
+    const lod = { value: 1 };
+    cascadeTerrain.uniforms = { ...terrain.uniforms, uCascadeLod: lod };
+    cascadeWater.uniforms = { ...water.uniforms, uCascadeLod: lod };
+    applyCascade(island, cascadeTerrain, cascadeWater, rocks);
+
+    const { base, top } = island.river.fall;
+    const bounds = new THREE.Box3(
+      new THREE.Vector3(base.x - 145, base.y - 50, base.z - 145),
+      new THREE.Vector3(base.x + 145, top.y + 30, base.z + 145),
+    );
+    const frustum = new THREE.Frustum(), viewProjection = new THREE.Matrix4(), eye = new THREE.Vector3();
+    const before = scene.onBeforeRender;
+    scene.onBeforeRender = function onBeforeRender(activeRenderer, activeScene, view, target) {
+      before.call(this, activeRenderer, activeScene, view, target);
+      view.getWorldPosition(eye);
+      const distance = Math.hypot(eye.x - base.x, eye.z - base.z);
+      const visible = distance < 550 && frustum
+        .setFromProjectionMatrix(viewProjection.multiplyMatrices(view.projectionMatrix, view.matrixWorldInverse))
+        .intersectsBox(bounds);
+      if (visible) lod.value = 1 - THREE.MathUtils.smoothstep(distance, 400, 550);
+      terrainMesh.material = visible ? cascadeTerrain : terrain;
+      waterMesh.material = visible ? cascadeWater : water;
+    };
+  }
   return {
-    pipeline, applyIsland,
+    pipeline, applyIsland, installCascadeLook,
     setToon(value) { toon.value = value ? 1 : 0; setToonLit(value); },
     /** World-space town rect [minX, minZ, maxX, maxZ]; strength 0 restores the open-island meadow. */
     setTownGreenery(rect, strength = 1) {
