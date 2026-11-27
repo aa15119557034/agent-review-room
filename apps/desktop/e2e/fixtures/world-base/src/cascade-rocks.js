@@ -27,7 +27,7 @@ void main(){
   vec4 world = modelMatrix * vec4(position, 1.0);
   vStonePos = world.xyz;
   vStoneNormal = normalize(mat3(modelMatrix) * normal);
-  vStonePigment = color;
+  vStonePigment = color.rgb;
   gl_Position = projectionMatrix * viewMatrix * world;
 }`,
     fragmentShader: /* glsl */ `
@@ -45,7 +45,8 @@ void main(){
   float parting = smoothstep(0.74, 1.0, sin(bed * 7.0)) * (1.0 - max(n.y, 0.0));
   vec3 pigment = vStonePigment * (1.0 - 0.13 * parting);
   vec3 stone = applyAtmosphere(pigment * light * uRockExposure, vStonePos);
-  gl_FragColor = vec4(stone, 1.0);
+  // The geometry supplies its own contours. Keep the post outline off the strata and wet toes.
+  gl_FragColor = vec4(stone, 0.0);
 }`,
   });
 }

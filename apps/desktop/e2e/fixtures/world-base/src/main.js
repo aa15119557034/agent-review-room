@@ -145,6 +145,7 @@ async function init() {
     if (islandSward) island.meadow.hide = { ...island.meadow.hide, grass: true };
   }
   const cascadeRocks = await (await import('./cascade-rocks.js')).addCascadeRocks(island);
+  (await import('./cascade-mist.js')).addCascadeMist(island);
   worldBase.cascadeRocks = cascadeRocks;
   look.applyIsland(island, cascadeRocks);
   if (groundParams) for (const [material, label] of [[island.terrain.material, 'terrain'], [island.transition.material, 'transition']]) {

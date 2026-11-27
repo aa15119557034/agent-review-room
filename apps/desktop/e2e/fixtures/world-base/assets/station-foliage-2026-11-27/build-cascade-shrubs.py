@@ -11,6 +11,7 @@ from mathutils import Vector
 
 ROOT = Path(__file__).parent
 NAME = 'cascade-shrubs'
+TRAILING = 'cascade-trailing'
 SHARED = runpy.run_path(str(ROOT / 'build-foliage.py'))
 RAIL = runpy.run_path(str(ROOT / 'build-rail-leaf-sprays.py'))
 Mesh, linear, mix = (SHARED[key] for key in ('Mesh', 'linear', 'mix'))
@@ -82,6 +83,49 @@ def bough(mesh, center, axes, heading, rise, scale, rng):
         mesh.colors[first_vertex:] = [mix(color, leaf_tint, strength) for color in mesh.colors[first_vertex:]]
 
 
+def trailing_branch(mesh, path, branch, rng):
+    path = [Vector(point) for point in path]
+    mesh.fork(path, [.015 - .013 * i / (len(path) - 1) for i in range(len(path))], 5, STEM)
+    total = 0
+    for i, (joint, tip) in enumerate(zip(path[1:], path[2:]), start=1):
+        last = i == len(path) - 2
+        side = -1 if (i + branch) % 2 else 1
+        leaves = ((.18, 52 * side, 1., 26 * side), (.68, -66 * side, .81, -35 * side))
+        if last:
+            leaves += ((.89, 8 * side, .74, 21 * side),)
+        for offset, heading, width, roll in leaves:
+            # Drooped faces turn towards the open air below the shelf; the upper pair sits in the crown.
+            pitch = -21 if i == 1 else -43 - 4.3 * i
+            root = joint.lerp(tip, offset)
+            length = (.263 - .016 * i) * width * rng.uniform(.87, 1.13)
+            first_vertex = len(mesh.points)
+            RAIL['leaf'](mesh, root, -90 + heading + rng.uniform(-13, 13), pitch + rng.uniform(-12, 12),
+                         length, length * rng.uniform(.28, .35), roll + rng.uniform(-17, 17), rng.uniform(0, 6.3))
+            leaf_tint = LEAF_TINTS[(i + branch) % len(LEAF_TINTS)]
+            mesh.colors[first_vertex:] = [mix(color, leaf_tint, .15) for color in mesh.colors[first_vertex:]]
+            total += 1
+    return total
+
+
+def trailing_sprays(paint):
+    mesh = Mesh()
+    rng = Random(81)
+    # Blender -Y faces away from the stone. The root plane stays at Z=0 on purpose.
+    branches = (
+        ((-.10, .17, .014), (-.23, -.14, .17), (-.43, -.40, .13), (-.51, -.66, -.11),
+         (-.58, -.84, -.49), (-.63, -.95, -.83), (-.58, -1.01, -1.17)),
+        ((.12, .13, .014), (.27, -.14, .21), (.36, -.43, .09), (.43, -.70, -.19),
+         (.39, -.86, -.57), (.49, -.92, -.91)),
+        ((.0, .16, .02), (-.02, -.22, .14), (.06, -.49, .08), (.018, -.73, -.24),
+         (.096, -.95, -.51), (.13, -1.06, -.80), (.10, -1.13, -1.02)),
+    )
+    count = sum(trailing_branch(mesh, path, index, rng) for index, path in enumerate(branches))
+    obj = mesh.object(TRAILING, paint, True)
+    obj.location.x = 3.52
+    obj['leafCount'] = count
+    obj.data.color_attributes.active_color = obj.data.color_attributes['PlantColor']
+
+
 def build_source():
     bpy.ops.wm.read_factory_settings(use_empty=True)
     bpy.context.scene.name = 'Cascade Bank Shrubs'
@@ -106,6 +150,7 @@ def build_source():
         obj.location.x = index * 1.76
         obj['leafCount'] = 48
         obj.data.color_attributes.active_color = obj.data.color_attributes['PlantColor']
+    trailing_sprays(paint)
     bpy.ops.object.select_all(action='DESELECT')
     bpy.data.objects['cascade-spreading'].select_set(True)
     bpy.context.view_layer.objects.active = bpy.data.objects['cascade-spreading']
@@ -113,8 +158,8 @@ def build_source():
         for area in screen.areas:
             if area.type == 'VIEW_3D':
                 space = area.spaces.active
-                space.region_3d.view_location = (.85, 0, .48)
-                space.region_3d.view_distance = 4.5
+                space.region_3d.view_location = (1.63, 0, .22)
+                space.region_3d.view_distance = 6.0
                 space.region_3d.view_rotation = Vector((1.0, -4.2, 2.7)).to_track_quat('Z', 'Y')
                 space.shading.type = 'SOLID'
                 space.shading.color_type = 'VERTEX'
@@ -126,4 +171,4 @@ if __name__ == '__main__':
     if '--build-source' in sys.argv:
         build_source()
     bpy.context.window.scene = bpy.data.scenes['Cascade Bank Shrubs']
-    SHARED['export_glb'](NAME, [bpy.data.objects[name] for name in VARIANTS])
+    SHARED['export_glb'](NAME, [bpy.data.objects[name] for name in (*VARIANTS, TRAILING)])

@@ -4,6 +4,7 @@ from pathlib import Path
 import sys
 
 import bpy
+from mathutils import Vector
 
 
 HERE = Path(__file__).resolve().parent
@@ -71,22 +72,26 @@ BROKEN_TAPER = [(-0.54,-0.21,-0.01),(-0.31,-0.48,0.19),(0.03,-0.50,0.31),(0.41,-
                 (-0.07,0.29,-0.04),(-0.35,0.22,0.09),(-0.49,0.02,0.04)]
 
 
-def flank(vertices, faces, pigment, sections):
-    """A thin angled stratum fades into the surveyed wall at the ends and the foot."""
+def wall_bed(vertices, faces, pigment, sections):
+    """One continuous stratum below the preserved shelf. Both ends vanish inside the cliff."""
     first = len(vertices)
-    for x, brow, y, heel, thickness in sections:
-        back = min(brow - 0.86, heel - 0.45)
-        vertices.extend(((x,-back,y+0.10), (x,-brow,y), (x,-heel,y-thickness), (x,-back,y-thickness-0.23)))
-    faces.append(tuple(first + i for i in reversed(range(4))))
+    # x, brow, height, heel, foot level in local rock coordinates. The lower
+    # contours follow the sampled face into the cliff instead of closing in air.
+    for x, brow, y, heel, foot in sections:
+        back = min(brow - 1.24, heel - 0.68)
+        lip = 0.79 * brow + 0.21 * heel
+        vertices.extend(((x,-back,y+0.09), (x,-brow,y), (x,-lip,0.61*y+0.39*foot),
+                         (x,-heel,foot), (x,-back,foot-0.34)))
+    faces.append(tuple(first + i for i in reversed(range(5))))
     pigment.append(CLIFF_SEAM[0])
     for j in range(len(sections)-1):
-        base = first + 4*j
-        for k, colors in enumerate((CLIFF_SKIRT, CLIFF_SKIRT, CLIFF_SEAM, CLIFF_SEAM)):
-            nxt = (k+1) % 4
-            faces.append((base+k, base+nxt, base+nxt+4, base+k+4))
-            pigment.append(colors[(j + k) % len(colors)])
-    last = first + 4*(len(sections)-1)
-    faces.append(tuple(last + i for i in range(4)))
+        base = first + 5*j
+        for k, colors in enumerate((CLIFF_SKIRT, CLIFF_SKIRT, CLIFF_SEAM, CLIFF_SEAM, CLIFF_SKIRT)):
+            nxt = (k+1) % 5
+            faces.append((base+k, base+nxt, base+nxt+5, base+k+5))
+            pigment.append(colors[(j // 2 + k) % len(colors)])
+    last = first + 5*(len(sections)-1)
+    faces.append(tuple(last + i for i in range(5)))
     pigment.append(CLIFF_SEAM[1])
 
 
@@ -115,21 +120,47 @@ def shape(name):
             [(-.94,.81,.83,-.22),(-.36,1.01,1.02,.07),(.16,1.0,1.0,0),(.52,.91,.91,-.11)],
             (.19,-.40), (WET, WET, SIDES), (3,2,2,0,0,3,3,2))
     else:
-        # Keep the planted brow and upper cap. Below them the ledge tapers rapidly back into the wall.
+        # Use the unaltered two top contours for every existing planting probe.
+        # The narrow platform lip overlaps one broad stratum, with no separate side spikes.
         add(TERRACE, (6.1, 5.5), (0,0,-.25),
-            [(-1.54,.81,.53,-1.02),(-.72,1.00,.67,-.59),(.18,1.05,.79,-.31),(.91,1.0,1.0,0),(1.32,.90,.91,-.10)],
-            (.17,-.37), (CLIFF_SEAM, CLIFF_SEAM, CLIFF_SKIRT, BEVEL), (2,2,1,1,0,0,3,3,2,2))
+            [(.29,.93,.63,-.62),(.66,.98,.83,-.19),(.91,1.0,1.0,0),(1.32,.90,.91,-.10)],
+            (.17,-.37), (CLIFF_SEAM, CLIFF_SKIRT, BEVEL), (2,2,1,1,0,0,3,3,2,2))
         add(TAPER, (3.64, 2.88), (-.90,.78,-.77),
             [(-.7,.91,.91,-.10),(.40,1.05,.98,0),(.83,.89,.82,-.08)],
             (-.25,-.50), (SIDES, BEVEL), (2,2,1,1,0,0,3,3,2))
-        flank(vertices, faces, colors, [(-5.92,-1.54,-.36,-1.76,.19),(-4.69,-.49,.29,-1.01,.45),
-              (-3.53,.24,.54,-.57,.54),(-2.80,.59,.66,-.32,.62),(-1.66,1.17,.80,-.05,.69)])
-        flank(vertices, faces, colors, [(1.64,1.25,.58,.08,.69),(2.63,.93,.64,-.18,.55),
-              (3.59,.58,.49,-.28,.54),(4.73,.35,.38,-.37,.42),(5.66,-.28,.20,-.64,.34)])
+        wall_bed(vertices, faces, colors, [(-6.80,-2.07,.78,-2.54,-.08),(-5.74,-1.37,.98,-1.83,-.02),
+                 (-4.73,-.43,1.07,-1.02,-.12),(-3.55,.44,.97,-.48,-.19),(-2.66,1.00,.73,-.27,-.27),
+                 (-1.30,1.87,.75,-.24,-.34),(.14,2.06,.71,-.19,-.36),(1.52,1.83,.68,-.21,-.24),
+                 (2.83,1.39,.74,-.18,-.26),(3.92,.78,.88,-.40,-.17),
+                 (5.15,.49,.97,-.49,-.22),(6.18,-.13,.91,-.77,-.11),(7.02,-.73,.77,-1.26,-.22)])
     return vertices, faces, colors
 
 
 NAMES = ('cascade-terrace', 'cascade-angled-shelf', 'cascade-wet-toe', 'cascade-high-ledge')
+
+
+def paint_and_normals(mesh, colors):
+    # Adjacent stone planes share their border colour. Preserve some face direction
+    # in the split normals so the warm terraces soften without reading as pillows.
+    rgb = [Vector((0,0,0)) for _ in mesh.vertices]
+    weights = [0.0 for _ in mesh.vertices]
+    for polygon, paint in zip(mesh.polygons, colors):
+        polygon.use_smooth = True
+        weight = max(0.0001, polygon.area) ** 0.39
+        for i in polygon.vertices:
+            rgb[i] += Vector(paint) * weight
+            weights[i] += weight
+    mesh.update()
+    layer = mesh.color_attributes.new(name='StonePaint', type='FLOAT_COLOR', domain='POINT')
+    mesh.color_attributes.active_color = layer
+    for i, color in enumerate(rgb):
+        layer.data[i].color = (*(color / weights[i]), 1.0)
+    normals = [None] * len(mesh.loops)
+    for polygon in mesh.polygons:
+        for i in polygon.loop_indices:
+            smooth = mesh.vertices[mesh.loops[i].vertex_index].normal
+            normals[i] = polygon.normal.lerp(smooth, 0.76).normalized()
+    mesh.normals_split_custom_set(normals)
 
 
 def build():
@@ -149,11 +180,7 @@ def build():
         if mesh.validate():
             raise ValueError(f'{name} had invalid faces')
         mesh.update()
-        paint = mesh.color_attributes.new(name='StonePaint', type='FLOAT_COLOR', domain='CORNER')
-        mesh.color_attributes.active_color = paint
-        for polygon, color in zip(mesh.polygons, colors):
-            for i in polygon.loop_indices:
-                paint.data[i].color = (*color,1.0)
+        paint_and_normals(mesh, colors)
         mesh.materials.append(mat)
         obj = bpy.data.objects.new(name, mesh)
         obj.location.x = index * 13.0

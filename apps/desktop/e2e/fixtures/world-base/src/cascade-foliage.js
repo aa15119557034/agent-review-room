@@ -3,7 +3,7 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { loadModel, makeBatch } from './scatter-common.js';
 
 const ASSETS = '/station-foliage/';
-const SHRUBS = ['cascade-spreading', 'cascade-upright'];
+const SHRUBS = ['cascade-spreading', 'cascade-upright', 'cascade-trailing'];
 const GRASSES = ['meadow-ribbon-a', 'meadow-ribbon-b'];
 
 // Authored world-space groups on bank pockets and the two shoulders of the upper stream.
@@ -39,8 +39,9 @@ const POCKETS = [
   ]],
   ['upper-ledge', 'cascade-high-ledge', [
     [0, -195.15, -490.57, -0.5, 2.85, 2.29], [1, -195.18, -489.34, 1.4, 2.16, 2.05],
-    [1, -194.61, -491.52, 0.4, 1.75, 1.60], [3, -195.82, -490.81, 0.6, 1.83, 1.57],
+    [1, -194.61, -491.52, 0.4, 1.75, 1.60], [4, -195.82, -490.81, -2.07, 1.22, 1.15],
     [2, -195.04, -491.60, -2.3, 2.16, 1.42],
+    [4, -194.82, -491.66, -2.31, 0.93, 0.83],
   ]],
 ];
 
@@ -53,7 +54,7 @@ async function loadShrubs() {
     }
     // The editable Blender gallery places the variants side by side, so use their local geometry.
     mesh.material.dispose();
-    return { id: name, geometry: mesh.geometry };
+    return { id: name, geometry: mesh.geometry, shrub: true };
   });
 }
 
@@ -67,9 +68,9 @@ function rootHeight(surface, x, z, radius) {
 }
 
 export async function addCascadeFoliage(island, { gradientMap = null, shelves = null } = {}) {
-  const [shrubs, ...grasses] = await Promise.all([loadShrubs(), ...GRASSES.map(name =>
+  const [[spreading, upright, trailing], ...grasses] = await Promise.all([loadShrubs(), ...GRASSES.map(name =>
     loadModel(`${ASSETS}${name}.glb`, { vertexColors: true, snapGround: true }, name))]);
-  const models = [...shrubs, ...grasses];
+  const models = [spreading, upright, ...grasses, trailing];
   const positions = models.map(() => []);
   const group = new THREE.Group();
   group.name = 'cascade-bank-foliage';
@@ -92,16 +93,17 @@ export async function addCascadeFoliage(island, { gradientMap = null, shelves = 
     } : island.heightAt;
     rows.forEach(([id, x, z, yaw, sx, sy], i) => {
       // Shelf shrubs can spill over their stone, but all stem-base probes stay on its top face.
-      const radius = shelf ? Math.min(0.38, sx * 0.18) : sx * (id < SHRUBS.length ? 0.27 : 0.18);
+      const model = models[id];
+      const radius = shelf ? Math.min(0.38, sx * 0.18) : sx * (model.shrub ? 0.27 : 0.18);
       const y = rootHeight(surface, x, z, radius);
       const insideStream = island.river.rows.some(r => Math.hypot(r.x - x, r.z - z) < r.hw * 1.12 + radius);
       if (y === null || insideStream) {
-        skipped.push({ pocket, model: models[id].id, x, z, reason: insideStream ? 'stream' : 'support' });
+        skipped.push({ pocket, model: model.id, x, z, reason: insideStream ? 'stream' : 'support' });
         return;
       }
       const pose = { x, y, z, yaw, sx, sy, sz: sx * (i % 2 ? 0.92 : 1), tint: i % 2 ? 0.93 : 1.04 };
       positions[id].push(pose);
-      placements.push({ pocket, model: models[id].id, ...pose });
+      placements.push({ pocket, model: model.id, ...pose });
     });
   }
 
@@ -112,7 +114,7 @@ export async function addCascadeFoliage(island, { gradientMap = null, shelves = 
     if (!items.length) return;
     const mesh = makeBatch({ name: `foliage-${model.id}`, model, material, items });
     mesh.receiveShadow = true;
-    mesh.castShadow = i < SHRUBS.length;
+    mesh.castShadow = model.shrub === true;
     group.add(mesh);
     triangles += model.geometry.index.count * items.length / 3;
   });
