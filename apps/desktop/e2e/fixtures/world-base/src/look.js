@@ -322,7 +322,125 @@ export function createLook(renderer, camera) {
     if (uGradeOn > 0.5) col = wbGrade(col, wbSky);`, 'grade stage');
   }
 
-  function applyIsland(island) {
+  function applyCascade(island, water, { shelves, ledge }) {
+    const ground = island.terrain.material;
+    ground.uniforms.uCascadeFoot = { value: new THREE.Vector2(island.river.fall.base.x, island.river.fall.base.z) };
+    ground.uniforms.uCascadeLedge = { value: new THREE.Vector3(...ledge.world).add(new THREE.Vector3(ledge.outward[0], 0, ledge.outward[1])) };
+    ground.fragmentShader = insert(ground.fragmentShader, 'void main(){',
+      'uniform vec2 uCascadeFoot;\nuniform vec3 uCascadeLedge;\nvoid main(){', 'cascade rock entry');
+    ground.fragmentShader = insert(ground.fragmentShader, 'float pebW = lowW * smoothstep(0.25, 0.6, cliffy);',
+      `float pebW = lowW * smoothstep(0.25, 0.6, cliffy);
+  float gorge = 1.0 - smoothstep(55.0, 145.0, distance(P.xz, uCascadeFoot));`, 'cascade terrain region');
+    ground.fragmentShader = insert(ground.fragmentShader, 'ms.r = mix(0.55, 0.12, wetLine);',
+      `ms.r = mix(0.55, 0.12, wetLine);
+    if (gorge > 0.0){
+      vec3 chips = mix(vec3(0.16, 0.115, 0.076), vec3(0.31, 0.245, 0.155), smoothstep(0.26, 0.8, ms.h));
+      ms.c = mix(ms.c, chips * mix(1.0, 0.58, wetLine), gorge * 0.86);
+      ms.n *= 1.0 - gorge * 0.7;
+      ms.r = mix(ms.r, 0.76, gorge);
+    }`, 'cascade bank gravel');
+    ground.fragmentShader = insert(ground.fragmentShader, 'rockAmt = hblend(rockW, m.h, rh, 0.9);', `
+    if (gorge > 0.0){
+      // Broad stone faces with sparse seams, following the existing bed slope.
+      float faceNoise = ntex(vec2((P.x - P.z) * 0.17, bed * 0.22)).r;
+      float slab = smoothstep(0.32, 0.7, faceNoise * 0.72 + lateral * 0.28);
+      float seam = smoothstep(0.84, 0.96, fract((bed + (lateral - 0.5) * 2.4) * 0.16));
+      vec3 warmStone = mix(vec3(0.235, 0.154, 0.116), vec3(0.48, 0.327, 0.22), slab);
+      warmStone *= (1.0 - seam * 0.17) * (0.92 + wallH * 0.16);
+      warmStone = mix(warmStone, warmStone * vec3(0.48, 0.55, 0.51), tide * 0.63);
+      warmStone = mix(warmStone, vec3(0.19, 0.24, 0.062), moss * 0.68);
+      rc = mix(rc, warmStone, gorge);
+      rh = mix(rh, 0.70 - 0.12 * seam, gorge);
+      rr = mix(rr, mix(0.84, 0.52, tide), gorge);
+      rn = normalize(mix(rn, N, gorge * 0.72));
+    }
+    rockAmt = hblend(rockW, m.h, rh, 0.9);`, 'cascade warm stone faces');
+    ground.fragmentShader = insert(ground.fragmentShader, 'dif = mix(dif, floor(dif * 3.0 + 0.5) / 3.0, uWorldToon);',
+      'dif = mix(dif, floor(dif * 3.0 + 0.5) / 3.0, uWorldToon * (1.0 - 0.68 * gorge * rockAmt));', 'cascade cliff lighting');
+    // The station's live shadow camera does not reach this gorge. Seat the
+    // overhang with a local contact term and a soft continuation down-sun.
+    ground.fragmentShader = insert(ground.fragmentShader,
+      'float sh = shadowBaked * cs * riderShadow(P) * townShadow(P, N);', `float sh = shadowBaked * cs * riderShadow(P) * townShadow(P, N);
+  if (gorge > 0.0){
+    vec3 above = uCascadeLedge - P;
+    float travel = dot(above, uSunDir);
+    float spread = length(above - uSunDir * max(travel, 0.0));
+    float shade = (1.0 - smoothstep(1.05, 3.15, spread)) *
+                  smoothstep(0.0, 1.0, travel) * (1.0 - smoothstep(2.5, 9.0, travel));
+    sh *= 1.0 - shade * rockAmt * 0.64;
+  }`, 'cascade ledge contact light');
+    ground.needsUpdate = true;
+
+    // The fjord shares its water mesh with the open sea. Fade this palette out
+    // around the existing impact point so beaches and the harbour retain theirs.
+    // The upstream sea shades its own analytic seabed. Supply the water-facing
+    // toes of the authored shelves so their shallow continuation reads through it.
+    const toes = shelves.filter(shelf => shelf.toeDepth > 0);
+    water.uniforms.uCascadeToe = { value: toes.map(({ world, rad }) => new THREE.Vector4(world[0], world[2], rad[0], rad[1])) };
+    water.uniforms.uCascadeToeDir = { value: toes.map(({ outward, toeDepth }) => new THREE.Vector3(...outward, toeDepth)) };
+    water.fragmentShader = insert(water.fragmentShader, 'void main(){', `
+uniform vec4 uCascadeToe[${toes.length}];
+uniform vec3 uCascadeToeDir[${toes.length}];
+float cascadeBed(vec2 p, float bed){
+  for (int i = 0; i < ${toes.length}; ++i){
+    vec4 shelf = uCascadeToe[i];
+    vec3 toe = uCascadeToeDir[i];
+    vec2 offset = p - shelf.xy;
+    vec2 uv = vec2(dot(offset, vec2(toe.y, -toe.x)), dot(offset, toe.xy)) / shelf.zw;
+    uv.y = (uv.y - 0.35) / 1.22;
+    float apron = dot(uv, uv);
+    bed = mix(bed, max(bed, -toe.z - 2.2 * apron), 1.0 - smoothstep(0.60, 1.0, apron));
+  }
+  return bed;
+}
+void main(){`, 'cascade rock toes');
+    water.fragmentShader = insert(water.fragmentShader, 'float bedH = terrainH(refr);', `float bedH = terrainH(refr);
+  float cascade = 1.0 - smoothstep(55.0, 145.0, distance(P.xz, uFallBase.xy));
+  if (cascade > 0.0) bedH = cascadeBed(refr, bedH);`, 'cascade region');
+    water.fragmentShader = insert(water.fragmentShader, 'vec3 body = bedLit * absorb + scat * (1.0 - absorb * 0.9);', `vec3 body = bedLit * absorb + scat * (1.0 - absorb * 0.9);
+  if (cascade > 0.0){
+    vec3 cascadeLight = uSunColor * (0.10 + 0.34 * sunVis) + uAmbSky * 0.60;
+    float shelf = smoothstep(0.35, 6.0, depth);
+    float basinCloud = ntex(P.xz * 0.82 + N.xz * 2.4 + vec2(uTime * 0.046, 0.0)).b;
+    float channel = smoothstep(4.0, 24.0, depth + (basinCloud - 0.5) * 7.0);
+    float stone = smoothstep(0.35, 0.66, nz.g * 0.65 + nz.r * 0.35);
+    vec3 shelfRock = mix(vec3(0.25, 0.27, 0.17), vec3(0.66, 0.59, 0.39), stone);
+    vec3 shelfCol = shelfRock * exp(-depth * vec3(0.74, 0.25, 0.17));
+    shelfCol += vec3(0.025, 0.255, 0.195) * shelf * (0.73 + caust * 0.18);
+    vec3 channelCol = mix(vec3(0.016, 0.074, 0.17), vec3(0.036, 0.182, 0.285), smoothstep(0.34, 0.66, basinCloud));
+    body = mix(body, mix(shelfCol, channelCol, channel) * cascadeLight, cascade);
+  }`, 'cascade shelves and channel');
+    water.fragmentShader = insert(water.fragmentShader,
+      'float foam = max(cap, wbShoreFoam);', `float foam = max(cap, wbShoreFoam);
+  if (cascade > 0.0){
+    float surfaceDepth = max(P.y - cascadeBed(P.xz, terrainH(P.xz)), 0.0);
+    float rockEdge = 1.0 - smoothstep(0.35, 2.25, surfaceDepth + (stretch - 0.5) * 1.7);
+    float brokenEdge = smoothstep(0.37, 0.63, bubbles * 0.7 + setNoise * 0.3);
+    float ledgeFoam = rockEdge * (0.21 + 0.68 * brokenEdge);
+    ledgeFoam *= 1.0 - smoothstep(0.85, 3.0, wbWaterFootprint);
+    foam = max(cap, mix(wbShoreFoam, ledgeFoam, cascade * smoothstep(0.06, 0.30, cliffy)));
+    float flecks = smoothstep(0.72, 0.86, fz2.b) * smoothstep(0.52, 0.73, fz1.a);
+    col += uSunColor * (flecks * cascade * sunVis * (1.0 - smoothstep(0.25, 0.95, wbWaterFootprint)) * 0.16);
+  }`, 'cascade rock-foot foam');
+    water.fragmentShader = insert(water.fragmentShader,
+      'foam = max(foam, smoothstep(0.75 - boil * 0.75, 0.95 - boil * 0.55, bubbles + ring * 0.12 * (1.0 - boil)));',
+      `float plume = ntex(P.xz * 1.4 + vec2(uTime * 0.34, -uTime * 0.19)).g;
+    float washCells = plume * 0.58 + bubbles * 0.42;
+    float rim = smoothstep(0.56 - 0.24 * boil, 0.75 - 0.21 * boil, washCells + ring * 0.09) * pow(boil, 0.75);
+    foam = max(foam, rim);
+    col = mix(col, vec3(0.045, 0.28, 0.25) * (uSunColor * 0.26 + uAmbSky * 0.54), boil * 0.36);`, 'cascade impact lace');
+
+    const fall = island.river.fallMat;
+    fall.fragmentShader = insert(fall.fragmentShader, 'float body = mix(1.0, 0.74, smoothstep(0.05, 0.7, k));', `float ribbons = smoothstep(0.26, 0.74, clumps * 0.7 + strands * 0.3);
+  float body = mix(1.0, 0.86, smoothstep(0.06, 0.65, k));`, 'cascade sheet coverage');
+    fall.fragmentShader = insert(fall.fragmentShader, 'vec3 glass = vec3(0.30, 0.55, 0.52) * (uSunColor * 0.2 * sun + uAmbSky * 0.6);', `vec3 glass = vec3(0.067, 0.34, 0.36) * (uSunColor * (0.12 + 0.25 * sun) + uAmbSky * 0.68);`, 'cascade blue-green ribbons');
+    fall.fragmentShader = insert(fall.fragmentShader, 'vec3 col = mix(glass, white, smoothstep(0.0, 0.10, k) * (0.6 + 0.4 * strands));', `float aerated = smoothstep(0.01, 0.24, k);
+  float whiteness = mix(0.22 + 0.48 * ribbons, 0.30 + 0.70 * ribbons, aerated);
+  vec3 col = mix(glass, white, whiteness);`, 'cascade aeration');
+    fall.needsUpdate = true;
+  }
+
+  function applyIsland(island, cascadeRocks) {
     // Quantize terrain's calibrated diffuse, including its grass wrap-lighting.
     // The town's raw-normal bands otherwise lift sunlit terrain straight to 1.
     for (const [material, needle, band] of [
@@ -413,6 +531,7 @@ export function createLook(renderer, camera) {
       `float wbShoreFoam = max(surfBand * 0.9, max(lace, churn));
   wbShoreFoam *= mix(1.0, 0.35, smoothstep(0.75, 3.0, wbWaterFootprint));
   float foam = max(cap, wbShoreFoam);`, 'shore foam coverage');
+    applyCascade(island, water, cascadeRocks);
     water.needsUpdate = true;
   }
   return {

@@ -144,7 +144,9 @@ async function init() {
     island.meadow.wbPetals = (vertexShader) => patchPetals(vertexShader, groundParams, Boolean(islandSward));
     if (islandSward) island.meadow.hide = { ...island.meadow.hide, grass: true };
   }
-  look.applyIsland(island);
+  const cascadeRocks = await (await import('./cascade-rocks.js')).addCascadeRocks(island);
+  worldBase.cascadeRocks = cascadeRocks;
+  look.applyIsland(island, cascadeRocks);
   if (groundParams) for (const [material, label] of [[island.terrain.material, 'terrain'], [island.transition.material, 'transition']]) {
     patchGroundShader(material, groundParams, label, islandSward, night ? 0.35 : 1);
   }
@@ -238,7 +240,12 @@ async function init() {
   {
     if (propsOn || vegOn) stage('正在铺放街道道具与植被…');
     if (propsOn) worldBase.streetProps = await (await import('./street-props.js')).createStreetProps({ scene, worldBase, island, station, vendingGlow });
-    if (vegOn) worldBase.vegetation = await (await import('./vegetation-scatter.js')).createVegetation({ scene, worldBase, island, station, flowerBeds: groundParams?.flowerBeds });
+    if (vegOn) {
+      worldBase.vegetation = await (await import('./vegetation-scatter.js')).createVegetation({ scene, worldBase, island, station, flowerBeds: groundParams?.flowerBeds });
+      worldBase.cascadeFoliage = await (await import('./cascade-foliage.js')).addCascadeFoliage(island, {
+        gradientMap: station.ctx.mat.gradientMap, shelves: cascadeRocks.group,
+      });
+    }
   }
   // Round 11: the shop-room boxes are installed after the town edge is built (the laundromat registers its room there). No program
   // using the lit chunks has compiled yet: the first render is after init.
@@ -312,6 +319,8 @@ async function init() {
     { name: 'sample-f-hillside', label: 'F · 东部山麓草坡', fov: 57, position: [1040.6682, 61.5086, 591.5865], target: [1062, 102.7783, 490] },
     { name: 'sample-g-rail', label: 'G · 铁路北侧小路', fov: 57, position: [337.8563, 9.6, 844.5], target: [268, 10.55, 857] },
     { name: 'sample-h-north', label: 'H · 北端村道', fov: 57, position: [181.0601, 136.1623, -1212.8685], target: [180, 141.45, -1238] },
+    { name: 'cascade-overview', label: '峡谷瀑布', fov: 56, position: [-262.654, 151.125, -587.576], target: [-216.281, 51.125, -494.488] },
+    { name: 'cascade-bank', label: '瀑布岩岸', fov: 59, position: [-226.416, 23.125, -527.081], target: [-220.060, 0.125, -497.762] },
   ];
   setView('station-street');
   document.querySelectorAll('[data-view]').forEach(button => button.addEventListener('click', () => setView(button.dataset.view)));
