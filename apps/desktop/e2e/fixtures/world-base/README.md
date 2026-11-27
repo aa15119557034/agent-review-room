@@ -45,7 +45,7 @@ node scripts\prepare-props.cjs --download
 
 主街橱窗与积水共用当前时段的六面街景。默认傍晚从 `src/street-env-evening/` 读取，下午从 `src/street-env/` 读取。更改建筑或日照后，运行 `node scripts/bake-street-reflections.cjs --electron=<已有Electron路径> --output=<新目录>` 可生成新的六面 PNG 和逐面报告。默认烘焙傍晚站区与程序天空，排除道口的镜头光晕。线性 RGB 峰值超过 2 的像素按同一比例缩放三个通道，报告分别记录原始峰值、限幅数量及量化误差。
 
-默认是傍晚（太阳高 12°、方位 280°，参数在 `src/evening.json`）。地形的太阳阴影烘焙在 `light.png` 里，换太阳必须一起重烘：首次运行 `python3 scripts/bake-evening-light.py`（需要 numpy、numba、scipy、Pillow，约半分钟），在 `.local/petalwake-*/assets/terrain/` 生成 `light-evening.png`；只换 R 通道（太阳阴影），AO、岸距、陡度照抄原图。网址加 `?time=afternoon` 回到 Petalwake 原来的下午光照做对照。港镇阴影图在场景启动时按所选太阳方向生成。
+默认是傍晚（太阳高 8.5°、方位 255°，参数在 `src/evening.json`）。换太阳方向时，运行 `python3 scripts/bake-evening-light.py` 重烘 `.local/petalwake-*/assets/terrain/light-evening-low.png`。夜景沿用 12°、280° 的阴影，地图由同一脚本加 `--night` 生成。`node scripts/art-preview.cjs prepare` 会生成两张图，需要 numpy、numba、scipy 和 Pillow。两张图只替换太阳阴影所在的 R 通道，AO、岸距和陡度沿用原图。用 `?time=afternoon` 可以看 Petalwake 原来的下午光照。港镇阴影图在场景启动时按所选太阳方向生成。
 
 在本目录使用已有 Electron 运行，无需构建桌面应用：
 

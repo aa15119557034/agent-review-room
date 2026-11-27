@@ -1,13 +1,13 @@
 {
   "note": "Evening preset (#254 C19). Sun angles use Petalwake tools/terrain/bake.py conventions: azimuth from +z (south) toward +x (east). The terrain sun-shadow channel for this sun is baked by scripts/bake-evening-light.py into the local Petalwake checkout.",
-  "sunElevDeg": 12,
-  "sunAzDeg": 280,
-  "lightMap": "terrain/light-evening.png",
+  "sunElevDeg": 8.5,
+  "sunAzDeg": 255,
+  "lightMap": "terrain/light-evening-low.png",
   "env": {
     "sunColor": [
-      2.75,
-      1.95,
-      1.32
+      3.45,
+      1.91,
+      0.89
     ],
     "zenith": [
       0.055,
@@ -30,14 +30,14 @@
       0.22
     ],
     "ambSky": [
-      0.3,
-      0.34,
-      0.52
+      0.23,
+      0.27,
+      0.49
     ],
     "ambGround": [
-      0.22,
-      0.17,
-      0.12
+      0.14,
+      0.12,
+      0.18
     ],
     "fog": [
       0.00016,

@@ -155,7 +155,7 @@ async function init() {
   if (shadowTint) worldBase.shadowTint = { island: patchIslandShadowTint(island, shadowTint) };
   if (timeOfDay === 'evening') applyHarbourEvening(island, look.pipeline.finalMat, camera);
   const sun = night ? new THREE.DirectionalLight(0x9abaff, 0.38)
-    : new THREE.DirectionalLight(evening ? 0xffcb98 : 0xffe4c4, evening ? 2.2 : 2.1);
+    : new THREE.DirectionalLight(evening ? 0xffb569 : 0xffe4c4, evening ? 4.0 : 2.1);
   sun.position.copy(island.U.uSunDir.value).multiplyScalar(160).add(new THREE.Vector3(...island.stationPlacement.position));
   sun.target.position.set(...island.stationPlacement.position);
   sun.castShadow = true;
@@ -167,7 +167,7 @@ async function init() {
   sun.shadow.bias = -0.0002;
   sun.shadow.normalBias = 0.035;
   skyFill = night ? new THREE.HemisphereLight(0x789bdf, 0x3b405c, 0.62)
-    : evening ? new THREE.HemisphereLight(0xb4bce8, 0xa08068, 1.6) : new THREE.HemisphereLight(0xcfe0ff, 0xa89c94, 1.05);
+    : evening ? new THREE.HemisphereLight(0xa6b4e8, 0x74688f, 1.18) : new THREE.HemisphereLight(0xcfe0ff, 0xa89c94, 1.05);
   scene.add(sun, sun.target, skyFill);
   stage('正在安放车站、店铺与碰撞体…');
   // Art round 22: zoned street cubes + vertical neon streaks on the wet road. toon.json "refl" (absent / on:0 = off);
@@ -263,7 +263,9 @@ async function init() {
   }
   // Round 27: outlines + cel bands (?toon=off keeps round 26). Same shop-room boxes as the shadow tint.
   if (toonEnabled()) {
-    const toonAll = await loadToon(), toonP = applyForm(toonAll[timeOfDay === 'afternoon' ? 'afternoon' : 'evening']);
+    const toonAll = await loadToon();
+    const toonP = applyForm(toonAll[timeOfDay === 'afternoon' ? 'afternoon' : 'evening']);
+    if (night) toonP.rim = toonAll.nightRim;
     originalFillColor = skyFill.color.clone();
     toonFillColor = night ? originalFillColor.clone() : new THREE.Color(toonP.skyFill);
     if (worldBase.styleState.toon) skyFill.color.copy(toonFillColor);

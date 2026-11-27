@@ -4,6 +4,8 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 /** Authored fixture meshes in the W1 lot's coordinate system. */
 export async function loadKonbiniFixtures(ctx) {
   const { scene } = await new GLTFLoader().loadAsync('/konbini-interior/konbini-interior.glb');
+  const warmInterior = new URLSearchParams(location.search).get('time') !== 'afternoon';
+  const areaFill = warmInterior ? '0.32, 0.31, 0.29' : '0.32, 0.36, 0.44';
   const materials = new Map();
   const toToon = (source) => {
     if (materials.has(source)) return materials.get(source);
@@ -28,16 +30,16 @@ export async function loadKonbiniFixtures(ctx) {
       material.onBeforeCompile = (shader) => {
         shader.fragmentShader = shader.fragmentShader.replace('#include <emissivemap_fragment>', `
           #include <emissivemap_fragment>
-          totalEmissiveRadiance += diffuseColor.rgb * vec3(0.32, 0.36, 0.44);
+          totalEmissiveRadiance += diffuseColor.rgb * vec3(${areaFill});
         `);
       };
-      material.customProgramCacheKey = () => 'w1-fluorescent-fill';
+      material.customProgramCacheKey = () => `w1-fluorescent-fill:${areaFill}`;
     }
     materials.set(source, material);
     return material;
   };
   scene.name = 'w1-authored-interior';
-  scene.userData.softenWindowHighlights = (new URLSearchParams(location.search).get('time') ?? 'evening') === 'evening';
+  scene.userData.warmInterior = warmInterior;
   // The source is already grouped by fixture and material.
   scene.userData.noBatch = true;
   // The exterior decal rays do not need to consider these enclosed shelves.
@@ -80,6 +82,7 @@ export function shadeKonbiniFloor(floor, fixtures) {
   });
 
   const original = floor.material, material = original.clone();
+  const tileGrade = fixtures.userData.warmInterior ? 'vec3(0.92, 0.87, 0.76)' : 'vec3(1.0)';
   material.onBeforeCompile = (shader, renderer) => {
     original.onBeforeCompile.call(material, shader, renderer);
     shader.uniforms.uW1FloorToLot = { value: floorToLot };
@@ -99,11 +102,12 @@ export function shadeKonbiniFloor(floor, fixtures) {
           vec2 gap = max(max(foot.xy - vW1Floor, vW1Floor - foot.zw), vec2(0.0));
           shelfDistance = min(shelfDistance, length(gap));
         }
-        float contact = 1.0 - smoothstep(0.035, 0.34, shelfDistance);
-        outgoingLight *= mix(vec3(1.0), vec3(0.48, 0.55, 0.66), contact);
+        float contact = 1.0 - smoothstep(0.065, 0.105, shelfDistance);
+        float penumbra = 1.0 - smoothstep(0.105, 0.24, shelfDistance);
+        outgoingLight *= ${tileGrade} * (1.0 - 0.36 * contact - 0.20 * penumbra);
         #include <opaque_fragment>`);
   };
-  material.customProgramCacheKey = () => `${original.customProgramCacheKey()}|w1-floor-contact`;
+  material.customProgramCacheKey = () => `${original.customProgramCacheKey()}|w1-floor-contact:${tileGrade}`;
   floor.material = material;
 }
 

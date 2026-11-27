@@ -1,10 +1,11 @@
 const TONE_MAP = '#include <tonemapping_fragment>';
 const TERRAIN_ATMOSPHERE = 'col = applyAtmosphere(col, P);';
 
-// Muted cool pink at the canopy's existing luminance keeps the folded leaf faces readable.
+// Keep the crown's lit and shadowed faces distinct while lifting its cool grey-pink moonlit colour.
 const SAKURA_NIGHT = /* glsl */`
   float sakuraValue = dot(gl_FragColor.rgb, vec3(0.2126, 0.7152, 0.0722));
-  gl_FragColor.rgb = mix(gl_FragColor.rgb, sakuraValue * vec3(1.28, 0.90, 1.10), 0.93);
+  vec3 sakuraMoon = sakuraValue * 1.24 * vec3(1.24, 0.89, 1.44);
+  gl_FragColor.rgb = mix(gl_FragColor.rgb, sakuraMoon, 0.96);
 `;
 
 // Elevated slopes northeast of Sakuragaoka seen above the shops in view A. World-space

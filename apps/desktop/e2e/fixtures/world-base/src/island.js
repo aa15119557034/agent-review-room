@@ -174,9 +174,9 @@ function applySkyLook(p) {
 /** Adopt the native island into the caller's renderer and scene, without starting the game. */
 export async function createIsland({ scene, renderer, camera, assetBase = '/assets', timeOfDay = 'evening' }) {
   if (!['afternoon', 'evening', 'night'].includes(timeOfDay)) throw new Error('Unknown time of day: ' + timeOfDay);
-  // Night uses the evening bake and direction as low moonlight.
+  // Night keeps the original terrain bake as low moonlight.
   const [evening, night] = await Promise.all([
-    timeOfDay === 'afternoon' ? null : json(new URL('./evening.json', import.meta.url)),
+    timeOfDay === 'evening' ? json(new URL('./evening.json', import.meta.url)) : null,
     timeOfDay === 'night' ? json(new URL('./night.json', import.meta.url)) : null,
   ]);
   if (evening) ENV.evening = evening.env;
@@ -201,10 +201,11 @@ export async function createIsland({ scene, renderer, camera, assetBase = '/asse
   await json(`${assetBase}/town/masks.json`);
   const [terrain, town] = await Promise.all([Terrain.load(renderer, assetBase), Town.load(renderer, assetBase)]);
   if (!town.towns.some((entry) => entry.id === 'larkhaven')) throw new Error('Larkhaven geometry failed to load.');
-  if (evening) {
+  const sunLook = evening ?? night;
+  if (sunLook) {
     // Terrain's constructor installed meta.sun and the afternoon light map; swap both
     // before anything else (clouds, water, props, station lights) reads them.
-    const url = `${assetBase}/${evening.lightMap}`;
+    const url = `${assetBase}/${sunLook.lightMap}`;
     const image = new Image();
     image.src = url;
     try { await image.decode(); } catch {
@@ -213,7 +214,7 @@ export async function createIsland({ scene, renderer, camera, assetBase = '/asse
     if (image.naturalWidth !== terrain.lightTex.image.width) throw new Error('Evening light map size differs from light.png');
     terrain.lightTex.image = image;
     terrain.lightTex.needsUpdate = true;
-    const elev = THREE.MathUtils.degToRad(evening.sunElevDeg), az = THREE.MathUtils.degToRad(evening.sunAzDeg);
+    const elev = THREE.MathUtils.degToRad(sunLook.sunElevDeg), az = THREE.MathUtils.degToRad(sunLook.sunAzDeg);
     U.uSunDir.value.set(Math.sin(az) * Math.cos(elev), Math.sin(elev), Math.cos(az) * Math.cos(elev)).normalize();
   }
   const surface = (x, z) => {

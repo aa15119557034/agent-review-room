@@ -1,4 +1,7 @@
 {
+  "sunElevDeg": 12,
+  "sunAzDeg": 280,
+  "lightMap": "terrain/light-evening.png",
   "env": {
     "sunColor": [0.055, 0.085, 0.15],
     "zenith": [0.006, 0.013, 0.039],

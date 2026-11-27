@@ -39,7 +39,7 @@ export async function loadShopSpill() {
 
 /** Shop rooms (lot id + [x0,y0,z0,x1,y1,z1] in lot space, +z toward the street) -> fronts in station-root space. */
 export function shopFrontsFromRooms(layout, rooms, p, night = false) {
-  return rooms.flatMap(({ lot: id, frame, name, kind: roomKind, box, glazing }) => {
+  return rooms.flatMap(({ lot: id, frame, name, kind: roomKind, box, glazing, lampColor }) => {
     const lot = frame ? null : layout.lotById(id), f = frame ?? layout.lotFrame(lot), c = Math.cos(f.rotY), s = Math.sin(f.rotY);
     const position = (x, z) => [f.x + x * c + z * s, f.y + box[1], f.z - x * s + z * c];
     const kind = roomKind ?? lot.kind, label = name ?? id;
@@ -47,7 +47,7 @@ export function shopFrontsFromRooms(layout, rooms, p, night = false) {
       const mid = (from + to) / 2, face = out + 0.05, front = axis === 'x';
       return { center: front ? position(mid, face) : position(face, mid), normal: front ? [s, 0, c] : [c, 0, -s],
         width: to - from, kind, name: front ? label : label + '-north', depth: night ? nightDepth ?? depth : depth,
-        gain: night ? nightGain ?? gain : gain, color: [0.78, 0.90, 1] };
+        gain: night ? nightGain ?? gain : gain, color: (night && lampColor) || [0.78, 0.90, 1] };
     });
     return [{ center: position((box[0] + box[3]) / 2, box[5] + (p.wallOut ?? 0.25)), normal: [s, 0, c],
       width: box[3] - box[0], kind, name: label }];

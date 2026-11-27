@@ -32,7 +32,12 @@ function addFacadeBounce(material, rearCorridor) {
   vec3 fbFill = vec3( ${c} );
   #ifdef WB_APARTMENT_REAR_LIGHTING
     vec3 fbWorld = cameraPosition + geometryPosition * mat3( viewMatrix );
-    fbFill += vec3(0.095, 0.132, 0.158) * wbApartmentRear(fbWorld);
+    float fbRear = wbApartmentRear(fbWorld);
+    // Deep under the slab, the low sun reaches the walk mainly as reflected light.
+    reflectedLight.directDiffuse *= mix(vec3(1.0), vec3(0.25, 0.40, 0.60), fbRear);
+    reflectedLight.directSpecular *= mix(1.0, 0.32, fbRear);
+    fbSun *= mix(1.0, 0.35, fbRear);
+    fbFill += vec3(0.095, 0.132, 0.158) * fbRear;
   #endif
   reflectedLight.indirectDiffuse += diffuseColor.rgb * fbFill * ( 1.0 - smoothstep( ${b.sunLo.toFixed(3)}, ${b.sunHi.toFixed(3)}, fbSun ) );
 }`);

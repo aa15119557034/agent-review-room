@@ -10,7 +10,7 @@ const GONDOLA_X = [-2.65, -0.2, 2.3];
 const GONDOLA_BACK = -9.8, GONDOLA_FRONT = -4.6;
 const GONDOLA_W = 0.92, GONDOLA_COLLIDER_BACK = GONDOLA_BACK - 0.2, GONDOLA_COLLIDER_FRONT = GONDOLA_FRONT + 0.34;
 
-export function buildKonbiniInterior(ctx, C, S, D, authored = false, softHighlights = false) {
+export function buildKonbiniInterior(ctx, C, S, D, authored = false, warmInterior = false) {
   const { A, U, F } = C; const G = C.G; const k = S.k;
   const M = authored ? { ...C.M, inner: C.M.fluorescent } : C.M;
   const { FY, CY, IX0, IX1, IZ0, IZ1, gx, TEAL, TEAL_D, YEL, INK } = D;
@@ -24,7 +24,8 @@ export function buildKonbiniInterior(ctx, C, S, D, authored = false, softHighlig
   const mKick = M.inner('#8f969d', 0.2), mMetal = M.inner('#b8bdc2', 0.28), mDark = M.inner('#4f5358', 0.16), mInk = M.inner('#3a3346', 0.1);
   const mTealI = M.inner(TEAL, 0.28), mYelI = M.inner(YEL, 0.3), mPeg = M.inner('#dcd9d1', 0.3), mBody = M.inner('#e6e6e2', 0.3);
   const mGlass = ctx.mat.glass({ opacity: 0.05, streaks: false, tint: '#c9d6de' });
-  const mLamp = M.glow(authored ? '#eaf7ff' : '#fff3dc', softHighlights ? 0.91 : 1.3), mLed = M.glow('#f4f9ff', 1.2);
+  const mLamp = M.glow(warmInterior ? '#fff7eb' : authored ? '#eaf7ff' : '#fff3dc', warmInterior ? 0.94 : 1.3);
+  const mLed = M.glow('#f4f9ff', 1.2);
   const mPink = M.inner('#f7d3de', 0.35), mCounter = M.inner('#f1efe9', 0.32), mTop = M.inner('#d6d2c8', 0.3);
 
   // printed price rail (flat graphic) — one strip reused on every shelf edge
@@ -89,8 +90,9 @@ export function buildKonbiniInterior(ctx, C, S, D, authored = false, softHighlig
   // ---------------- floor: grout base + individual tiles
   {
     const cx = (IX0 + IX1) / 2, cz = (IZ0 + IZ1) / 2;
-    const tileColor = new THREE.Color(authored ? '#aab8c9' : '#f1efe8');
-    const fl = k.plane(IX1 - IX0, IZ1 - IZ0, M.inner(authored ? '#8592a4' : '#b9b6ae', 0.2), [cx, FY + 0.002, cz], [-Math.PI / 2, 0, 0]); fl.castShadow = false;
+    const tileColor = new THREE.Color(warmInterior ? '#a8a093' : authored ? '#aab8c9' : '#f1efe8');
+    const grout = M.inner(warmInterior ? '#898279' : authored ? '#8592a4' : '#b9b6ae', 0.2);
+    const fl = k.plane(IX1 - IX0, IZ1 - IZ0, grout, [cx, FY + 0.002, cz], [-Math.PI / 2, 0, 0]); fl.castShadow = false;
     const ts = 0.4, gap = 0.008;
     let ix = 0;
     for (let x = IX0; x < IX1 - 1e-3; x += ts, ix++) {

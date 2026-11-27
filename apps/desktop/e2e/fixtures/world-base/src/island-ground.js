@@ -177,26 +177,23 @@ float wbHarbourLight(vec3 p) {
        * smoothstep(1091.0, 1111.0, p.z) * (1.0 - smoothstep(1140.0, 1170.0, p.z))
        * (1.0 - smoothstep(17.0, 24.0, p.y));
 }
-
-vec3 wbHarbourSun(float flagstone) {
-  float source = dot(uSunColor, vec3(0.2126, 0.7152, 0.0722));
-  // Open sea softens the warmer landward light. Only the new inland flags keep
-  // a little warmth in their direct term; the old rail bed stays blue-grey.
-  return source * mix(vec3(0.595, 0.630, 0.695), vec3(0.725, 0.684, 0.632), flagstone);
-}
 `;
 
 const HARBOUR_MIST = /* glsl */`
 uniform mat4 uWbHarbourCamera;
 vec3 wbHarbourMist(vec3 col, vec2 uv) {
   vec3 eye = uWbHarbourCamera[3].xyz;
-  // One shallow bank of marine air, running along the quay and out over the sea.
-  vec3 q = (eye - vec3(-62.0, 3.7, 1134.0)) / vec3(132.0, 11.5, 29.0);
-  float nearBank = 1.0 - smoothstep(1.3, 2.1, max(max(abs(q.x), abs(q.y)), abs(q.z)));
+  // The fog bank sits beyond the quay wall (z 1128.9), below the deck (y 4.52).
+  const vec3 center = vec3(-6.0, 0.75, 1192.0);
+  const vec3 radius = vec3(205.0, 2.95, 63.0);
+  vec3 offset = eye - center;
+  vec3 approach = abs(offset) / vec3(190.0, 17.0, 105.0);
+  float nearBank = 1.0 - smoothstep(1.0, 1.5, max(max(approach.x, approach.y), approach.z));
   if (nearBank <= 0.0) return col;
+  vec3 q = offset / radius;
   vec3 view = wbPos(uv);
   float depth = length(view);
-  vec3 ray = mat3(uWbHarbourCamera) * (view / max(depth, 0.001)) / vec3(132.0, 11.5, 29.0);
+  vec3 ray = mat3(uWbHarbourCamera) * (view / max(depth, 0.001)) / radius;
   float a = dot(ray, ray), b = dot(q, ray), c = dot(q, q) - 1.0;
   float discriminant = b*b - a*c;
   if (discriminant <= 0.0) return col;
@@ -204,11 +201,11 @@ vec3 wbHarbourMist(vec3 col, vec2 uv) {
   float from = max(0.0, (-b - root) / a), to = min(depth, (-b + root) / a);
   float span = to - from;
   if (span <= 0.0) return col;
-  vec3 center = q + ray * ((from + to) * 0.5);
+  vec3 mid = q + ray * ((from + to) * 0.5);
   // Integrate a quadratic density that vanishes at the volume boundary.
-  float density = max(0.0, 1.0 - dot(center, center) - a * span*span / 12.0);
-  float fog = nearBank * (1.0 - exp(-0.0125 * span * density));
-  return mix(col, vec3(0.125, 0.385, 0.560), fog);
+  float density = max(0.0, 1.0 - dot(mid, mid) - a * span*span / 12.0);
+  float fog = nearBank * 0.34 * (1.0 - exp(-0.021 * span * density));
+  return mix(col, vec3(0.085, 0.245, 0.335), fog);
 }
 `;
 
@@ -224,8 +221,9 @@ export function applyHarbourEvening(island, finalMaterial, camera) {
     float flags = saturate(town.g / max(town.r + town.g, 0.001))
                 * (1.0 - smoothstep(0.04, 0.15, town.b))
                 * (1.0 - smoothstep(1123.9, 1125.2, P.z));
-    vec3 directDelta = mix(wbHarbourSun(0.0) - uSunColor, vec3(0.32, 0.16, 0.035), flags);
-    col += m.c * directDelta * (dif * sh * wbQuay);
+    vec3 sun = vec3(0.32, 0.16, 0.035) * (dif * sh);
+    vec3 bounce = vec3(0.12, 0.093, 0.055) * (1.0 - sh);
+    col += m.c * (sun + bounce) * (flags * wbQuay);
   }
   ${air}`, 'harbour terrain light');
   terrain.fragmentShader = ground;
@@ -233,21 +231,21 @@ export function applyHarbourEvening(island, finalMaterial, camera) {
 
   const town = island.town.material;
   let built = insert(town.fragmentShader, 'void main(){', `${HARBOUR_LIGHT}\nvoid main(){`, 'harbour town entry');
-  const ambient = 'amb *= mix(0.42, 1.0, ao);';
-  built = insert(built, ambient, `${ambient}
-  float wbQuay = wbHarbourLight(vWorld);
-  vec3 wbLocalSun = uSunColor;
-  if (wbQuay > 0.0) {
-    float railBed = smoothstep(1124.6, 1125.25, vWorld.z) *
-                    (1.0 - smoothstep(1128.9, 1130.6, vWorld.z));
-    float flags = float(mat == 11) * smoothstep(0.65, 0.90, N.y);
-    float deck = flags * railBed * (1.0 - smoothstep(4.65, 5.0, vWorld.y));
+  const townLight = 'float ao = vInfo.y;';
+  built = insert(built, townLight, `// Asset material 11 carries the quay flagstones, including the strip beside the rail.
+  float wbRailDeck = 0.0;
+  if (mat == 11 && vWorld.z > 1124.55 && vWorld.z < 1129.5 && vWorld.y < 5.0) {
+    wbRailDeck = wbHarbourLight(vWorld) * smoothstep(1124.55, 1125.05, vWorld.z)
+               * (1.0 - smoothstep(1128.9, 1129.5, vWorld.z))
+               * (1.0 - smoothstep(4.65, 5.0, vWorld.y)) * smoothstep(0.65, 0.90, N.y);
     float value = dot(alb, vec3(0.2126, 0.7152, 0.0722));
-    alb = mix(alb, value * vec3(0.82, 0.89, 1.00), wbQuay * deck * 0.88);
-    wbLocalSun = mix(uSunColor, wbHarbourSun(flags * (1.0 - railBed)), wbQuay);
-  }`, 'harbour town light');
-  built = insert(built, 'uSunColor * dif * sunVis', 'wbLocalSun * dif * sunVis', 'harbour town diffuse');
-  built = insert(built, 'uSunColor * sunVis * dif', 'wbLocalSun * sunVis * dif', 'harbour town specular');
+    alb = mix(alb, value * vec3(0.62, 0.61, 0.60), wbRailDeck);
+  }
+  ${townLight}`, 'harbour rail-side stone');
+  const ambient = 'amb *= mix(0.42, 1.0, ao);';
+  built = insert(built, ambient,
+    `${ambient}
+  amb += vec3(0.18, 0.145, 0.105) * (wbRailDeck * (1.0 - sunVis) * ao);`, 'harbour rail-side shade');
   town.fragmentShader = built;
   town.needsUpdate = true;
 
