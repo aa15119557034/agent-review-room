@@ -20,6 +20,19 @@ float swardDapple(vec2 xz, float time) {
   return coverage * smoothstep(0.51, 0.56, cloud);
 }
 `;
+export const SWARD_PAINT_FIELD = /* glsl */ `    vec2 paintXZ = vec2(localXZ.x + 0.43 * localXZ.y, localXZ.y * 0.72);
+    float field = 0.52 * vnoise(paintXZ / 14.0)
+      + 0.36 * vnoise(paintXZ / 47.0 + 37.0)
+      + 0.12 * vnoise(vec2(paintXZ.x, paintXZ.y * 1.65) / 4.5 + 61.0);
+    float tone = 0.52 * smoothstep(0.34, 0.44, field) + 0.48 * smoothstep(0.52, 0.61, field);`;
+export const SWARD_EXPOSURE = /* glsl */ `    tone *= mix(0.46, 1.0, sunlit);
+    tone *= mix(1.0, 0.70, smoothstep(240.0, 650.0, dist));
+    float warmth = 0.64 * swardWarmth(tone);
+    float light = mix(0.35, 0.49, sunlit);
+    float meadowExposure = swardMeadow(P.xz) * sunlit;
+    float dappleShade = swardDapple(P.xz, uTime);
+    warmth = mix(warmth, max(warmth, 0.24 + 0.49 * swardWarmth(tone)), meadowExposure);
+    warmth *= 1.0 - 0.83 * dappleShade;`;
 
 // X-51 art round 2 (#254): island-wide ground.
 //  1 flower drifts: the meadow's flower density is gathered into broad drifts (60–250 m) with calm
@@ -205,21 +218,10 @@ void main(){`, label + ' station paint');
     const lighting = 'vec3 col = m.c * (uSunColor * dif * sh + amb);';
     s = insert(s, lighting, `${lighting}
   if (paintCover > 0.0 && soft > 0.0) {
-    vec2 paintXZ = vec2(localXZ.x + 0.43 * localXZ.y, localXZ.y * 0.72);
-    float field = 0.52 * vnoise(paintXZ / 14.0)
-      + 0.36 * vnoise(paintXZ / 47.0 + 37.0)
-      + 0.12 * vnoise(vec2(paintXZ.x, paintXZ.y * 1.65) / 4.5 + 61.0);
-    float tone = 0.52 * smoothstep(0.34, 0.44, field) + 0.48 * smoothstep(0.52, 0.61, field);
+${SWARD_PAINT_FIELD}
     // Clouds soften the value, while ground, buildings and slopes determine the hue.
     float sunlit = smoothstep(0.18, 0.70, sh / max(cs, 0.05)) * smoothstep(-0.13, 0.12, ndlRaw);
-    tone *= mix(0.46, 1.0, sunlit);
-    tone *= mix(1.0, 0.70, smoothstep(240.0, 650.0, dist));
-    float warmth = 0.64 * swardWarmth(tone);
-    float light = mix(0.35, 0.49, sunlit);
-    float meadowExposure = swardMeadow(P.xz) * sunlit;
-    float dappleShade = swardDapple(P.xz, uTime);
-    warmth = mix(warmth, max(warmth, 0.24 + 0.49 * swardWarmth(tone)), meadowExposure);
-    warmth *= 1.0 - 0.83 * dappleShade;
+${SWARD_EXPOSURE}
     if (uWbStationSwardRect.z > 0.0) {
       vec2 lawnXY = localXZ - uWbStationSwardRect.xy;
       vec2 beyondLawn = max(max(-lawnXY, lawnXY - uWbStationSwardRect.zw), vec2(0.0));

@@ -1,8 +1,9 @@
 import * as THREE from 'three';
 import { loadTable, loadModels, pickWeighted, makeMaterial, makeMaterialSet, makeBatch, makeBatches, getAerial, getContext, hash32, rngFrom, fbm, noise2, smooth, focusFalloff } from './scatter-common.js';
 import { addStationLawn } from './transition.js';
-import { SWARD_DAPPLE } from './island-ground.js';
-import { VALUE_NOISE_2D } from '../upstream/petalwake/src/shaders/common.js';
+import { SWARD_COOL, SWARD_WARM, SWARD_WARMTH, SWARD_DAPPLE, SWARD_PAINT_FIELD, SWARD_EXPOSURE } from './island-ground.js';
+import { ATMOSPHERE, CLOUD_SHADOW, NOISE, TERRAIN_LOOKUP, VALUE_NOISE_2D } from '../upstream/petalwake/src/shaders/common.js';
+import { SKY_UNIFORMS } from '../upstream/petalwake/src/world/sky.js';
 
 // X-51 vegetation (2026-11-21): island-wide trees, bushes, hedges and grass tufts as InstancedMesh batches (one draw call per GLB, materials baked into
 // vertex colours, toon ramp + camera-distance fog from scatter-common.js). Models, sizes, origin offsets, radii, species weights and scale ranges live in
@@ -124,8 +125,9 @@ function plantShortSward(ctx, habitats, seed) {
   const up = new THREE.Vector3(0, 1, 0), normal = new THREE.Vector3();
   const tilt = new THREE.Quaternion(), rotate = new THREE.Quaternion();
   const position = new THREE.Vector3(), scale = new THREE.Vector3();
-  const step = 0.88, cell = 12;
-  return habitats.map(({ name, bounds: [x0, z0, x1, z1], clusters, swardAreas }, habitatIndex) => {
+  const cell = 12;
+  return habitats.map(({ name, carpet, bounds: [x0, z0, x1, z1], clusters, swardAreas }, habitatIndex) => {
+    const step = carpet ? 0.56 : 0.88;
     const patches = swardAreas.map(([x, z, length, width, angle, density]) =>
       ({ x, z, length, width, density, c: Math.cos(angle), s: Math.sin(angle) }));
     const cells = new Map();
@@ -138,23 +140,83 @@ function plantShortSward(ctx, habitats, seed) {
         const dx = x - area.x, dz = z - area.z;
         const u = (dx * area.c + dz * area.s) / area.length;
         const v = (dz * area.c - dx * area.s) / area.width;
-        cover = Math.max(cover, area.density * (1 - smooth(0.45, 1.03, u * u + v * v + 0.22 * (field - 0.5))));
+        const wobble = (carpet ? 0.12 : 0.22) * (field - 0.5);
+        cover = Math.max(cover, area.density * (1 - smooth(0.45, 1.03, u * u + v * v + wobble)));
       }
-      if (r() > cover * (0.51 + 0.60 * field) || !canPlantMeadow(ctx, x, z, 0.90)) continue;
+      // Keep a continuous core. Shape low, overlapping blades at the edge instead of scattering single tiles beyond it.
+      if ((carpet ? cover < 0.24 : r() > cover * (0.51 + 0.60 * field)) || !canPlantMeadow(ctx, x, z, 0.90)) continue;
       // Short, sparse blades under the flowers support the bed while leaving its color visible.
       const underFlowers = clusters.some(([fx, fz, fr]) => Math.hypot(fx - x, fz - z) < fr);
       const kind = r() < (underFlowers ? 0.88 : 0.52) ? 'swardLow' : 'swardBowed';
       const yaw = r() * Math.PI * 2, size = 0.84 + 0.20 * r();
+      const rim = carpet ? smooth(0.24, 0.78, cover) : 1;
       const bladeHeight = (underFlowers ? 0.56 : 0.82) * (0.77 + 0.26 * field + 0.26 * r());
       const y = ctx.groundY(x, z) - 0.048;
       ctx.terrain.normalAt(x, z, normal, 0.60).lerp(up, 0.26).normalize();
       tilt.setFromUnitVectors(up, normal).multiply(rotate.setFromAxisAngle(up, yaw));
-      const matrix = new THREE.Matrix4().compose(position.set(x, y, z), tilt, scale.set(size, bladeHeight, size));
+      const spread = size * (carpet ? 0.72 + 0.17 * rim : 1);
+      const height = bladeHeight * (carpet ? 0.43 + 0.43 * rim : 1);
+      const matrix = new THREE.Matrix4().compose(position.set(x, y, z), tilt, scale.set(spread, height, spread));
       const key = `${Math.floor(x / cell)}:${Math.floor(z / cell)}:${kind}`;
       if (!cells.has(key)) cells.set(key, { kind, items: [] });
       cells.get(key).items.push({ x, y, z, matrix, tint: 0.87 + 0.18 * r(), tr: 0.93 + 0.11 * field, tb: 1.03 - 0.14 * field });
     }
-    return { name, cells };
+    return { name, carpet, cells };
+  });
+}
+
+function hillsideBladeMaterial(island) {
+  const uniforms = Object.fromEntries([...SKY_UNIFORMS, 'uTime', 'uWorld', 'uHeightTex', 'uSplatTex', 'uLightTex']
+    .map(name => [name, island.U[name]]));
+  const swatch = hex => new THREE.Vector3(...new THREE.Color(hex).toArray().map(value => +value.toFixed(4)));
+  Object.assign(uniforms, {
+    uBladeCool: { value: swatch(SWARD_COOL) }, uBladeWarm: { value: swatch(SWARD_WARM) },
+    uBladeExposure: { value: island.timeOfDay === 'night' ? 0.35 : 1 },
+    uWbWorldToStation: island.terrain.material.uniforms.uWbWorldToStation,
+  });
+  return new THREE.ShaderMaterial({
+    name: 'vegetation-hillside-blade-paint', uniforms,
+    vertexShader: /* glsl */ `
+varying vec3 vBladeWorld;
+varying float vBladeHeight;
+void main(){
+  vec4 world = modelMatrix * instanceMatrix * vec4(position, 1.0);
+  vBladeWorld = world.xyz;
+  vBladeHeight = position.y;
+  gl_Position = projectionMatrix * viewMatrix * world;
+}`,
+    fragmentShader: /* glsl */ `
+varying vec3 vBladeWorld;
+varying float vBladeHeight;
+uniform float uTime;
+uniform mat4 uWbWorldToStation;
+uniform vec3 uBladeCool, uBladeWarm;
+uniform float uBladeExposure;
+${NOISE}
+${ATMOSPHERE}
+${CLOUD_SHADOW}
+${TERRAIN_LOOKUP}
+${SWARD_WARMTH}
+${SWARD_DAPPLE}
+void main(){
+    vec3 P = vBladeWorld;
+    float dist = distance(uCamPos, P);
+    vec2 localXZ = (uWbWorldToStation * vec4(P, 1.0)).xz;
+    float lod = mix(mix(0.72, 1.28, swardMeadow(P.xz)), 2.35, smoothstep(32.0, 430.0, dist));
+    float direct = dot(terrainN(P.xz, lod), uSunDir);
+    // The shoulder lies outside town and station shadow bounds. Use the island bake and the same cloud paint as its ground.
+    float shadow = texture(uLightTex, worldUV(P.xz)).r;
+    float sunlit = smoothstep(0.18, 0.70, shadow) * smoothstep(-0.13, 0.12, direct);
+${SWARD_PAINT_FIELD}
+${SWARD_EXPOSURE}
+    float cs = cloudShadow(P.xz, uTime);
+    vec3 ground = mix(uBladeCool, uBladeWarm, warmth) * light * mix(0.92, 1.0, cs) * uBladeExposure;
+    ground *= mix(vec3(1.0), vec3(0.54, 0.73, 0.88), dappleShade * mix(0.65, 1.0, sunlit));
+    float tip = smoothstep(0.012, 0.17, vBladeHeight);
+    vec3 bladeTip = mix(vec3(1.07, 1.20, 1.18), vec3(1.24, 1.17, 0.93), sunlit * (1.0 - dappleShade));
+    vec3 colour = applyAtmosphere(ground * mix(vec3(1.0), bladeTip, tip), P);
+    gl_FragColor = vec4(colour, 0.0);
+}`,
   });
 }
 
@@ -443,6 +505,7 @@ export async function createVegetation({ scene, worldBase, island, station, flow
   const beds = plantFlowerBeds(ctx, habitats, SP.grass.models, P.seed);
   const grassBands = plantGrassBands(ctx, habitats, P.seed);
   const meadowSward = plantShortSward(ctx, habitats, P.seed);
+  const carpetMaterial = meadowSward.some(a => a.carpet) ? hillsideBladeMaterial(island) : null;
   if (!dryRun) for (const bed of beds) island.meadow.addFlowerBed(bed.name, bed.flowers);
 
   // ---- batches --------------------------------------------------------------------------------------------------------------------------------------
@@ -458,7 +521,10 @@ export async function createVegetation({ scene, worldBase, island, station, flow
     const patchItems = {};
     for (const tuft of [...beds[index].grass, ...grass]) (patchItems[tuft.kind] ??= []).push(tuft);
     for (const [kind, list] of Object.entries(patchItems)) {
-      const batches = makeBatches({ name: `vegetation-${name}-${kind}`, model: model[kind], materials, items: list });
+      const batchName = `vegetation-${name}-${kind}`;
+      const batches = meadowSward[index].carpet
+        ? [makeBatch({ name: batchName, model: model[kind], material: carpetMaterial, items: list })]
+        : makeBatches({ name: batchName, model: model[kind], materials, items: list });
       root.add(...batches);
       drawCalls += batches.length;
       triangles += model[kind].tris * list.length;
@@ -467,8 +533,8 @@ export async function createVegetation({ scene, worldBase, island, station, flow
   }
   if (meadowSward.length) {
     const material = shortSwardMaterial(station.ctx.mat.gradientMap, aerial, island.U.uTime);
-    for (const { name, cells } of meadowSward) for (const [key, { kind, items: tiles }] of cells) {
-      const mesh = makeBatch({ name: `vegetation-${name}-sward-${key}`, model: model[kind], material, items: tiles });
+    for (const { name, carpet, cells } of meadowSward) for (const [key, { kind, items: tiles }] of cells) {
+      const mesh = makeBatch({ name: `vegetation-${name}-sward-${key}`, model: model[kind], material: carpet ? carpetMaterial : material, items: tiles });
       root.add(mesh);
       drawCalls++;
       triangles += model[kind].tris * tiles.length;

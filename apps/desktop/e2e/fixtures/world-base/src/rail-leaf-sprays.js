@@ -2,25 +2,33 @@ import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { terrainH } from '../upstream/sakuragaoka/src/world/environment/common.js';
 
-// Small shoots on the two R4 shrub crowns. Each base sits 3 cm within the shrub at its authored height.
-// The turn opens some faces toward the sidewalk while preserving gaps and a rounded outer profile.
+// Low sprays follow the measured shoulders of the two R4 shrubs. Their bases sit inside the
+// crowns. Each row gives local x, z, height above ground, yaw, pitch, roll, and scale.
 const placements = {
   'spray-spreading': [
-    [54.48, -52.74, 0.684, -0.78, -0.58, 0.78],
-    [54.91, -52.88, 0.518, 0.36, -0.45, 0.78],
-    [49.36, -52.75, 0.510, -0.91, -0.42, 0.79],
-    [49.80, -52.90, 0.433, 0.33, -0.51, 0.79],
+    [54.31, -52.84, 0.482, 0.58, -0.945, -0.048, 0.74],
+    [54.69, -52.91, 0.524, -1.15, -0.545, 0.856, 0.805],
+    [54.99, -52.80, 0.612, 1.00, 0.025, -0.592, 0.87],
+    [54.59, -52.64, 0.711, 0.56, 0.476, 0.401, 0.74],
+    [49.14, -52.77, 0.361, 0.89, -0.466, -0.513, 0.805],
+    [49.53, -52.89, 0.463, -1.05, -0.342, 0.755, 0.87],
+    [49.92, -52.88, 0.453, 0.57, -0.672, -0.533, 0.74],
   ],
   'spray-rising': [
-    [54.63, -52.69, 0.727, -0.21, -0.52, 0.74],
-    [54.13, -52.73, 0.425, -0.97, -0.54, 0.67],
-    [49.54, -52.74, 0.595, -0.11, -0.51, 0.76],
+    [54.48, -52.91, 0.456, 1.03, -0.928, -0.718, 0.74],
+    [54.77, -52.77, 0.688, -0.40, -0.374, 0.020, 0.805],
+    [55.06, -52.72, 0.623, 1.19, 0.436, -0.173, 0.87],
+    [49.31, -52.83, 0.436, 0.59, -0.774, -0.022, 0.74],
+    [49.74, -52.92, 0.432, 0.11, -0.896, -0.114, 0.805],
+    [50.09, -52.79, 0.503, 1.00, 0.141, -0.523, 0.87],
   ],
   'spray-tipped': [
-    [54.36, -52.62, 0.608, -0.61, -0.57, 0.75],
-    [54.76, -52.67, 0.702, 2.48, 0.42, 0.78],
-    [49.37, -52.65, 0.551, -0.53, -0.46, 0.73],
-    [49.99, -52.61, 0.556, 2.30, 0.44, 0.75],
+    [54.56, -52.78, 0.693, -1.24, -0.001, 0.476, 0.74],
+    [54.88, -52.91, 0.495, 0.93, -0.658, -0.855, 0.805],
+    [54.23, -52.68, 0.509, -0.67, -0.243, 0.101, 0.87],
+    [49.61, -52.67, 0.636, -0.78, 0.256, -0.167, 0.74],
+    [49.82, -52.73, 0.592, 0.49, 0.027, -0.150, 0.805],
+    [49.40, -52.66, 0.583, -0.85, 0.470, -0.047, 0.87],
   ],
 };
 
@@ -43,9 +51,9 @@ export async function addRailLeafSprays(ctx) {
   for (const { name, poses, geometry } of variants) {
     const mesh = new THREE.InstancedMesh(geometry, material, poses.length);
     mesh.name = `foliage-rail-${name}`;
-    for (const [index, [x, z, height, yaw, tilt, size]] of poses.entries()) {
+    for (const [index, [x, z, height, yaw, pitch, roll, size]] of poses.entries()) {
       position.set(x, terrainH(x, z) + height, z);
-      rotation.setFromEuler(euler.set(tilt, yaw, 0, 'YXZ'));
+      rotation.setFromEuler(euler.set(pitch, yaw, roll, 'YXZ'));
       transform.compose(position, rotation, scale.setScalar(size));
       mesh.setMatrixAt(index, transform);
     }

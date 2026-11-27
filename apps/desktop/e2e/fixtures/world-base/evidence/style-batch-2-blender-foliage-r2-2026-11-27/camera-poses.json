@@ -1,0 +1,1314 @@
+[
+  {
+    "name": "art-a-street",
+    "eye": [
+      278.8,
+      10.488,
+      936
+    ],
+    "rotation": [
+      -0.003277842930440409,
+      -0.009834585659995631,
+      -0.00003223795934194156,
+      0.9999462663720154
+    ],
+    "fov": 35.63777782904556,
+    "direction": [
+      0.019667903082122552,
+      -0.006555967694040891,
+      -0.9997850733412393
+    ],
+    "world": [
+      0.9998065597712203,
+      0,
+      0.01966832576599103,
+      0,
+      0.00012894490831770922,
+      0.9999785094128747,
+      -0.006554699506150283,
+      0,
+      -0.01966790308212255,
+      0.006555967694040889,
+      0.9997850733412391,
+      0,
+      278.8,
+      10.488,
+      936,
+      1
+    ],
+    "projection": [
+      1.9444444444444444,
+      0,
+      0,
+      0,
+      0,
+      3.1111111111111107,
+      0,
+      0,
+      0,
+      0,
+      -1.000025000312504,
+      -1,
+      0,
+      0,
+      -0.4000050000625008,
+      0
+    ],
+    "scene": {
+      "width": 1440,
+      "height": 900,
+      "dpr": 1,
+      "timeOfDay": "evening",
+      "frozen": 5000,
+      "stationTime": 5,
+      "islandTime": 5,
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "webgl": 0,
+      "worldErrors": [],
+      "decals": {
+        "source": "baked",
+        "fingerprint": "1047:2716761:294394.8:936637.0"
+      }
+    },
+    "variant": "candidate",
+    "time": "evening",
+    "filename": "candidate-evening-art-a-street.png"
+  },
+  {
+    "name": "art-b-konbini",
+    "eye": [
+      279.1,
+      9.8184,
+      912.8
+    ],
+    "rotation": [
+      0.013653878147403252,
+      0.5849950384089397,
+      -0.009850566433920587,
+      0.8108620986267578
+    ],
+    "fov": 58,
+    "direction": [
+      -0.948431612193484,
+      0.033667889556717234,
+      -0.315188753296918
+    ],
+    "world": [
+      0.315367542755708,
+      6.938893903907228e-18,
+      -0.9489696059285707,
+      0,
+      0.03194980388508459,
+      0.9994330759049336,
+      0.010617759599272487,
+      0,
+      0.948431612193484,
+      -0.033667889556717234,
+      0.315188753296918,
+      0,
+      279.1,
+      9.8184,
+      912.8,
+      1
+    ],
+    "projection": [
+      1.1275298470446398,
+      0,
+      0,
+      0,
+      0,
+      1.8040477552714236,
+      0,
+      0,
+      0,
+      0,
+      -1.000025000312504,
+      -1,
+      0,
+      0,
+      -0.4000050000625008,
+      0
+    ],
+    "scene": {
+      "width": 1440,
+      "height": 900,
+      "dpr": 1,
+      "timeOfDay": "evening",
+      "frozen": 5000,
+      "stationTime": 5,
+      "islandTime": 5,
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "webgl": 0,
+      "worldErrors": [],
+      "decals": {
+        "source": "baked",
+        "fingerprint": "1047:2716761:294394.8:936637.0"
+      }
+    },
+    "variant": "candidate",
+    "time": "evening",
+    "filename": "candidate-evening-art-b-konbini.png"
+  },
+  {
+    "name": "art-c-alley",
+    "eye": [
+      287.65,
+      14.384808464050293,
+      767.3199999999999
+    ],
+    "rotation": [
+      0.00512201791291099,
+      0.8012252009590126,
+      -0.006859231737600546,
+      0.5983016740914732
+    ],
+    "fov": 45,
+    "direction": [
+      -0.9586784919004513,
+      0.017120602438809196,
+      0.2839761154386208
+    ],
+    "world": [
+      -0.28401774342368036,
+      -1.734723475976807e-18,
+      -0.9588190243317661,
+      0,
+      0.01641555932635108,
+      0.9998534317449395,
+      -0.004862554870724551,
+      0,
+      0.9586784919004508,
+      -0.01712060243880919,
+      -0.28397611543862067,
+      0,
+      287.65,
+      14.384808464050293,
+      767.3199999999999,
+      1
+    ],
+    "projection": [
+      1.5088834764831844,
+      0,
+      0,
+      0,
+      0,
+      2.4142135623730954,
+      0,
+      0,
+      0,
+      0,
+      -1.000025000312504,
+      -1,
+      0,
+      0,
+      -0.4000050000625008,
+      0
+    ],
+    "scene": {
+      "width": 1440,
+      "height": 900,
+      "dpr": 1,
+      "timeOfDay": "evening",
+      "frozen": 5000,
+      "stationTime": 5,
+      "islandTime": 5,
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "webgl": 0,
+      "worldErrors": [],
+      "decals": {
+        "source": "baked",
+        "fingerprint": "1047:2716761:294394.8:936637.0"
+      }
+    },
+    "variant": "candidate",
+    "time": "evening",
+    "filename": "candidate-evening-art-c-alley.png"
+  },
+  {
+    "name": "art-d-laundry",
+    "eye": [
+      283.5,
+      12.520055181715234,
+      783.8
+    ],
+    "rotation": [
+      0.1297258927986663,
+      0.0767626424061459,
+      -0.010073721024303532,
+      0.9885227410703001
+    ],
+    "fov": 48,
+    "direction": [
+      -0.14914959045888027,
+      0.2580205611636348,
+      -0.9545573789368302
+    ],
+    "world": [
+      0.9880120337511014,
+      0,
+      -0.15437688027361013,
+      0,
+      0.039832409278888155,
+      0.9661394257646269,
+      0.2549274193848833,
+      0,
+      0.14914959045888027,
+      -0.2580205611636348,
+      0.9545573789368302,
+      0,
+      283.5,
+      12.520055181715234,
+      783.8,
+      1
+    ],
+    "projection": [
+      1.403772983690135,
+      0,
+      0,
+      0,
+      0,
+      2.2460367739042155,
+      0,
+      0,
+      0,
+      0,
+      -1.000025000312504,
+      -1,
+      0,
+      0,
+      -0.4000050000625008,
+      0
+    ],
+    "scene": {
+      "width": 1440,
+      "height": 900,
+      "dpr": 1,
+      "timeOfDay": "evening",
+      "frozen": 5000,
+      "stationTime": 5,
+      "islandTime": 5,
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "webgl": 0,
+      "worldErrors": [],
+      "decals": {
+        "source": "baked",
+        "fingerprint": "1047:2716761:294394.8:936637.0"
+      }
+    },
+    "variant": "candidate",
+    "time": "evening",
+    "filename": "candidate-evening-art-d-laundry.png"
+  },
+  {
+    "name": "sample-e-harbour",
+    "eye": [
+      -49.3148,
+      6.0969,
+      1121.5
+    ],
+    "rotation": [
+      0.014730707497095328,
+      -0.7342518484654964,
+      0.01594041117183272,
+      0.6785301265038345
+    ],
+    "fov": 57,
+    "direction": [
+      0.9959543721812238,
+      0.0433990103794266,
+      0.07868554143672668
+    ],
+    "world": [
+      -0.07875974736665081,
+      3.469446951953614e-18,
+      0.9968936263186465,
+      0,
+      -0.043264196835787166,
+      0.9990578190966158,
+      -0.0034180950934462988,
+      0,
+      -0.9959543721812238,
+      -0.0433990103794266,
+      -0.07868554143672668,
+      0,
+      -49.3148,
+      6.0969,
+      1121.5,
+      1
+    ],
+    "projection": [
+      1.1511068037709111,
+      0,
+      0,
+      0,
+      0,
+      1.8417708860334578,
+      0,
+      0,
+      0,
+      0,
+      -1.000025000312504,
+      -1,
+      0,
+      0,
+      -0.4000050000625008,
+      0
+    ],
+    "scene": {
+      "width": 1440,
+      "height": 900,
+      "dpr": 1,
+      "timeOfDay": "evening",
+      "frozen": 5000,
+      "stationTime": 5,
+      "islandTime": 5,
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "webgl": 0,
+      "worldErrors": [],
+      "decals": {
+        "source": "baked",
+        "fingerprint": "1047:2716761:294394.8:936637.0"
+      }
+    },
+    "variant": "candidate",
+    "time": "evening",
+    "filename": "candidate-evening-sample-e-harbour.png"
+  },
+  {
+    "name": "sample-f-hillside",
+    "eye": [
+      1040.6682,
+      61.5086,
+      591.5865
+    ],
+    "rotation": [
+      0.18707634146308863,
+      -0.10146136691099782,
+      0.019429882402105244,
+      0.9768984149640014
+    ],
+    "fov": 57,
+    "direction": [
+      0.1909651544011817,
+      0.36945192775998625,
+      -0.9094160669786755
+    ],
+    "world": [
+      0.9786561413887844,
+      2.0816681711721685e-17,
+      0.2055046396605573,
+      0,
+      -0.07592408528621422,
+      0.9292498442692525,
+      0.36156639805023605,
+      0,
+      -0.1909651544011817,
+      -0.36945192775998625,
+      0.9094160669786755,
+      0,
+      1040.6682,
+      61.5086,
+      591.5865,
+      1
+    ],
+    "projection": [
+      1.1511068037709111,
+      0,
+      0,
+      0,
+      0,
+      1.8417708860334578,
+      0,
+      0,
+      0,
+      0,
+      -1.000025000312504,
+      -1,
+      0,
+      0,
+      -0.4000050000625008,
+      0
+    ],
+    "scene": {
+      "width": 1440,
+      "height": 900,
+      "dpr": 1,
+      "timeOfDay": "evening",
+      "frozen": 5000,
+      "stationTime": 5,
+      "islandTime": 5,
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "webgl": 0,
+      "worldErrors": [],
+      "decals": {
+        "source": "baked",
+        "fingerprint": "1047:2716761:294394.8:936637.0"
+      }
+    },
+    "variant": "candidate",
+    "time": "evening",
+    "filename": "candidate-evening-sample-f-hillside.png"
+  },
+  {
+    "name": "sample-g-rail",
+    "eye": [
+      337.8563,
+      9.6,
+      844.5
+    ],
+    "rotation": [
+      0.0042956255745017925,
+      0.7668403876967841,
+      -0.005132508643737493,
+      0.6418029485387173
+    ],
+    "fov": 57,
+    "direction": [
+      -0.9842767490939558,
+      0.013385520155508656,
+      0.17612526520406083
+    ],
+    "world": [
+      -0.1761410456958643,
+      -1.734723475976807e-18,
+      -0.9843649384355212,
+      0,
+      0.013176236723804703,
+      0.9999104099118913,
+      -0.0023577395173743658,
+      0,
+      0.9842767490939556,
+      -0.013385520155508653,
+      -0.1761252652040608,
+      0,
+      337.8563,
+      9.6,
+      844.5,
+      1
+    ],
+    "projection": [
+      1.1511068037709111,
+      0,
+      0,
+      0,
+      0,
+      1.8417708860334578,
+      0,
+      0,
+      0,
+      0,
+      -1.000025000312504,
+      -1,
+      0,
+      0,
+      -0.4000050000625008,
+      0
+    ],
+    "scene": {
+      "width": 1440,
+      "height": 900,
+      "dpr": 1,
+      "timeOfDay": "evening",
+      "frozen": 5000,
+      "stationTime": 5,
+      "islandTime": 5,
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "webgl": 0,
+      "worldErrors": [],
+      "decals": {
+        "source": "baked",
+        "fingerprint": "1047:2716761:294394.8:936637.0"
+      }
+    },
+    "variant": "candidate",
+    "time": "evening",
+    "filename": "candidate-evening-sample-g-rail.png"
+  },
+  {
+    "name": "sample-h-north",
+    "eye": [
+      181.0601,
+      136.1623,
+      -1212.8685
+    ],
+    "rotation": [
+      0.1033905527383131,
+      0.02096399872548667,
+      -0.002179647308778166,
+      0.9944174945662979
+    ],
+    "fov": 57,
+    "direction": [
+      -0.041243224297320726,
+      0.20571813707852246,
+      -0.9777418087238078
+    ],
+    "world": [
+      0.9991115197900943,
+      8.673617379884035e-19,
+      -0.042144644057437335,
+      0,
+      0.008669917663333433,
+      0.9786112854841509,
+      0.20553536058490954,
+      0,
+      0.041243224297320726,
+      -0.20571813707852246,
+      0.9777418087238078,
+      0,
+      181.0601,
+      136.1623,
+      -1212.8685,
+      1
+    ],
+    "projection": [
+      1.1511068037709111,
+      0,
+      0,
+      0,
+      0,
+      1.8417708860334578,
+      0,
+      0,
+      0,
+      0,
+      -1.000025000312504,
+      -1,
+      0,
+      0,
+      -0.4000050000625008,
+      0
+    ],
+    "scene": {
+      "width": 1440,
+      "height": 900,
+      "dpr": 1,
+      "timeOfDay": "evening",
+      "frozen": 5000,
+      "stationTime": 5,
+      "islandTime": 5,
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "webgl": 0,
+      "worldErrors": [],
+      "decals": {
+        "source": "baked",
+        "fingerprint": "1047:2716761:294394.8:936637.0"
+      }
+    },
+    "variant": "candidate",
+    "time": "evening",
+    "filename": "candidate-evening-sample-h-north.png"
+  },
+  {
+    "filename": "candidate-evening-ground-01.png",
+    "name": "ground-01",
+    "method": "Station first-person walker and local collision/ground test",
+    "attempt": 2,
+    "yaw": 93.32415944896638,
+    "pitch": -7,
+    "localFeet": [
+      30.127039399417114,
+      0.5732557275831699,
+      25.473418842256066
+    ],
+    "feet": [
+      310.12703939941713,
+      8.57325572758317,
+      925.473418842256
+    ],
+    "heightError": 1.7763568394002505e-15,
+    "eyeHeight": 1.5199999999999996,
+    "walked": 0.8830139280071053,
+    "rejected": {
+      "capsule": 1
+    },
+    "eye": [
+      310.12703939941713,
+      10.09325572758317,
+      925.473418842256
+    ],
+    "rotation": [
+      -0.04189760457543092,
+      0.7259621046399221,
+      0.0444017444497377,
+      0.6850197796030679
+    ],
+    "fov": 58,
+    "direction": [
+      -0.9908761483784088,
+      -0.1218693434051475,
+      0.057552773284768724
+    ],
+    "world": [
+      -0.057984984566809894,
+      0,
+      -0.9983174553040663,
+      0,
+      -0.12166429278780425,
+      0.992546151641322,
+      0.007066591996514757,
+      0,
+      0.9908761483784085,
+      0.12186934340514748,
+      -0.05755277328476871,
+      0,
+      310.12703939941713,
+      10.09325572758317,
+      925.473418842256,
+      1
+    ],
+    "projection": [
+      1.1275298470446398,
+      0,
+      0,
+      0,
+      0,
+      1.8040477552714236,
+      0,
+      0,
+      0,
+      0,
+      -1.000025000312504,
+      -1,
+      0,
+      0,
+      -0.4000050000625008,
+      0
+    ],
+    "scene": {
+      "width": 1440,
+      "height": 900,
+      "dpr": 1,
+      "timeOfDay": "evening",
+      "frozen": 5000,
+      "stationTime": 5,
+      "islandTime": 5,
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "webgl": 0,
+      "worldErrors": [],
+      "decals": {
+        "source": "baked",
+        "fingerprint": "1047:2716761:294394.8:936637.0"
+      }
+    },
+    "variant": "candidate",
+    "time": "evening"
+  },
+  {
+    "filename": "candidate-evening-ground-02.png",
+    "name": "ground-02",
+    "method": "Outlying town road sample; existing terrain height and continuous road-clearance probes",
+    "attempt": 1,
+    "pointIndex": 603,
+    "poolSize": 1788,
+    "road": "larkhaven:netrow",
+    "feet": [
+      -69.17623239091023,
+      4.608134204408563,
+      1096.5640335434928
+    ],
+    "slope": 0.020325018835151143,
+    "pitch": -7,
+    "terrainY": 4.608134204408563,
+    "roadSupport": [
+      4.608134204408563,
+      4.616609372842969,
+      4.622956954988438,
+      4.625627775987686
+    ],
+    "eyeHeight": 1.5999999999999996,
+    "rejected": {},
+    "eye": [
+      -69.17623239091023,
+      6.208134204408562,
+      1096.5640335434928
+    ],
+    "rotation": [
+      -0.04395531151255068,
+      0.692673502964519,
+      0.042365726350124235,
+      0.7186629906371438
+    ],
+    "fov": 58,
+    "direction": [
+      -0.9918732249528253,
+      -0.12186934340514749,
+      -0.03654269776139419
+    ],
+    "world": [
+      0.036817127043377695,
+      0,
+      -0.9993220197495258,
+      0,
+      -0.12178671839718051,
+      0.992546151641322,
+      -0.004486879098840331,
+      0,
+      0.991873224952825,
+      0.12186934340514746,
+      0.03654269776139418,
+      0,
+      -69.17623239091023,
+      6.208134204408562,
+      1096.5640335434928,
+      1
+    ],
+    "projection": [
+      1.1275298470446398,
+      0,
+      0,
+      0,
+      0,
+      1.8040477552714236,
+      0,
+      0,
+      0,
+      0,
+      -1.000025000312504,
+      -1,
+      0,
+      0,
+      -0.4000050000625008,
+      0
+    ],
+    "scene": {
+      "width": 1440,
+      "height": 900,
+      "dpr": 1,
+      "timeOfDay": "evening",
+      "frozen": 5000,
+      "stationTime": 5,
+      "islandTime": 5,
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "webgl": 0,
+      "worldErrors": [],
+      "decals": {
+        "source": "baked",
+        "fingerprint": "1047:2716761:294394.8:936637.0"
+      }
+    },
+    "variant": "candidate",
+    "time": "evening"
+  },
+  {
+    "name": "blender-grass-close",
+    "target": [
+      1046.54,
+      65.4479,
+      573.13
+    ],
+    "hiddenMeshes": [],
+    "eye": [
+      1044.95,
+      64.9459,
+      576.85
+    ],
+    "rotation": [
+      0.06043491751770558,
+      -0.20020690228281218,
+      0.012374072707988995,
+      0.9778096437178179
+    ],
+    "fov": 45,
+    "direction": [
+      0.3900328274550783,
+      0.12314243986318434,
+      -0.9125296340458973
+    ],
+    "world": [
+      0.9195281572058758,
+      -3.469446951953614e-18,
+      0.3930241317089399,
+      0,
+      -0.04839795050374837,
+      0.992389006138491,
+      0.11323294080122927,
+      0,
+      -0.3900328274550783,
+      -0.12314243986318434,
+      0.9125296340458973,
+      0,
+      1044.95,
+      64.9459,
+      576.85,
+      1
+    ],
+    "projection": [
+      1.5088834764831844,
+      0,
+      0,
+      0,
+      0,
+      2.4142135623730954,
+      0,
+      0,
+      0,
+      0,
+      -1.000025000312504,
+      -1,
+      0,
+      0,
+      -0.4000050000625008,
+      0
+    ],
+    "scene": {
+      "width": 1440,
+      "height": 900,
+      "dpr": 1,
+      "timeOfDay": "evening",
+      "frozen": 5000,
+      "stationTime": 5,
+      "islandTime": 5,
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "webgl": 0,
+      "worldErrors": [],
+      "decals": {
+        "source": "baked",
+        "fingerprint": "1047:2716761:294394.8:936637.0"
+      }
+    },
+    "variant": "candidate",
+    "time": "evening",
+    "filename": "candidate-evening-blender-grass-close.png"
+  },
+  {
+    "name": "blender-grass-hidden",
+    "target": [
+      1046.54,
+      65.4479,
+      573.13
+    ],
+    "hiddenMeshes": [
+      "vegetation-hillside-meadowFan",
+      "vegetation-hillside-meadowSweep",
+      "vegetation-tower-meadowFan",
+      "vegetation-tower-meadowSweep",
+      "vegetation-hillside-sward-87:47:swardLow",
+      "vegetation-hillside-sward-87:47:swardBowed",
+      "vegetation-hillside-sward-86:47:swardBowed",
+      "vegetation-hillside-sward-86:47:swardLow",
+      "vegetation-hillside-sward-88:47:swardLow",
+      "vegetation-hillside-sward-88:47:swardBowed",
+      "vegetation-hillside-sward-86:48:swardBowed",
+      "vegetation-hillside-sward-86:48:swardLow",
+      "vegetation-hillside-sward-87:48:swardLow",
+      "vegetation-hillside-sward-87:48:swardBowed",
+      "vegetation-hillside-sward-88:48:swardBowed",
+      "vegetation-hillside-sward-88:48:swardLow",
+      "vegetation-hillside-sward-85:48:swardLow",
+      "vegetation-hillside-sward-85:48:swardBowed",
+      "vegetation-hillside-sward-86:49:swardLow",
+      "vegetation-hillside-sward-86:49:swardBowed",
+      "vegetation-hillside-sward-87:49:swardBowed",
+      "vegetation-hillside-sward-87:49:swardLow",
+      "vegetation-tower-sward-14:-104:swardBowed",
+      "vegetation-tower-sward-14:-104:swardLow",
+      "vegetation-tower-sward-16:-104:swardLow",
+      "vegetation-tower-sward-16:-104:swardBowed",
+      "vegetation-tower-sward-13:-104:swardLow",
+      "vegetation-tower-sward-13:-104:swardBowed",
+      "vegetation-tower-sward-15:-104:swardLow",
+      "vegetation-tower-sward-15:-104:swardBowed",
+      "vegetation-tower-sward-13:-103:swardBowed",
+      "vegetation-tower-sward-13:-103:swardLow",
+      "vegetation-tower-sward-14:-103:swardBowed",
+      "vegetation-tower-sward-14:-103:swardLow",
+      "vegetation-tower-sward-15:-103:swardLow",
+      "vegetation-tower-sward-15:-103:swardBowed",
+      "vegetation-tower-sward-16:-103:swardBowed",
+      "vegetation-tower-sward-16:-103:swardLow",
+      "vegetation-tower-sward-14:-102:swardLow",
+      "vegetation-tower-sward-15:-102:swardBowed",
+      "vegetation-tower-sward-15:-102:swardLow",
+      "vegetation-tower-sward-14:-102:swardBowed"
+    ],
+    "eye": [
+      1044.95,
+      64.9459,
+      576.85
+    ],
+    "rotation": [
+      0.06043491751770558,
+      -0.20020690228281218,
+      0.012374072707988995,
+      0.9778096437178179
+    ],
+    "fov": 45,
+    "direction": [
+      0.3900328274550783,
+      0.12314243986318434,
+      -0.9125296340458973
+    ],
+    "world": [
+      0.9195281572058758,
+      -3.469446951953614e-18,
+      0.3930241317089399,
+      0,
+      -0.04839795050374837,
+      0.992389006138491,
+      0.11323294080122927,
+      0,
+      -0.3900328274550783,
+      -0.12314243986318434,
+      0.9125296340458973,
+      0,
+      1044.95,
+      64.9459,
+      576.85,
+      1
+    ],
+    "projection": [
+      1.5088834764831844,
+      0,
+      0,
+      0,
+      0,
+      2.4142135623730954,
+      0,
+      0,
+      0,
+      0,
+      -1.000025000312504,
+      -1,
+      0,
+      0,
+      -0.4000050000625008,
+      0
+    ],
+    "scene": {
+      "width": 1440,
+      "height": 900,
+      "dpr": 1,
+      "timeOfDay": "evening",
+      "frozen": 5000,
+      "stationTime": 5,
+      "islandTime": 5,
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "webgl": 0,
+      "worldErrors": [],
+      "decals": {
+        "source": "baked",
+        "fingerprint": "1047:2716761:294394.8:936637.0"
+      }
+    },
+    "variant": "candidate",
+    "time": "evening",
+    "filename": "candidate-evening-blender-grass-hidden.png"
+  },
+  {
+    "name": "blender-leaves-close",
+    "target": [
+      334.62,
+      8.83,
+      847.29
+    ],
+    "hiddenMeshes": [],
+    "eye": [
+      335.7,
+      9.6,
+      846
+    ],
+    "rotation": [
+      -0.07272765069337078,
+      0.9183210251321957,
+      0.20016326160587744,
+      0.3336642808693691
+    ],
+    "fov": 44,
+    "direction": [
+      -0.5837070413724758,
+      -0.41616150171927097,
+      0.6972056327504477
+    ],
+    "world": [
+      -0.7667576729930996,
+      0,
+      -0.6419366564593479,
+      0,
+      -0.26714932296077,
+      0.9092907150558402,
+      0.31909502464758205,
+      0,
+      0.5837070413724758,
+      0.41616150171927097,
+      -0.6972056327504477,
+      0,
+      335.7,
+      9.6,
+      846,
+      1
+    ],
+    "projection": [
+      1.546929283385185,
+      0,
+      0,
+      0,
+      0,
+      2.475086853416296,
+      0,
+      0,
+      0,
+      0,
+      -1.000025000312504,
+      -1,
+      0,
+      0,
+      -0.4000050000625008,
+      0
+    ],
+    "scene": {
+      "width": 1440,
+      "height": 900,
+      "dpr": 1,
+      "timeOfDay": "evening",
+      "frozen": 5000,
+      "stationTime": 5,
+      "islandTime": 5,
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "webgl": 0,
+      "worldErrors": [],
+      "decals": {
+        "source": "baked",
+        "fingerprint": "1047:2716761:294394.8:936637.0"
+      }
+    },
+    "variant": "candidate",
+    "time": "evening",
+    "filename": "candidate-evening-blender-leaves-close.png"
+  },
+  {
+    "name": "blender-leaves-hidden",
+    "target": [
+      334.62,
+      8.83,
+      847.29
+    ],
+    "hiddenMeshes": [
+      "foliage-rail-spray-spreading",
+      "foliage-rail-spray-rising",
+      "foliage-rail-spray-tipped"
+    ],
+    "eye": [
+      335.7,
+      9.6,
+      846
+    ],
+    "rotation": [
+      -0.07272765069337078,
+      0.9183210251321957,
+      0.20016326160587744,
+      0.3336642808693691
+    ],
+    "fov": 44,
+    "direction": [
+      -0.5837070413724758,
+      -0.41616150171927097,
+      0.6972056327504477
+    ],
+    "world": [
+      -0.7667576729930996,
+      0,
+      -0.6419366564593479,
+      0,
+      -0.26714932296077,
+      0.9092907150558402,
+      0.31909502464758205,
+      0,
+      0.5837070413724758,
+      0.41616150171927097,
+      -0.6972056327504477,
+      0,
+      335.7,
+      9.6,
+      846,
+      1
+    ],
+    "projection": [
+      1.546929283385185,
+      0,
+      0,
+      0,
+      0,
+      2.475086853416296,
+      0,
+      0,
+      0,
+      0,
+      -1.000025000312504,
+      -1,
+      0,
+      0,
+      -0.4000050000625008,
+      0
+    ],
+    "scene": {
+      "width": 1440,
+      "height": 900,
+      "dpr": 1,
+      "timeOfDay": "evening",
+      "frozen": 5000,
+      "stationTime": 5,
+      "islandTime": 5,
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "webgl": 0,
+      "worldErrors": [],
+      "decals": {
+        "source": "baked",
+        "fingerprint": "1047:2716761:294394.8:936637.0"
+      }
+    },
+    "variant": "candidate",
+    "time": "evening",
+    "filename": "candidate-evening-blender-leaves-hidden.png"
+  },
+  {
+    "name": "art-a-street",
+    "eye": [
+      278.8,
+      10.488,
+      936
+    ],
+    "rotation": [
+      -0.003277842930440409,
+      -0.009834585659995631,
+      -0.00003223795934194156,
+      0.9999462663720154
+    ],
+    "fov": 35.63777782904556,
+    "direction": [
+      0.019667903082122552,
+      -0.006555967694040891,
+      -0.9997850733412393
+    ],
+    "world": [
+      0.9998065597712203,
+      0,
+      0.01966832576599103,
+      0,
+      0.00012894490831770922,
+      0.9999785094128747,
+      -0.006554699506150283,
+      0,
+      -0.01966790308212255,
+      0.006555967694040889,
+      0.9997850733412391,
+      0,
+      278.8,
+      10.488,
+      936,
+      1
+    ],
+    "projection": [
+      1.9444444444444444,
+      0,
+      0,
+      0,
+      0,
+      3.1111111111111107,
+      0,
+      0,
+      0,
+      0,
+      -1.000025000312504,
+      -1,
+      0,
+      0,
+      -0.4000050000625008,
+      0
+    ],
+    "scene": {
+      "width": 1440,
+      "height": 900,
+      "dpr": 1,
+      "timeOfDay": "night",
+      "frozen": 5000,
+      "stationTime": 5,
+      "islandTime": 5,
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "webgl": 0,
+      "worldErrors": [],
+      "decals": {
+        "source": "baked",
+        "fingerprint": "1047:2716761:294394.8:936637.0"
+      }
+    },
+    "variant": "candidate",
+    "time": "night",
+    "filename": "candidate-night-art-a-street.png"
+  },
+  {
+    "name": "art-b-konbini",
+    "eye": [
+      279.1,
+      9.8184,
+      912.8
+    ],
+    "rotation": [
+      0.013653878147403252,
+      0.5849950384089397,
+      -0.009850566433920587,
+      0.8108620986267578
+    ],
+    "fov": 58,
+    "direction": [
+      -0.948431612193484,
+      0.033667889556717234,
+      -0.315188753296918
+    ],
+    "world": [
+      0.315367542755708,
+      6.938893903907228e-18,
+      -0.9489696059285707,
+      0,
+      0.03194980388508459,
+      0.9994330759049336,
+      0.010617759599272487,
+      0,
+      0.948431612193484,
+      -0.033667889556717234,
+      0.315188753296918,
+      0,
+      279.1,
+      9.8184,
+      912.8,
+      1
+    ],
+    "projection": [
+      1.1275298470446398,
+      0,
+      0,
+      0,
+      0,
+      1.8040477552714236,
+      0,
+      0,
+      0,
+      0,
+      -1.000025000312504,
+      -1,
+      0,
+      0,
+      -0.4000050000625008,
+      0
+    ],
+    "scene": {
+      "width": 1440,
+      "height": 900,
+      "dpr": 1,
+      "timeOfDay": "night",
+      "frozen": 5000,
+      "stationTime": 5,
+      "islandTime": 5,
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "webgl": 0,
+      "worldErrors": [],
+      "decals": {
+        "source": "baked",
+        "fingerprint": "1047:2716761:294394.8:936637.0"
+      }
+    },
+    "variant": "candidate",
+    "time": "night",
+    "filename": "candidate-night-art-b-konbini.png"
+  }
+]

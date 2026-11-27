@@ -15,32 +15,32 @@ Mesh, linear, mix = (SHARED[key] for key in ('Mesh', 'linear', 'mix'))
 UP = Vector((0, 0, 1))
 
 # Position on the twig, heading and pitch in degrees, length, half width, and surface roll.
-# Long boxwood-like leaves, slightly rounded accent leaves and younger narrow leaves share a twig.
+# Small ovate leaf blades lie along the crown, with a shallow branch beneath each spray.
 SPRAYS = {
     'spray-spreading': (
-        ((0, 0, 0), (.075, -.014, .035), (.156, .002, .072), (.246, .031, .112)),
-        ((.38, -70, 13, .138, .041, 24), (.50, 81, 24, .151, .046, -29),
-         (.66, -48, 22, .176, .049, 35), (.78, 62, 18, .152, .047, -21),
-         (.93, -14, 34, .168, .044, -18)),
+        ((0, 0, 0), (.047, -.009, .013), (.093, .001, .028), (.148, .018, .028)),
+        ((.36, -70, 7, .081, .028, 15), (.46, 81, 8, .087, .031, -17),
+         (.64, -54, 7, .100, .033, 20), (.76, 62, 5, .088, .033, -12),
+         (.96, -14, 4, .094, .027, -10)),
     ),
     'spray-rising': (
-        ((0, 0, 0), (.052, .032, .056), (.126, .051, .135), (.193, .041, .205)),
-        ((.35, 76, 30, .121, .037, -18), (.49, -64, 17, .152, .041, 17),
-         (.60, 96, 45, .148, .041, -30), (.78, -59, 37, .168, .042, 36),
-         (.90, 56, 51, .116, .034, -12), (1., 9, 55, .146, .036, 14)),
+        ((0, 0, 0), (.042, .015, .014), (.085, .024, .029), (.135, .021, .041)),
+        ((.33, 76, 10, .075, .025, -11), (.47, -64, 9, .084, .025, 11),
+         (.60, 96, 12, .088, .029, -18), (.75, -59, 10, .098, .030, 18),
+         (.89, 56, 6, .074, .024, -10), (1., 9, 9, .087, .027, 10)),
     ),
     'spray-tipped': (
-        ((0, 0, 0), (.092, -.029, .019), (.171, -.030, .065), (.248, -.008, .102)),
-        ((.39, 72, 16, .161, .045, -28), (.48, -97, 22, .121, .042, 29),
-         (.61, 56, 29, .176, .052, 38), (.74, -66, 11, .148, .048, 25),
-         (.87, 49, 31, .155, .048, -28), (1., -9, 23, .187, .050, -12)),
+        ((0, 0, 0), (.056, -.018, .009), (.108, -.020, .021), (.155, -.005, .027)),
+        ((.35, 72, 10, .087, .030, -17), (.47, -97, 7, .074, .026, 17),
+         (.61, 56, 8, .103, .035, 21), (.73, -66, 5, .087, .031, 15),
+         (.87, 49, 7, .090, .030, -16), (1., -9, 4, .108, .032, -8)),
     ),
 }
 
 # Closed cross-section. The top has one turned edge, broad shoulders and a raised midrib.
 BLADE_SECTION = ((-1., 0.), (-.69, -.07), (0., -.14), (.70, -.08), (1., 0.),
                  (.68, .065), (.06, .235), (-.53, .14))
-PROFILE = ((.11, .29), (.26, .72), (.43, 1.), (.60, .89), (.77, .64), (.90, .32))
+PROFILE = ((.12, .33), (.30, .82), (.50, 1.), (.72, .73), (.89, .33))
 SHADE = linear('356052')
 COOL_FACE = linear('587e57')
 WARM_FACE = linear('8aab63')
@@ -106,11 +106,11 @@ def build_source():
     paint.use_backface_culling = True
     for index, (name, (twig, blades)) in enumerate(SPRAYS.items()):
         mesh = Mesh()
-        mesh.fork(twig, [.010, .008, .005, .0024], 5, STEM)
+        mesh.fork(twig, [.006, .005, .0035, .0018], 5, STEM)
         for number, (at, heading, pitch, length, width, roll) in enumerate(blades):
             root = twig_point(twig, at)
-            neck = root + .029 * Vector((cos(radians(heading)), sin(radians(heading)), .28))
-            mesh.fork([root, neck], [.0042, .0031], 4, STEM)
+            neck = root + .014 * Vector((cos(radians(heading)), sin(radians(heading)), .24))
+            mesh.fork([root, neck], [.0025, .0018], 4, STEM)
             leaf(mesh, neck, heading, pitch, length, width, roll, 1.21 * index + number * .66)
         obj = mesh.object(name, paint, True)
         obj.location.x = index * .64
