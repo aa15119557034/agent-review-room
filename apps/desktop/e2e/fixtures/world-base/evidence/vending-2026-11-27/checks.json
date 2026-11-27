@@ -115,9 +115,9 @@
       "signs": 11,
       "corners": 0,
       "frontage": 16,
-      "station": 13,
+      "station": 11,
       "guardrails": 91,
-      "vending": 7,
+      "vending": 5,
       "postboxes": 8,
       "hydrants": 9,
       "sizeWarnings": []
@@ -176,50 +176,62 @@
     },
     "lighting": {
       "groundPatches": 7,
-      "wallPatches": 1,
-      "triangles": 1190
+      "wallPatches": 2,
+      "triangles": 476,
+      "w1Wall": {
+        "min": [
+          272.61199951171875,
+          8.732878684997559,
+          914.7000122070312
+        ],
+        "max": [
+          272.61199951171875,
+          10.132878303527832,
+          915
+        ]
+      }
     },
     "machineBatches": [
       {
         "name": "street-props-vendDrinks",
         "type": "MeshToonMaterial",
-        "count": 4,
+        "count": 3,
         "emissiveIntensity": 1,
         "triangles": 84
       },
       {
         "name": "street-props-vendDrinks-cards",
         "type": "MeshToonMaterial",
-        "count": 4,
+        "count": 3,
         "emissiveIntensity": 1,
         "triangles": 2
       },
       {
         "name": "street-props-vendDrinks-window",
         "type": "MeshToonMaterial",
-        "count": 4,
-        "emissiveIntensity": 0.65,
+        "count": 3,
+        "emissiveIntensity": 0.48,
         "triangles": 2
       },
       {
         "name": "street-props-vendCoffee",
         "type": "MeshToonMaterial",
-        "count": 3,
+        "count": 2,
         "emissiveIntensity": 1,
         "triangles": 84
       },
       {
         "name": "street-props-vendCoffee-cards",
         "type": "MeshToonMaterial",
-        "count": 3,
+        "count": 2,
         "emissiveIntensity": 1,
         "triangles": 2
       },
       {
         "name": "street-props-vendCoffee-window",
         "type": "MeshToonMaterial",
-        "count": 3,
-        "emissiveIntensity": 0.65,
+        "count": 2,
+        "emissiveIntensity": 0.48,
         "triangles": 2
       },
       {
@@ -229,6 +241,39 @@
         "triangles": null
       }
     ],
+    "stationVending": [
+      {
+        "id": "V3a",
+        "meshCount": 28,
+        "floorY": 0.4539137254901961,
+        "source": [
+          -4.9285,
+          1.6589137254901962,
+          13.9
+        ],
+        "forward": [
+          1,
+          0,
+          6.123233995736766e-17
+        ]
+      },
+      {
+        "id": "V3b",
+        "meshCount": 28,
+        "floorY": 0.4237176470588235,
+        "source": [
+          -4.9285,
+          1.6287176470588236,
+          12.8
+        ],
+        "forward": [
+          1,
+          0,
+          6.123233995736766e-17
+        ]
+      }
+    ],
+    "cache": "baked",
     "registration": [
       {
         "kind": "recycleBin",
@@ -249,22 +294,6 @@
         "x": -5.28,
         "y": 0.27692,
         "z": 14.67,
-        "rotY": 1.5707963267948966
-      },
-      {
-        "kind": "vendDrinks",
-        "stationId": "V3a",
-        "x": -5.3,
-        "y": 0.4539137254901961,
-        "z": 13.9,
-        "rotY": 1.5707963267948966
-      },
-      {
-        "kind": "vendCoffee",
-        "stationId": "V3b",
-        "x": -5.3,
-        "y": 0.4237176470588235,
-        "z": 12.8,
         "rotY": 1.5707963267948966
       },
       {
@@ -394,9 +423,9 @@
       "signs": 11,
       "corners": 0,
       "frontage": 16,
-      "station": 13,
+      "station": 11,
       "guardrails": 91,
-      "vending": 7,
+      "vending": 5,
       "postboxes": 8,
       "hydrants": 9,
       "sizeWarnings": []
@@ -455,50 +484,62 @@
     },
     "lighting": {
       "groundPatches": 7,
-      "wallPatches": 1,
-      "triangles": 1190
+      "wallPatches": 2,
+      "triangles": 476,
+      "w1Wall": {
+        "min": [
+          272.61199951171875,
+          8.732878684997559,
+          914.7000122070312
+        ],
+        "max": [
+          272.61199951171875,
+          10.132878303527832,
+          915
+        ]
+      }
     },
     "machineBatches": [
       {
         "name": "street-props-vendDrinks",
         "type": "MeshToonMaterial",
-        "count": 4,
+        "count": 3,
         "emissiveIntensity": 1,
         "triangles": 84
       },
       {
         "name": "street-props-vendDrinks-cards",
         "type": "MeshToonMaterial",
-        "count": 4,
+        "count": 3,
         "emissiveIntensity": 1,
         "triangles": 2
       },
       {
         "name": "street-props-vendDrinks-window",
         "type": "MeshToonMaterial",
-        "count": 4,
-        "emissiveIntensity": 0.95,
+        "count": 3,
+        "emissiveIntensity": 0.7,
         "triangles": 2
       },
       {
         "name": "street-props-vendCoffee",
         "type": "MeshToonMaterial",
-        "count": 3,
+        "count": 2,
         "emissiveIntensity": 1,
         "triangles": 84
       },
       {
         "name": "street-props-vendCoffee-cards",
         "type": "MeshToonMaterial",
-        "count": 3,
+        "count": 2,
         "emissiveIntensity": 1,
         "triangles": 2
       },
       {
         "name": "street-props-vendCoffee-window",
         "type": "MeshToonMaterial",
-        "count": 3,
-        "emissiveIntensity": 0.95,
+        "count": 2,
+        "emissiveIntensity": 0.7,
         "triangles": 2
       },
       {
@@ -508,6 +549,39 @@
         "triangles": null
       }
     ],
+    "stationVending": [
+      {
+        "id": "V3a",
+        "meshCount": 28,
+        "floorY": 0.4539137254901961,
+        "source": [
+          -4.9285,
+          1.6589137254901962,
+          13.9
+        ],
+        "forward": [
+          1,
+          0,
+          6.123233995736766e-17
+        ]
+      },
+      {
+        "id": "V3b",
+        "meshCount": 28,
+        "floorY": 0.4237176470588235,
+        "source": [
+          -4.9285,
+          1.6287176470588236,
+          12.8
+        ],
+        "forward": [
+          1,
+          0,
+          6.123233995736766e-17
+        ]
+      }
+    ],
+    "cache": "baked",
     "registration": [
       {
         "kind": "recycleBin",
@@ -528,22 +602,6 @@
         "x": -5.28,
         "y": 0.27692,
         "z": 14.67,
-        "rotY": 1.5707963267948966
-      },
-      {
-        "kind": "vendDrinks",
-        "stationId": "V3a",
-        "x": -5.3,
-        "y": 0.4539137254901961,
-        "z": 13.9,
-        "rotY": 1.5707963267948966
-      },
-      {
-        "kind": "vendCoffee",
-        "stationId": "V3b",
-        "x": -5.3,
-        "y": 0.4237176470588235,
-        "z": 12.8,
         "rotY": 1.5707963267948966
       },
       {

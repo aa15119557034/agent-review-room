@@ -148,10 +148,10 @@ def build_recycle_bin():
     for x in (-0.29, 0.29):
         box(bm, x, 0, 0.81, 0.04, 0.62, 0.30)
     box(bm, 0, 0.29, 0.81, 0.54, 0.04, 0.30)
-    objs.append(new_obj('bin-body', mat_plain('bin-body', (0.30, 0.34, 0.38), 0.7, 0.1), bm, smooth=False))
+    objs.append(new_obj('bin-body', mat_plain('bin-body', (0.77, 0.81, 0.74), 0.7, 0.1), bm, smooth=False))
     bm = bmesh.new()
     box(bm, 0, 0, 0.99, 0.66, 0.66, 0.06)
-    objs.append(new_obj('bin-lid', mat_plain('bin-lid', (0.22, 0.25, 0.28), 0.6, 0.2), bm, smooth=False))
+    objs.append(new_obj('bin-lid', mat_plain('bin-lid', (0.14, 0.36, 0.29), 0.6, 0.2), bm, smooth=False))
 
     panel, rims, wells = bmesh.new(), bmesh.new(), bmesh.new()
     for center in (-0.155, 0.155):
@@ -176,8 +176,8 @@ def build_recycle_bin():
             rims.faces.new((rim[i], rim[j], opening[j], opening[i]))
             wells.faces.new((throat[j], throat[i], interior[i], interior[j]))
         wells.faces.new(interior)
-    objs.append(new_obj('bin-panel', mat_plain('bin-panel', (0.24, 0.36, 0.38)), panel, smooth=False))
-    objs.append(new_obj('bin-rims', mat_plain('bin-rims', (0.64, 0.75, 0.72)), rims, smooth=False))
+    objs.append(new_obj('bin-panel', mat_plain('bin-panel', (0.77, 0.81, 0.74)), panel, smooth=False))
+    objs.append(new_obj('bin-rims', mat_plain('bin-rims', (0.34, 0.53, 0.46)), rims, smooth=False))
     objs.append(new_obj('bin-wells', mat_plain('bin-wells', (0.018, 0.035, 0.043)), wells, smooth=False))
 
     bm = bmesh.new()

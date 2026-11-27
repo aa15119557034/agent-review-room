@@ -98,28 +98,19 @@ export function buildVending(ctx, H) {
     else { const fp = H.footprint(v.x, v.z, 1.08, 0.82, rot); y0 = fp.max + 0.04; base = { top: 0, bottom: fp.min - 0.07 - y0 }; }
     const g = H.place(v.x, y0, v.z, rot);
     const k = ctx.kit(g);
-    // --- base / plinth
-    if (base.steel) k.boxB(1.04, 0.02, 0.78, M.steelBase, [0, -0.02, 0]);
-    else k.boxB(1.08, base.top - base.bottom, 0.82, M.concrete, [0, base.bottom, 0]);
-    physics.addBox(v.x, v.z, 1.0, 0.75, rot, y0 - 0.1, y0 + 1.83);
-    // --- neighbours: bins, crates and flag keep their original poses
-    const put = (lx, lz, lrot = 0) => { const p = H.toWorld(v.x, v.z, rot, lx, lz); return { x: p.x, z: p.z, rotY: rot + lrot }; };
-    if (v.id === 'V1b') { recycleBin(ctx, H, M, tx, put(0.77, 0.0), 'blue', '#e9ecee', '#5b8fd6'); nobori(ctx, H, tx, put(1.32, 0.05, -0.25)); }
-    if (v.id === 'V2') recycleBin(ctx, H, M, tx, put(-0.77, 0.0), 'blue', '#e9ecee', '#5b8fd6', v.y);
-    if (v.id === 'V3a') recycleBin(ctx, H, M, tx, put(-0.77, 0.02), 'blue', '#e8eae6', '#4f9e78');
-    if (v.id === 'V4') {
-      recycleBin(ctx, H, M, tx, put(-0.77, 0.02), 'old', '#d8ddd6', '#4d8a6a');
-      crateStack(ctx, H, tx, put(-1.36, 0.0, 0.08), ['#4f7fc4', '#e7c14f']);
-    }
-    if (v.id === 'V5') recycleBin(ctx, H, M, tx, put(-0.83, 0.04), 'blue', '#e9ecee', '#5b8fd6');
-    if (ctx.services.streetPropReplacements && (v.id === 'V3a' || v.id === 'V3b')) {
-      const kind = v.id === 'V3a' ? 'vendDrinks' : 'vendCoffee';
-      ctx.services.streetPropReplacements.push({ kind, stationId: v.id, x: v.x, y: y0, z: v.z, rotY: rot });
-      continue;
-    }
     const casing = mat.toon(B.casing, { paint: cfg.old ? 0.07 : 0.045 });
     const door = mat.toon(B.door, { paint: cfg.old ? 0.07 : 0.04 });
     const stile = mat.toon(B.stile, { paint: 0.04 });
+    let display = null;
+    if (ctx.services.stationVending && (v.id === 'V3a' || v.id === 'V3b')) {
+      const front = H.toWorld(v.x, v.z, rot, 0, 0.3715);
+      display = { id: v.id, source: [front.x, y0 + 1.205, front.z], floorY: y0,
+        forward: [Math.sin(rot), 0, Math.cos(rot)], meshes: [] };
+      ctx.services.stationVending.push(display);
+    }
+    // --- base / plinth
+    if (base.steel) k.boxB(1.04, 0.02, 0.78, M.steelBase, [0, -0.02, 0]);
+    else k.boxB(1.08, base.top - base.bottom, 0.82, M.concrete, [0, base.bottom, 0]);
     // --- body + cap
     k.rbox(1.0, 1.79, 0.625, 0.035, casing, [0, 0.895, -0.0625]);
     k.rbox(1.03, 0.045, 0.785, 0.018, casing, [0, 1.8075, -0.0045]);
@@ -131,7 +122,8 @@ export function buildVending(ctx, H) {
     k.box(0.935, 0.205, 0.006, M.dark, [0, 1.665, 0.3765]);
     k.plane(0.91, 0.188, mat.emissive('#ffffff', 1.0, { map: tx.headers[cfg.brand] }), [0, 1.665, 0.3805]);
     // --- display: back glow, liners, rails, glass
-    k.plane(0.92, 0.70, M.back, [0, 1.205, 0.2515]);
+    const back = k.plane(0.92, 0.70, M.back, [0, 1.205, 0.2515]);
+    display?.meshes.push(back);
     k.plane(0.125, 0.70, M.liner, [-0.4595, 1.205, 0.3125], [0, Math.PI / 2, 0]);
     k.plane(0.125, 0.70, M.liner, [0.4595, 1.205, 0.3125], [0, -Math.PI / 2, 0]);
     k.plane(0.92, 0.125, M.liner, [0, 1.5535, 0.3125], [Math.PI / 2, 0, 0]);
@@ -145,12 +137,14 @@ export function buildVending(ctx, H) {
       k.box(0.92, RAIL_H, 0.11, M.rail, [0, ry + RAIL_H / 2, 0.31]);
       const pg = plane(0.91, RAIL_H);
       cellUV(pg, 0, r * 53, 1024, 52, 1024, 160);
-      k.mesh(pg, railMat, [0, ry + RAIL_H / 2, 0.3658]).castShadow = false;
+      const rail = k.mesh(pg, railMat, [0, ry + RAIL_H / 2, 0.3658]);
+      rail.castShadow = false;
+      display?.meshes.push(rail);
       // products (instanced later)
       row.forEach((key0, i) => {
         const key = key0.replace('*', '');
         const m = new T3.Matrix4().compose(new T3.Vector3(SLOT_X[i], ry + RAIL_H, 0.305), new T3.Quaternion(), new T3.Vector3(1, 1, 1));
-        machines.push({ g, key, m });
+        machines.push({ g, key, m, display });
       });
     });
     const glass = k.plane(0.92, 0.70, M.glass, [0, 1.205, 0.3715]);
@@ -183,6 +177,17 @@ export function buildVending(ctx, H) {
     if (v.id === 'V4') {
       k.plane(0.17, 0.17, mat.decal('#ffffff', { map: tx.sticker, transparent: true }), [0.504, 1.16, 0.12], [0, Math.PI / 2, 0.08]);
     }
+    physics.addBox(v.x, v.z, 1.0, 0.75, rot, y0 - 0.1, y0 + 1.83);
+    // --- neighbours: bins, crates, flag
+    const put = (lx, lz, lrot = 0) => { const p = H.toWorld(v.x, v.z, rot, lx, lz); return { x: p.x, z: p.z, rotY: rot + lrot }; };
+    if (v.id === 'V1b') { recycleBin(ctx, H, M, tx, put(0.77, 0.0), 'blue', '#e9ecee', '#5b8fd6'); nobori(ctx, H, tx, put(1.32, 0.05, -0.25)); }
+    if (v.id === 'V2') recycleBin(ctx, H, M, tx, put(-0.77, 0.0), 'blue', '#e9ecee', '#5b8fd6', v.y);
+    if (v.id === 'V3a') recycleBin(ctx, H, M, tx, put(-0.77, 0.02), 'blue', '#e8eae6', '#4f9e78');
+    if (v.id === 'V4') {
+      recycleBin(ctx, H, M, tx, put(-0.77, 0.02), 'old', '#d8ddd6', '#4d8a6a');
+      crateStack(ctx, H, tx, put(-1.36, 0.0, 0.08), ['#4f7fc4', '#e7c14f']);
+    }
+    if (v.id === 'V5') recycleBin(ctx, H, M, tx, put(-0.83, 0.04), 'blue', '#e9ecee', '#5b8fd6');
   }
 
   // --- products: one shared geometry per product type, plain meshes (the static batcher merges them
@@ -194,6 +199,7 @@ export function buildVending(ctx, H) {
     e.m.decompose(pm.position, pm.quaternion, pm.scale);
     pm.castShadow = false; pm.receiveShadow = false; pm.name = 'props.product.' + e.key;
     e.g.add(pm);
+    e.display?.meshes.push(pm);
   }
 }
 

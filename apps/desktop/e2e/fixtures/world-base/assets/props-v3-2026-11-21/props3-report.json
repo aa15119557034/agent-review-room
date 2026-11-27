@@ -2,7 +2,7 @@
   {
     "file": "prop-vending-drinks.glb",
     "triangles": 88,
-    "bytes": 79416,
+    "bytes": 132540,
     "size_m": [
       1.04,
       0.79,
@@ -12,7 +12,7 @@
   {
     "file": "prop-vending-coffee.glb",
     "triangles": 88,
-    "bytes": 79420,
+    "bytes": 132544,
     "size_m": [
       1.04,
       0.79,
@@ -22,7 +22,7 @@
   {
     "file": "prop-recycle-bin.glb",
     "triangles": 282,
-    "bytes": 29180,
+    "bytes": 29208,
     "size_m": [
       0.44,
       0.36,

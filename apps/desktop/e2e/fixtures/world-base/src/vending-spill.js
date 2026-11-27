@@ -3,20 +3,22 @@ import { groundSpillFronts } from './shop-spill.js';
 
 const deck = { depth: 1.45, cell: 0.18, rayLift: 0.35 };
 const width = 1.85;
-const setbackFromFace = 0.12;
+const plinthClearance = 0.12;
+const cabinetContact = -0.055;       // fade starts just under the cabinet's leading edge
 const wallReach = 2.15;
 const offset = 0.012;
 
 /** A single additive pass for near-machine spill. Paving follows existing floor samples;
  * wall vertices are attached to an actual nearby face and dropped at open edges. */
-export function addVendingSpill({ parent, machines, station, city, town, surfaceAt, strength }) {
-  const positions = [], falloff = [], scales = [], coverage = [];
-  function append(vertices, coordinates, faces, amount, support) {
+export function addVendingSpill({ parent, machines, station, city, town, terrain, surfaceAt, strength }) {
+  const positions = [], falloff = [], scales = [], coverage = [], heightDelta = [];
+  function append(vertices, coordinates, faces, amount, support, baseY = null) {
     for (const i of faces) {
       positions.push(...vertices[i]);
       falloff.push(...coordinates[i]);
       scales.push(amount);
       coverage.push(support ? support[i] : 1);
+      heightDelta.push(baseY === null ? 0 : vertices[i][1] - offset - baseY);
     }
   }
 
@@ -24,7 +26,7 @@ export function addVendingSpill({ parent, machines, station, city, town, surface
   // don't throw a patch across the drop.
   const stationRoots = [station.root, city?.root].filter(Boolean);
   const fronts = machines.filter(m => m.station).map(m => {
-    const p = m.source.clone().addScaledVector(m.forward, setbackFromFace);
+    const p = m.source.clone().addScaledVector(m.forward, plinthClearance);
     return { center: [p.x, m.baseY, p.z], normal: m.forward.toArray(), width };
   });
   const floors = groundSpillFronts(fronts, stationRoots, deck);
@@ -41,20 +43,22 @@ export function addVendingSpill({ parent, machines, station, city, town, surface
   }
   for (const m of machines) {
     if (m.station) continue;
+    if (m.terrainFloor && terrain.material.uniforms.uWorld.value.w === 0) {
+      const patch = terrainFloor(m, terrain);
+      if (!patch.faces.length) continue;
+      append(patch.vertices, patch.coordinates, patch.faces, 1, null, m.baseY);
+      groundPatches++;
+      continue;
+    }
     const right = new THREE.Vector3(m.forward.z, 0, -m.forward.x);
     const grid = sampleGrid(10, 8, (u, v) => {
-      const p = m.source.clone().addScaledVector(right, u * width / 2).addScaledVector(m.forward, setbackFromFace + v * deck.depth);
+      const p = m.source.clone().addScaledVector(right, u * width / 2).addScaledVector(m.forward, cabinetContact + v * deck.depth);
       p.y = surfaceAt(p.x, p.z, m.baseY);
       return Math.abs(p.y - m.baseY) < 0.75 ? p.addScaledVector(THREE.Object3D.DEFAULT_UP, offset).toArray() : null;
     });
     if (!grid.faces.length) continue;
     const support = surfaceCoverage(grid.vertices.length, grid.faces);
-    grid.vertices.forEach((p, i) => {
-      // A continuous slope attenuates the pool gradually. The mesh still rejects
-      // triangles spanning a step or reaching beyond the close floor receiver.
-      if (p) support[i] *= 1 - THREE.MathUtils.smoothstep(Math.abs(p[1] - offset - m.baseY), 0.30, 0.75);
-    });
-    append(grid.vertices, grid.coordinates, grid.faces, 1, support);
+    append(grid.vertices, grid.coordinates, grid.faces, 1, support, m.baseY);
     groundPatches++;
   }
 
@@ -71,6 +75,12 @@ export function addVendingSpill({ parent, machines, station, city, town, surface
     });
   }
   const ray = new THREE.Raycaster(), near = new THREE.Box3();
+  const stationMachines = machines.filter(m => m.station);
+  const casingHit = (p) => stationMachines.some(m => {
+    const x = p.x - m.source.x, z = p.z - m.source.z, depth = x * m.forward.x + z * m.forward.z;
+    const side = x * m.forward.z - z * m.forward.x;
+    return p.y >= m.baseY - 0.05 && p.y <= m.baseY + 1.85 && Math.abs(side) <= 0.53 && depth >= -0.78 && depth <= 0.05;
+  });
   const normalOf = hit => hit.face.normal.clone().applyNormalMatrix(new THREE.Matrix3().getNormalMatrix(hit.object.matrixWorld));
   let wallPatches = 0;
   for (const m of machines) {
@@ -78,24 +88,28 @@ export function addVendingSpill({ parent, machines, station, city, town, surface
     near.setFromCenterAndSize(m.source, new THREE.Vector3(6, 2.4, 6));
     const local = targets.filter(t => t.box.intersectsBox(near));
     for (const side of [-1, 1]) {
-      const origin = m.source.clone().addScaledVector(right, side * 0.68);
+      const origin = m.source.clone().addScaledVector(right, side * 0.68).addScaledVector(m.forward, m.station ? 0.04 : 0);
       // Check the backing and the side wall around the casing flank. The first
       // surface on a ray occludes anything behind it.
-      const directions = [[-1, 0.25], [-0.18, 1]];
+      const directions = m.station ? [[-1, 0.25], [-0.55, 1], [-0.18, 1], [0.12, 1]] : [[-1, 0.25], [-0.18, 1]];
+      const reach = m.station ? 2.55 : wallReach;
+      // The opaque south pier is recessed beside W1's display. A shallow ray
+      // passes over the standalone bins on its way to that facade.
+      if (m.stationId === 'V3a' && side === -1) directions.push([-1, 0.10, -0.09, 3.0]);
       let nearest = null;
-      for (const [back, out] of directions) {
-        const direction = m.forward.clone().multiplyScalar(back).addScaledVector(right, side * out).normalize();
+      for (const [back, out, down = 0, range = reach] of directions) {
+        const direction = m.forward.clone().multiplyScalar(back).addScaledVector(right, side * out).setY(down).normalize();
         ray.set(origin, direction);
-        ray.far = nearest?.hit.distance ?? wallReach;
+        ray.far = Math.min(nearest?.hit.distance ?? range, range);
         const hit = ray.intersectObjects(local.filter(t => ray.ray.intersectsBox(t.box)).map(t => t.mesh), false)[0];
-        if (!hit?.face) continue;
+        if (!hit?.face || (m.station && casingHit(hit.point))) continue;
         const normal = normalOf(hit);
-        if (Math.abs(normal.y) <= 0.2 && normal.dot(direction) <= -0.5) nearest = { hit, normal };
+        if (Math.abs(normal.y) <= 0.2 && normal.dot(direction) <= -0.5) nearest = { hit, normal, range };
       }
       if (nearest) {
         const patch = wallSurface(nearest.hit, nearest.normal);
         if (!patch.faces.length) continue;
-        append(patch.vertices, patch.coordinates, patch.faces, 0.66 * (1 - nearest.hit.distance / (wallReach + 0.15)));
+        append(patch.vertices, patch.coordinates, patch.faces, 0.66 * (1 - nearest.hit.distance / (nearest.range + 0.15)));
         wallPatches++;
       }
     }
@@ -107,6 +121,7 @@ export function addVendingSpill({ parent, machines, station, city, town, surface
   geometry.setAttribute('aFalloff', new THREE.Float32BufferAttribute(falloff, 2));
   geometry.setAttribute('aScale', new THREE.Float32BufferAttribute(scales, 1));
   geometry.setAttribute('aCoverage', new THREE.Float32BufferAttribute(coverage, 1));
+  geometry.setAttribute('aHeightDelta', new THREE.Float32BufferAttribute(heightDelta, 1));
   const material = new THREE.ShaderMaterial({
     name: 'vending-spill',
     uniforms: { uColor: { value: new THREE.Color('#b7e9ff') }, uStrength: { value: strength } },
@@ -114,11 +129,16 @@ export function addVendingSpill({ parent, machines, station, city, town, surface
       attribute vec2 aFalloff;
       attribute float aScale;
       attribute float aCoverage;
+      attribute float aHeightDelta;
       varying vec2 vFalloff;
       varying float vScale;
       varying float vCoverage;
+      varying float vHeightDelta;
+      varying vec3 vWorldPosition;
       void main() {
         vFalloff = aFalloff; vScale = aScale; vCoverage = aCoverage;
+        vHeightDelta = aHeightDelta;
+        vWorldPosition = ( modelMatrix * vec4( position, 1.0 ) ).xyz;
         gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
       }`,
     fragmentShader: /* glsl */`
@@ -127,11 +147,15 @@ export function addVendingSpill({ parent, machines, station, city, town, surface
       varying vec2 vFalloff;
       varying float vScale;
       varying float vCoverage;
+      varying float vHeightDelta;
+      varying vec3 vWorldPosition;
       void main() {
         float edge = 1.0 - smoothstep( 0.0, 1.0, length( vFalloff ) );
-        float floorNearFade = mix( 1.0, smoothstep( 0.0, 0.30, vFalloff.y ), step( 0.999, vScale ) );
+        float floorNearFade = mix( 1.0, smoothstep( 0.0, 0.12, vFalloff.y ), step( 0.999, vScale ) );
         float support = smoothstep( 0.0, 1.0, vCoverage );
-        gl_FragColor = vec4( uColor * ( uStrength * vScale * edge * edge * support * floorNearFade ), 0.0 );
+        float slopeFade = 1.0 - smoothstep( 0.30, 0.75, abs( vHeightDelta ) );
+        float close = 1.0 - smoothstep( 24.0, 52.0, distance( cameraPosition, vWorldPosition ) );
+        gl_FragColor = vec4( uColor * ( uStrength * vScale * edge * edge * support * floorNearFade * slopeFade * close ), 0.0 );
       }`,
     transparent: true, depthTest: true, depthWrite: false, side: THREE.DoubleSide, toneMapped: false,
     blending: THREE.CustomBlending, blendEquation: THREE.AddEquation, blendEquationAlpha: THREE.AddEquation,
@@ -147,6 +171,40 @@ export function addVendingSpill({ parent, machines, station, city, town, surface
   mesh.userData.walkable = false;
   parent.add(mesh);
   return { mesh, groundPatches, wallPatches, triangles: positions.length / 9 };
+}
+
+/** At walking distance, the upstream terrain draws its texel-centred, level-0
+ * triangles with alternating diagonals. Project onto those planes so a light
+ * pool crosses the paved/grass texture seam without intersecting the terrain. */
+function terrainFloor(m, terrain) {
+  const center = m.source.clone().addScaledVector(m.forward, cabinetContact);
+  const right = new THREE.Vector3(m.forward.z, 0, -m.forward.x);
+  const cell = terrain.cell, first = (cell - terrain.meta.world) / 2;
+  const reach = Math.hypot(width / 2, deck.depth);
+  const gridIndex = value => Math.floor((value - first) / cell);
+  const vertices = [], coordinates = [], faces = [];
+  const sample = (ix, iz) => {
+    const x = first + ix * cell, z = first + iz * cell;
+    const dx = x - center.x, dz = z - center.z;
+    return [(dx * right.x + dz * right.z) * 2 / width,
+      (dx * m.forward.x + dz * m.forward.z) * 2 / deck.depth - 1, x, terrain.heightAt(x, z), z];
+  };
+  for (let z = gridIndex(center.z - reach); z <= gridIndex(center.z + reach); z++) {
+    for (let x = gridIndex(center.x - reach); x <= gridIndex(center.x + reach); x++) {
+      const a = sample(x, z), b = sample(x + 1, z), c = sample(x, z + 1), d = sample(x + 1, z + 1);
+      const triangles = (x + z) & 1 ? [[a, c, b], [b, c, d]] : [[a, c, d], [a, d, b]];
+      for (let polygon of triangles) {
+        for (const axis of [0, 1]) for (const edge of [-1, 1]) polygon = clip(polygon, axis, edge);
+        const base = vertices.length;
+        for (const [u, v, wx, y, wz] of polygon) {
+          vertices.push([wx, y + offset, wz]);
+          coordinates.push([u, (v + 1) / 2]);
+        }
+        for (let i = 2; i < polygon.length; i++) faces.push(base, base + i - 1, base + i);
+      }
+    }
+  }
+  return { vertices, coordinates, faces };
 }
 
 /** At a kerb, an omitted triangle exposes a new boundary inside the floor grid.
@@ -208,7 +266,7 @@ function clip(polygon, axis, edge) {
     const insideA = a[axis] * edge <= 1, insideB = b[axis] * edge <= 1;
     if (insideA !== insideB) {
       const t = (edge - a[axis]) / (b[axis] - a[axis]);
-      out.push([a[0] + t * (b[0] - a[0]), a[1] + t * (b[1] - a[1])]);
+      out.push(a.map((v, i) => v + t * (b[i] - v)));
     }
     if (insideB) out.push(b);
     a = b;

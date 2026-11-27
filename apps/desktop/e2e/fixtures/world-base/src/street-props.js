@@ -40,13 +40,12 @@ const _m = new THREE.Matrix4(), _x = new THREE.Vector3(), _y = new THREE.Vector3
 /** Matrix with +Z toward (fx, fz), x stretched by sx, standing on y. */
 const facing = (x, y, z, fx, fz, sx = 1) => { const l = Math.hypot(fx, fz) || 1; fx /= l; fz /= l; return _m.clone().makeBasis(_x.set(fz * sx, 0, -fx * sx), _y, _z.set(fx, 0, fz)).setPosition(_t.set(x, y, z)); };
 
-export async function createStreetProps({ scene, worldBase, island, station, dryRun = false }) {
+export async function createStreetProps({ scene, worldBase, island, station, vendingGlow = null, dryRun = false }) {
   const t0 = performance.now(), P = PARAMS, rng = rngFrom(hash32(P.seed, 1));
   const ctx = await getContext({ worldBase, island, station, scene });
   const [aerial, table] = await Promise.all([getAerial(worldBase, island), loadTable()]);
   const model = await loadModels(table.props), GROUPS = table.props.groups, pick = g => pickWeighted(rng, GROUPS[g]), RAD = id => model[id].radius;
-  const dark = island.timeOfDay !== 'afternoon' && new URLSearchParams(location.search).get('vendlight') !== 'off';
-  const windowLight = dark ? (island.timeOfDay === 'night' ? 0.95 : 0.65) : 0;
+  const windowLight = vendingGlow ? (vendingGlow === 'night' ? 0.70 : 0.48) : 0;
   const materials = makeMaterialSet({ gradientMap: station.ctx.mat.gradientMap, aerial, name: 'street-props', windowLight }), material = materials.shared;
   const root = new THREE.Group(); root.name = 'street-props';
   const items = {}, all = [], rejects = {};
@@ -262,15 +261,21 @@ export async function createStreetProps({ scene, worldBase, island, station, dry
     root.add(wires); drawCalls++; wireTris = geometry.index.count / 3; triangles += wireTris; counts.wireTubes = wireGeoms.length;
   }
   let vendingSpill = null;
-  if (dark && !dryRun) {
+  if (vendingGlow && !dryRun) {
     const kinds = new Set(GROUPS.vending.map(entry => entry.id));
     const machines = all.filter(p => kinds.has(p.kind)).map(p => ({
       station: p.station, baseY: p.y,
+      terrainFloor: Math.abs(p.y - island.terrain.heightAt(p.x, p.z)) < 0.03,
       source: model[p.kind].windowGeometry.boundingBox.getCenter(new THREE.Vector3()).applyMatrix4(p.item.matrix),
       forward: new THREE.Vector3(0, 0, 1).transformDirection(p.item.matrix),
     }));
-    vendingSpill = addVendingSpill({ parent: root, machines, station, city: worldBase.city, town: island.town, surfaceAt,
-      strength: island.timeOfDay === 'night' ? 0.28 : 0.22 });
+    for (const p of station.ctx.services.stationVending ?? []) {
+      machines.push({ station: true, stationId: p.id, baseY: p.floorY + station.root.position.y,
+        source: station.toWorld(new THREE.Vector3().fromArray(p.source)),
+        forward: new THREE.Vector3().fromArray(p.forward).transformDirection(station.root.matrixWorld) });
+    }
+    vendingSpill = addVendingSpill({ parent: root, machines, station, city: worldBase.city, town: island.town, terrain: island.terrain, surfaceAt,
+      strength: vendingGlow === 'night' ? 0.28 : 0.22 });
     drawCalls += Number(Boolean(vendingSpill.mesh)); triangles += vendingSpill.triangles;
   }
   if (!dryRun) scene.add(root);
