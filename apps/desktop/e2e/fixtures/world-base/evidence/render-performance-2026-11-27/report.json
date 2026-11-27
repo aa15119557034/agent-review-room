@@ -1,0 +1,302 @@
+{
+  "settings": {
+    "width": 1440,
+    "height": 900,
+    "dpr": 1,
+    "clockSeconds": 5,
+    "seed": "0x254",
+    "warmup": 60,
+    "renderedFrames": 120,
+    "measuredFrames": 118,
+    "rounds": 3
+  },
+  "order": [
+    [
+      "base",
+      "candidate"
+    ],
+    [
+      "candidate",
+      "base"
+    ],
+    [
+      "base",
+      "candidate"
+    ]
+  ],
+  "sources": {
+    "base": {
+      "revision": "0cf9bbd12cbc765f312b4523f0d2e80a8591315e"
+    },
+    "candidate": {
+      "revision": "ad250a2d2bb8212c258771b0cf430e1a1a7b73af"
+    }
+  },
+  "profiles": [
+    {
+      "side": "base",
+      "round": 1,
+      "bakeMs": 21184,
+      "errors": []
+    },
+    {
+      "side": "candidate",
+      "round": 1,
+      "bakeMs": 3742,
+      "errors": []
+    },
+    {
+      "side": "candidate",
+      "round": 2,
+      "bakeMs": 3872,
+      "errors": []
+    },
+    {
+      "side": "base",
+      "round": 2,
+      "bakeMs": 3672,
+      "errors": []
+    },
+    {
+      "side": "base",
+      "round": 3,
+      "bakeMs": 3728,
+      "errors": []
+    },
+    {
+      "side": "candidate",
+      "round": 3,
+      "bakeMs": 3797,
+      "errors": []
+    }
+  ],
+  "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "summary": [
+    {
+      "name": "art-a-street",
+      "base": {
+        "rounds": [
+          11.732767999999998,
+          10.358303999999997,
+          10.064896
+        ],
+        "p95": 10.358303999999997
+      },
+      "candidate": {
+        "rounds": [
+          9.449471999999998,
+          9.595903999999997,
+          9.284607999999999
+        ],
+        "p95": 9.449471999999998
+      }
+    },
+    {
+      "name": "art-b-konbini",
+      "base": {
+        "rounds": [
+          10.987423999999999,
+          11.024384000000001,
+          11.47392
+        ],
+        "p95": 11.024384000000001
+      },
+      "candidate": {
+        "rounds": [
+          10.191743999999998,
+          9.730816,
+          9.892863999999998
+        ],
+        "p95": 9.892863999999998
+      }
+    },
+    {
+      "name": "art-c-alley",
+      "base": {
+        "rounds": [
+          11.013120000000002,
+          11.117568000000004,
+          10.76736
+        ],
+        "p95": 11.013120000000002
+      },
+      "candidate": {
+        "rounds": [
+          9.476864,
+          9.304064000000002,
+          8.983552
+        ],
+        "p95": 9.304064000000002
+      }
+    },
+    {
+      "name": "art-d-laundry",
+      "base": {
+        "rounds": [
+          7.018496000000002,
+          6.838272000000002,
+          7.190528000000003
+        ],
+        "p95": 7.018496000000002
+      },
+      "candidate": {
+        "rounds": [
+          6.856704000000002,
+          5.991424000000002,
+          6.4704320000000015
+        ],
+        "p95": 6.4704320000000015
+      }
+    },
+    {
+      "name": "sample-e-harbour",
+      "base": {
+        "rounds": [
+          11.487231999999999,
+          10.99344,
+          10.92592
+        ],
+        "p95": 10.99344
+      },
+      "candidate": {
+        "rounds": [
+          10.68608,
+          10.560287999999998,
+          10.188735999999997
+        ],
+        "p95": 10.560287999999998
+      }
+    },
+    {
+      "name": "sample-f-hillside",
+      "base": {
+        "rounds": [
+          7.614080000000003,
+          7.325280000000001,
+          7.657472000000004
+        ],
+        "p95": 7.614080000000003
+      },
+      "candidate": {
+        "rounds": [
+          6.331392000000001,
+          5.915648000000002,
+          6.294400000000004
+        ],
+        "p95": 6.294400000000004
+      }
+    },
+    {
+      "name": "sample-g-rail",
+      "base": {
+        "rounds": [
+          12.437503999999999,
+          12.157951999999998,
+          11.841535999999998
+        ],
+        "p95": 12.157951999999998
+      },
+      "candidate": {
+        "rounds": [
+          11.280383999999998,
+          11.831295999999998,
+          11.369247999999995
+        ],
+        "p95": 11.369247999999995
+      }
+    },
+    {
+      "name": "sample-h-north",
+      "base": {
+        "rounds": [
+          6.523904000000002,
+          6.447104000000002,
+          6.732800000000003
+        ],
+        "p95": 6.523904000000002
+      },
+      "candidate": {
+        "rounds": [
+          4.772864000000001,
+          4.760288000000002,
+          4.682752000000002
+        ],
+        "p95": 4.760288000000002
+      }
+    }
+  ],
+  "pixelComparison": {
+    "art-a-street": {
+      "pixels": 22,
+      "aboveThree": 0,
+      "maxChannelDelta": 1,
+      "hashes": [
+        "981ab5fc49790d314f92accdaaeb43365e85300c8fcf5f77826ddcbfef383c1a",
+        "8158a8f8cfdf006f7daced8d4ce61c6ed0827a8ec1c59a179074ebf4004ac54d"
+      ]
+    },
+    "art-b-konbini": {
+      "pixels": 0,
+      "aboveThree": 0,
+      "maxChannelDelta": 0,
+      "hashes": [
+        "d79c718778ec0f7aa1569e3fd7fd4dd614009f94a1b482c4c5d7f1003a27c937",
+        "d79c718778ec0f7aa1569e3fd7fd4dd614009f94a1b482c4c5d7f1003a27c937"
+      ]
+    },
+    "art-c-alley": {
+      "pixels": 0,
+      "aboveThree": 0,
+      "maxChannelDelta": 0,
+      "hashes": [
+        "79d211373d8bee4248b8ed72ae505084c5b2b877c69940daedbf1c084600c0ab",
+        "79d211373d8bee4248b8ed72ae505084c5b2b877c69940daedbf1c084600c0ab"
+      ]
+    },
+    "art-d-laundry": {
+      "pixels": 0,
+      "aboveThree": 0,
+      "maxChannelDelta": 0,
+      "hashes": [
+        "d93559f51ef9a7fd3fea1d7b017dd4568366adb3f2af0d2e2b19df88185f4489",
+        "d93559f51ef9a7fd3fea1d7b017dd4568366adb3f2af0d2e2b19df88185f4489"
+      ]
+    },
+    "sample-e-harbour": {
+      "pixels": 0,
+      "aboveThree": 0,
+      "maxChannelDelta": 0,
+      "hashes": [
+        "3b91ed00c83e8e9b581ac335700d8e06ca884c964cf142e16c5d90fea3eba159",
+        "3b91ed00c83e8e9b581ac335700d8e06ca884c964cf142e16c5d90fea3eba159"
+      ]
+    },
+    "sample-f-hillside": {
+      "pixels": 0,
+      "aboveThree": 0,
+      "maxChannelDelta": 0,
+      "hashes": [
+        "2f1476989ab5cae465661e49d88e8c766dc3469093b724cce653ceca0092ece9",
+        "2f1476989ab5cae465661e49d88e8c766dc3469093b724cce653ceca0092ece9"
+      ]
+    },
+    "sample-g-rail": {
+      "pixels": 0,
+      "aboveThree": 0,
+      "maxChannelDelta": 0,
+      "hashes": [
+        "eda5f525e6804803eec08101f1df33ef1a402656e49abecd567c208fca214e05",
+        "eda5f525e6804803eec08101f1df33ef1a402656e49abecd567c208fca214e05"
+      ]
+    },
+    "sample-h-north": {
+      "pixels": 0,
+      "aboveThree": 0,
+      "maxChannelDelta": 0,
+      "hashes": [
+        "114774fc307a41dc0e9aff8f39f78451ef50dbc5fddd12f2ebd04162e032732a",
+        "114774fc307a41dc0e9aff8f39f78451ef50dbc5fddd12f2ebd04162e032732a"
+      ]
+    }
+  }
+}
