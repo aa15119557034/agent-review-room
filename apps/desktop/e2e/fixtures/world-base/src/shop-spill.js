@@ -43,10 +43,10 @@ export function shopFrontsFromRooms(layout, rooms, p, night = false) {
     const lot = frame ? null : layout.lotById(id), f = frame ?? layout.lotFrame(lot), c = Math.cos(f.rotY), s = Math.sin(f.rotY);
     const position = (x, z) => [f.x + x * c + z * s, f.y + box[1], f.z - x * s + z * c];
     const kind = roomKind ?? lot.kind, label = name ?? id;
-    if (glazing) return glazing.map(({ axis, from, to, out, depth, gain, nightGain }) => {
+    if (glazing) return glazing.map(({ axis, from, to, out, depth, nightDepth, gain, nightGain }) => {
       const mid = (from + to) / 2, face = out + 0.05, front = axis === 'x';
       return { center: front ? position(mid, face) : position(face, mid), normal: front ? [s, 0, c] : [c, 0, -s],
-        width: to - from, kind, name: front ? label : label + '-north', depth,
+        width: to - from, kind, name: front ? label : label + '-north', depth: night ? nightDepth ?? depth : depth,
         gain: night ? nightGain ?? gain : gain, color: [0.78, 0.90, 1] };
     });
     return [{ center: position((box[0] + box[3]) / 2, box[5] + (p.wallOut ?? 0.25)), normal: [s, 0, c],

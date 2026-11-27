@@ -241,11 +241,16 @@ def gondola(name,x,index,materials):
                 product=labels[(group*2+level+(side>0))%len(labels)]
                 width = rng.uniform(.076, .119)
                 height = rng.uniform(.102, .152) if kind != 'bag' else rng.uniform(.125, .175)
+                # Keep the shelf slot pitch while sizing the single-serving pudding.
+                package_width, package_height = width, height
+                if product == 'pudding':
+                    package_width = width * .84
+                    package_height = .09 + .40 * (height - .102)
                 for i in range(count):
                     if z + width*.52 > -4.51:
                         break
                     f.packed(x + side*(.349 - rng.uniform(0, .027)), y + .042, z,
-                             direction, product, width, height, kind)
+                             direction, product, package_width, package_height, kind)
                     if i==0:
                         f.box(x+side*.453,y+.019,z,.008,.058,.093,
                               label='price_'+PRICES[(group+level+index)%len(PRICES)],face=direction)

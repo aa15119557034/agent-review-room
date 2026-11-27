@@ -22,7 +22,9 @@ const inRoom = (b) => {
   const height = b.max[1] - b.min[1];
   const y0 = (b.min[1] + height * 0.62).toFixed(4), y1 = (b.min[1] + height * 0.88).toFixed(4);
   const upper = b.lampUpper ? ` + ${vec3(b.lampUpper)} * smoothstep( ${y0}, ${y1}, q.y )` : '';
-  return `{ vec2 d = stW.xz - vec2( ${f3(b.o)} ); vec3 q = vec3( dot( d, vec2( ${f3(b.ex)} ) ), stW.y, dot( d, vec2( ${f3(b.ez)} ) ) );
+  // The guard grows by a centimetre to include points affected by the rounded GLSL lot basis.
+  const guard = b.aabb.map((value, index) => value + (index < 3 ? -0.01 : 0.01));
+  return `if ( ${inAabb(guard)} ) { vec2 d = stW.xz - vec2( ${f3(b.o)} ); vec3 q = vec3( dot( d, vec2( ${f3(b.ex)} ) ), stW.y, dot( d, vec2( ${f3(b.ez)} ) ) );
       if ( all( greaterThan( q, ${vec3(b.min)} ) ) && all( lessThan( q, ${vec3(b.max)} ) ) ) { stIn = 1.0;${b.lamp ? ` stLamp = ${vec3(b.lamp)}${upper};` : ''} } }`;
 };
 export function indoorGlsl(boxes) {
@@ -49,12 +51,14 @@ export function installLitShadowTint(p, boxes) {
   if (chunk.includes('wbShadowTint')) return;
   THREE.ShaderChunk.lights_fragment_end = `${chunk}
 #if defined( RE_IndirectDiffuse )
-{ // wbShadowTint
+${indoorGlsl(boxes)}
+if ( stIn < 0.5 ) { // wbShadowTint
   float stLum = dot( diffuseColor.rgb, vec3( 0.2126, 0.7152, 0.0722 ) );
   float stSun = dot( reflectedLight.directDiffuse, vec3( 0.2126, 0.7152, 0.0722 ) ) / max( stLum, 0.03 );
   float stShade = 1.0 - smoothstep( ${p.sunLo.toFixed(3)}, ${p.sunHi.toFixed(3)}, stSun );
-${indoorGlsl(boxes)}
-  reflectedLight.indirectDiffuse += diffuseColor.rgb * ${vec3(p.fill)} * stShade * ( 1.0 - stIn ) + diffuseColor.rgb * stLamp;
+  reflectedLight.indirectDiffuse += diffuseColor.rgb * ${vec3(p.fill)} * stShade;
+} else {
+  reflectedLight.indirectDiffuse += diffuseColor.rgb * stLamp;
 }
 #endif`;
 }
