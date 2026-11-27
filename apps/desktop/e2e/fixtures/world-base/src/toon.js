@@ -37,9 +37,9 @@ const f = (x) => Number(x).toFixed(4);
 const vec3 = (v) => `vec3( ${v.map(f).join(', ')} )`;
 
 /** Must run before any material is created (the setter below sees their own onBeforeCompile hooks). Hands the two shared
- *  uniforms to every program that compiles with the lit chunk, and marks tree crowns (sakura masses and cards) as no-outline.
+ *  uniforms to every program that compiles with the lit chunk, and lets fine foliage skip the outline.
  *  The wrapper keeps toString() of the original so three's default program cache keys stay distinct. */
-const NOLINE_NAMES = /^sakura:(blob|cards)$/;
+const NOLINE_NAMES = /^(sakura:(blob|cards)|station-lawn-blades|vegetation(?:-.*)?)$/;
 export function installToonHook() {
   const proto = THREE.Material.prototype;
   if (Object.getOwnPropertyDescriptor(proto, 'onBeforeCompile').get) return;
@@ -59,7 +59,8 @@ export function installToonHook() {
       if (flatEligible(material) && shader.fragmentShader && !shader.fragmentShader.includes('TOON_FLAT')) {
         shader.fragmentShader = `#define TOON_FLAT\n${shader.fragmentShader}`;
       }
-      if (NOLINE_NAMES.test(material.name) && shader.fragmentShader && !shader.fragmentShader.includes('TOON_NOLINE')) {
+      if (NOLINE_NAMES.test(material.name) && !material.defines?.TOON_TREE_CROWN
+          && shader.fragmentShader && !shader.fragmentShader.includes('TOON_NOLINE')) {
         shader.fragmentShader = `#define TOON_NOLINE\n${shader.fragmentShader}`;
       }
       return result;
@@ -120,6 +121,10 @@ ${signs ? `#if defined( TOON_SIGN ) && ! defined( TOON_NOLINE )
   tmM = ${f(SIGN_MASK)};
 #endif
 ` : ''}  gl_FragColor.a = tmM;
+#ifdef TOON_TREE_CROWN
+  // The post pass keeps the silhouette and fades contact shading on painted crowns.
+  gl_FragColor.a = mix( tmM, 2.5, vStationCrown * uTbK );
+#endif
 }
 #endif`;
   }

@@ -1,0 +1,284 @@
+{
+  "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "poses": {
+    "station-street": [
+      278.8,
+      10.488,
+      936,
+      -0.003277842930440409,
+      -0.009834585659995631,
+      -3.223795934194156e-05,
+      0.9999462663720154,
+      35.63777782904556
+    ],
+    "lighthouse-road": [
+      181.0601,
+      136.1623,
+      -1212.8685,
+      0.1033905527383131,
+      0.02096399872548667,
+      -0.002179647308778166,
+      0.9944174945662979,
+      57
+    ],
+    "grove-a": [
+      468.9,
+      5.4801266670227,
+      1022.3,
+      -0.023916417445318784,
+      0.9497485870079169,
+      -0.07497572224380308,
+      -0.3029591845893878,
+      58
+    ],
+    "forest-edge": [
+      89.1,
+      61.7418018341,
+      187.5,
+      0.0009989835544162743,
+      0.998996311673234,
+      0.033161792830147016,
+      -0.030094298320832113,
+      57
+    ],
+    "flower-slope": [
+      404.3,
+      37.7210256237,
+      530.9,
+      0.012270505309736973,
+      -0.5861800442686982,
+      0.008879477842387821,
+      0.8100392245279467,
+      57
+    ],
+    "station-island-seam": [
+      382,
+      13.64657465617,
+      981,
+      -0.01824660845498208,
+      0.8708832919439569,
+      0.032424665514679624,
+      0.49007957941441366,
+      57
+    ],
+    "handoff": [
+      346.8,
+      13.014800000000001,
+      1019.1,
+      0.0003165042670506921,
+      0.6883545101672566,
+      0.00030035133464517065,
+      -0.7253743019617671,
+      58
+    ]
+  },
+  "authoredGrass": {
+    "sizeWarnings": [],
+    "trees": 4220,
+    "streetTrees": 59,
+    "bushes": 3549,
+    "hedges": 208,
+    "hedgeBushes": 48,
+    "grass": 20229,
+    "rootGrass": 17811,
+    "openGrass": 0,
+    "edgeGrass": 727,
+    "wallGrass": 1691,
+    "flowers": 5407,
+    "thinned": 2395,
+    "stationLawn": {
+      "groups": 71,
+      "patches": 390,
+      "blades": 1170,
+      "triangles": 3510
+    }
+  },
+  "treesIdentical": 4220,
+  "bushesIdentical": 3549,
+  "hedgesIdentical": 208,
+  "hueThresholds": "Grass proxy HSV H=56–185°, S>=32/255; warm H<108°, cool H>=120°.",
+  "samples": {
+    "grove-a": {
+      "regions": [
+        [
+          70,
+          668,
+          1360,
+          893
+        ]
+      ],
+      "before": {
+        "greenPixels": 285960,
+        "warmPercent": 2.22,
+        "coolPercent": 97.31,
+        "warmMedianRgb": [
+          126.0,
+          138.0,
+          110.0
+        ],
+        "warmMedianHue": 87.53
+      },
+      "after": {
+        "greenPixels": 287188,
+        "warmPercent": 69.61,
+        "coolPercent": 28.27,
+        "warmMedianRgb": [
+          101.0,
+          123.0,
+          66.0
+        ],
+        "warmMedianHue": 81.88
+      }
+    },
+    "lighthouse-road": {
+      "regions": [
+        [
+          80,
+          680,
+          420,
+          887
+        ],
+        [
+          1000,
+          680,
+          1320,
+          887
+        ]
+      ],
+      "before": {
+        "greenPixels": 131863,
+        "warmPercent": 0.86,
+        "coolPercent": 98.86,
+        "warmMedianRgb": [
+          96.0,
+          111.0,
+          79.0
+        ],
+        "warmMedianHue": 87.53
+      },
+      "after": {
+        "greenPixels": 131957,
+        "warmPercent": 69.52,
+        "coolPercent": 28.48,
+        "warmMedianRgb": [
+          88.0,
+          112.0,
+          66.0
+        ],
+        "warmMedianHue": 93.18
+      }
+    },
+    "forest-edge": {
+      "regions": [
+        [
+          100,
+          574,
+          1370,
+          890
+        ]
+      ],
+      "before": {
+        "greenPixels": 395005,
+        "warmPercent": 37.37,
+        "coolPercent": 45.53,
+        "warmMedianRgb": [
+          107.0,
+          137.0,
+          95.0
+        ],
+        "warmMedianHue": 101.65
+      },
+      "after": {
+        "greenPixels": 395381,
+        "warmPercent": 64.05,
+        "coolPercent": 34.72,
+        "warmMedianRgb": [
+          110.0,
+          132.0,
+          76.0
+        ],
+        "warmMedianHue": 81.88
+      }
+    }
+  },
+  "stationOriginalForeground": {
+    "roi": [
+      80,
+      653,
+      1020,
+      890
+    ],
+    "max": 1,
+    "pixelsAboveOne": 0
+  },
+  "stationIslandSeam": {
+    "eye": [
+      397,
+      13.702389558156375,
+      987
+    ],
+    "rotation": [
+      -0.012898394612344335,
+      0.8503947548894674,
+      0.02087004088308166,
+      0.5255728623763267
+    ],
+    "fov": 54,
+    "samples": [
+      {
+        "x": 397,
+        "z": 987,
+        "station": false,
+        "grass": 1
+      },
+      {
+        "x": 392,
+        "z": 989.5,
+        "station": false,
+        "grass": 1
+      },
+      {
+        "x": 387,
+        "z": 992,
+        "station": false,
+        "grass": 1
+      },
+      {
+        "x": 382,
+        "z": 994.5,
+        "station": false,
+        "grass": 0.6823529601097107
+      },
+      {
+        "x": 377,
+        "z": 997,
+        "station": false,
+        "grass": 0.04313725605607033
+      },
+      {
+        "x": 372,
+        "z": 999.5,
+        "station": true,
+        "grass": 0
+      },
+      {
+        "x": 367,
+        "z": 1002,
+        "station": true,
+        "grass": 0
+      },
+      {
+        "x": 362,
+        "z": 1004.5,
+        "station": true,
+        "grass": 0
+      },
+      {
+        "x": 357,
+        "z": 1007,
+        "station": true,
+        "grass": 0
+      }
+    ]
+  }
+}

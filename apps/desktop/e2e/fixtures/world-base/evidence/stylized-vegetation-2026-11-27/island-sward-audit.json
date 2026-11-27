@@ -1,0 +1,201 @@
+{
+  "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "cameraPoses": {
+    "station-street": [
+      278.8,
+      10.488,
+      936,
+      -0.003277842930440409,
+      -0.009834585659995631,
+      -3.223795934194156e-05,
+      0.9999462663720154,
+      35.63777782904556
+    ],
+    "lighthouse-road": [
+      181.0601,
+      136.1623,
+      -1212.8685,
+      0.1033905527383131,
+      0.02096399872548667,
+      -0.002179647308778166,
+      0.9944174945662979,
+      57
+    ],
+    "grove-a": [
+      468.9,
+      5.4801266670227,
+      1022.3,
+      -0.023916417445318784,
+      0.9497485870079169,
+      -0.07497572224380308,
+      -0.3029591845893878,
+      58
+    ],
+    "forest-edge": [
+      89.1,
+      61.7418018341,
+      187.5,
+      0.0009989835544162743,
+      0.998996311673234,
+      0.033161792830147016,
+      -0.030094298320832113,
+      57
+    ],
+    "flower-slope": [
+      404.3,
+      37.7210256237,
+      530.9,
+      0.012270505309736973,
+      -0.5861800442686982,
+      0.008879477842387821,
+      0.8100392245279467,
+      57
+    ],
+    "handoff": [
+      346.8,
+      13.014800000000001,
+      1019.1,
+      0.0003165042670506921,
+      0.6883545101672566,
+      0.00030035133464517065,
+      -0.7253743019617671,
+      58
+    ]
+  },
+  "meadowBefore": {
+    "station-street": {
+      "cells": 21,
+      "blades": 30492,
+      "flowers": 127594
+    },
+    "lighthouse-road": {
+      "cells": 72,
+      "blades": 203490,
+      "flowers": 172694
+    },
+    "grove-a": {
+      "cells": 56,
+      "blades": 267840,
+      "flowers": 29403
+    },
+    "forest-edge": {
+      "cells": 114,
+      "blades": 286254,
+      "flowers": 395981
+    },
+    "flower-slope": {
+      "cells": 114,
+      "blades": 296235,
+      "flowers": 364991
+    },
+    "handoff": {
+      "cells": 55,
+      "blades": 224820,
+      "flowers": 85804
+    }
+  },
+  "meadowAfter": {
+    "station-street": {
+      "cells": 14,
+      "blades": 0,
+      "flowers": 127594
+    },
+    "lighthouse-road": {
+      "cells": 33,
+      "blades": 0,
+      "flowers": 172694
+    },
+    "grove-a": {
+      "cells": 3,
+      "blades": 0,
+      "flowers": 29403
+    },
+    "forest-edge": {
+      "cells": 56,
+      "blades": 0,
+      "flowers": 395981
+    },
+    "flower-slope": {
+      "cells": 54,
+      "blades": 0,
+      "flowers": 364991
+    },
+    "handoff": {
+      "cells": 9,
+      "blades": 0,
+      "flowers": 85804
+    }
+  },
+  "authoredGrassBefore": {
+    "sizeWarnings": [],
+    "trees": 4220,
+    "streetTrees": 59,
+    "bushes": 3549,
+    "hedges": 208,
+    "hedgeBushes": 48,
+    "grass": 21022,
+    "openGrass": 5110,
+    "edgeGrass": 709,
+    "flowers": 5692,
+    "thinned": 2395,
+    "stationLawn": {
+      "groups": 71,
+      "patches": 390,
+      "blades": 1170,
+      "triangles": 3510
+    }
+  },
+  "authoredGrassAfter": {
+    "sizeWarnings": [],
+    "trees": 4220,
+    "streetTrees": 59,
+    "bushes": 3549,
+    "hedges": 208,
+    "hedgeBushes": 48,
+    "grass": 20229,
+    "rootGrass": 17811,
+    "openGrass": 0,
+    "edgeGrass": 727,
+    "wallGrass": 1691,
+    "flowers": 5407,
+    "thinned": 2395,
+    "stationLawn": {
+      "groups": 71,
+      "patches": 390,
+      "blades": 1170,
+      "triangles": 3510
+    }
+  },
+  "treesIdentical": 4220,
+  "bushesIdentical": 3549,
+  "hedgesIdentical": 208,
+  "groveYellowRoi": [
+    340,
+    760,
+    1100,
+    898
+  ],
+  "yellowRule": "HSV 42–72°, saturation > .45, value > .65",
+  "yellowPercentBefore": 66.21,
+  "yellowPercentAfter": 0.0,
+  "stationHandoffForeground": {
+    "roi": [
+      80,
+      653,
+      1020,
+      890
+    ],
+    "max": 1,
+    "pixelsAboveOne": 0
+  },
+  "stationStreet": {
+    "roi": [
+      0,
+      0,
+      1440,
+      900
+    ],
+    "max": 171,
+    "pixelsAboveOne": 23225
+  }
+}

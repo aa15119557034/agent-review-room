@@ -12,6 +12,7 @@
  "petalLift": 0.06,
  "swardSteps": 0.85,
  "swardEdge": 0.12,
+ "swardPaint": true,
  "rockLo": 0.05,
  "rockHi": 0.4,
  "rockEdge": 0.16,

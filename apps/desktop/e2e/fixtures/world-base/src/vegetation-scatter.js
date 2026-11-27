@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { loadTable, loadModels, pickWeighted, makeMaterialSet, makeBatches, getAerial, getContext, hash32, rngFrom, fbm, noise2, smooth, focusFalloff } from './scatter-common.js';
+import { addStationLawn } from './transition.js';
 
 // X-51 vegetation (2026-11-21): island-wide trees, bushes, hedges and grass tufts as InstancedMesh batches (one draw call per GLB, materials baked into
 // vertex colours, toon ramp + camera-distance fog from scatter-common.js). Models, sizes, origin offsets, radii, species weights and scale ranges live in
@@ -15,10 +16,10 @@ import { loadTable, loadModels, pickWeighted, makeMaterialSet, makeBatches, getA
 //              far forests, cherry a few percent near the settlements (more near roads), otherwise broadleaf a / b.
 //   street     young trees along every street of the towns, alternate sides, every `street.spacing` m.
 //   bushes     one beside `bush.share` of the trees + free bushes along forest edges.
-//   hedges     a hedge row `hedge.offset` m outside the walkable rectangle all round (gaps where a road, a building or water is).
-//   grass      v2 grass clumps + flowers (`grass.flowerShare` of the instances are flowers: yellow / white, a few pink), by zone: `grass.perTree` at every tree foot, open meadow
-//              within `grass.radius` m of the focus points (patchy noise, `grass.p`), the verges beside the roads there (`grass.edge`, denser, more flowers) and flower patches.
-//   LOD        broadleaf trees: the light model beyond `lod.nearDist` m (props-veg.json) from the camera, the v2 model within (see makeTreeLod / update()).
+//   hedges     a trimmed row outside the walkable rectangle, layered with lower shrubs where the border has room.
+//   grass      small clumps and flowers at tree feet, road verges and town walls. The original
+//              open-meadow scattering is retained for the comparison with ?ground=off.
+//   LOD        trees with a named near model use the light model beyond the configured camera distance.
 // Caps (`cap`) thin a class uniformly when the budget (1.5 M triangles, 60 draw calls for props + vegetation) would be exceeded.
 
 export const vegEnabled = () => new URLSearchParams(location.search).get('veg') !== 'off';
@@ -30,17 +31,17 @@ export const PARAMS = {
     conifer: { slope: 0.3, height: 140, farShare: 0.82 }, cherry: { near: 0.06, byRoad: 0.14, roadReach: 45 } },
   street: { spacing: [9, 13], offset: 1.9, keep: 0.75, minHalfW: 1.8 },
   bush: { share: 0.55, cell: 14, edge: 0.3, base: 0.05, cap: 3500, walkMargin: 2.5 },
-  hedge: { offset: 1.4, overlap: 0.92, skip: 0.06 },   // segment spacing = model length x overlap
-  grass: { cell: 4, p: 0.2, meadowBoost: 1.7, perTree: 2, cap: 30000, coverMin: 0.45, radius: [[280, 900, 450], [176, -1182, 150]], flowerShare: 0.27,
-    // station-local margin strips of open lawn between the last lot row and the edge of the walkable rectangle (east side only, x 64..91, z 8..126; the west strip holds the fenced allotment): the station clears the
-    // splat cover and `walk` covers the whole rectangle, so without this nothing grew on the one stretch of lawn a player can stand on
+  hedge: { offset: 1.4, overlap: 0.92 },   // segment spacing = model length x overlap
+  // World-space grass focuses include the extra meadow around (60, 110).
+  grass: { cell: 4, p: 0.2, meadowBoost: 1.7, perTree: 2, cap: 30000, coverMin: 0.45, radius: [[280, 900, 450], [176, -1182, 150], [60, 110, 200]], flowerShare: 0.27,
+    // Station-local east lawn. The station clears its terrain cover and includes it in the walkable rectangle.
     lawn: { x: [64, 91], z: [8, 126] },
     edge: { step: 1.7, p: 0.6, reach: [0.4, 2.6], reachFocus: 1.25, flower: 0.4, coverMin: 0.2 } },
   skipRoads: /:(mole|pier)$/,
 };
 
 const _cam = new THREE.Vector3(), _m = new THREE.Matrix4(), _x = new THREE.Vector3(), _y = new THREE.Vector3(0, 1, 0), _z = new THREE.Vector3(), _t = new THREE.Vector3();
-const facing = (x, y, z, fx, fz, sx = 1) => { const l = Math.hypot(fx, fz) || 1; fx /= l; fz /= l; return _m.clone().makeBasis(_x.set(fz * sx, 0, -fx * sx), _y, _z.set(fx, 0, fz)).setPosition(_t.set(x, y, z)); };
+const facing = (x, y, z, fx, fz, sy) => _m.clone().makeBasis(_x.set(fz, 0, -fx), _y.set(0, sy, 0), _z.set(fx, 0, fz)).setPosition(_t.set(x, y, z));
 
 export async function createVegetation({ scene, worldBase, island, station, dryRun = false }) {
   const t0 = performance.now(), P = PARAMS, T = P.tree, rng = rngFrom(hash32(P.seed, 1));
@@ -137,51 +138,98 @@ export async function createVegetation({ scene, worldBase, island, station, dryR
   for (const b of keptBushes) push(b.kind, b);
 
   // ---- hedges along the walkable rectangle ---------------------------------------------------------------------------------------------------------
-  let hedgeCount = 0; const hk = kindOf('hedge');
+  let hedgeCount = 0; const hk = kindOf('hedge'), hedgeBushes = [];
   {
     const b = station.bounds, o = station.root.position, H = P.hedge, d = H.offset;
     const x0 = b.x0 + o.x - d, x1 = b.x1 + o.x + d, z0 = b.z0 + o.z - d, z1 = b.z1 + o.z + d;
     const step = model[hk].size[0] * H.overlap;
+    const borderTrees = keptTrees.filter(t => t.x >= x0 - 7 && t.x <= x1 + 7 && t.z >= z0 - 7 && t.z <= z1 + 7);
+    const hedgeRng = rngFrom(hash32(P.seed, 43));
+    const tryHedgeBush = (x, z, hedgeY, scale) => {
+      const kind = pickWeighted(hedgeRng, SP.bush.models), size = model[kind].size;
+      const r = Math.hypot(size[0], size[2]) * scale / 2, y = ctx.groundY(x, z);
+      if (y < T.minH || Math.abs(y - hedgeY) > 0.45 || ctx.isWater(x, z, 1) || ctx.slope(x, z) > 0.6) return;
+      if (room(x, z, r, { corr: 1.5 }) || onRoad(x, z, r + 1.2) || nearProp(x, z, r + 0.4)) return;
+      if (borderTrees.some(t => Math.hypot(t.x - x, t.z - z) < r + 0.55)) return;
+      if (hedgeBushes.some(bush => Math.hypot(bush.x - x, bush.z - z) < 2.4)) return;
+      const shrub = { kind, r, x, y: y - 0.06, z, yaw: hedgeRng() * Math.PI * 2, sx: scale, sy: scale * 0.95, sz: scale, tint: 0.94 };
+      hedgeBushes.push(shrub);
+      push(kind, shrub);
+    };
     const edges = [[x0, z0, x1, z0, 0, -1], [x1, z0, x1, z1, 1, 0], [x1, z1, x0, z1, 0, 1], [x0, z1, x0, z0, -1, 0]]; // from, to, outward normal
     for (const [ax, az, bx, bz, nx, nz] of edges) {
       const len = Math.hypot(bx - ax, bz - az), ux = (bx - ax) / len, uz = (bz - az) / len;
       for (let s = step / 2; s < len - step / 2; s += step) {
         const x = ax + ux * s, z = az + uz * s;
-        if (rng() < H.skip) continue;
+        // Keep the original sampling sequence for the seeded grass pass below.
+        const wasGap = rng() < 0.06;
         const y = ctx.groundY(x, z);
         if (y < T.minH || ctx.isWater(x, z, 1) || ctx.slope(x, z) > 0.8) { bump('hedge-ground'); continue; }
         if (ctx.obstacle(x, z, 1.0, ['walk', 'bld', 'corr', 'prop', 'town'], { corr: 1.5 })) { bump('hedge-blocked'); continue; }
         if (onRoad(x, z, 2.2) || nearProp(x, z, 1.0)) { bump('hedge-road'); continue; }
-        push(hk, { matrix: facing(x, y - 0.03, z, nx, nz), ...tint(1, 0.2), hedge: true, x, z, y, r: 1.2 }); hedgeCount++;
+        const height = 0.68 + 0.62 * noise2(x, z, 6.7, P.seed + 29);
+        const color = wasGap ? { tint: 1 } : tint(1, 0.2);
+        push(hk, { matrix: facing(x, y - 0.03, z, nx, nz, height), ...color, hedge: true, x, z, y, r: 1.2 });
+        hedgeCount++;
+        // Keep most of the clipped row open to view and add depth at selected clusters and tree feet.
+        const nearCorner = Math.min(s, len - s) < 6;
+        const nearTree = borderTrees.some(t => Math.hypot(t.x - x, t.z - z) < 5);
+        const cluster = noise2(x, z, 9, P.seed + 37) > 0.61;
+        if ((nearCorner || nearTree || cluster) && hedgeRng() > 0.26) {
+          const shift = (hedgeRng() - 0.5) * step;
+          tryHedgeBush(x + ux * shift - nx * 0.64, z + uz * shift - nz * 0.64, y, 0.41 + hedgeRng() * 0.09);
+        }
+        if ((nearCorner || nearTree) && hedgeRng() > 0.32) {
+          tryHedgeBush(x + nx * 1.25, z + nz * 1.25, y, 0.65 + hedgeRng() * 0.14);
+        }
       }
     }
   }
 
-  // ---- grass: tuft rings at tree feet + patches of open ground ---------------------------------------------------------------------------------------------
+  // ---- grass: tuft rings at tree feet and clusters along roads and walls ----
   const Gp = P.grass, tufts = [];
-  const tuft = (x, z, hy, flower = Gp.flowerShare) => { const sp = rng() < flower ? 'flower' : 'grass', s = scaleOf(sp); tufts.push({ kind: kindOf(sp), x, y: hy - 0.02, z, yaw: rng() * Math.PI * 2, sx: s, sy: s * (0.8 + rng() * 0.5), sz: s, ...tint(1, 0.35) }); };
+  const paintedSward = worldBase.ground?.islandSward;
+  const makeTuft = (x, z, hy, flower = Gp.flowerShare) => {
+    const sp = rng() < flower ? 'flower' : 'grass', s = scaleOf(sp);
+    const kind = kindOf(sp), yaw = rng() * Math.PI * 2, h = s * (0.8 + rng() * 0.5);
+    return { kind, x, y: hy - 0.02, z, yaw, sx: s, sy: h, sz: s, ...tint(1, 0.35) };
+  };
   for (const t of [...keptTrees, ...keptBushes]) {
     if (t.street) continue;
-    for (let i = 0; i < Gp.perTree; i++) { const a = rng() * Math.PI * 2, d = (t.r ?? 1) * 0.35 + 0.8 + rng() * 1.5, x = t.x + Math.cos(a) * d, z = t.z + Math.sin(a) * d; if (ctx.cover(x, z) > 0.3 && !onRoad(x, z, 0.5)) tuft(x, z, ctx.groundY(x, z)); }
+    const heading = paintedSward ? rng() * Math.PI * 2 : 0;
+    const groups = paintedSward && t.r >= 1.65 && focusFalloff(ctx, t.x, t.z).d < 120 ? 2 : 1;
+    for (let i = 0; i < Gp.perTree * groups; i++) {
+      const angle = paintedSward
+        ? heading + Math.floor(i / Gp.perTree) * Math.PI + (i % Gp.perTree - 0.5) * 0.26
+        : rng() * Math.PI * 2;
+      const radius = (t.r ?? 1) * 0.35;
+      const distance = paintedSward ? radius + 0.53 + rng() * 0.55 : radius + 0.8 + rng() * 1.5;
+      const x = t.x + Math.cos(angle) * distance, z = t.z + Math.sin(angle) * distance;
+      if (ctx.cover(x, z) > 0.3 && !onRoad(x, z, 0.5)) tufts.push(makeTuft(x, z, ctx.groundY(x, z)));
+    }
   }
+  const rootGrass = tufts.length;
   // open meadow around the focus points: patchy, `meadowBoost` over the old density (the foreground was bare), flower patches on a 14 m noise
   let open = 0, edge = 0;
-  const inLawn = (x, z) => { const L = Gp.lawn, lx = x - ctx.ox, lz = z - ctx.oz; return lx >= L.x[0] && lx <= L.x[1] && lz >= L.z[0] && lz <= L.z[1]; };
-  const openOk = (x, z, y, r = 0.3) => {
-    const lawn = inLawn(x, z);
-    if (y < T.minH || ctx.slope(x, z) > 0.6 || (!lawn && ctx.cover(x, z) < Gp.coverMin) || ctx.isWater(x, z, 1.5)) return bump('grass-ground');
-    if (ctx.obstacle(x, z, r, lawn ? ['bld', 'prop', 'town', 'solid'] : ['walk', 'bld', 'prop', 'town'], lawn ? null : { walk: 0.8 })) return bump(lawn ? 'grass-lawn-blocked' : 'grass-blocked');
-    if (onRoad(x, z, 0.6) || nearProp(x, z, 0.5)) return bump('grass-road');
-    return true;
+  const meadowWeight = (x, z) => 0.25 + noise2(x, z, 22, P.seed + 5) * 1.2;
+  const meadowFlowers = (x, z) => Gp.flowerShare * (0.3 + 1.6 * smooth(0.45, 0.7, noise2(x, z, 14, P.seed + 9)));
+  const openReject = (x, z, y, lawn = false) => {
+    if (y < T.minH || ctx.slope(x, z) > 0.6 || (!lawn && ctx.cover(x, z) < Gp.coverMin) || ctx.isWater(x, z, 1.5)) return 'grass-ground';
+    if (ctx.obstacle(x, z, 0.3, lawn ? ['bld', 'prop', 'town', 'solid'] : ['walk', 'bld', 'prop', 'town'], lawn ? null : { walk: 0.8 })) return lawn ? 'grass-lawn-blocked' : 'grass-blocked';
+    if (onRoad(x, z, 0.6) || nearProp(x, z, 0.5)) return 'grass-road';
+    return null;
   };
-  for (const [fx, fz, R] of Gp.radius) for (let gz = fz - R; gz < fz + R; gz += Gp.cell) for (let gx = fx - R; gx < fx + R; gx += Gp.cell) {
-    const x = gx + rng() * Gp.cell, z = gz + rng() * Gp.cell;
-    if (Math.hypot(x - fx, z - fz) > R) continue;
-    if (rng() > Gp.p * Gp.meadowBoost * (0.25 + noise2(x, z, 22, P.seed + 5) * 1.2) * (1 - smooth(R * 0.6, R, Math.hypot(x - fx, z - fz)) * 0.8)) continue;
-    if (island.town.nameAt(x, z)) continue;
-    const y = ctx.groundY(x, z);
-    if (openOk(x, z, y) !== true) continue;
-    tuft(x, z, y, Gp.flowerShare * (0.3 + 1.6 * smooth(0.45, 0.7, noise2(x, z, 14, P.seed + 9)))); open++;
+  if (!paintedSward) {
+    for (const [fx, fz, R] of Gp.radius) for (let gz = fz - R; gz < fz + R; gz += Gp.cell) for (let gx = fx - R; gx < fx + R; gx += Gp.cell) {
+      const x = gx + rng() * Gp.cell, z = gz + rng() * Gp.cell;
+      if (Math.hypot(x - fx, z - fz) > R) continue;
+      if (rng() > Gp.p * Gp.meadowBoost * meadowWeight(x, z) * (1 - smooth(R * 0.6, R, Math.hypot(x - fx, z - fz)) * 0.8)) continue;
+      if (island.town.nameAt(x, z)) continue;
+      const y = ctx.groundY(x, z);
+      const reason = openReject(x, z, y);
+      if (reason) { bump(reason); continue; }
+      tufts.push(makeTuft(x, z, y, meadowFlowers(x, z))); open++;
+    }
   }
   // verges: both sides of every road near the focus points, `edge.reach` m beyond the kerb, thicker and with more flowers than the open meadow
   const E = Gp.edge;
@@ -197,11 +245,66 @@ export async function createVegetation({ scene, worldBase, island, station, dryR
         if (ctx.obstacle(x, z, 0.3, ['walk', 'bld', 'prop', 'town'], { walk: 0.8 })) { bump('edge-blocked'); continue; }
         const rd = ctx.roadDist(x, z, 14, r.i ?? ctx.roads.indexOf(r)); if (rd && rd.over < 0.4) { bump('edge-road'); continue; }
         if (nearProp(x, z, 0.5)) { bump('edge-prop'); continue; }
-        tuft(x, z, y, E.flower); edge++;
+        tufts.push(makeTuft(x, z, y, E.flower)); edge++;
       }
     }
   }
+  const beforeWalls = tufts.length;
+  if (paintedSward) {
+    const occupied = new Set(), wallRng = rngFrom(hash32(P.seed, 64));
+    const sides = [[-1, 0], [1, 0], [0, -1], [0, 1]];
+    const addWallClump = (wallX, wallZ, dx, dz) => {
+      const spacing = 3.4;
+      const key = `${Math.floor(wallX / spacing)},${Math.floor(wallZ / spacing)}`;
+      if (occupied.has(key) || wallRng() > 0.22) return;
+      let placed = false;
+      for (const tangent of [-0.28, 0.28]) {
+        const x = wallX + dx * 0.86 + dz * tangent, z = wallZ + dz * 0.86 - dx * tangent;
+        const y = ctx.groundY(x, z);
+        if (y < T.minH || ctx.cover(x, z) < E.coverMin || ctx.slope(x, z) > 0.6 || ctx.isWater(x, z, 1.2)) continue;
+        if (onRoad(x, z, 0.52) || nearProp(x, z, 0.35) || room(x, z, 0.3, { walk: 0.8 })) continue;
+        tufts.push(makeTuft(x, z, y, 0.18));
+        placed = true;
+      }
+      if (placed) occupied.add(key);
+    };
+    for (const s of [...island.town.solids].sort((a, b) => a.x0 - b.x0 || a.z0 - b.z0)) {
+      for (let iz = 0; iz < s.nz; iz++) for (let ix = 0; ix < s.nx; ix++) {
+        const height = s.grid[iz * s.nx + ix];
+        if (!height) continue;
+        const x = s.x0 + (ix + 0.5) * s.cell, z = s.z0 + (iz + 0.5) * s.cell;
+        for (const [dx, dz] of sides) {
+          const nx = ix + dx, nz = iz + dz;
+          if (nx >= 0 && nz >= 0 && nx < s.nx && nz < s.nz && s.grid[nz * s.nx + nx]) continue;
+          if (s.y0 + height * s.step < ctx.groundY(x, z) + 0.8) break;
+          addWallClump(x + dx * s.cell / 2, z + dz * s.cell / 2, dx, dz);
+        }
+      }
+    }
+  }
+  const wallGrass = tufts.length - beforeWalls;
   const keptTufts = tufts.length > Gp.cap ? tufts.filter(() => rng() < Gp.cap / tufts.length) : tufts;
+  // The station lawn has a separate seed and leaves the existing island batches intact.
+  const stationLawn = dryRun ? null : addStationLawn({
+    station,
+    bounds: Gp.lawn,
+    groundMaterials: paintedSward ? [island.terrain.material, island.transition.material] : [],
+    random: rngFrom(hash32(P.seed, 51)),
+    heightAt: (x, z) => ctx.groundY(x + ctx.ox, z + ctx.oz) - ctx.oy,
+    canGrow: (x, z) => {
+      const wx = x + ctx.ox, wz = z + ctx.oz;
+      return !island.town.nameAt(wx, wz) && !openReject(wx, wz, ctx.groundY(wx, wz), true);
+    },
+    shadeAt: (x, z) => smooth(0.31, 0.69, 0.7 * noise2(x, z, 14, P.seed + 17) + 0.3 * noise2(x, z, 4, P.seed + 19)),
+    // Broad, oblique patches in station space give the paint a canopy-shadow shape.
+    paintAt: (x, z) => {
+      const u = x + 0.43 * z, v = z * 0.72;
+      const field = 0.74 * noise2(u, v, 13, P.seed + 53)
+        + 0.18 * noise2(u, v, 5, P.seed + 59)
+        + 0.08 * noise2(u, v * 1.65, 2.8, P.seed + 61);
+      return 0.60 * smooth(0.417, 0.5, field) + 0.40 * smooth(0.54, 0.61, field);
+    },
+  });
   for (const g of keptTufts) push(g.kind, g);
 
   // ---- batches --------------------------------------------------------------------------------------------------------------------------------------
@@ -219,9 +322,9 @@ export async function createVegetation({ scene, worldBase, island, station, dryR
     return r;
   };
   if (!dryRun) scene.add(root);
-  const summary = { sizeWarnings: model.warnings, trees: keptTrees.length, streetTrees, bushes: keptBushes.length, hedges: hedgeCount, grass: keptTufts.length, openGrass: open, edgeGrass: edge, flowers: keptTufts.filter(g => SP.flower.models.some(m => m.id === g.kind)).length, thinned };
+  const summary = { sizeWarnings: model.warnings, trees: keptTrees.length, streetTrees, bushes: keptBushes.length + hedgeBushes.length, hedges: hedgeCount, hedgeBushes: hedgeBushes.length, grass: keptTufts.length, rootGrass, openGrass: open, edgeGrass: edge, wallGrass, flowers: keptTufts.filter(g => SP.flower.models.some(m => m.id === g.kind)).length, thinned, stationLawn };
   worldBase.scatter = { ...(worldBase.scatter ?? {}), veg: { root, counts, summary, update, lods, materials, drawCalls, triangles, rejects, attempts, ms: +(performance.now() - t0).toFixed(1),
-    trees: keptTrees.map(t => ({ kind: t.kind, x: t.x, z: t.z, r: t.r })), bushes: keptBushes.map(t => ({ kind: t.kind, x: t.x, z: t.z, r: t.r })), hedges: items[hk]?.map(h => ({ x: h.x, z: h.z })) ?? [], grass: keptTufts.map(t => ({ x: t.x, z: t.z })) } };
+    trees: keptTrees.map(t => ({ kind: t.kind, x: t.x, z: t.z, r: t.r })), bushes: [...keptBushes, ...hedgeBushes].map(t => ({ kind: t.kind, x: t.x, z: t.z, r: t.r })), hedges: items[hk]?.map(h => ({ x: h.x, z: h.z })) ?? [], grass: keptTufts.map(t => ({ x: t.x, z: t.z })) } };
   console.info('[world-base] vegetation', JSON.stringify({ ...summary, drawCalls, triangles, ms: worldBase.scatter.veg.ms }));
   return worldBase.scatter.veg;
 }
@@ -265,11 +368,15 @@ function makeTreeLod({ far: farModel, near, list, params, materials, root, name 
         const want = chosen.has(i);
         if (want === !!isNear[i]) continue;
         isNear[i] = want ? 1 : 0; changed = true;
-        const m = far.instanceMatrix.array, col = far.instanceColor.array;
-        if (want) m.fill(0, i * 16, i * 16 + 16); else { m.set(origM.subarray(i * 16, i * 16 + 16), i * 16); col.set(origC.subarray(i * 3, i * 3 + 3), i * 3); }
+        for (const mesh of farMeshes) {
+          const matrices = mesh.instanceMatrix.array;
+          if (want) matrices.fill(0, i * 16, i * 16 + 16);
+          else matrices.set(origM.subarray(i * 16, i * 16 + 16), i * 16);
+        }
+        // Far instance colours are never changed when a tree is hidden.
       }
     }
-    if (changed) { far.instanceMatrix.needsUpdate = true; }
+    if (changed) for (const mesh of farMeshes) mesh.instanceMatrix.needsUpdate = true;
     // the near meshes: the chosen trees, nearest first
     nearCount = cand.length;
     for (const m of nearMeshes) {

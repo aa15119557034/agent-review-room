@@ -1,0 +1,76 @@
+{
+  "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "mode": "1440x900 frozen evening",
+  "classification": "grade-off RGB to HSV: hue <66 or >167, saturation >8/255",
+  "greenCut": 1.3333,
+  "views": {
+    "art-a-street": {
+      "outsideGreenPixels": 1283927,
+      "outsideGreenChangedByMoreThan1": 0,
+      "outsideGreenMaxChannelDelta": 1,
+      "changedByMoreThan1": 1431
+    },
+    "art-b-konbini": {
+      "outsideGreenPixels": 1250743,
+      "outsideGreenChangedByMoreThan1": 0,
+      "outsideGreenMaxChannelDelta": 0,
+      "changedByMoreThan1": 14319
+    },
+    "art-c-alley": {
+      "outsideGreenPixels": 1187496,
+      "outsideGreenChangedByMoreThan1": 0,
+      "outsideGreenMaxChannelDelta": 0,
+      "changedByMoreThan1": 9034
+    },
+    "art-d-laundry": {
+      "outsideGreenPixels": 1168087,
+      "outsideGreenChangedByMoreThan1": 0,
+      "outsideGreenMaxChannelDelta": 0,
+      "changedByMoreThan1": 226
+    },
+    "sample-e-harbour": {
+      "outsideGreenPixels": 1282436,
+      "outsideGreenChangedByMoreThan1": 0,
+      "outsideGreenMaxChannelDelta": 0,
+      "changedByMoreThan1": 5985
+    },
+    "sample-f-hillside": {
+      "outsideGreenPixels": 720110,
+      "outsideGreenChangedByMoreThan1": 0,
+      "outsideGreenMaxChannelDelta": 0,
+      "changedByMoreThan1": 352451
+    },
+    "sample-g-rail": {
+      "outsideGreenPixels": 1233087,
+      "outsideGreenChangedByMoreThan1": 0,
+      "outsideGreenMaxChannelDelta": 1,
+      "changedByMoreThan1": 10062
+    },
+    "sample-h-north": {
+      "outsideGreenPixels": 1247542,
+      "outsideGreenChangedByMoreThan1": 0,
+      "outsideGreenMaxChannelDelta": 0,
+      "changedByMoreThan1": 7811
+    },
+    "handoff": {
+      "outsideGreenPixels": 741416,
+      "outsideGreenChangedByMoreThan1": 0,
+      "outsideGreenMaxChannelDelta": 0,
+      "changedByMoreThan1": 504168,
+      "lawn": {
+        "original": {
+          "sat": 0.2906,
+          "lumaP50": 103.43
+        },
+        "new": {
+          "sat": 0.4806,
+          "lumaP50": 103.5
+        },
+        "off": {
+          "sat": 0.4885,
+          "lumaP50": 110.72
+        }
+      }
+    }
+  }
+}

@@ -131,14 +131,20 @@ async function init() {
   const shadowTint = shadowTintParams ? shadowTintParams[timeOfDay === 'afternoon' ? 'afternoon' : 'evening'] : null;
   island = await createIsland({ scene, renderer, camera, timeOfDay });
   worldBase.island = island;
+  const scatterQuery = new URLSearchParams(location.search);
+  const propsOn = scatterQuery.get('props') !== 'off', vegOn = scatterQuery.get('veg') !== 'off';
   // Art round 2: island-wide ground (flower drifts, pastel petals, painted sward and rock). ?ground=off skips it.
   const groundParams = groundEnabled() ? await loadGround() : null;
+  const islandSward = vegOn ? groundParams?.swardPaint : null;
   if (groundParams) {
-    worldBase.ground = { drifts: applyFlowerDrifts(island.terrain, island.terrain.meta.world ?? 6144, groundParams.drift) };
-    island.meadow.wbPetals = (vertexShader) => patchPetals(vertexShader, groundParams);
+    worldBase.ground = { drifts: applyFlowerDrifts(island.terrain, island.terrain.meta.world ?? 6144, groundParams.drift), islandSward };
+    island.meadow.wbPetals = (vertexShader) => patchPetals(vertexShader, groundParams, Boolean(islandSward));
+    if (islandSward) island.meadow.hide = { ...island.meadow.hide, grass: true };
   }
   look.applyIsland(island);
-  if (groundParams) for (const [material, label] of [[island.terrain.material, 'terrain'], [island.transition.material, 'transition']]) patchGroundShader(material, groundParams, label);
+  if (groundParams) for (const [material, label] of [[island.terrain.material, 'terrain'], [island.transition.material, 'transition']]) {
+    patchGroundShader(material, groundParams, label, islandSward);
+  }
   if (shadowTint) worldBase.shadowTint = { island: patchIslandShadowTint(island, shadowTint) };
   const evening = island.timeOfDay === 'evening';
   // Low golden-hour sun: warmer and a little weaker; the sky fill turns cooler so shade reads blue-violet.
@@ -226,7 +232,6 @@ async function init() {
   // hedges, grass). Rules in src/street-props.js / src/vegetation-scatter.js; they run after every vegetation clear and building slot is known.
   // ?props=off / ?veg=off import nothing, and the page is the one without them.
   {
-    const scatterQuery = new URLSearchParams(location.search), propsOn = scatterQuery.get('props') !== 'off', vegOn = scatterQuery.get('veg') !== 'off';
     if (propsOn || vegOn) stage('正在铺放街道道具与植被…');
     if (propsOn) worldBase.streetProps = await (await import('./street-props.js')).createStreetProps({ scene, worldBase, island, station });
     if (vegOn) worldBase.vegetation = await (await import('./vegetation-scatter.js')).createVegetation({ scene, worldBase, island, station });

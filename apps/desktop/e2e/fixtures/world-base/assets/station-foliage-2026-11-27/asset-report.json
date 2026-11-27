@@ -1,0 +1,101 @@
+{
+  "canopy-a-far.glb": {
+    "size": [
+      5.193860054016113,
+      6.990953618660569,
+      4.161439895629883
+    ],
+    "triangles": 304,
+    "alphaMask": false
+  },
+  "canopy-a.glb": {
+    "size": [
+      5.193860054016113,
+      6.992967499420047,
+      4.161439895629883
+    ],
+    "triangles": 782,
+    "alphaMask": false
+  },
+  "canopy-b-far.glb": {
+    "size": [
+      5.02744197845459,
+      7.3803073707968,
+      4.579429864883423
+    ],
+    "triangles": 304,
+    "alphaMask": false
+  },
+  "canopy-b.glb": {
+    "size": [
+      5.02744197845459,
+      7.382321251556277,
+      4.579429864883423
+    ],
+    "triangles": 782,
+    "alphaMask": false
+  },
+  "station-cedar-far.glb": {
+    "size": [
+      4.090000152587891,
+      9.020000457763672,
+      3.378000020980835
+    ],
+    "triangles": 312,
+    "alphaMask": false
+  },
+  "station-cedar.glb": {
+    "size": [
+      3.9829999208450317,
+      9.020000457763672,
+      3.659999966621399
+    ],
+    "triangles": 920,
+    "alphaMask": false
+  },
+  "bank-shrub-a.glb": {
+    "size": [
+      1.8562811017036438,
+      1.0659969234839082,
+      1.914753496646881
+    ],
+    "triangles": 160,
+    "alphaMask": true
+  },
+  "bank-shrub-b.glb": {
+    "size": [
+      2.205498218536377,
+      1.10750840511173,
+      2.112195134162903
+    ],
+    "triangles": 160,
+    "alphaMask": true
+  },
+  "edge-hedge.glb": {
+    "size": [
+      2.4444297552108765,
+      1.1425168439745903,
+      1.014514446258545
+    ],
+    "triangles": 300,
+    "alphaMask": true
+  },
+  "meadow-ribbon-a.glb": {
+    "size": [
+      0.6043590009212494,
+      0.28908583521842957,
+      0.5912933498620987
+    ],
+    "triangles": 33,
+    "alphaMask": false
+  },
+  "meadow-ribbon-b.glb": {
+    "size": [
+      0.4416961818933487,
+      0.37917622923851013,
+      0.6769050061702728
+    ],
+    "triangles": 33,
+    "alphaMask": false
+  }
+}

@@ -1,0 +1,418 @@
+{
+  "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "poses": {
+    "a-main-street": [
+      278.8,
+      10.488,
+      936,
+      -0.003277842930440409,
+      -0.009834585659995631,
+      -3.223795934194156e-05,
+      0.9999462663720154,
+      35.63777782904556
+    ],
+    "handoff": [
+      346.8,
+      13.014800000000001,
+      1019.1,
+      0.0003165042670506921,
+      0.6883545101672566,
+      0.00030035133464517065,
+      -0.7253743019617671,
+      58
+    ],
+    "station-east": [
+      367,
+      13.096,
+      1022,
+      0.00032249478813299023,
+      0.38268340905068216,
+      0.00013358171503932248,
+      -0.9238794762253274,
+      58
+    ],
+    "meadow": [
+      349.8,
+      12.068399999999999,
+      985.3,
+      -0.0008661598062705875,
+      0.12186929700074431,
+      -0.00010635105148467905,
+      -0.9925457737077863,
+      58
+    ],
+    "station-cedar": [
+      368.5,
+      13.063756471210056,
+      1028.5,
+      -0.030347784229360443,
+      0.9049791732263864,
+      -0.0655020152899253,
+      -0.4192865297285528,
+      58
+    ],
+    "station-cedar-no-post-line": [
+      368.5,
+      13.063756471210056,
+      1028.5,
+      -0.030347784229360443,
+      0.9049791732263864,
+      -0.0655020152899253,
+      -0.4192865297285528,
+      58
+    ],
+    "grove-a": [
+      468.9,
+      5.480126667022705,
+      1022.3,
+      -0.023916417445318736,
+      0.9497485870079169,
+      -0.07497572224380293,
+      -0.3029591845893878,
+      58
+    ],
+    "grove-b": [
+      479.1,
+      6.316015744209277,
+      998,
+      -0.036172988578796354,
+      0.9043818411099734,
+      -0.07827852597094516,
+      -0.41792041436095123,
+      58
+    ]
+  },
+  "lodSwitches": [
+    {
+      "kind": "broadleafA",
+      "near": {
+        "near": 1,
+        "far": 1726
+      },
+      "far": {
+        "near": 0,
+        "far": 1727
+      },
+      "nearPartCounts": [
+        1
+      ],
+      "hiddenNear": [
+        1
+      ],
+      "hiddenFar": [
+        0
+      ],
+      "crownDefines": [
+        {
+          "TOON": "",
+          "TOON_TREE_CROWN": 1
+        },
+        {
+          "TOON": "",
+          "TOON_TREE_CROWN": 1
+        }
+      ],
+      "paintedVertices": [
+        {
+          "painted": 98,
+          "total": 170
+        },
+        {
+          "painted": 264,
+          "total": 409
+        }
+      ]
+    },
+    {
+      "kind": "broadleafB",
+      "near": {
+        "near": 1,
+        "far": 1620
+      },
+      "far": {
+        "near": 0,
+        "far": 1621
+      },
+      "nearPartCounts": [
+        1
+      ],
+      "hiddenNear": [
+        1
+      ],
+      "hiddenFar": [
+        0
+      ],
+      "crownDefines": [
+        {
+          "TOON": "",
+          "TOON_TREE_CROWN": 1
+        },
+        {
+          "TOON": "",
+          "TOON_TREE_CROWN": 1
+        }
+      ],
+      "paintedVertices": [
+        {
+          "painted": 98,
+          "total": 170
+        },
+        {
+          "painted": 264,
+          "total": 409
+        }
+      ]
+    },
+    {
+      "kind": "conifer",
+      "near": {
+        "near": 1,
+        "far": 738
+      },
+      "far": {
+        "near": 0,
+        "far": 739
+      },
+      "nearPartCounts": [
+        1
+      ],
+      "hiddenNear": [
+        1
+      ],
+      "hiddenFar": [
+        0
+      ],
+      "crownDefines": [
+        {
+          "TOON": "",
+          "TOON_TREE_CROWN": 1
+        },
+        {
+          "TOON": "",
+          "TOON_TREE_CROWN": 1
+        }
+      ],
+      "paintedVertices": [
+        {
+          "painted": 130,
+          "total": 160
+        },
+        {
+          "painted": 402,
+          "total": 468
+        }
+      ]
+    }
+  ],
+  "vegetationBatches": [
+    20,
+    19
+  ],
+  "treePositionsIdentical": 4220,
+  "meadowGrassPointsIdentical": 21022,
+  "warmGreenHistogram": "Fixed crown-only crop, HSV 78–188°, saturation >=35/255. Warm class hue <114° and Y>=130.",
+  "graded": {
+    "station-cedar": {
+      "top": {
+        "percentOfCrownMask": 43.06,
+        "rgbMedian": [
+          171.0,
+          218.5,
+          136.0
+        ],
+        "hueMedian": 93.18,
+        "lumaMedian": 202.66
+      },
+      "side": {
+        "percentOfCrownMask": 36.66,
+        "rgbMedian": [
+          85.0,
+          133.0,
+          100.0
+        ],
+        "hueMedian": 138.35,
+        "lumaMedian": 120.41
+      },
+      "shade": {
+        "percentOfCrownMask": 20.13,
+        "rgbMedian": [
+          39.0,
+          96.0,
+          91.0
+        ],
+        "hueMedian": 173.65,
+        "lumaMedian": 83.52
+      }
+    },
+    "grove-a": {
+      "top": {
+        "percentOfCrownMask": 18.51,
+        "rgbMedian": [
+          179.0,
+          230.0,
+          142.0
+        ],
+        "hueMedian": 93.18,
+        "lumaMedian": 212.73
+      },
+      "side": {
+        "percentOfCrownMask": 23.24,
+        "rgbMedian": [
+          87.0,
+          138.0,
+          103.0
+        ],
+        "hueMedian": 139.76,
+        "lumaMedian": 124.63
+      },
+      "shade": {
+        "percentOfCrownMask": 58.2,
+        "rgbMedian": [
+          39.0,
+          98.0,
+          94.0
+        ],
+        "hueMedian": 175.06,
+        "lumaMedian": 85.17
+      }
+    },
+    "grove-b": {
+      "top": {
+        "percentOfCrownMask": 23.92,
+        "rgbMedian": [
+          175.0,
+          225.0,
+          139.0
+        ],
+        "hueMedian": 93.18,
+        "lumaMedian": 208.09
+      },
+      "side": {
+        "percentOfCrownMask": 27.46,
+        "rgbMedian": [
+          85.0,
+          136.0,
+          102.0
+        ],
+        "hueMedian": 138.35,
+        "lumaMedian": 122.63
+      },
+      "shade": {
+        "percentOfCrownMask": 48.53,
+        "rgbMedian": [
+          38.0,
+          97.0,
+          93.0
+        ],
+        "hueMedian": 175.06,
+        "lumaMedian": 84.17
+      }
+    }
+  },
+  "gradeOff": {
+    "station-cedar": {
+      "top": {
+        "percentOfCrownMask": 43.06,
+        "rgbMedian": [
+          141.0,
+          184.0,
+          108.0
+        ],
+        "hueMedian": 93.18,
+        "lumaMedian": 169.23
+      },
+      "side": {
+        "percentOfCrownMask": 36.67,
+        "rgbMedian": [
+          82.0,
+          137.0,
+          100.0
+        ],
+        "hueMedian": 138.35,
+        "lumaMedian": 122.64
+      },
+      "shade": {
+        "percentOfCrownMask": 20.13,
+        "rgbMedian": [
+          51.0,
+          107.0,
+          103.0
+        ],
+        "hueMedian": 173.65,
+        "lumaMedian": 95.02
+      }
+    },
+    "grove-a": {
+      "top": {
+        "percentOfCrownMask": 18.5,
+        "rgbMedian": [
+          144.0,
+          189.0,
+          111.0
+        ],
+        "hueMedian": 94.59,
+        "lumaMedian": 173.8
+      },
+      "side": {
+        "percentOfCrownMask": 23.25,
+        "rgbMedian": [
+          83.0,
+          140.0,
+          102.0
+        ],
+        "hueMedian": 139.76,
+        "lumaMedian": 125.14
+      },
+      "shade": {
+        "percentOfCrownMask": 58.21,
+        "rgbMedian": [
+          50.0,
+          109.0,
+          105.0
+        ],
+        "hueMedian": 175.06,
+        "lumaMedian": 96.38
+      }
+    },
+    "grove-b": {
+      "top": {
+        "percentOfCrownMask": 23.89,
+        "rgbMedian": [
+          142.0,
+          187.0,
+          109.0
+        ],
+        "hueMedian": 94.59,
+        "lumaMedian": 171.8
+      },
+      "side": {
+        "percentOfCrownMask": 27.49,
+        "rgbMedian": [
+          82.0,
+          139.0,
+          101.0
+        ],
+        "hueMedian": 138.35,
+        "lumaMedian": 124.07
+      },
+      "shade": {
+        "percentOfCrownMask": 48.52,
+        "rgbMedian": [
+          50.0,
+          108.0,
+          104.0
+        ],
+        "hueMedian": 175.06,
+        "lumaMedian": 95.59
+      }
+    }
+  },
+  "handoffGrassMedianLuma": 98.8,
+  "aMainStreetChangedPixelsAboveOne": 1354,
+  "aMainStreetChangesBounds": [
+    392,
+    58,
+    1225,
+    557
+  ]
+}

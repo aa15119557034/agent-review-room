@@ -1,0 +1,278 @@
+{
+  "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "views": {
+    "a-main-street": [
+      278.8,
+      10.488,
+      936,
+      -0.003277842930440409,
+      -0.009834585659995631,
+      -3.223795934194156e-05,
+      0.9999462663720154,
+      35.63777782904556
+    ],
+    "handoff": [
+      346.8,
+      13.014800000000001,
+      1019.1,
+      0.0003165042670506921,
+      0.6883545101672566,
+      0.00030035133464517065,
+      -0.7253743019617671,
+      58
+    ],
+    "station-east": [
+      367,
+      13.096,
+      1022,
+      0.00032249478813299023,
+      0.38268340905068216,
+      0.00013358171503932248,
+      -0.9238794762253274,
+      58
+    ],
+    "meadow": [
+      349.8,
+      12.068399999999999,
+      985.3,
+      -0.0008661598062705875,
+      0.12186929700074431,
+      -0.00010635105148467905,
+      -0.9925457737077863,
+      58
+    ],
+    "station-cedar": [
+      368.5,
+      13.063756471210056,
+      1028.5,
+      -0.030347784229360443,
+      0.9049791732263864,
+      -0.0655020152899253,
+      -0.4192865297285528,
+      58
+    ],
+    "station-cedar-no-post-line": [
+      368.5,
+      13.063756471210056,
+      1028.5,
+      -0.030347784229360443,
+      0.9049791732263864,
+      -0.0655020152899253,
+      -0.4192865297285528,
+      58
+    ],
+    "grove-a": [
+      468.9,
+      5.480126667022705,
+      1022.3,
+      -0.023916417445318736,
+      0.9497485870079169,
+      -0.07497572224380293,
+      -0.3029591845893878,
+      58
+    ],
+    "grove-b": [
+      479.1,
+      6.316015744209277,
+      998,
+      -0.036172988578796354,
+      0.9043818411099734,
+      -0.07827852597094516,
+      -0.41792041436095123,
+      58
+    ]
+  },
+  "preexistingTreePositionsIdentical": 4220,
+  "islandGrassPointsIdentical": 21022,
+  "stationLawn": {
+    "groups": 71,
+    "patches": 390,
+    "blades": 1170,
+    "triangles": 3510
+  },
+  "vegetationBatches": [
+    25,
+    20
+  ],
+  "aMainStreetMaxRgbDelta": 103,
+  "aMainStreetPixelsRgbDeltaAboveOne": 1128,
+  "aMainStreetChangesBounds": [
+    842,
+    58,
+    1225,
+    350
+  ],
+  "postOutlineProbe": {
+    "region": [
+      520,
+      30,
+      940,
+      660
+    ],
+    "pixelsWithRgbDeltaAboveSix": 6245
+  },
+  "activeCelSettings": {
+    "levels": [
+      0,
+      0.45,
+      1
+    ],
+    "edges": [
+      0.16,
+      0.6
+    ],
+    "width": 0.012,
+    "strength": 1
+  },
+  "lod": [
+    {
+      "kind": "broadleafA",
+      "near": {
+        "near": 1,
+        "far": 1726
+      },
+      "far": {
+        "near": 0,
+        "far": 1727
+      },
+      "nearPartCounts": [
+        1
+      ],
+      "hiddenNear": [
+        1
+      ],
+      "hiddenFar": [
+        0
+      ],
+      "crownDefines": [
+        {
+          "TOON": "",
+          "TOON_TREE_CROWN": 1
+        },
+        {
+          "TOON": "",
+          "TOON_TREE_CROWN": 1
+        }
+      ]
+    },
+    {
+      "kind": "broadleafB",
+      "near": {
+        "near": 1,
+        "far": 1620
+      },
+      "far": {
+        "near": 0,
+        "far": 1621
+      },
+      "nearPartCounts": [
+        1
+      ],
+      "hiddenNear": [
+        1
+      ],
+      "hiddenFar": [
+        0
+      ],
+      "crownDefines": [
+        {
+          "TOON": "",
+          "TOON_TREE_CROWN": 1
+        },
+        {
+          "TOON": "",
+          "TOON_TREE_CROWN": 1
+        }
+      ]
+    },
+    {
+      "kind": "conifer",
+      "near": {
+        "near": 1,
+        "far": 738
+      },
+      "far": {
+        "near": 0,
+        "far": 739
+      },
+      "nearPartCounts": [
+        1,
+        1
+      ],
+      "hiddenNear": [
+        1
+      ],
+      "hiddenFar": [
+        0
+      ],
+      "crownDefines": [
+        {
+          "TOON": "",
+          "TOON_TREE_CROWN": 1
+        },
+        {
+          "TOON": "",
+          "TOON_TREE_CROWN": 1
+        }
+      ]
+    }
+  ],
+  "meshBefore": [
+    {
+      "kind": "broadleafA",
+      "farSolidTriangles": 216,
+      "nearSolidTriangles": 492,
+      "farBatches": 2,
+      "nearBatches": 2,
+      "farMaterial": "vegetation",
+      "nearMaterial": "vegetation"
+    },
+    {
+      "kind": "broadleafB",
+      "farSolidTriangles": 216,
+      "nearSolidTriangles": 492,
+      "farBatches": 2,
+      "nearBatches": 2,
+      "farMaterial": "vegetation",
+      "nearMaterial": "vegetation"
+    },
+    {
+      "kind": "conifer",
+      "farSolidTriangles": 196,
+      "nearSolidTriangles": 1304,
+      "farBatches": 2,
+      "nearBatches": 2,
+      "farMaterial": "vegetation",
+      "nearMaterial": "vegetation"
+    }
+  ],
+  "meshAfter": [
+    {
+      "kind": "broadleafA",
+      "farSolidTriangles": 304,
+      "nearSolidTriangles": 782,
+      "farBatches": 1,
+      "nearBatches": 1,
+      "farMaterial": "vegetation-broadleafA:solid",
+      "nearMaterial": "vegetation-broadleafA3:solid"
+    },
+    {
+      "kind": "broadleafB",
+      "farSolidTriangles": 304,
+      "nearSolidTriangles": 782,
+      "farBatches": 1,
+      "nearBatches": 1,
+      "farMaterial": "vegetation-broadleafB:solid",
+      "nearMaterial": "vegetation-broadleafB3:solid"
+    },
+    {
+      "kind": "conifer",
+      "farSolidTriangles": 312,
+      "nearSolidTriangles": 952,
+      "farBatches": 1,
+      "nearBatches": 2,
+      "farMaterial": "vegetation-conifer:solid",
+      "nearMaterial": "vegetation-conifer2:solid"
+    }
+  ]
+}

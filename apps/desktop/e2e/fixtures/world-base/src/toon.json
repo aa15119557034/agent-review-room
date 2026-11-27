@@ -92,7 +92,7 @@
    "skinKeep": 0.35,
    "skyKeep": 0.3,
    "skyGain": 0.4,
-   "greenCut": 4,
+   "greenCut": 1.3333,
    "greenLumaLo": 0.27,
    "greenLumaHi": 0.45
   },

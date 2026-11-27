@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 import { makeAerial, patchAerial, hash32, rngFrom } from './block-common.js';
+import { toonEnabled } from './toon.js';
 import * as layout from '../upstream/sakuragaoka/src/world/layout.js';
 
 // X-51 street props + vegetation (2026-11-21): the pieces both island-wide scatter passes share (street-props.js, vegetation-scatter.js).
@@ -62,6 +63,10 @@ export async function loadModel(url, spec = {}, id = url, warnings = []) {
     const card = !!m.map;
     for (const k of Object.keys(g.attributes)) if (k !== 'position' && k !== 'normal' && !(card && k === 'uv')) g.deleteAttribute(k);
     g.setAttribute('color', new THREE.BufferAttribute(col, 3));
+    if (spec.toonCrown && !card) {
+      const crown = new Uint8Array(n).fill(o.userData.stationCrown === true ? 1 : 0);
+      g.setAttribute('stationCrown', new THREE.BufferAttribute(crown, 1));
+    }
     if (!g.index) g.setIndex(Array.from({ length: n }, (_, i) => i));
     if (card) { cardParts.push(g); map ??= m.map; map.anisotropy = 4; } else { parts.push(g); o.material.dispose?.(); }
   });
@@ -90,20 +95,53 @@ export async function getAerial(worldBase, island) {
   const palette = params[island.timeOfDay === 'afternoon' ? 'afternoon' : 'evening'];
   return makeAerial(island, palette.fog, params.blocks.fog.start);
 }
-export function makeMaterial({ gradientMap, aerial, name, map = null, alphaTest = 0, tint = null, height = 1 }) {
+export function makeMaterial({ gradientMap, aerial, name, map = null, alphaTest = 0, tint = null, height = 1, toonCrown = false }) {
   const m = new THREE.MeshToonMaterial({ vertexColors: true, gradientMap, name });
+  if (toonCrown) m.defines.TOON_TREE_CROWN = 1;
   if (map) { m.map = map; m.alphaTest = alphaTest || 0.5; m.side = THREE.DoubleSide; }
-  patchAerial(m, aerial, 'lit');
+  const vegetation = name === 'vegetation' || name.startsWith('vegetation-');
+  // Preserve distant leaf color where the warm evening haze is tuned for buildings.
+  patchAerial(m, aerial, 'lit', vegetation ? 0.45 : 1);
   // patchAerial reads the vertex position in model space; with instancing the instance matrix has to be applied first.
   const aerialHook = m.onBeforeCompile;
   m.onBeforeCompile = (shader, renderer) => {
+    if (toonCrown && toonEnabled()) applyCrownColors(shader);
     aerialHook.call(m, shader, renderer);
     if (tint) m.userData.tintUniforms = applyTint(shader, tint, height);
     shader.vertexShader = shader.vertexShader.replace('vBkPos = ( modelMatrix * vec4( transformed, 1.0 ) ).xyz;',
       'vec4 bkP = vec4( transformed, 1.0 );\n#ifdef USE_INSTANCING\nbkP = instanceMatrix * bkP;\n#endif\nvBkPos = ( modelMatrix * bkP ).xyz;');
   };
-  m.customProgramCacheKey = () => 'scatter-aerial-lit' + (map ? '-card' : '') + (tint ? '-tint' : '');
+  m.customProgramCacheKey = () => 'scatter-aerial-lit' + (vegetation ? '-vegetation' : '') + (map ? '-card' : '') + (tint ? '-tint' : '');
   return m;
+}
+
+/** Paint the three big values from the crown normals. Keep bark in the common lighting
+ * and let the existing aerial fog run after the crown colors have been chosen. */
+function applyCrownColors(shader) {
+  shader.uniforms.uCrownShade = { value: new THREE.Color('#326960') };
+  shader.uniforms.uCrownSide = { value: new THREE.Color('#527f5b') };
+  shader.uniforms.uCrownTop = { value: new THREE.Color('#7d9d63') };
+  shader.vertexShader = shader.vertexShader
+    .replace('#include <common>', '#include <common>\nattribute float stationCrown;\nvarying float vStationCrown;')
+    .replace('#include <begin_vertex>', '#include <begin_vertex>\nvStationCrown = stationCrown;');
+  shader.fragmentShader = shader.fragmentShader
+    .replace('#include <common>', '#include <common>\nvarying float vStationCrown;\n'
+      + 'uniform vec3 uCrownShade, uCrownSide, uCrownTop;')
+    .replace('#include <opaque_fragment>', `
+      vec3 crownUp = ( viewMatrix * vec4( 0.0, 1.0, 0.0, 0.0 ) ).xyz;
+#if NUM_DIR_LIGHTS > 0
+      crownUp = normalize( crownUp + directionalLights[ 0 ].direction * 0.42 );
+#endif
+      float crownLight = dot( normal, crownUp );
+      float edge = clamp( fwidth( crownLight ) * 0.65, 0.012, 0.045 );
+      float side = smoothstep( -0.18 - edge, -0.18 + edge, crownLight );
+      float top = smoothstep( 0.35 - edge, 0.35 + edge, crownLight );
+      vec3 crown = mix( mix( uCrownShade, uCrownSide, side ), uCrownTop, top );
+      float leafValue = dot( diffuseColor.rgb, vec3( 0.2126, 0.7152, 0.0722 ) );
+      crown *= mix( 0.93, 1.07, smoothstep( 0.06, 0.38, leafValue ) );
+      outgoingLight = mix( outgoingLight, crown, vStationCrown * uTbK );
+      #include <opaque_fragment>
+    `);
 }
 /**
  * Per-model colour grade of the leaves (props-veg.json "tint": { low, high, from, to, sat, leafOnly }), applied after the vertex colour x texture:
@@ -133,13 +171,17 @@ function applyTint(shader, tint, height) {
   }`);
   return shader.uniforms;
 }
-/** Material cache per model: the shared one unless the model has a "tint" (own uniforms) or cards (alpha-masked texture). */
+/** Cache materials by model when tint, tree shading or alpha-masked cards need their own program. */
 export function makeMaterialSet({ gradientMap, aerial, name }) {
   const shared = makeMaterial({ gradientMap, aerial, name }), cache = new Map();
   const get = (model, card) => {
     const key = model.id + (card ? ':card' : ':solid');
-    if (!card && !model.spec.tint) return shared;
-    if (!cache.has(key)) cache.set(key, makeMaterial({ gradientMap, aerial, name: name + '-' + key, map: card ? model.map : null, tint: model.spec.tint ?? null, height: model.size[1] }));
+    const toonCrown = !card && model.spec.toonCrown;
+    if (!card && !model.spec.tint && !toonCrown) return shared;
+    if (!cache.has(key)) cache.set(key, makeMaterial({
+      gradientMap, aerial, name: name + '-' + key, map: card ? model.map : null,
+      tint: model.spec.tint ?? null, height: model.size[1], toonCrown,
+    }));
     return cache.get(key);
   };
   return { shared, solid: m => get(m, false), card: m => get(m, true), all: () => [shared, ...cache.values()] };

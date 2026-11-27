@@ -93,9 +93,12 @@ uniform vec4 uLn, uLnS;   // width px / strength / fade near / fade far ; sil lo
 uniform vec3 uLnCol, uLnFl;
 uniform vec4 uLnF;       // round 17: form on / ink darken / ink saturation / thin-out of the width
 uniform vec4 uLnE;       // round 19: sign outline on / emissive ink level / sign step lo hi (metres)
-float wbLine(vec2 uv, float d0) {
+// Coverage above the emissive sign mask (1.5) is a painted tree crown (2.5).
+float wbCrownMask(float mask) {
+  return step(1.55, mask);
+}
+float wbLine(vec2 uv, float d0, float mask) {
   if (d0 >= uFar*0.9 || d0 > uLn.w) return 0.0;
-  float mask = texture(tColor, uv).a;
   if (mask < 0.95) return 0.0; // resolved MSAA alpha: any masked coverage at the edge pixel (blade tips, canopy cards, glass) skips the line
   float thin = smoothstep(uLn.z, uLn.w, d0);
   vec2 px = max(uLn.x*(uRes.y/1080.0)*(1.0 - uLnF.w*thin), 1.0)/uRes;
@@ -112,8 +115,9 @@ float wbLine(vec2 uv, float d0) {
   // A crease is a bend in continuous depth. Both sides of a real depth step have a huge curvature, but the far side
   // belongs to the line of the near side (and to its mask), so the crease is dropped wherever a neighbour is a step away.
   float jump = max(max(abs(dl-d0), abs(dr-d0)), max(abs(du-d0), abs(dd-d0)))/d0;
-  float cr = smoothstep(uLnS.z, uLnS.w, lap)*uLnC*(1.0 - smoothstep(0.05, 0.12, jump));
-  if (uLnE.x > 0.5) {
+  float crown = wbCrownMask(mask);
+  float cr = smoothstep(uLnS.z, uLnS.w, lap)*uLnC*(1.0 - smoothstep(0.05, 0.12, jump))*(1.0-crown);
+  if (uLnE.x > 0.5 && crown < 0.5) {
     // round 19: on a sign (mask above 1) only a real step in depth is a line: metres, not relative, so a bottle sample,
     // a shelf lip or a poster on the wall inside the sign stays untouched; no creases there either
     float wbS = clamp((mask - 1.0)*2.0, 0.0, 1.0);
@@ -229,22 +233,24 @@ export function createLook(renderer, camera) {
   });
   mat.fragmentShader = insert(mat.fragmentShader, 'void main(){', `${OUTLINES}\n${LINES}\n${GRADE}\nvoid main(){`, 'composite entry');
   mat.fragmentShader = insert(mat.fragmentShader, 'col *= uExposure;', `
+    float wbSurfaceMask = texture(tColor, uv).a;
+    float wbCrown = wbCrownMask(wbSurfaceMask);
     // Contact shadows (ZZZ refs: crates, benches, eaves all sit in soft dark creases).
     if (uAO*uToon > 0.0) {
-      float wbA = wbAO(uv, wbDepth(uv)), wbAk = uAO*uToon;
+      float wbA = wbAO(uv, wbDepth(uv)), wbAk = uAO*uToon*mix(1.0, 0.12, wbCrown);
       col *= mix(1.0, wbA, wbAk);
       col *= mix(vec3(1.0), uShAO, (1.0 - wbA)*wbAk*uShOn); // creases fall into blue-violet, not grey
     }
     if (uLnOn > 0.5) {
-      float wbL27 = wbLine(uv, wbDepth(uv))*uToon;
+      float wbL27 = wbLine(uv, wbDepth(uv), wbSurfaceMask)*uToon;
       vec3 wbInk = col*uLnCol; // round 27: dark, cool, hand-drawn line in the local colour
       if (uLnF.x > 0.5) {
         // round 17: ink = the local colour, darkened and made more saturated (never black), plus a violet floor
         vec3 wbBase = col;
-        if (uLnE.x > 0.5) {
+        if (uLnE.x > 0.5 && wbCrown < 0.5) {
           // round 19: a sign is brighter than 1 (emissive / light box); its ink comes from the colour scaled back to
           // display range and dimmed again, so the line reads as a line and not as a darker glow
-          float wbSg = clamp((texture(tColor, uv).a - 1.0)*2.0, 0.0, 1.0);
+          float wbSg = clamp((wbSurfaceMask - 1.0)*2.0, 0.0, 1.0);
           wbBase = mix(col, col/max(max(col.r, max(col.g, col.b)), 1.0)*uLnE.y, wbSg);
         }
         wbInk = wbBase*uLnF.y;

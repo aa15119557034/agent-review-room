@@ -1,0 +1,46 @@
+{
+  "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "stationLawn": {
+    "groups": 71,
+    "patches": 390,
+    "blades": 1170,
+    "triangles": 3510
+  },
+  "islandGrassPointsIdentical": 21022,
+  "scenes": {
+    "handoff": {
+      "meanMaxChannelDelta": 11.382,
+      "pixelsChangedByMoreThan1": 522191,
+      "lawnROI": {
+        "rect": [
+          80,
+          653,
+          1020,
+          890
+        ],
+        "original": {
+          "warmGreenPercent": 99.24,
+          "coolGreenPercent": 0.19,
+          "luma10_50_90": [
+            98.86,
+            103.5,
+            105.93
+          ]
+        },
+        "revised": {
+          "warmGreenPercent": 29.43,
+          "coolGreenPercent": 34.75,
+          "luma10_50_90": [
+            57.56,
+            81.82,
+            114.28
+          ]
+        }
+      }
+    },
+    "art-a-street": {
+      "meanMaxChannelDelta": 0.0,
+      "pixelsChangedByMoreThan1": 0
+    }
+  }
+}

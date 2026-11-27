@@ -1,0 +1,134 @@
+{
+  "colorRule": "R > 210, G > 195, B < 40",
+  "views": {
+    "second-lawn": {
+      "roi": [
+        0,
+        625,
+        1440,
+        850
+      ],
+      "yellowPixelsBefore": 31213,
+      "yellowPixelsAfter": 0,
+      "lumaP10P50P90Before": [
+        118.83,
+        128.76,
+        181.78
+      ],
+      "lumaP10P50P90After": [
+        118.06,
+        127.76,
+        131.33
+      ],
+      "medianDeltaWherePreviouslyYellow": -87.32
+    },
+    "other-lawn": {
+      "roi": [
+        0,
+        625,
+        1440,
+        880
+      ],
+      "yellowPixelsBefore": 21345,
+      "yellowPixelsAfter": 0,
+      "lumaP10P50P90Before": [
+        94.38,
+        111.36,
+        132.33
+      ],
+      "lumaP10P50P90After": [
+        93.81,
+        110.43,
+        127.12
+      ],
+      "medianDeltaWherePreviouslyYellow": -93.17
+    },
+    "handoff": {
+      "roi": [
+        80,
+        653,
+        1020,
+        890
+      ],
+      "yellowPixelsBefore": 0,
+      "yellowPixelsAfter": 0,
+      "lumaP10P50P90Before": [
+        85.04,
+        98.81,
+        113.14
+      ],
+      "lumaP10P50P90After": [
+        85.04,
+        98.8,
+        113.14
+      ],
+      "medianDeltaWherePreviouslyYellow": null
+    }
+  },
+  "secondViewSingleChanges": {
+    "before": 31213,
+    "transition-off": 31213,
+    "blend-off": 31213,
+    "grade-off": 26103,
+    "terrain-receive-off": 305924,
+    "sun-off": 0,
+    "toon-steps-off": 30637,
+    "rim-off": 31140,
+    "shadow-edge-cut-off": 34493
+  },
+  "aMainStreetMaxRgbDelta": 0,
+  "islandGrassPointsIdentical": 21022,
+  "stationLawn": {
+    "groups": 71,
+    "patches": 390,
+    "blades": 1170,
+    "triangles": 3510
+  },
+  "fixedEvening": true,
+  "viewport": [
+    1440,
+    900
+  ],
+  "cameraPoses": {
+    "a-main-street": [
+      278.8,
+      10.488,
+      936,
+      -0.003277842930440409,
+      -0.009834585659995631,
+      -3.223795934194156e-05,
+      0.9999462663720154,
+      35.63777782904556
+    ],
+    "second-lawn": [
+      356.5,
+      11.505600000000001,
+      965.2,
+      0.00043467192302272886,
+      0.08715573445104706,
+      3.802886561750207e-05,
+      -0.9961946032610413,
+      58
+    ],
+    "other-lawn": [
+      349.8,
+      12.068399999999999,
+      985.3,
+      0.0004330799443614478,
+      0.12186933180404619,
+      5.317553080427475e-05,
+      -0.9925460571579335,
+      58
+    ],
+    "handoff": [
+      346.8,
+      13.014800000000001,
+      1019.1,
+      0.0003165042670506921,
+      0.6883545101672566,
+      0.00030035133464517065,
+      -0.7253743019617671,
+      58
+    ]
+  }
+}
