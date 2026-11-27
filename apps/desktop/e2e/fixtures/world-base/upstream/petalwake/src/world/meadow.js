@@ -337,7 +337,8 @@ void main(){
   float headR = uSize * mix(0.052, 0.080, rnd.w) * shp.z;
   float stemH = mix(0.58, 1.04, rnd.x) * shp.w * (0.7 + 0.3 * splat.a);
   #ifdef FLOWER_BED
-  stemH *= mix(0.53, 0.73, smoothstep(0.62, 0.96, rnd.w));
+  stemH *= mix(0.265, 0.365, smoothstep(0.62, 0.96, rnd.w));
+  headR *= mix(1.50, 1.94, rnd.z);
   #endif
   // ---- the wake has been here: the map says what share of the petals it took. They come off one
   // at a time as that share climbs (in the fragment shader) - a flower at the edge of a track, or
@@ -382,7 +383,11 @@ void main(){
     vec3 hn = normalize(tipTan * 0.55 + up * 0.55 + uSunDir * 0.30 + vec3(rnd.x - 0.5, 0.0, rnd.z - 0.5) * 0.7);
     // with distance a head stands in for a whole clump: it turns to face the eye, as a clump
     // seen from the side still shows its colour
-    hn = normalize(mix(hn, normalize(uCamPos - root), 0.16 + 0.50 * farK));
+    float facing = 0.16 + 0.50 * farK;
+    #ifdef FLOWER_BED
+    facing += mix(0.16, 0.27, rnd.y);
+    #endif
+    hn = normalize(mix(hn, normalize(uCamPos - root), facing));
     vec3 tx = normalize(cross(hn, vec3(0.31, 0.2, 0.93)));
     vec3 ty = cross(hn, tx);
     float r = length(position.xy);
@@ -430,6 +435,9 @@ void main(){
     float pa = abs(fract(a * k / 6.2831853 + 0.5) - 0.5) * 2.0;
     // petal outline: broad blade, pinched at the gaps, little notches at the tip
     float outline = mix(1.0, 0.36, pow(pa, k > 10.0 ? 1.1 : 2.4));
+    #ifdef FLOWER_BED
+    outline += 0.12 * pow(pa, 1.5);
+    #endif
     outline *= 1.0 - 0.07 * cos(pa * 9.0) * step(k, 9.0);
     float fw = max(fwidth(r) * 1.5, 0.02);
     // torn off by the wake: every petal has its own breaking point, so a flower at the edge of

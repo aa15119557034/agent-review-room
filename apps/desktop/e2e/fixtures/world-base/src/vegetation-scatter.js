@@ -68,16 +68,16 @@ function plantFlowerBeds(ctx, habitats, grassModels, seed) {
       if (roots.length < 15) continue;
       flowers.push(...roots);
       counts.push(roots.length);
-      // Broad short blades at the feet and rim of the flower bed. Bare ground separates the beds.
-      const grassCount = Math.round(2 + radius * 3);
+      // Overlap wider low blades in the centre and round the rim to cover the flower stems' bases.
+      const grassCount = Math.round(4 + radius * 7);
       for (let i = 0; i < grassCount; i++) {
         const theta = start + i * 2.399963 + (r() - 0.5) * 0.4;
-        const reach = radius * (0.25 + r() * 0.69);
+        const reach = radius * (0.14 + r() * 0.72);
         const x = cx + Math.cos(theta) * reach, z = cz + Math.sin(theta) * reach;
         if (!canPlant(x, z, 0.4)) continue;
-        const kind = pickWeighted(r, grassModels), s = 0.64 + 0.32 * r();
+        const kind = pickWeighted(r, grassModels), s = 0.89 + 0.34 * r();
         grass.push({ kind, x, y: ctx.groundY(x, z) - 0.017, z, yaw: r() * Math.PI * 2,
-          sx: s, sy: 0.63 + 0.29 * r(), sz: s, tint: 0.86 + 0.16 * r() });
+          sx: s, sy: 0.30 + 0.15 * r(), sz: s, tint: 0.82 + 0.15 * r() });
       }
     }
     return { name, flowers, grass, counts };

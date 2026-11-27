@@ -1,0 +1,98 @@
+[
+  {
+    "time": "evening",
+    "beds": [
+      {
+        "name": "hillside",
+        "flowersPerCluster": [
+          27,
+          34,
+          22,
+          37,
+          24,
+          35,
+          21,
+          34,
+          27,
+          33,
+          28,
+          26
+        ],
+        "grass": 135
+      },
+      {
+        "name": "tower",
+        "flowersPerCluster": [
+          28,
+          33,
+          34,
+          31,
+          22,
+          37,
+          34,
+          26,
+          22,
+          32,
+          38,
+          22
+        ],
+        "grass": 142
+      }
+    ],
+    "meshes": {
+      "meadow-flower-bed-hillside": 348,
+      "meadow-flower-bed-tower": 359,
+      "env-flora-rail-bank-east-shrubs": 8,
+      "env-flora-rail-bank-east-tuft": 74,
+      "env-flora-rail-bank-east-flower": 68
+    }
+  },
+  {
+    "time": "night",
+    "beds": [
+      {
+        "name": "hillside",
+        "flowersPerCluster": [
+          27,
+          34,
+          22,
+          37,
+          24,
+          35,
+          21,
+          34,
+          27,
+          33,
+          28,
+          26
+        ],
+        "grass": 135
+      },
+      {
+        "name": "tower",
+        "flowersPerCluster": [
+          28,
+          33,
+          34,
+          31,
+          22,
+          37,
+          34,
+          26,
+          22,
+          32,
+          38,
+          22
+        ],
+        "grass": 142
+      }
+    ],
+    "meshes": {
+      "meadow-flower-bed-hillside": 348,
+      "meadow-flower-bed-tower": 359,
+      "env-flora-rail-bank-east-shrubs": 8,
+      "env-flora-rail-bank-east-tuft": 74,
+      "env-flora-rail-bank-east-flower": 68
+    }
+  }
+]
