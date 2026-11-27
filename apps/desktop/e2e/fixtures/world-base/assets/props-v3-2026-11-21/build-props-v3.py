@@ -1,11 +1,13 @@
 # build-props-v3.py —— 贩卖机 / 回收箱 / 路牌（带图集贴图）
 # 参照 C酱 2026-11-21 反馈：贩卖机正面要有饮料罐、发光展示窗、品牌面板、投币口、取物口；
 # 路牌要有真实图案和文字，一张图集铺全部路牌。
+import argparse
+import sys
 import bpy, bmesh, math, os, json
 from mathutils import Vector
 
-TEX = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'out', 'proptex')
-OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'out', 'props3')
+TEX = os.path.dirname(os.path.abspath(__file__))
+OUT = os.path.join(TEX, 'out', 'props3')
 
 
 def reset():
@@ -122,8 +124,10 @@ def build_vending(which):
     bm = bmesh.new()
     layer = bm.loops.layers.uv.verify()
     wu0, wv0, wu1, wv1 = cell_uv((1, row))
-    wx = W * 0.41
-    wz0, wz1 = H * 0.155, H * 0.645
+    # The window's inset must match vend_body_cell's opening, including the
+    # face's 2 cm end clearance and the image-space Y direction.
+    wx = W * 0.43
+    wz0, wz1 = 0.02 + (H - 0.04) * 0.34, 0.02 + (H - 0.04) * 0.87
     yw = -0.016
     pts2 = [(-wx, yw, wz0), (wx, yw, wz0), (wx, yw, wz1), (-wx, yw, wz1)]
     quad_uv(bm, pts2, [(wu0, wv0), (wu1, wv0), (wu1, wv1), (wu0, wv1)], layer)
@@ -137,21 +141,54 @@ def build_vending(which):
 
 
 def build_recycle_bin():
-    """回收箱：0.62 x 0.62 x 0.95，顶部三个投口"""
+    """回收箱正面有两个圆形投口，盖板后有可见的收料腔。"""
     objs = []
     bm = bmesh.new()
-    box(bm, 0, 0, 0.475, 0.62, 0.62, 0.95)
-    objs.append(new_obj('bin-body', mat_plain('bin-body', (0.30, 0.34, 0.38), 0.7, 0.1), bm, smooth=False))
+    box(bm, 0, 0, 0.33, 0.62, 0.62, 0.66)
+    for x in (-0.29, 0.29):
+        box(bm, x, 0, 0.81, 0.04, 0.62, 0.30)
+    box(bm, 0, 0.29, 0.81, 0.54, 0.04, 0.30)
+    objs.append(new_obj('bin-body', mat_plain('bin-body', (0.77, 0.81, 0.74), 0.7, 0.1), bm, smooth=False))
     bm = bmesh.new()
-    box(bm, 0, 0, 0.98, 0.66, 0.66, 0.06)
-    objs.append(new_obj('bin-lid', mat_plain('bin-lid', (0.22, 0.25, 0.28), 0.6, 0.2), bm, smooth=False))
+    box(bm, 0, 0, 0.99, 0.66, 0.66, 0.06)
+    objs.append(new_obj('bin-lid', mat_plain('bin-lid', (0.14, 0.36, 0.29), 0.6, 0.2), bm, smooth=False))
+
+    panel, rims, wells = bmesh.new(), bmesh.new(), bmesh.new()
+    for center in (-0.155, 0.155):
+        outer = []
+        edge = []
+        rim = []
+        opening = []
+        throat = []
+        for i in range(16):
+            angle = i * math.tau / 16
+            dx, dz = math.cos(angle), math.sin(angle)
+            rectangle = max(abs(dx), abs(dz))
+            outer.append(panel.verts.new((center + 0.155 * dx / rectangle, -0.31, 0.81 + 0.15 * dz / rectangle)))
+            edge.append(panel.verts.new((center + 0.116 * dx, -0.31, 0.81 + 0.116 * dz)))
+            rim.append(rims.verts.new((center + 0.116 * dx, -0.311, 0.81 + 0.116 * dz)))
+            opening.append(rims.verts.new((center + 0.091 * dx, -0.326, 0.81 + 0.091 * dz)))
+            throat.append(wells.verts.new((center + 0.091 * dx, -0.326, 0.81 + 0.091 * dz)))
+        interior = [wells.verts.new((v.co.x, -0.17, v.co.z)) for v in throat]
+        for i in range(16):
+            j = (i + 1) % 16
+            panel.faces.new((outer[i], outer[j], edge[j], edge[i]))
+            rims.faces.new((rim[i], rim[j], opening[j], opening[i]))
+            wells.faces.new((throat[j], throat[i], interior[i], interior[j]))
+        wells.faces.new(interior)
+    objs.append(new_obj('bin-panel', mat_plain('bin-panel', (0.77, 0.81, 0.74)), panel, smooth=False))
+    objs.append(new_obj('bin-rims', mat_plain('bin-rims', (0.34, 0.53, 0.46)), rims, smooth=False))
+    objs.append(new_obj('bin-wells', mat_plain('bin-wells', (0.018, 0.035, 0.043)), wells, smooth=False))
+
     bm = bmesh.new()
-    for i, dx in enumerate((-0.18, 0.0, 0.18)):
-        cyl(bm, dx, 0, 0.95, 0.075, 0.075, 0.10, 8, caps=False)
-    objs.append(new_obj('bin-holes', mat_plain('bin-holes', (0.08, 0.09, 0.10), 0.9), bm, smooth=False))
-    bm = bmesh.new()
-    box(bm, 0, -0.315, 0.42, 0.40, 0.02, 0.22)
-    objs.append(new_obj('bin-label', mat_plain('bin-label', (0.62, 0.66, 0.70), 0.85), bm, smooth=False))
+    uv = bm.loops.layers.uv.verify()
+    quad_uv(bm, [(-0.246, -0.312, 0.39), (0.246, -0.312, 0.39),
+                 (0.246, -0.312, 0.565), (-0.246, -0.312, 0.565)],
+            [(0, 0), (1, 0), (1, 1), (0, 1)], uv)
+    objs.append(new_obj('bin-label', mat_tex('bin-label', 'recycle-label.png'), bm, smooth=False))
+    # Match the existing station bin footprint and collision height.
+    for ob in objs:
+        ob.scale = (0.44 / 0.66, 0.36 / 0.66, 0.87 / 1.02)
     return objs
 
 
@@ -162,7 +199,7 @@ def build_sign(kind):
         'speed40': (0, 0, 2.45, 0.62, 0.62, 'circle'),
         'blue': (1, 0, 2.55, 1.30, 0.42, 'rect'),
         'warning': (0, 1, 2.35, 0.70, 0.70, 'diamond'),
-        'stop': (1, 1, 2.30, 0.82, 0.74, 'triangle_down'),
+        'stop': (1, 1, 2.20, 0.80, 0.70, 'triangle_down'),
     }[kind]
     col, row, post_h, sw, sh, shape = cfg
     objs = []
@@ -174,8 +211,8 @@ def build_sign(kind):
     bm = bmesh.new()
     layer = bm.loops.layers.uv.verify()
     u0, v0, u1, v1 = cell_uv((col, row))
-    # 牌中心：倒三角时整块牌抬到杆顶以上，杆顶到牌下沿，不挡字
-    cz = post_h + (sh * 0.5 + 0.04) if shape in ("triangle", "triangle_down") else post_h
+    # The stop sign sits on the original 2.62 m silhouette, with the pole behind its face.
+    cz = post_h + 0.07 if shape == 'triangle_down' else post_h
     y = -0.02
     if shape == 'circle':
         seg = 20
@@ -197,10 +234,15 @@ def build_sign(kind):
         quad_uv(bm, pts, [(u0 + (u1 - u0) * 0.5, v1), (u1, v0 + (v1 - v0) * 0.5),
                           (u0 + (u1 - u0) * 0.5, v0), (u0, v0 + (v1 - v0) * 0.5)], layer)
     elif shape == "triangle_down":
-        # 日本停止牌：倒三角（尖朝下）
+        # Match the printed triangle in make-prop-atlas.py, including its white rim.
+        # Mapping the whole cell clipped 「れ」 against the physical diagonal.
         h2 = sh / 2
-        pts = [(-sw / 2, y, cz + h2), (sw / 2, y, cz + h2), (0, y, cz - h2)]
-        quad_uv(bm, pts, [(u0, v1), (u1, v1), (u0 + (u1 - u0) * 0.5, v0)], layer)
+        pts = [(-sw / 2, y, cz + h2), (0, y, cz - h2), (sw / 2, y, cz + h2)]
+        du, dv = u1 - u0, v1 - v0
+        top = v1 - dv * (0.5 - 0.44 * 0.80)
+        bottom = v1 - dv * (0.5 + 0.44 * 0.86)
+        quad_uv(bm, pts, [(u0 + du * 0.06, top), (u0 + du * 0.5, bottom),
+                          (u1 - du * 0.06, top)], layer)
     else:  # triangle
         h2 = sh / 2
         pts = [(0, y, cz + h2), (sw / 2, y, cz - h2), (-sw / 2, y, cz - h2)]
@@ -246,19 +288,27 @@ def export(objs, name):
 
 
 BUILDS = [
-    ('prop-vending-drink', lambda: build_vending('drink')),
+    ('prop-vending-drinks', lambda: build_vending('drink')),
     ('prop-vending-coffee', lambda: build_vending('coffee')),
     ('prop-recycle-bin', build_recycle_bin),
     ('prop-sign-40', lambda: build_sign('speed40')),
     ('prop-sign-direction', lambda: build_sign('blue')),
     ('prop-sign-warning2', lambda: build_sign('warning')),
-    ('prop-sign-stop2', lambda: build_sign('stop')),
+    ('prop-sign-stop', lambda: build_sign('stop')),
 ]
 
+parser = argparse.ArgumentParser()
+parser.add_argument('--output', default=OUT)
+parser.add_argument('--only', nargs='+', choices=[name for name, _ in BUILDS])
+args = parser.parse_args(sys.argv[sys.argv.index('--') + 1:] if '--' in sys.argv else [])
+OUT = args.output
 report = []
 for name, fn in BUILDS:
+    if args.only and name not in args.only:
+        continue
     reset()
     objs = fn()
+    bpy.context.view_layer.update()
     tris = sum(tri_count(o) for o in objs)
     xs, ys, zs = [], [], []
     for o in objs:

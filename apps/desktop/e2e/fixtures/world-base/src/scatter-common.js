@@ -49,8 +49,9 @@ export async function loadModel(url, spec = {}, id = url, warnings = []) {
   const gltf = await new GLTFLoader().loadAsync(url);
   gltf.scene.updateMatrixWorld(true);
   // Untextured parts: material colour (x the GLB's vertex colours when spec.vertexColors) baked into ONE merged geometry. Parts whose material has a base-colour
-  // texture (alpha-masked leaf / grass cards, v2 models) go into a second geometry that keeps its UVs; it is drawn with the card material (alphaTest, no blending).
-  const parts = [], cardParts = []; let map = null;
+  // texture go into a geometry that keeps its UVs. A named vending window retains its separate emissive texture.
+  const parts = [], cardParts = [], windowParts = [];
+  let map = null, windowMap = null, windowEmission = null;
   gltf.scene.traverse(o => {
     if (!o.isMesh) return;
     const g = o.geometry.clone();
@@ -68,11 +69,19 @@ export async function loadModel(url, spec = {}, id = url, warnings = []) {
       g.setAttribute('stationCrown', new THREE.BufferAttribute(crown, 1));
     }
     if (!g.index) g.setIndex(Array.from({ length: n }, (_, i) => i));
-    if (card) { cardParts.push(g); map ??= m.map; map.anisotropy = 4; } else { parts.push(g); o.material.dispose?.(); }
+    if (spec.window && m.name === spec.window) {
+      windowParts.push(g); windowMap = m.map; windowEmission = m.emissiveMap;
+    } else if (card) { cardParts.push(g); map ??= m.map; map.anisotropy = 4; }
+    else { parts.push(g); o.material.dispose?.(); }
   });
-  if (!parts.length && !cardParts.length) throw new Error(`${url}: no meshes`);
+  if (spec.window && (windowParts.length !== 1 || !windowMap || !windowEmission)) {
+    throw new Error(`${url}: expected one textured ${spec.window} mesh with an emissive map`);
+  }
+  if (windowMap) windowMap.anisotropy = windowEmission.anisotropy = 4;
+  if (!parts.length && !cardParts.length && !windowParts.length) throw new Error(`${url}: no meshes`);
   const merge = list => { if (!list.length) return null; const g = list.length === 1 ? list[0] : mergeGeometries(list, false); if (list.length > 1) for (const p of list) p.dispose(); return g; };
-  const geometry = merge(parts), cardGeometry = merge(cardParts), all = [geometry, cardGeometry].filter(Boolean);
+  const geometry = merge(parts), cardGeometry = merge(cardParts), windowGeometry = merge(windowParts);
+  const all = [geometry, cardGeometry, windowGeometry].filter(Boolean);
   // table: origin offset, scale / fit, ground snap (same transform for both geometries)
   const [ox, oy, oz] = spec.origin ?? [0, 0, 0], boxOf = () => { const b = new THREE.Box3(); for (const g of all) { g.computeBoundingBox(); b.union(g.boundingBox); } return b; };
   for (const g of all) g.translate(-ox, -oy, -oz);
@@ -85,7 +94,8 @@ export async function loadModel(url, spec = {}, id = url, warnings = []) {
   const box = b, size = [box.max.x - box.min.x, box.max.y - box.min.y, box.max.z - box.min.z];
   if (spec.size && spec.size.some((v, i) => Math.abs(size[i] - v) > 0.35 * Math.max(v, 0.2))) warnings.push({ id, expected: spec.size, measured: size.map(v => +v.toFixed(2)) });
   const tris = all.reduce((n, g) => n + g.index.count / 3, 0);
-  return { id, spec, geometry, cardGeometry, map, box, size, tris, url, radius: spec.radius ?? Math.max(size[0], size[2]) / 2 };
+  return { id, spec, geometry, cardGeometry, map, windowGeometry, windowMap, windowEmission, box, size, tris, url,
+    radius: spec.radius ?? Math.max(size[0], size[2]) / 2 };
 }
 
 // ---- material (toon ramp + aerial fog, instancing aware) ------------------------------------------------------------------------
@@ -172,7 +182,7 @@ function applyTint(shader, tint, height) {
   return shader.uniforms;
 }
 /** Cache materials by model when tint, tree shading or alpha-masked cards need their own program. */
-export function makeMaterialSet({ gradientMap, aerial, name }) {
+export function makeMaterialSet({ gradientMap, aerial, name, windowLight = 0 }) {
   const shared = makeMaterial({ gradientMap, aerial, name }), cache = new Map();
   const get = (model, card) => {
     const key = model.id + (card ? ':card' : ':solid');
@@ -184,7 +194,21 @@ export function makeMaterialSet({ gradientMap, aerial, name }) {
     }));
     return cache.get(key);
   };
-  return { shared, solid: m => get(m, false), card: m => get(m, true), all: () => [shared, ...cache.values()] };
+  const window = model => {
+    const key = model.id + ':window';
+    if (!cache.has(key)) {
+      const m = makeMaterial({ gradientMap, aerial, name: 'vend-window', map: model.windowMap });
+      m.alphaTest = 0;
+      if (windowLight > 0) {
+        m.emissive.set('#fff1da');
+        m.emissiveMap = model.windowEmission;
+        m.emissiveIntensity = windowLight;
+      }
+      cache.set(key, m);
+    }
+    return cache.get(key);
+  };
+  return { shared, solid: m => get(m, false), card: m => get(m, true), window, all: () => [shared, ...cache.values()] };
 }
 
 // ---- instancing -----------------------------------------------------------------------------------------------------------------
@@ -210,6 +234,11 @@ export function makeBatches({ name, model, materials, items }) {
   const out = [];
   if (model.geometry) out.push(makeBatch({ name, model, material: materials.solid(model), items }));
   if (model.cardGeometry) out.push(makeBatch({ name: name + '-cards', model: { geometry: model.cardGeometry }, material: materials.card(model), items }));
+  if (model.windowGeometry) {
+    const mesh = makeBatch({ name: name + '-window', model: { geometry: model.windowGeometry }, material: materials.window(model), items });
+    mesh.castShadow = false;
+    out.push(mesh);
+  }
   return out;
 }
 

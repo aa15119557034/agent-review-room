@@ -3,10 +3,16 @@ vending-atlas.png  1024x1024  左半：饮料机正面，右半：咖啡机正�
 sign-atlas.png     1024x1024  2x2 四格：限速 40 / 蓝色方向牌 / 菱形警示 / 止まれ
 做法：画 4 倍再缩，字体用 Windows 自带的。
 """
-import math, os
+import argparse, math, os
 from PIL import Image, ImageDraw, ImageFont, ImageFilter
 
-OUT = r'E:\agent-review-room\.tmp\blender-blocks\out\proptex'
+parser = argparse.ArgumentParser()
+parser.add_argument('--output', default=r'E:\agent-review-room\.tmp\blender-blocks\out\proptex')
+selection = parser.add_mutually_exclusive_group()
+selection.add_argument('--recycle-only', action='store_true')
+selection.add_argument('--vending-only', action='store_true')
+args = parser.parse_args()
+OUT = args.output
 os.makedirs(OUT, exist_ok=True)
 SS = 2
 
@@ -57,28 +63,48 @@ def vend_body_cell(d, x0, y0, w, h, theme):
 
 
 def vend_window_cell(d, x0, y0, w, h, theme):
-    """商品窗（单独一格，接入时给这块加自发光）：3 行 x 4 列商品 + 价签 + 灯带"""
-    d.rectangle([x0, y0, x0 + w, y0 + h], fill=theme["glass"])
+    """Three lit shelves of original bottles and cans with printed price rails."""
+    glass = tuple(round(channel * .89) for channel in theme["glass"])
+    d.rectangle([x0, y0, x0 + w, y0 + h], fill=glass)
     # 顶部灯带
     d.rectangle([x0 + w * 0.02, y0 + h * 0.02, x0 + w * 0.98, y0 + h * 0.07], fill=theme["strip"])
-    rows, cols = 3, 4
+    rows, cols = 3, 6
     gx0, gy0 = x0 + w * 0.05, y0 + h * 0.11
     gx1, gy1 = x0 + w * 0.95, y0 + h * 0.95
     cw = (gx1 - gx0) / cols
     ch = (gy1 - gy0) / rows
+    labels = ('TEA', 'SODA', 'MUGI', 'COCOA', 'CIDER', 'BLACK')
     for r in range(rows):
+        shelf = gy0 + (r + 1) * ch
+        d.rectangle((gx0, shelf - ch * .21, gx1, shelf - ch * .12), fill=(106, 112, 114))
         for c in range(cols):
             cx = gx0 + c * cw + cw * 0.5
-            cy = gy0 + r * ch + ch * 0.62
+            cy = shelf - ch * .22
             col = theme["cans"][(r * cols + c) % len(theme["cans"])]
-            cwid, chei = cw * 0.40, ch * 0.50
-            d.rounded_rectangle([cx - cwid / 2, cy - chei, cx + cwid / 2, cy], radius=cwid * 0.18, fill=col)
-            d.rectangle([cx - cwid * 0.30, cy - chei * 0.92, cx - cwid * 0.14, cy - chei * 0.12],
-                        fill=tuple(min(255, int(v * 1.35)) for v in col))
-            f_p = font(int(ch * 0.14))
-            pt = "¥130"
+            bottle = (r + c) % 3 != 0
+            half = cw * (0.25 if bottle else 0.29)
+            height = ch * (0.69 if bottle else 0.54)
+            y = cy - height
+            edge = tuple(max(16, int(value * .66)) for value in col)
+            shine = tuple(min(255, int(value * .60 + 96)) for value in col)
+            top = y + height * .26 if bottle else y
+            d.rounded_rectangle((cx - half, top, cx + half, cy), radius=half * .25, fill=col, outline=edge, width=2)
+            if bottle:
+                d.polygon([(cx - half, top + 2), (cx - half * .53, y + height * .11),
+                           (cx + half * .53, y + height * .11), (cx + half, top + 2)], fill=col)
+                d.rounded_rectangle((cx - half * .56, y, cx + half * .56, y + height * .12),
+                                    radius=3, fill=(233, 230, 211), outline=edge, width=2)
+            else:
+                d.ellipse((cx - half * .90, y, cx + half * .90, y + height * .12),
+                          fill=(220, 222, 220), outline=edge, width=2)
+            d.line((cx - half * .69, y + height * .30, cx - half * .69, cy - height * .10), fill=shine, width=3)
+            d.rectangle((cx - half * .82, y + height * .43, cx + half * .82, y + height * .73), fill=(247, 241, 216))
+            d.text((cx, y + height * .57), labels[(r + c) % len(labels)],
+                   font=font(max(7, int(half * .41))), anchor='mm', fill=theme["dark"])
+            f_p = font(int(ch * 0.105))
+            pt = ("¥130", "¥140", "¥150")[r]
             pw2 = d.textlength(pt, font=f_p)
-            d.text((cx - pw2 / 2, cy + ch * 0.04), pt, font=f_p, fill=theme["dark"])
+            d.text((cx - pw2 / 2, cy + ch * 0.097), pt, font=f_p, fill=theme["dark"])
 
 
 def make_vending_atlas(size=1024):
@@ -186,11 +212,28 @@ def make_sign_atlas(size=1024):
     return img
 
 
-v = make_vending_atlas()
-s = make_sign_atlas()
-prev = Image.new('RGB', (1024 + 1024 + 24, 1024), (24, 26, 30))
-prev.paste(v, (0, 0)); prev.paste(s, (1048, 0))
-prev.save(os.path.join(OUT, 'prop-atlas-preview.png'))
+def make_recycle_label():
+    image = Image.new('RGB', (512, 184), (234, 241, 225))
+    d = ImageDraw.Draw(image)
+    d.rectangle((0, 0, 511, 26), fill=(53, 129, 119))
+    d.rectangle((0, 138, 511, 183), fill=(53, 129, 119))
+    d.line((256, 47, 256, 120), fill=(123, 160, 145), width=3)
+    for x, text in [(128, 'かん'), (384, 'びん')]:
+        d.text((x, 78), text, font=font(56), anchor='mm', fill=(29, 62, 65))
+    d.text((256, 157), '資源回収', font=font(31), anchor='mm', fill=(245, 247, 229))
+    image.save(os.path.join(OUT, 'recycle-label.png'))
+
+
+if not args.vending_only:
+    make_recycle_label()
+if args.vending_only:
+    make_vending_atlas()
+elif not args.recycle_only:
+    v = make_vending_atlas()
+    s = make_sign_atlas()
+    prev = Image.new('RGB', (1024 + 1024 + 24, 1024), (24, 26, 30))
+    prev.paste(v, (0, 0)); prev.paste(s, (1048, 0))
+    prev.save(os.path.join(OUT, 'prop-atlas-preview.png'))
 print('OK', OUT)
 
 

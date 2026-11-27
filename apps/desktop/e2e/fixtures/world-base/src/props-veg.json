@@ -5,13 +5,14 @@
     "models": {
       "poleA": { "base": "/poles-v2/", "file": "pole-utility-a.glb", "size": [2.2, 11.0, 0.6], "origin": [0, 0, 0], "radius": 0.35, "attach": { "height": 10.75, "offsets": [-0.88, 0, 0.88] } },
       "poleB": { "base": "/poles-v2/", "file": "pole-utility-b.glb", "size": [2.4, 12.0, 0.6], "origin": [0, 0, 0], "radius": 0.45, "attach": { "height": 11.8, "offsets": [-0.96, 0, 0.96] } },
-      "vendDrinks": { "file": "prop-vending-drinks.glb", "size": [1.0, 1.85, 0.77], "origin": [0, 0, 0], "radius": 0.55 },
-      "vendCoffee": { "file": "prop-vending-coffee.glb", "size": [1.0, 1.85, 0.77], "origin": [0, 0, 0], "radius": 0.55 },
+      "vendDrinks": { "base": "/street-props-v3/", "file": "prop-vending-drinks.glb", "size": [1.04, 1.87, 0.79], "origin": [0, 0, -0.375], "radius": 0.55, "window": "vend-window" },
+      "vendCoffee": { "base": "/street-props-v3/", "file": "prop-vending-coffee.glb", "size": [1.04, 1.87, 0.79], "origin": [0, 0, -0.375], "radius": 0.55, "window": "vend-window" },
       "postbox": { "file": "prop-postbox.glb", "size": [0.6, 1.11, 0.58], "origin": [0, 0, 0], "radius": 0.4 },
       "signSpeed": { "file": "prop-sign-speed.glb", "size": [0.62, 2.71, 0.05], "origin": [0, 0, 0], "radius": 0.3 },
       "signBlue": { "file": "prop-sign-blue.glb", "size": [1.3, 2.6, 0.06], "origin": [0, 0, 0], "radius": 0.3 },
       "signWarning": { "file": "prop-sign-warning.glb", "size": [0.68, 2.3, 0.06], "origin": [0, 0, 0], "radius": 0.3 },
-      "signStop": { "file": "prop-sign-stop.glb", "size": [0.8, 2.62, 0.06], "origin": [0, 0, 0], "radius": 0.3 },
+      "signStop": { "base": "/street-props-v3/", "file": "prop-sign-stop.glb", "size": [0.8, 2.62, 0.09], "origin": [0, 0, 0], "radius": 0.3 },
+      "recycleBin": { "base": "/street-props-v3/", "file": "prop-recycle-bin.glb", "size": [0.44, 0.87, 0.36], "origin": [0, 0, 0], "radius": 0.28 },
       "guardrail": { "file": "prop-guardrail.glb", "size": [2.0, 0.81, 0.1], "origin": [0, 0, 0], "radius": 0.5 },
       "hydrant": { "file": "prop-hydrant.glb", "size": [0.42, 0.79, 0.3], "origin": [0, 0, 0], "radius": 0.3 }
     },

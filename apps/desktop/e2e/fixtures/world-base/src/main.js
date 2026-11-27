@@ -134,6 +134,7 @@ async function init() {
   const night = timeOfDay === 'night', evening = timeOfDay !== 'afternoon';
   const scatterQuery = new URLSearchParams(location.search);
   const propsOn = scatterQuery.get('props') !== 'off', vegOn = scatterQuery.get('veg') !== 'off';
+  const vendingGlow = propsOn && evening && scatterQuery.get('vendlight') !== 'off' ? timeOfDay : null;
   // Art round 2: island-wide ground (flower drifts, pastel petals, painted sward and rock). ?ground=off skips it.
   const groundParams = groundEnabled() ? await loadGround() : null;
   const islandSward = vegOn ? groundParams?.swardPaint : null;
@@ -170,7 +171,7 @@ async function init() {
   station = await createStation({
     scene, renderer, camera, offset: island.stationPlacement.position,
     rotationY: island.stationPlacement.rotationY, sunDir: island.U.uSunDir.value, evening,
-    groundMaterial: island.transition.material, refl,
+    groundMaterial: island.transition.material, refl, replaceStreetProps: propsOn, vendingGlow,
     onProgress: stage,
   });
   worldBase.station = station;
@@ -234,7 +235,7 @@ async function init() {
   // ?props=off / ?veg=off import nothing, and the page is the one without them.
   {
     if (propsOn || vegOn) stage('正在铺放街道道具与植被…');
-    if (propsOn) worldBase.streetProps = await (await import('./street-props.js')).createStreetProps({ scene, worldBase, island, station });
+    if (propsOn) worldBase.streetProps = await (await import('./street-props.js')).createStreetProps({ scene, worldBase, island, station, vendingGlow });
     if (vegOn) worldBase.vegetation = await (await import('./vegetation-scatter.js')).createVegetation({ scene, worldBase, island, station });
   }
   // Round 11: the shop-room boxes are installed after the town edge is built (the laundromat registers its room there). No program
