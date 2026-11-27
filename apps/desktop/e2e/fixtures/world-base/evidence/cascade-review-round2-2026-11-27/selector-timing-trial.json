@@ -1,0 +1,330 @@
+{
+  "candidate": "e0d7701cab08658221da50fda3da7826ba825296",
+  "matchesSourceAfter": true,
+  "groups": 60,
+  "clockRows": 574,
+  "exactStandardMaterialPrograms": true,
+  "standardWorkloadParity": {
+    "art-a-street": true,
+    "art-b-konbini": true,
+    "art-c-alley": true,
+    "art-d-laundry": true,
+    "sample-e-harbour": true,
+    "sample-f-hillside": true,
+    "sample-g-rail": true,
+    "sample-h-north": true
+  },
+  "allGatesMet": false,
+  "summary": [
+    {
+      "name": "art-a-street",
+      "time": "evening",
+      "baseP95": 12.097536,
+      "candidateP95": 12.621823999999997,
+      "delta": 0.5242879999999968,
+      "rounds": [
+        {
+          "round": 1,
+          "baseP95": 12.097536,
+          "candidateP95": 12.493824,
+          "delta": 0.3962880000000002
+        },
+        {
+          "round": 2,
+          "baseP95": 12.816383999999998,
+          "candidateP95": 13.920960000000001,
+          "delta": 1.1045760000000033
+        },
+        {
+          "round": 3,
+          "baseP95": 12.054528,
+          "candidateP95": 12.621823999999997,
+          "delta": 0.5672959999999971
+        }
+      ],
+      "pairedDeltaMedian": 0.5672959999999971,
+      "within16_7": true,
+      "gate": "candidate <= base",
+      "meetsGate": false
+    },
+    {
+      "name": "art-b-konbini",
+      "time": "evening",
+      "baseP95": 16.304128000000002,
+      "candidateP95": 16.201728,
+      "delta": -0.10240000000000293,
+      "rounds": [
+        {
+          "round": 1,
+          "baseP95": 15.784960000000002,
+          "candidateP95": 16.782336,
+          "delta": 0.9973759999999992
+        },
+        {
+          "round": 2,
+          "baseP95": 16.8304,
+          "candidateP95": 16.201728,
+          "delta": -0.6286720000000017
+        },
+        {
+          "round": 3,
+          "baseP95": 16.304128000000002,
+          "candidateP95": 15.843328,
+          "delta": -0.46080000000000254
+        }
+      ],
+      "pairedDeltaMedian": -0.46080000000000254,
+      "within16_7": true,
+      "gate": "candidate <= base",
+      "meetsGate": true
+    },
+    {
+      "name": "art-c-alley",
+      "time": "evening",
+      "baseP95": 15.921152000000001,
+      "candidateP95": 16.196512000000002,
+      "delta": 0.27536000000000094,
+      "rounds": [
+        {
+          "round": 1,
+          "baseP95": 15.921152000000001,
+          "candidateP95": 15.785984,
+          "delta": -0.13516800000000195
+        },
+        {
+          "round": 2,
+          "baseP95": 15.869951999999998,
+          "candidateP95": 16.196512000000002,
+          "delta": 0.3265600000000042
+        },
+        {
+          "round": 3,
+          "baseP95": 15.925248000000002,
+          "candidateP95": 16.571072,
+          "delta": 0.6458239999999993
+        }
+      ],
+      "pairedDeltaMedian": 0.3265600000000042,
+      "within16_7": true,
+      "gate": "candidate <= base",
+      "meetsGate": false
+    },
+    {
+      "name": "art-d-laundry",
+      "time": "evening",
+      "baseP95": 9.818111999999998,
+      "candidateP95": 10.346496,
+      "delta": 0.5283840000000026,
+      "rounds": [
+        {
+          "round": 1,
+          "baseP95": 9.746431999999999,
+          "candidateP95": 9.590783999999996,
+          "delta": -0.1556480000000029
+        },
+        {
+          "round": 2,
+          "baseP95": 9.818111999999998,
+          "candidateP95": 10.346496,
+          "delta": 0.5283840000000026
+        },
+        {
+          "round": 3,
+          "baseP95": 10.571616000000002,
+          "candidateP95": 10.35776,
+          "delta": -0.2138560000000016
+        }
+      ],
+      "pairedDeltaMedian": -0.1556480000000029,
+      "within16_7": true,
+      "gate": "candidate <= base",
+      "meetsGate": false
+    },
+    {
+      "name": "sample-e-harbour",
+      "time": "evening",
+      "baseP95": 13.025279999999999,
+      "candidateP95": 13.78816,
+      "delta": 0.7628800000000009,
+      "rounds": [
+        {
+          "round": 1,
+          "baseP95": 12.787679999999998,
+          "candidateP95": 13.518496000000003,
+          "delta": 0.7308160000000044
+        },
+        {
+          "round": 2,
+          "baseP95": 13.025279999999999,
+          "candidateP95": 13.825183999999998,
+          "delta": 0.7999039999999997
+        },
+        {
+          "round": 3,
+          "baseP95": 14.155776,
+          "candidateP95": 13.78816,
+          "delta": -0.36761599999999994
+        }
+      ],
+      "pairedDeltaMedian": 0.7308160000000044,
+      "within16_7": true,
+      "gate": "candidate <= base",
+      "meetsGate": false
+    },
+    {
+      "name": "sample-f-hillside",
+      "time": "evening",
+      "baseP95": 10.709920000000002,
+      "candidateP95": 11.048032,
+      "delta": 0.3381119999999971,
+      "rounds": [
+        {
+          "round": 1,
+          "baseP95": 10.726399999999998,
+          "candidateP95": 10.737632,
+          "delta": 0.011232000000001463
+        },
+        {
+          "round": 2,
+          "baseP95": 10.709920000000002,
+          "candidateP95": 11.134688,
+          "delta": 0.4247679999999985
+        },
+        {
+          "round": 3,
+          "baseP95": 10.683296,
+          "candidateP95": 11.048032,
+          "delta": 0.36473599999999884
+        }
+      ],
+      "pairedDeltaMedian": 0.36473599999999884,
+      "within16_7": true,
+      "gate": "candidate <= base",
+      "meetsGate": false
+    },
+    {
+      "name": "sample-g-rail",
+      "time": "evening",
+      "baseP95": 17.036288000000003,
+      "candidateP95": 17.477631999999996,
+      "delta": 0.44134399999999374,
+      "rounds": [
+        {
+          "round": 1,
+          "baseP95": 17.036288000000003,
+          "candidateP95": 17.968128,
+          "delta": 0.9318399999999976
+        },
+        {
+          "round": 2,
+          "baseP95": 16.532479999999996,
+          "candidateP95": 17.134592,
+          "delta": 0.6021120000000053
+        },
+        {
+          "round": 3,
+          "baseP95": 17.503231999999993,
+          "candidateP95": 17.477631999999996,
+          "delta": -0.02559999999999718
+        }
+      ],
+      "pairedDeltaMedian": 0.6021120000000053,
+      "within16_7": false,
+      "gate": "candidate <= base",
+      "meetsGate": false
+    },
+    {
+      "name": "sample-h-north",
+      "time": "evening",
+      "baseP95": 9.675775999999997,
+      "candidateP95": 10.154847999999998,
+      "delta": 0.4790720000000004,
+      "rounds": [
+        {
+          "round": 1,
+          "baseP95": 9.367551999999996,
+          "candidateP95": 9.603072000000003,
+          "delta": 0.2355200000000064
+        },
+        {
+          "round": 2,
+          "baseP95": 10.237952,
+          "candidateP95": 10.154847999999998,
+          "delta": -0.08310400000000229
+        },
+        {
+          "round": 3,
+          "baseP95": 9.675775999999997,
+          "candidateP95": 10.224608,
+          "delta": 0.5488320000000027
+        }
+      ],
+      "pairedDeltaMedian": 0.2355200000000064,
+      "within16_7": true,
+      "gate": "candidate <= base",
+      "meetsGate": false
+    },
+    {
+      "name": "cascade-overview",
+      "time": "afternoon",
+      "baseP95": 11.189248,
+      "candidateP95": 11.486048000000006,
+      "delta": 0.2968000000000064,
+      "rounds": [
+        {
+          "round": 1,
+          "baseP95": 10.926847999999998,
+          "candidateP95": 11.364159999999998,
+          "delta": 0.43731200000000037
+        },
+        {
+          "round": 2,
+          "baseP95": 11.189248,
+          "candidateP95": 11.904,
+          "delta": 0.7147520000000007
+        },
+        {
+          "round": 3,
+          "baseP95": 11.207519999999999,
+          "candidateP95": 11.486048000000006,
+          "delta": 0.27852800000000677
+        }
+      ],
+      "pairedDeltaMedian": 0.43731200000000037,
+      "within16_7": true,
+      "gate": "candidate <= 16.7 ms",
+      "meetsGate": true
+    },
+    {
+      "name": "cascade-bank",
+      "time": "afternoon",
+      "baseP95": 9.701376,
+      "candidateP95": 9.961439999999998,
+      "delta": 0.2600639999999981,
+      "rounds": [
+        {
+          "round": 1,
+          "baseP95": 8.996863999999999,
+          "candidateP95": 10.025984000000001,
+          "delta": 1.0291200000000025
+        },
+        {
+          "round": 2,
+          "baseP95": 11.014016,
+          "candidateP95": 9.436160000000001,
+          "delta": -1.5778559999999988
+        },
+        {
+          "round": 3,
+          "baseP95": 9.701376,
+          "candidateP95": 9.961439999999998,
+          "delta": 0.2600639999999981
+        }
+      ],
+      "pairedDeltaMedian": 0.2600639999999981,
+      "within16_7": true,
+      "gate": "candidate <= 16.7 ms",
+      "meetsGate": true
+    }
+  ]
+}

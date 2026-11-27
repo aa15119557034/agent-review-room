@@ -1,0 +1,56 @@
+{
+  "base": {
+    "head": "3cf1e3243ce289342da5be7cd421373cfd0b1d69",
+    "tree": "301679abc8dcd0d52cf0a3d94670e81d5e11c4f7",
+    "port": 56397,
+    "changed": {},
+    "served": {
+      "index.html": "cb4fd7f0cd74cf17e9629d3b808a029afe10b036ef9737e4e354ff80b4b1f6d5",
+      "src/main.js": "3fa3429b1817afea96c1dd27599167040b7b750dd1b0ed601729f1623ca01e5d",
+      "src/look.js": "536412a0e77232a8cb68918ac481bca594dd3f18d052b5d7b5e72846c2032311",
+      "src/island-ground.js": "1d6677cc0718bea265b7cb5bc6bb9f29a59e6e7612434a51d13d1845bd20c6c0",
+      "src/vegetation-scatter.js": "8e7360e715a63aaad24e6ba09eadfeaa080a28cedbc3a7535586f2322b0a0084",
+      "src/weathering-decals-combined.json": "e90363a30a6dbc9b4cfa22c361c74c693772a51b978695ea07644e0f57323b87",
+      "upstream/petalwake/src/world/river.js": "aec8e1de1b320ab5cb4fd71e6541712d78aac38fc5434e75131d4933ab84c43c",
+      "upstream/petalwake/src/world/water.js": "6cfdc9c8526453a9cbebf3a117470687849ced971285bc80b472dab452af1be0"
+    }
+  },
+  "candidate": {
+    "head": "5ff4870f6a7f9d43f0b5621baacdbb12e5bfafbb",
+    "tree": "9898079f1e25d24ebd4b24f69edd099b01383976",
+    "port": 56395,
+    "changed": {
+      "assets/station-foliage-2026-11-27/build-cascade-shrubs.py": "dab9462d639411407916263a17d863dcc45d4a9ba8e1784b9ef3c2a3e088eb07",
+      "assets/station-foliage-2026-11-27/cascade-rocks/build-cascade-rocks.py": "278f4546aad6b4b2f8f2b00317b0666fe798ce0d4363bdaff3686f617dfa09e6",
+      "assets/station-foliage-2026-11-27/cascade-rocks/cascade-rocks.blend": "d9e737dd0f0d2dca629b80e1ff6e50fcf327740a952f79d5bb12346bd50212b7",
+      "assets/station-foliage-2026-11-27/cascade-rocks/cascade-rocks.glb": "8a87fd1121b21e38b4e29ea729611568586a24b17b7ef5d7a6d5046352963f10",
+      "assets/station-foliage-2026-11-27/cascade-shrubs.blend": "5efcde4dbe41a7681b3032c419b265f670b52e62d1f9d8509bb3b1bf1231829d",
+      "assets/station-foliage-2026-11-27/cascade-shrubs.glb": "b7b7682248f9c55a18f2af6b1eb130cc7ea770e988bc3c161a6924575352ce48",
+      "index.html": "a02a18b0e5b247f64189f2ba79e5d52dd7e1618a733af88640805bd641816e56",
+      "src/cascade-foliage.js": "71c5056be3f5392fc064844dd499420364e024c8ca592424c28cf127d2e943c5",
+      "src/cascade-mist.js": "f76c1c3d7e46e37e27f37c0b10d5879999b1e320cf9ee6414de430b685356beb",
+      "src/cascade-rocks.js": "0881f8cdab8a1f8860ac54c6f9312da255a856f20598ab6ad4d7caf0fb729f64",
+      "src/look.js": "e42e7a0a8865de2364f4e4e6895deb4d330b92c477aed4933ce6f4b675860f36",
+      "src/main.js": "a9b4e861314d1581d84334a4d0f827bab0e384da2c7728d156d8980a49e6728c"
+    },
+    "served": {
+      "index.html": "a02a18b0e5b247f64189f2ba79e5d52dd7e1618a733af88640805bd641816e56",
+      "src/main.js": "a9b4e861314d1581d84334a4d0f827bab0e384da2c7728d156d8980a49e6728c",
+      "src/look.js": "e42e7a0a8865de2364f4e4e6895deb4d330b92c477aed4933ce6f4b675860f36",
+      "src/island-ground.js": "1d6677cc0718bea265b7cb5bc6bb9f29a59e6e7612434a51d13d1845bd20c6c0",
+      "src/vegetation-scatter.js": "8e7360e715a63aaad24e6ba09eadfeaa080a28cedbc3a7535586f2322b0a0084",
+      "src/weathering-decals-combined.json": "e90363a30a6dbc9b4cfa22c361c74c693772a51b978695ea07644e0f57323b87",
+      "upstream/petalwake/src/world/river.js": "aec8e1de1b320ab5cb4fd71e6541712d78aac38fc5434e75131d4933ab84c43c",
+      "upstream/petalwake/src/world/water.js": "6cfdc9c8526453a9cbebf3a117470687849ced971285bc80b472dab452af1be0",
+      "assets/station-foliage-2026-11-27/cascade-rocks/cascade-rocks.glb": "8a87fd1121b21e38b4e29ea729611568586a24b17b7ef5d7a6d5046352963f10",
+      "assets/station-foliage-2026-11-27/cascade-shrubs.glb": "b7b7682248f9c55a18f2af6b1eb130cc7ea770e988bc3c161a6924575352ce48",
+      "src/cascade-foliage.js": "71c5056be3f5392fc064844dd499420364e024c8ca592424c28cf127d2e943c5",
+      "src/cascade-mist.js": "f76c1c3d7e46e37e27f37c0b10d5879999b1e320cf9ee6414de430b685356beb",
+      "src/cascade-rocks.js": "0881f8cdab8a1f8860ac54c6f9312da255a856f20598ab6ad4d7caf0fb729f64"
+    }
+  },
+  "harnessSha256": "37b0670796a114477626e3e70f17d29de5f80c7aebeb21ee03179a9bcd619a25",
+  "inspectSha256": "93f2961aea06dfb37a6625b8bc8ee94c5f4db7cfd16f815b5c639932d2a73420",
+  "preloadSha256": "6deda8457b5c1f654a1c995ff4b028de29b3b36de7c0c3cc11185033ecef0d83",
+  "canonicalSha256": "deb5b182b14dcdd4f1c9b24d483cab600c259d174c14154f9c21501d5661f5c8"
+}

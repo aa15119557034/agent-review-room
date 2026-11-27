@@ -1,0 +1,66 @@
+{
+  "afternoon": {
+    "overview": {
+      "differentPixels": 0,
+      "maxChannelDifference": 0,
+      "pixelsAboveThreeSteps": 0
+    },
+    "bank": {
+      "differentPixels": 0,
+      "maxChannelDifference": 0,
+      "pixelsAboveThreeSteps": 0
+    },
+    "ledge": {
+      "differentPixels": 0,
+      "maxChannelDifference": 0,
+      "pixelsAboveThreeSteps": 0
+    },
+    "pool": {
+      "differentPixels": 0,
+      "maxChannelDifference": 0,
+      "pixelsAboveThreeSteps": 0
+    },
+    "outside-harbour": {
+      "differentPixels": 0,
+      "maxChannelDifference": 0,
+      "pixelsAboveThreeSteps": 0
+    },
+    "leaf-detail": {
+      "differentPixels": 0,
+      "maxChannelDifference": 0,
+      "pixelsAboveThreeSteps": 0
+    }
+  },
+  "evening": {
+    "overview": {
+      "differentPixels": 0,
+      "maxChannelDifference": 0,
+      "pixelsAboveThreeSteps": 0
+    },
+    "bank": {
+      "differentPixels": 0,
+      "maxChannelDifference": 0,
+      "pixelsAboveThreeSteps": 0
+    },
+    "ledge": {
+      "differentPixels": 0,
+      "maxChannelDifference": 0,
+      "pixelsAboveThreeSteps": 0
+    },
+    "pool": {
+      "differentPixels": 0,
+      "maxChannelDifference": 0,
+      "pixelsAboveThreeSteps": 0
+    },
+    "outside-harbour": {
+      "differentPixels": 0,
+      "maxChannelDifference": 0,
+      "pixelsAboveThreeSteps": 0
+    },
+    "leaf-detail": {
+      "differentPixels": 0,
+      "maxChannelDifference": 0,
+      "pixelsAboveThreeSteps": 0
+    }
+  }
+}
