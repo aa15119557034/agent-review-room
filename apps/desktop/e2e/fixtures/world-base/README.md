@@ -49,13 +49,13 @@ node scripts\prepare-props.cjs --download
 
 ### GPU 帧时对照
 
-两份 `world-base` 检出须各自准备本地资产并保持干净。在装有 Electron 的机器上运行同一份脚本。
+两份 `world-base` 检出须各自准备本地资产并保持干净。在装有 Electron 和 `nvidia-smi` 的 NVIDIA 机器上运行同一份脚本。
 
 ```text
 node scripts/benchmark-render.cjs <Electron 可执行文件> <底分支 world-base> <候选 world-base> <输出目录>
 ```
 
-脚本在同一 GPU 上交叉测三轮 A–H。场景时间固定在 5 秒，分辨率为 1440 × 900，DPR 1。各机位预热 60 帧，以 118 个 GPU 样本求每轮 P95，再取三轮中值。输出包括两版首轮同机位 PNG、逐帧 GPU 时间与绘制数据、GPU 时钟和探针启动烘焙时间。
+脚本在同一 GPU 上交叉测三轮 A–H。每次加载先在 G 持续渲染到 GPU 频率稳定，再开始计时。场景时间固定在 5 秒，分辨率为 1440 × 900，DPR 1。各机位预热 60 帧，以 118 个 GPU 样本求每轮 P95，再取三轮中值。每 250 毫秒记录频率。缺少计时窗口内的频率记录，或轮内、轮间频率中值偏差超过 10% 时，整轮自动重测并保留拒收原因。输出包括两版首轮同机位 PNG、逐帧 GPU 时间与绘制数据、GPU 频率校验和探针启动烘焙时间。
 
 在本目录使用已有 Electron 运行，无需构建桌面应用：
 
