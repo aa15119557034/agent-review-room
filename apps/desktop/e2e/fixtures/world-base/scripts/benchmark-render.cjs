@@ -8,9 +8,50 @@ const { setTimeout: delay } = require('node:timers/promises');
 const views = ['art-a-street', 'art-b-konbini', 'art-c-alley', 'art-d-laundry',
   'sample-e-harbour', 'sample-f-hillside', 'sample-g-rail', 'sample-h-north'];
 const settings = { width: 1440, height: 900, dpr: 1, clockSeconds: 5, seed: '0x254',
-  warmup: 60, renderedFrames: 120, measuredFrames: 118, rounds: 3 };
+  warmup: 60, renderedFrames: 120, measuredFrames: 118, rounds: 3,
+  telemetryIntervalMs: 250, preheatMinMs: 6000, preheatWindowMs: 4000, preheatTimeoutMs: 60000,
+  clockTolerance: 0.10, maxRoundAttempts: 3 };
 const order = [['base','candidate'], ['candidate','base'], ['base','candidate']];
 const mode = process.argv[2] || '';
+
+function median(values) {
+  const sorted = [...values].sort((a,b) => a-b);
+  const middle = Math.floor(sorted.length/2);
+  return sorted.length % 2 ? sorted[middle] : (sorted[middle-1]+sorted[middle])*0.5;
+}
+
+function outsideTolerance(value, reference) {
+  return Math.abs(value-reference)/reference > settings.clockTolerance;
+}
+
+function readClocks(file,gpu) {
+  return fs.readFileSync(file,'utf8').split(/\r?\n/).flatMap(line => {
+    const [timestamp,name,graphics,,,,,utilization] = line.split(',').map(value => value.trim());
+    const date = timestamp?.match(/^(\d{4})[/-](\d{2})[/-](\d{2}) (\d{2}):(\d{2}):(\d{2})\.(\d+)$/);
+    const clock = Number.parseInt(graphics,10), load = Number.parseInt(utilization,10);
+    if (!date || !name || !gpu.includes(name) || !Number.isFinite(clock) || clock<=0 || !Number.isFinite(load)) return [];
+    const [,year,month,day,hour,minute,second,fraction] = date;
+    const time = new Date(+year,+month-1,+day,+hour,+minute,+second,+fraction.padEnd(3,'0').slice(0,3)).getTime();
+    return [{time,clock,load}];
+  });
+}
+
+async function preheatGpu(webContents,clockFile,gpu) {
+  await webContents.executeJavaScript("window.worldBase.setView('sample-g-rail')");
+  const started = Date.now();
+  await delay(settings.preheatMinMs);
+  while (Date.now()-started < settings.preheatTimeoutMs) {
+    const now = Date.now();
+    const samples = readClocks(clockFile,gpu).filter(row => row.time >= Math.max(started,now-settings.preheatWindowMs) && row.load >= 50);
+    if (samples.length >= 8 && samples.at(-1).time-samples[0].time >= 2500) {
+      const clocks = samples.map(row => row.clock);
+      const reference = median(clocks);
+      if (clocks.every(value => !outsideTolerance(value,reference))) return {clocks,median:reference};
+    }
+    await delay(500);
+  }
+  throw Error('GPU clock did not settle under G load: '+gpu);
+}
 
 async function sample(name, capture) {
   const world = window.worldBase;
@@ -80,11 +121,11 @@ async function inElectron() {
   app.setPath('userData',outputPath('browser-profile'));
   app.on('window-all-closed', () => {});
   await app.whenReady();
-  const results = [], profiles = [], poses = new Map();
+  const poses = new Map(), attempts = [];
   let gpu;
   function outputPath(file) { return path.join(output,file); }
   function save(file,value) { fs.writeFileSync(outputPath(file), JSON.stringify(value,null,2)+'\n'); }
-  async function scenario(side,round) {
+  async function scenario(side,round,attempt) {
     const browser = new BrowserWindow({width:settings.width,height:settings.height,useContentSize:true,show:false,
       webPreferences:{offscreen:true,backgroundThrottling:false,
         preload:path.join(__dirname,'benchmark-freeze.cjs'),contextIsolation:false}});
@@ -103,6 +144,16 @@ async function inElectron() {
         await delay(200);
       }
       const bakeMs = await browser.webContents.executeJavaScript('window.worldBase.refl?.bakeMs ?? null');
+      const rendererName = await browser.webContents.executeJavaScript(`(() => {
+        const gl = window.worldBase.renderer.getContext();
+        const extension = gl.getExtension('WEBGL_debug_renderer_info');
+        return extension && gl.getParameter(extension.UNMASKED_RENDERER_WEBGL);
+      })()`);
+      if (!rendererName || (gpu && rendererName!==gpu)) throw Error('GPU identity changed or is unavailable');
+      gpu = rendererName;
+      const clockFile = outputPath('gpu-clocks.csv');
+      const warmed = await preheatGpu(browser.webContents,clockFile,gpu);
+      const rows = [];
       for (const name of views) {
         const {png,...row} = await browser.webContents.executeJavaScript('('+sample.toString()+')('+JSON.stringify(name)+','+(round===1)+')');
         gpu ??= row.gpu;
@@ -114,23 +165,64 @@ async function inElectron() {
           if (image.readUInt32BE(16)!==settings.width || image.readUInt32BE(20)!==settings.height) throw Error('Incorrect PNG size');
           fs.writeFileSync(outputPath(side+'-'+name+'.png'),image);
         }
-        results.push({side,round,...row});
-        console.log(side,round,name,row.p95.toFixed(3),row.samples);
-        save('measurements.json',results);
+        rows.push({side,round,attempt,...row});
+        console.log(side,round,attempt,name,row.p95.toFixed(3),row.samples);
       }
       const runtime = await browser.webContents.executeJavaScript('window.worldBase.errors');
       errors.push(...runtime);
       if (errors.length) throw Error(errors.join('\n'));
-      profiles.push({side,round,bakeMs,errors});
+      const telemetry = readClocks(clockFile,gpu);
+      const clockWindows = Object.fromEntries(rows.map(row => [
+        row.name, telemetry.filter(sample => sample.time>=row.startedAt && sample.time<=row.endedAt).map(sample => sample.clock),
+      ]));
+      const coverage = Object.values(clockWindows);
+      const clockMedian = coverage.every(series => series.length) ? median(coverage.map(median)) : null;
+      return {rows,profile:{side,round,attempt,bakeMs,errors,warmed,clockMedian,clockWindows}};
     } finally {
       session.webRequest.onCompleted(null);
       session.webRequest.onErrorOccurred(null);
       browser.destroy();
     }
   }
-  for (const [index,sides] of order.entries()) {
-    for (const side of sides) await scenario(side,index+1);
+  const accepted = new Map(), retries = new Map();
+  while (accepted.size < order.length) {
+    for (const [index,sides] of order.entries()) {
+      const round = index+1;
+      if (accepted.has(round)) continue;
+      const attempt = (retries.get(round)??0)+1;
+      if (attempt>settings.maxRoundAttempts) throw Error('GPU clock did not pass comparison for round '+round);
+      retries.set(round,attempt);
+      const pair = [];
+      for (const side of sides) pair.push(await scenario(side,round,attempt));
+      const clocks = pair.map(side => side.profile.clockMedian);
+      const validCoverage = clocks.every(value => value!==null);
+      const clockMedian = validCoverage ? median(clocks) : null;
+      const reason = !validCoverage ? 'missing clock samples' :
+        clocks.some(value => outsideTolerance(value,clockMedian)) ? 'sides differ from round median' : null;
+      const record = {round,attempt,clockMedian,reason,profiles:pair.map(item => item.profile)};
+      attempts.push(record);
+      if (reason) console.warn('Repeating round',round,reason,clocks);
+      else accepted.set(round,{record,rows:pair.flatMap(side => side.rows)});
+      save('clock-attempts.json',attempts);
+    }
+    if (accepted.size===order.length) {
+      const reference = median([...accepted.values()].map(pair => pair.record.clockMedian));
+      for (const [round,pair] of accepted) {
+        if (outsideTolerance(pair.record.clockMedian,reference) ||
+          pair.record.profiles.some(profile => outsideTolerance(profile.clockMedian,reference))) {
+          pair.record.reason = 'clock differs from three-round median';
+          console.warn('Repeating round',round,pair.record.reason,pair.record.clockMedian,reference);
+          accepted.delete(round);
+        }
+      }
+      save('clock-attempts.json',attempts);
+    }
+    save('measurements.json',[...accepted.values()].flatMap(pair => pair.rows));
   }
+  const validRounds = [...accepted].sort((a,b)=>a[0]-b[0]).map(([,pair])=>pair);
+  const results = validRounds.flatMap(pair=>pair.rows);
+  const profiles = validRounds.flatMap(pair=>pair.record.profiles);
+  save('measurements.json',results);
   const summary = views.map(name => {
     const sampleSide = side => {
       const rounds = results.filter(row => row.name===name && row.side===side).map(row => row.p95);
@@ -154,7 +246,7 @@ async function compare() {
   const output = path.resolve(destination);
   fs.mkdirSync(output,{recursive:true});
   const servers = [], sources = {};
-  let clocks, clockFile;
+  let clocks, clockFile, electron;
   try {
     for (const [side,directory] of [['base',baseline],['candidate',candidate]]) {
       const root = path.resolve(directory);
@@ -170,14 +262,14 @@ async function compare() {
       sources[side] = {root,revision:source,url:'http://127.0.0.1:'+server.address().port+'/'};
     }
     clockFile = fs.createWriteStream(path.join(output,'gpu-clocks.csv'));
-    clocks = spawn('nvidia-smi',['--query-gpu=timestamp,clocks.gr,clocks.mem,pstate,temperature.gpu,power.draw,utilization.gpu',
-      '--format=csv','-l','1'],{windowsHide:true});
+    clocks = spawn('nvidia-smi',['--query-gpu=timestamp,name,clocks.gr,clocks.mem,pstate,temperature.gpu,power.draw,utilization.gpu',
+      '--format=csv','--loop-ms='+settings.telemetryIntervalMs],{windowsHide:true});
     clocks.stdout.pipe(clockFile);
-    clocks.on('error',err => console.error('GPU clock log unavailable:',err.message));
+    const monitorStopped = once(clocks,'exit').then(([status]) => { throw Error('GPU clock monitor exited: '+status); });
     const env = {...process.env,X51_RENDER_BENCHMARK_CONFIG:JSON.stringify({sources,output})};
     delete env.ELECTRON_RUN_AS_NODE;
-    const electron = spawn(path.resolve(executable),[__filename,'--measure'],{env,windowsHide:true,stdio:'inherit'});
-    const [status] = await once(electron,'exit');
+    electron = spawn(path.resolve(executable),[__filename,'--measure'],{env,windowsHide:true,stdio:'inherit'});
+    const [status] = await Promise.race([once(electron,'exit'),monitorStopped]);
     if (status !== 0) throw Error('Electron benchmark failed: '+status);
     for (const {root,revision:sha} of Object.values(sources)) {
       if (revision(root)!==sha || execFileSync('git',['status','--porcelain','--','.'],{cwd:root,encoding:'utf8'}).trim()) {
@@ -185,6 +277,7 @@ async function compare() {
       }
     }
   } finally {
+    if (electron && electron.exitCode===null) electron.kill();
     if (clocks) {
       clocks.stdout.unpipe(clockFile);
       clocks.kill();
