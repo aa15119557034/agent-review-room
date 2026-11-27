@@ -3,6 +3,7 @@
 import * as THREE from 'three';
 import { buildWindow } from '../upstream/sakuragaoka/src/world/houses/house.js';
 import { PAL } from '../upstream/sakuragaoka/src/world/houses/lot.js';
+import { addLaundryRail } from './neighborhood-props.js';
 
 const FH = 2.85;
 export function townApartmentBounds({ width: w, depth: d }) {
@@ -86,6 +87,15 @@ export function buildTownApartment(H, F, spec) {
           F.box(metal, steel, 1.65, .025, .025, x, y + 2.32, z);
           H.laundry.line(F, x - .72, x + .72, y + 2.30, z, r, 'apartment');
           record('laundry', [x, y + 2.30, z], { floor: fl + 1 });
+        }
+        if (overLaundry && bay === 1) {
+          // A sheet over the front half of the center loggia reads through the rail
+          // from street level. The original recessed window remains legible above it.
+          const railY = slabTop + 1.36, depth = 1.05;
+          addLaundryRail(F.sub(x, railY, bayFront), M, 2.50, depth);
+          H.laundry.line(F, x - 1.14, x + 1.16, railY + .014, bayFront + depth,
+            H.ctx.rng('town-laundry-balcony-sheet'), 'sheets');
+          record('laundry', [x, railY, bayFront + depth], { floor: fl + 1 });
         }
       }
     }

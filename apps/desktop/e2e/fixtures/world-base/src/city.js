@@ -8,7 +8,8 @@ import { addStationArt } from './station-art.js';
 import { createTownPlants } from './town-plants.js';
 import { createTownPaving, finishTownLanes } from './town-paving.js';
 import { createApartmentSurfaces } from './apartment-surfaces.js';
-import { addLaundryCart, addDeliveryCorner } from './neighborhood-props.js';
+import { addLaundryRail, addLaundryCart, addDeliveryCorner } from './neighborhood-props.js';
+import { makeBicycle, BIKE_COLORS } from '../upstream/sakuragaoka/src/world/vehicles/bike.js';
 import { createNoticeSheet, addLaundryNotices, addStandingBoard, addBackAlley, addRearCorridor, addDoorsteps } from './art-r1-city.js';
 
 const SITES = [
@@ -249,15 +250,32 @@ export async function createCity({ scene, station, island, skyline }) {
       const ownMaterial = material => ownedMaterials.has(material) ? material : clone(material);
       mesh.material = Array.isArray(mesh.material) ? mesh.material.map(ownMaterial) : ownMaterial(mesh.material);
     });
+    // Park parallel to the facade on the left wing, outside the stair
+    // corridor. The original station bicycle builder borrows its existing atlas.
+    const laundryBike = makeBicycle(station.ctx, { seed: 'town-laundry', lod: 0, color: BIKE_COLORS.yellow,
+      basketColor: '#aeaea0', saddleColor: '#514841', steer: .07, stand: 'down', lean: .045 });
+    laundryBike.name = 'town-laundry-bicycle';
+    laundryBike.position.set(-1.28, supportY + .002, -122.31);
+    laundryBike.rotation.y = Math.PI / 2;
+    root.add(laundryBike);
     const potStart = gb.tris;
-    // Keep the terracotta container and location, replacing its lobe foliage too.
-    frame.cyl(M.plain, '#b86f4e', .118, .21, 6.25, supportY + .105, -122.7, { rTop: .145, seg: 9 });
-    frame.cyl(M.plain, '#c38560', .155, .035, 6.25, supportY + .1975, -122.7, { seg: 9, open: true });
-    frame.cyl(M.soil, '#756649', .137, .015, 6.25, supportY + .205, -122.7, { seg: 8 });
-    const potPlant = plants.shrub({ name: 'town-laundry-pot', x: 6.25, y: supportY + .21, z: -122.7,
-      random: ctx.rng('town-laundry-pot-leaves'), scale: .28, flowers: true,
-      footprint: { minX: 5.96, maxX: 6.54, minZ: -122.99, maxZ: -122.41 } });
-    const potTriangles = gb.tris - potStart + potPlant.cards * 4;
+    let potCards = 0;
+    for (const [name, x, z, radius, height, scale, body, rim] of [
+      ['town-laundry-pot', 6.25, -122.7, .237, .39, .43, '#bd7953', '#d09a72'],
+      ['town-laundry-left-pot', -2.53, -122.97, .213, .43, .40, '#929e85', '#aeb89e'],
+    ]) {
+      frame.cyl(M.plain, body, radius * .76, height, x, supportY + height / 2, z, { rTop: radius, seg: 10 });
+      frame.cyl(M.plain, rim, radius + .014, .055, x, supportY + height - .026, z, { seg: 10, open: true });
+      frame.cyl(M.soil, '#756649', radius - .008, .014, x, supportY + height - .016, z, { seg: 10 });
+      const reach = radius + .12;
+      const plant = plants.shrub({ name, x, y: supportY + height - .012, z, random: ctx.rng(name + '-leaves'),
+        scale, flowers: true, footprint: { minX: x - reach, maxX: x + reach, minZ: z - reach, maxZ: z + reach } });
+      potCards += plant.cards;
+    }
+    const potTriangles = gb.tris - potStart + potCards * 4;
+    const drying = frame.sub(6.43, supportY + .98, -123.25);
+    addLaundryRail(drying, M, 1.03, .31);
+    H.laundry.line(drying, -.43, .46, .014, .31, ctx.rng('town-laundry-rack'), 'sheets');
     const densityStart = gb.tris;
     townSortingBins(H, frame, -.4, supportY, -122.93, 2);
     // Rear ground-floor housekeeping stays beside the rightmost door; it does
@@ -289,6 +307,8 @@ export async function createCity({ scene, station, island, skyline }) {
       frame, M: H.M, A: H.A, sheet: noticeSheet, yardY: shop.baseY + .025 });
     stats.artR1 = { notices: noticeCount, alley, standingBoards: 1, triangles: gb.tris - artStart, texturePixels: 1024 * 1024 };
     stats.neighborhoodProps = { laundryCart: { origin: cart.origin.toArray(), triangles: cartTriangles },
+      laundryBicycle: { origin: laundryBike.position.toArray(), triangles: laundryBike.userData.tris },
+      laundryDryingRail: { origin: drying.origin.toArray() },
       deliveryCorner: { origin: delivery.origin.toArray(), triangles: gb.tris - detailTris } };
     const density = {
       gbTriangles: gb.tris - densityStart, umbrellaTriangles: 0,

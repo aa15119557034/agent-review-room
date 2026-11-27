@@ -15,6 +15,20 @@ bool wbCartContains(vec3 p) {
          all(lessThan(p, vec3(1.57, 1.41, 0.74)));
 }
 
+float wbCartRim(vec3 p, float normalY, float face) {
+  // The model's two wooden rims share an axle at x = -0.60 m.
+  vec2 wheel = p.xy - vec2(-0.60, 0.50);
+  float outerRim = smoothstep(0.42, 0.49, length(wheel))
+                 * (1.0 - smoothstep(0.52, 0.57, length(wheel)));
+  float arc = smoothstep(-0.06, 0.21, dot(wheel, vec2(0.46, 0.89)));
+  float wheelEdge = outerRim * arc * smoothstep(0.50, 0.55, abs(p.z));
+  // Only the upper faces of the two projecting handles catch the quay light.
+  float shafts = smoothstep(0.34, 0.73, p.x) * smoothstep(0.31, 0.41, abs(p.z))
+               * smoothstep(0.48, 0.59, p.y) * (1.0 - smoothstep(0.72, 0.82, p.y));
+  float handleEdge = shafts * smoothstep(0.27, 0.77, normalY);
+  return max(wheelEdge * mix(0.62, 1.0, face), handleEdge);
+}
+
 float wbCaskGrain(vec3 p, float normalY, float detail) {
   vec2 q = p.xz - vec2(-0.10, -0.08);
   if (p.y < 0.668 || p.y > 1.27 || dot(q, q) > 0.0686) return 1.0;
@@ -67,6 +81,14 @@ export function applyHarbourCart(island) {
     vec3 woodBounce = wbCartWood ? vec3(0.28, 0.181, 0.092) : vec3(0.074, 0.054, 0.040);
     amb += woodBounce * (face * shade);
   }`);
+  const atmosphere = 'col = applyAtmosphere(col, vWorld);';
+  shader = insert(shader, atmosphere, `
+  if (wbCartWood) {
+    float rimSide = smoothstep(-0.45, 0.6, dot(N, vec3(-0.65, 0.49, 0.58)));
+    float amberRim = wbCartRim(wbCart, N.y, rimSide);
+    col += vec3(0.42, 0.166, 0.044) * amberRim * (0.74 + 0.26 * ao);
+  }
+  ${atmosphere}`);
   const yaw = MathUtils.degToRad(pose.yaw);
   mesh.material = new ShaderMaterial({
     vertexShader: source.vertexShader,

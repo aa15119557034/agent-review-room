@@ -10,6 +10,14 @@ float swardMeadow(vec2 xz) {
   float headland = 1.0 - smoothstep(31.0, 58.0, distance(xz, vec2(174.0, -1231.0)));
   return max(hillside, headland);
 }
+float swardCrest(vec2 xz) {
+  vec2 d = xz - vec2(1060.0, 565.0);
+  if (abs(d.x) > 47.0 || abs(d.y) > 34.0) return 0.0;
+  // The light follows the ridge above the flower beds and feathers into its gullies.
+  vec2 crest = vec2(dot(d, vec2(0.87, -0.50)) / 42.0,
+                   dot(d, vec2(0.50, 0.87)) / 12.0);
+  return 1.0 - smoothstep(0.16, 1.20, dot(crest, crest));
+}
 float swardDapple(vec2 xz, float time) {
   float coverage = swardMeadow(xz);
   if (coverage <= 0.0) return 0.0;
@@ -21,9 +29,9 @@ float swardDapple(vec2 xz, float time) {
   if (xz.x > 995.0 && xz.x < 1111.0 && xz.y > 540.0 && xz.y < 602.0) {
     vec2 shoulder = (xz - vec2(1053.0, 571.0)) / vec2(58.0, 31.0);
     float shoulderWeight = 1.0 - smoothstep(0.42, 1.0, dot(shoulder, shoulder));
-    float feather = 0.075 * shoulderWeight;
+    float feather = 0.11 * shoulderWeight;
     float cloudShade = smoothstep(0.51 - feather, 0.56 + feather, cloud);
-    return coverage * mix(cloudShade, 0.5, 0.36 * shoulderWeight);
+    return coverage * mix(cloudShade, 0.5, 0.56 * shoulderWeight);
   }
   return coverage * smoothstep(0.51, 0.56, cloud);
 }
@@ -40,7 +48,13 @@ export const SWARD_EXPOSURE = /* glsl */ `    tone *= mix(0.46, 1.0, sunlit);
     float meadowExposure = swardMeadow(P.xz) * sunlit;
     float dappleShade = swardDapple(P.xz, uTime);
     warmth = mix(warmth, max(warmth, 0.24 + 0.49 * swardWarmth(tone)), meadowExposure);
-    warmth *= 1.0 - 0.83 * dappleShade;`;
+    warmth *= 1.0 - 0.83 * dappleShade;
+    float crestLight = swardCrest(P.xz);
+    if (crestLight > 0.0) {
+      warmth += (1.0 - warmth) * (0.38 * crestLight);
+      light *= 1.0 + 0.42 * crestLight;
+      dappleShade *= 1.0 - 0.57 * crestLight;
+    }`;
 
 // X-51 art round 2 (#254): island-wide ground.
 //  1 flower drifts: the meadow's flower density is gathered into broad drifts (60–250 m) with calm
@@ -414,10 +428,12 @@ export function patchPetals(vertexShader, p, shortOpenStems = false) {
     `vec3 petal = flowerPetal(species, rnd.z);
   petal = mix(vec3(dot(petal, vec3(0.299, 0.587, 0.114))), petal, ${f(p.petalSat)}) * ${f(p.petalGain)} + ${f(p.petalLift)};`, 'petal palette');
   if (shortOpenStems) {
-    shader = insert(shader, 'void main(){', `#ifdef FLOWER_BED
+    shader = insert(shader, 'void main(){', `
 ${SWARD_DAPPLE}
-#endif
 void main(){`, 'flower bed dapple');
+    const shadow = 'light.r *= townShadowV(root + vec3(0.0, 0.35, 0.0));';
+    shader = insert(shader, shadow, `${shadow}
+  light.r = max(light.r, 0.38 * swardCrest(xz));`, 'meadow crest flower light');
     const silhouette = 'vec4 shp = flowerShape(species);';
     shader = insert(shader, silhouette, `#ifdef FLOWER_BED
   petal *= mix(vec3(1.0), vec3(0.88, 0.94, 1.0), swardDapple(xz, uTime));

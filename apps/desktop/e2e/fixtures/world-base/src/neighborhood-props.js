@@ -54,6 +54,17 @@ export function addMaintenanceRack(F, M, labels) {
   F.box(M.metal, '#8a908a', 0.11, 0.06, 0.05, 0.15, -0.22, 0.11);
 }
 
+/** A wall-mounted drying rail, with two brackets transferring the load into the wall. */
+export function addLaundryRail(F, M, width, depth) {
+  const steel = '#a4aea1', plate = '#6d8078';
+  for (const x of [-width / 2 + .045, width / 2 - .045]) {
+    F.box(M.metal, plate, .065, .26, .027, x, -.095, .014, { skip: 'b' });
+    F.box(M.metal, steel, .032, .036, depth, x, 0, depth / 2);
+    F.beam(M.metal, steel, [x, -.19, .029], [x, -.012, depth - .025], .028, .028);
+  }
+  F.cyl(M.metal, steel, .018, width, 0, .014, depth, { rz: Math.PI / 2, seg: 8 });
+}
+
 export function addLaundryCart(F, M, labels) {
   const steel = '#839396';
   for (const x of [-0.24, 0.24]) for (const z of [-0.16, 0.16]) {

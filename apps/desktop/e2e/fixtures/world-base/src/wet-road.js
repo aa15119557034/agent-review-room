@@ -5,6 +5,20 @@ import { zoneGlsl } from './street-zones.js';
 const SIZE = 512;
 const BOUNDS = { x0: -4, z0: 4, x1: 4, z1: 34 };
 const DECALS = new Set(['street-lines', 'street-paint', 'street-glyphs', 'street-util-decals', 'street-util-top']);
+const SUNLIT_PAVING = new Set(['street-sidewalk', 'street-curbs', 'street-lgutter',
+  'street-tactile-dots', 'street-tactile-bars', 'street-lines', 'street-paint', 'street-glyphs']);
+const STREET_BEAM = /* glsl */`
+  float streetBeam(vec2 position) {
+    // The shop opening projects a diagonal band across both curbs.
+    vec2 band = position - vec2(0.05, 22.0);
+    float along = dot(band, vec2(0.9659, 0.2588));
+    float across = dot(band, vec2(-0.2588, 0.9659));
+    float edge = abs(across + 0.055 * sin(along * 2.1));
+    return (1.0 - smoothstep(1.27, 1.58, edge))
+         * (1.0 - smoothstep(4.30, 5.65, abs(along)))
+         * mix(1.0, 0.78, smoothstep(-3.5, 5.3, along));
+  }
+`;
 const GROUPS = [
   // Lane-wide damp bands (refs 10/11 in #252): at street-level grazing angles a
   // 1 m patch collapses to a few pixel rows, so patches span most of a lane.
@@ -23,6 +37,39 @@ function smooth(a, b, x) {
 function insert(source, needle, replacement) {
   if (!source.includes(needle)) throw new Error(`Wet road shader entry changed: ${needle}`);
   return source.replace(needle, replacement);
+}
+
+function lightPaving(root, worldToLocal, streetSunlight) {
+  const lit = [];
+  root.traverse(mesh => {
+    if (!mesh.isMesh || !SUNLIT_PAVING.has(mesh.name)) return;
+    // Keep the same standalone receivers in all palettes so their decal
+    // fingerprint does not depend on whether the sunset material is active.
+    mesh.userData.noBatch = true;
+    if (!streetSunlight) return;
+    const source = mesh.material;
+    const material = source.clone();
+    const sourceKey = source.customProgramCacheKey();
+    material.onBeforeCompile = function (shader, renderer) {
+      source.onBeforeCompile.call(this, shader, renderer);
+      shader.uniforms.uSunPatchWorldToLocal = worldToLocal;
+      shader.vertexShader = insert(shader.vertexShader, '#include <common>', `#include <common>
+        uniform mat4 uSunPatchWorldToLocal;
+        varying vec2 vSunPatch;`);
+      shader.vertexShader = insert(shader.vertexShader, '#include <project_vertex>', `#include <project_vertex>
+        vSunPatch = (uSunPatchWorldToLocal * modelMatrix * vec4(transformed, 1.0)).xz;`);
+      shader.fragmentShader = insert(shader.fragmentShader, '#include <common>', `#include <common>
+        varying vec2 vSunPatch;
+        ${STREET_BEAM}`);
+      shader.fragmentShader = insert(shader.fragmentShader, '#include <opaque_fragment>', `
+        outgoingLight += vec3(0.24, 0.086, 0.024) * streetBeam(vSunPatch);
+        #include <opaque_fragment>`);
+    };
+    material.customProgramCacheKey = () => `${sourceKey}|station-sunset-paving`;
+    mesh.material = material;
+    lit.push({ mesh, source, material });
+  });
+  return lit;
 }
 
 function makeMask(root, layout) {
@@ -177,6 +224,7 @@ export function applyWetRoad({ root, ctx, reflections, zones = null, streetSunli
     // Art r22: zoned cubes (street-zones.js). Absent with ?refl=old: the shader below is then character for character the r21 one.
     ...(zones ? zones.uniforms : {}),
   };
+  const lit = lightPaving(root, uniforms.uStreetWorldToLocal, streetSunlight);
   const upstreamCompile = original.onBeforeCompile;
   const upstreamKey = original.customProgramCacheKey();
   material.onBeforeCompile = function (shader, renderer) {
@@ -196,6 +244,7 @@ export function applyWetRoad({ root, ctx, reflections, zones = null, streetSunli
       uniform vec4 uWetBounds;
       ${STREET_REFLECTION_GLSL}
       ${zones ? zoneGlsl(zones.count) : ''}
+      ${streetSunlight ? STREET_BEAM : ''}
       varying vec3 vWetWorld;
       varying vec2 vWetLocal;`);
     shader.fragmentShader = insert(shader.fragmentShader, '#include <map_fragment>', `#include <map_fragment>
@@ -205,15 +254,6 @@ export function applyWetRoad({ root, ctx, reflections, zones = null, streetSunli
       // Wet asphalt reads darker and slightly cooler/more saturated.
       diffuseColor.rgb *= mix(vec3(1.0), vec3(0.42, 0.46, 0.52), wetMask.r);`);
     shader.fragmentShader = insert(shader.fragmentShader, '#include <opaque_fragment>', `
-      ${streetSunlight ? `
-        // West-side sunset through the gap beside the main-street shops.
-        vec2 band = vWetLocal - vec2(0.25, 22.0);
-        float alongSun = dot(band, vec2(0.9659, 0.2588));
-        float acrossSun = dot(band, vec2(-0.2588, 0.9659));
-        float beam = (1.0 - smoothstep(1.16, 1.68, abs(acrossSun)))
-                   * (1.0 - smoothstep(2.35, 3.4, abs(alongSun)));
-        outgoingLight += vec3(0.076, 0.039, 0.012) * beam * (1.0 - 0.44 * wetMask.g);
-      ` : ''}
       if (wetMask.r > 0.002) {
         vec3 N = inverseTransformDirection(normal, viewMatrix);
         vec2 p = vWetLocal;
@@ -234,6 +274,9 @@ export function applyWetRoad({ root, ctx, reflections, zones = null, streetSunli
         outgoingLight = mix(outgoingLight, reflection, weight);
         ${zones ? '}' : ''}
       }
+      ${streetSunlight ? `
+        outgoingLight += vec3(0.39, 0.146, 0.036) * streetBeam(vWetLocal) * (1.0 - 0.42 * wetMask.g);
+      ` : ''}
       #include <opaque_fragment>`);
   };
   // The different callback deliberately opts out of batch2's material rewriting.
@@ -243,7 +286,7 @@ export function applyWetRoad({ root, ctx, reflections, zones = null, streetSunli
   let disposed = false;
   return {
     material, maskTexture: texture,
-    stats: { ...stats, materials: 1, extraPasses: 0, extraRenderTargets: 0, reflection: 'shared station street cube' },
+    stats: { ...stats, materials: 1 + lit.length, extraPasses: 0, extraRenderTargets: 0, reflection: 'shared station street cube' },
     uniforms,
     get enabled() { return uniforms.uWetEnabled.value === 1; },
     setEnabled(enabled) { uniforms.uWetEnabled.value = enabled ? 1 : 0; },
@@ -252,6 +295,10 @@ export function applyWetRoad({ root, ctx, reflections, zones = null, streetSunli
       disposed = true;
       uniforms.uWetEnabled.value = 0;
       if (mesh.material === material) mesh.material = original;
+      for (const paving of lit) {
+        if (paving.mesh.material === paving.material) paving.mesh.material = paving.source;
+        paving.material.dispose();
+      }
       material.dispose();
       texture.dispose();
     },
