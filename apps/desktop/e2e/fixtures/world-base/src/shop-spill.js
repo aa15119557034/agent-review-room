@@ -1,10 +1,10 @@
 import * as THREE from 'three';
 
 // Art round 10 (#254 X-51): indoor light spilling out of lit shops onto the paving in front of the door. Every shop room
-// registered in ctx.services.shopInteriors (round 26, the laundromat since round 11) gets one horizontal patch:
-// as wide as its street front, `depth` m out, strongest at the wall and smoothly gone at the far and side edges. One
+// registered in ctx.services.shopInteriors gets a horizontal patch at each glazed face,
+// strongest at the wall and smoothly gone at the far and side edges. One
 // Mesh (one merged geometry, one draw call), additive, depth-tested, no depth write, and the framebuffer alpha (outline coverage mask,
-// toon.js) is left alone, exactly as in door-glow.js. Strength and colours live in evening.json ("shopSpill"); evening only.
+// toon.js) is left alone, exactly as in door-glow.js. Strength and colours live in evening.json ("shopSpill").
 // The deck height is found with rays at build time so steps and kerbs do not leave the patch floating: it is laid at the
 // door landing and cut short where the paving drops away.
 
@@ -39,11 +39,17 @@ export async function loadShopSpill() {
 
 /** Shop rooms (lot id + [x0,y0,z0,x1,y1,z1] in lot space, +z toward the street) -> fronts in station-root space. */
 export function shopFrontsFromRooms(layout, rooms, p) {
-  return rooms.map(({ lot: id, frame, name, kind: roomKind, box }) => {
+  return rooms.flatMap(({ lot: id, frame, name, kind: roomKind, box, glazing }) => {
     const lot = frame ? null : layout.lotById(id), f = frame ?? layout.lotFrame(lot), c = Math.cos(f.rotY), s = Math.sin(f.rotY);
-    const ex = [c, -s], ez = [s, c], lz = box[5] + (p.wallOut ?? 0.25), lx = (box[0] + box[3]) / 2;
-    return { center: [f.x + lx * ex[0] + lz * ez[0], f.y + box[1], f.z + lx * ex[1] + lz * ez[1]], normal: [ez[0], 0, ez[1]],
-      width: box[3] - box[0], kind: roomKind ?? lot.kind, name: name ?? id };
+    const position = (x, z) => [f.x + x * c + z * s, f.y + box[1], f.z - x * s + z * c];
+    const kind = roomKind ?? lot.kind, label = name ?? id;
+    if (glazing) return glazing.map(({ axis, from, to, out, depth, gain }) => {
+      const mid = (from + to) / 2, face = out + 0.05, front = axis === 'x';
+      return { center: front ? position(mid, face) : position(face, mid), normal: front ? [s, 0, c] : [c, 0, -s],
+        width: to - from, kind, name: front ? label : label + '-north', depth, gain, color: [0.78, 0.90, 1] };
+    });
+    return [{ center: position((box[0] + box[3]) / 2, box[5] + (p.wallOut ?? 0.25)), normal: [s, 0, c],
+      width: box[3] - box[0], kind, name: label }];
   });
 }
 
@@ -61,8 +67,8 @@ export function groundSpillFronts(fronts, roots, p, offset = new THREE.Vector3()
   }); }
   const a = new THREE.Vector3(), b = new THREE.Vector3(), c = new THREE.Vector3(), e1 = new THREE.Vector3(), e2 = new THREE.Vector3(), nn = new THREE.Vector3();
   /** Up-facing triangles (projected to xz, with their plane) near one front, in parent space. */
-  const trianglesNear = (f) => {
-    const reach = f.width / 2 + p.depth + 1.5, x0 = f.center[0] - reach, x1 = f.center[0] + reach, z0 = f.center[2] - reach, z1 = f.center[2] + reach;
+  const trianglesNear = (f, depth) => {
+    const reach = f.width / 2 + depth + 1.5, x0 = f.center[0] - reach, x1 = f.center[0] + reach, z0 = f.center[2] - reach, z1 = f.center[2] + reach;
     const y0 = f.center[1] - 2, y1 = f.center[1] + 1.2, out = [];
     for (const o of meshes) {
       const g = o.geometry; if (!g.boundingBox) g.computeBoundingBox();
@@ -95,13 +101,14 @@ export function groundSpillFronts(fronts, roots, p, offset = new THREE.Vector3()
   };
   const out = [], cell = p.cell ?? 0.25, lift = 0.020, maxStep = p.maxStep ?? 0.03;
   for (const f of fronts) {
-    tris = trianglesNear(f);
+    const depth = f.depth ?? p.depth;
+    tris = trianglesNear(f, depth);
     n.fromArray(f.normal); t.set(-n.z, 0, n.x);
     // One regular grid per front (cell m spacing), vertices shared between neighbouring cells so the patch is seamless. Every vertex takes
     // the paving height under it (+ lift). A triangle is kept only if its centroid's paving height matches the triangle's own plane within
     // maxStep, so slopes are followed, and the triangles bridging a step or kerb riser are dropped instead of floating. Rays start only
     // rayLift above the room floor, so tops of vending machines, crates and shelves are never taken for ground.
-    const cols = Math.max(1, Math.ceil(f.width / cell)), cw = f.width / cols, rows = Math.max(1, Math.ceil(p.depth / cell)), rd = p.depth / rows;
+    const cols = Math.max(1, Math.ceil(f.width / cell)), cw = f.width / cols, rows = Math.max(1, Math.ceil(depth / cell)), rd = depth / rows;
     const nx = cols + 1, ny = rows + 1, pos = new Float32Array(nx * ny * 3), span = new Float32Array(nx * ny * 2), vv = new Float32Array(nx * ny);
     const ok = new Uint8Array(nx * ny), x0 = f.center[0] - t.x * f.width / 2, z0 = f.center[2] - t.z * f.width / 2;
     for (let j = 0; j < nx; j++) for (let i = 0; i < ny; i++) {
@@ -147,7 +154,8 @@ export function addShopSpill({ parent, fronts, params: p }) {
   let vo = 0, io = 0;
   for (const f of fronts) {
     positions.set(f.positions, vo * 3); spans.set(f.span, vo * 2); vs.set(f.v, vo);
-    const col = /^(konbini|laundry)$/.test(f.kind) ? p.cool : p.warm;
+    const color = f.color ?? (/^(konbini|laundry)$/.test(f.kind) ? p.cool : p.warm);
+    const col = color.map(channel => channel * (f.gain ?? 1));
     for (let k = 0; k < f.vertexCount; k++) colors.set(col, (vo + k) * 3);
     for (let k = 0; k < f.index.length; k++) index[io + k] = f.index[k] + vo;
     vo += f.vertexCount; io += f.index.length;

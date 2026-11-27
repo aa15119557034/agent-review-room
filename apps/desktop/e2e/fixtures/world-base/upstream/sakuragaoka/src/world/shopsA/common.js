@@ -167,12 +167,12 @@ export function makeCommon(ctx) {
   // meshes whose materials share the same *signature* (map, side, transparency, paint, emissive colour +
   // intensity). So colours are free, but every distinct emissive value is a separate draw call: interior
   // self-light is therefore quantised to a few warm levels (by albedo luminance) instead of c * WARM.
-  const WARM = col('#ffdcae');
+  const WARM = col('#ffdcae'), FLUORESCENT = col('#e3f3ff');
   const INNER_LV = [0.05, 0.14, 0.3, 0.52, 0.78];
-  const innerEm = (c, amt) => {
+  const innerEm = (c, amt, lamp = WARM) => {
     const cc = col(c); const lum = 0.2126 * cc.r + 0.7152 * cc.g + 0.0722 * cc.b;
     const lv = INNER_LV.reduce((a, b) => (Math.abs(b - lum) < Math.abs(a - lum) ? b : a));
-    return { emissive: hex(WARM.clone().multiplyScalar(lv)), emissiveIntensity: amt < 0.24 ? 0.2 : amt < 0.38 ? 0.3 : 0.42 };
+    return { emissive: hex(lamp.clone().multiplyScalar(lv)), emissiveIntensity: amt < 0.24 ? 0.2 : amt < 0.38 ? 0.3 : 0.42 };
   };
   const quantGlass = (o = {}) => {
     if (o.frost) return { tint: '#9fb6c8', opacity: 0.26, frost: true };
@@ -194,6 +194,7 @@ export function makeCommon(ctx) {
     stripe: (a, b, n) => mat.toon('#ffffff', { map: stripeTex(a, b, n), paint: 0.05 }),
     /** interior surface: toon + (quantised) warm self-light so shop interiors glow softly behind the glass */
     inner: (c, amt = 0.3, o = {}) => mat.toon(c, { ...innerEm(c, amt), ...o }),
+    fluorescent: (c, amt = 0.3, o = {}) => mat.toon(c, { ...innerEm(c, amt, FLUORESCENT), ...o }),
     innerMap: (c, map, amt = 0.3, o = {}) => mat.toon(c, { map, ...innerEm(c, amt), ...o }),
     glow: (c, i = 1.0, o) => mat.emissive(c, i, o),
     glass: (o = {}) => mat.glass(quantGlass(o)),

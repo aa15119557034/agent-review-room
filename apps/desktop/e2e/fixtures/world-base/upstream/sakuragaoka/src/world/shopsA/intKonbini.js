@@ -6,8 +6,9 @@
 // back-room door. Only printed things (labels, screens, signs, price rails) are textures.
 import * as THREE from 'three';
 
-export function buildKonbiniInterior(ctx, C, S, D) {
-  const { M, A, U, F } = C; const G = C.G; const k = S.k;
+export function buildKonbiniInterior(ctx, C, S, D, authored = false) {
+  const { A, U, F } = C; const G = C.G; const k = S.k;
+  const M = authored ? { ...C.M, inner: C.M.fluorescent } : C.M;
   const { FY, CY, IX0, IX1, IZ0, IZ1, gx, TEAL, TEAL_D, YEL, INK } = D;
   const rr = ctx.rng('kb.int2');
   G.setShop('W1', 0.42);
@@ -18,7 +19,7 @@ export function buildKonbiniInterior(ctx, C, S, D) {
   const mWhite = M.inner('#eceae4', 0.32), mShelf = M.inner('#e2e0d9', 0.32), mBase = M.inner('#cfccc4', 0.25);
   const mKick = M.inner('#8f969d', 0.2), mMetal = M.inner('#b8bdc2', 0.28), mDark = M.inner('#4f5358', 0.16), mInk = M.inner('#3a3346', 0.1);
   const mTealI = M.inner(TEAL, 0.28), mYelI = M.inner(YEL, 0.3), mPeg = M.inner('#dcd9d1', 0.3), mBody = M.inner('#e6e6e2', 0.3);
-  const mGlass = ctx.mat.glass({ opacity: 0.05, streaks: false, tint: '#c9d6de' }), mLamp = M.glow('#fff3dc', 1.3), mLed = M.glow('#f4f9ff', 1.2);
+  const mGlass = ctx.mat.glass({ opacity: 0.05, streaks: false, tint: '#c9d6de' }), mLamp = M.glow(authored ? '#eaf7ff' : '#fff3dc', 1.3), mLed = M.glow('#f4f9ff', 1.2);
   const mPink = M.inner('#f7d3de', 0.35), mCounter = M.inner('#f1efe9', 0.32), mTop = M.inner('#d6d2c8', 0.3);
 
   // printed price rail (flat graphic) — one strip reused on every shelf edge
@@ -90,7 +91,7 @@ export function buildKonbiniInterior(ctx, C, S, D) {
       let iz = 0;
       for (let z = IZ0; z < IZ1 - 1e-3; z += ts, iz++) {
         const w = Math.min(ts, IX1 - x) - gap, d = Math.min(ts, IZ1 - z) - gap;
-        const base = (ix + iz) % 2 ? 0.93 : 0.9, c = new THREE.Color('#f1efe8').multiplyScalar(base + rr() * 0.04);
+        const base = (ix + iz) % 2 ? 0.93 : 0.9, c = new THREE.Color(authored ? '#ebf0f5' : '#f1efe8').multiplyScalar(base + rr() * 0.04);
         G.add('tile', S, [x + gap / 2 + w / 2, FY + 0.005, z + gap / 2 + d / 2], [w, 1, d], c);
       }
     }
@@ -193,11 +194,13 @@ export function buildKonbiniInterior(ctx, C, S, D) {
       const r = ctx.rng('kb.bc' + cx);
       for (const y of [0.55, 0.85, 1.15]) pegRow(bc, -0.43, 0.43, y + 0.2, 0.02, r, [0, 2, 3, 5, 6, 7]);
     }
-    S.box(cx, cz + 0.07, 0.92, len + 0.54, -1, FY + GH + 0.4);
   }
-  gondola(-2.65, -9.8, -4.6, [PLAN.snacks, PLAN.sweets]);
-  gondola(-0.2, -9.8, -4.6, [PLAN.noodle, PLAN.bread]);
-  gondola(2.3, -9.8, -4.6, [PLAN.daily, PLAN.grocery]);
+  // Preserve the fixture footprints in the original W1 physics context.
+  for (const [x, first, second] of [[-2.65, PLAN.snacks, PLAN.sweets], [-0.2, PLAN.noodle, PLAN.bread], [2.3, PLAN.daily, PLAN.grocery]]) {
+    const z0 = -9.8, z1 = -4.6;
+    if (!authored) gondola(x, z0, z1, [first, second]);
+    S.box(x, (z0 + z1) / 2 + 0.07, 0.92, z1 - z0 + 0.54, -1, FY + GH + 0.4);
+  }
 
   // hanging category signs (printed boards on wires)
   const catSign = (t, c) => A.inner.region(256, 64, (g, w, h) => { g.fillStyle = '#fbf8f0'; g.fillRect(0, 0, w, h); g.fillStyle = c; g.fillRect(0, 0, 18, h); g.fillRect(w - 18, 0, 18, h); U.text(g, t, w / 2, h / 2 + 2, 30, F.round, c, { weight: 900, maxW: w - 50 }); });
@@ -211,185 +214,191 @@ export function buildKonbiniInterior(ctx, C, S, D) {
   // ---------------- reach-in coolers (back wall): 8 glass doors
   {
     const x0 = -1.4, x1 = 4.6, n = 8, dw = (x1 - x0) / n, FZ = -11.02, zb = IZ0, cx = (x0 + x1) / 2, depth = FZ - zb;
-    const sets = ['お茶', '紙パック', '水・炭酸', 'ジュース', 'スポーツ', '乳飲料', 'コーヒー', 'エナジー'];
-    const mCab = M.inner('#dcdfe2', 0.3);
-    k.box(x1 - x0 + 0.1, 0.2, depth + 0.04, mKick, [cx, FY + 0.1, (FZ + zb) / 2 + 0.02]);
-    k.box(x1 - x0 + 0.1, 0.4, depth + 0.1, mCab, [cx, FY + 2.42, (FZ + zb) / 2 + 0.05]);
-    for (const x of [x0 - 0.03, x1 + 0.03]) k.box(0.05, 2.62, depth + 0.1, mCab, [x, FY + 1.31, (FZ + zb) / 2 + 0.05]);
-    k.plane(x1 - x0, 2.02, M.inner('#eef1f2', 0.52), [cx, FY + 1.21, zb + 0.012]);
-    k.box(x1 - x0, 0.03, depth, M.inner('#c9ced3', 0.3), [cx, FY + 0.215, (FZ + zb) / 2]);
-    const hReg = {};
-    for (const nm of new Set(sets)) hReg[nm] = A.glow.region(128, 28, (g, w, h) => { g.fillStyle = TEAL; g.fillRect(0, 0, w, h); U.text(g, nm, w / 2, h / 2 + 1, 17, F.round, '#fff', { weight: 900 }); });
-    const PETV = { 'お茶': [0, 1, 2, 11], '水・炭酸': [3, 4, 15, 10], 'ジュース': [5, 8, 13, 14], 'スポーツ': [7, 3, 12, 4], '乳飲料': [12, 6], 'コーヒー': [9, 6], 'エナジー': [10, 8] };
-    const CANV = { '水・炭酸': [8, 7, 1], 'ジュース': [9, 6, 5, 14], 'コーヒー': [2, 3, 10, 11], 'エナジー': [4, 0, 1, 15, 12], 'スポーツ': [7, 8] };
-    for (let i = 0; i < n; i++) {
-      const xc = x0 + dw * (i + 0.5), nm = sets[i];
-      const dg = S.k.group([xc, FY, FZ], 0); const kd = ctx.kit(dg);
-      // door: frame, glass, handle with stand-offs, gasket strip
-      const dh = 2.02, y0 = 0.2;
-      kd.box(dw - 0.012, 0.055, 0.045, mDark, [0, y0 + 0.028, 0.03]); kd.box(dw - 0.012, 0.07, 0.045, mDark, [0, y0 + dh - 0.035, 0.03]);
-      for (const s of [-1, 1]) kd.box(0.045, dh, 0.045, mDark, [s * (dw / 2 - 0.028), y0 + dh / 2, 0.03]);
-      kd.plane(dw - 0.1, dh - 0.12, mGlass, [0, y0 + dh / 2, 0.035]).castShadow = false;
-      const hs = i % 2 ? -1 : 1, hx = hs * (dw / 2 - 0.085);
-      kd.cyl(0.013, 0.013, 0.78, mMetal, [hx, y0 + 1.05, 0.105], null, 8);
-      for (const yy of [0.72, 1.38]) kd.cyl(0.008, 0.008, 0.06, mMetal, [hx, y0 + yy, 0.075], [Math.PI / 2, 0, 0], 6);
-      S.card(hReg[nm], dw - 0.08, 0.18, [0, y0 + dh + 0.12, 0.105], null, null, kd);
-      // shelves + drinks (behind the glass: z < 0)
-      const r = ctx.rng('kb.cool' + i);
-      for (let s = 0; s < 5; s++) {
-        const y = y0 + 0.03 + s * 0.39;
-        if (s > 0) { kd.box(dw - 0.05, 0.014, 0.62, mMetal, [0, y - 0.007, -0.36]); }
-        kd.box(dw - 0.05, 0.03, 0.01, M.inner('#f7f5ef', 0.45), [0, y - 0.005, -0.045]);
-        S.card(rRail, dw - 0.06, 0.028, [0, y - 0.005, -0.039], null, null, kd);
-        const hMax = 0.36;
-        let tp;
-        if (nm === '乳飲料') tp = s < 2 ? [TPL.carton] : s < 4 ? [TPL.cartonS] : [{ ...TPL.pet, vars: PETV[nm] }];
-        else if (nm === 'コーヒー' || nm === 'エナジー') tp = s === 0 ? [{ ...TPL.pet, vars: PETV[nm] }] : s < 3 ? [{ ...TPL.canL, vars: CANV[nm] }] : [{ ...TPL.can, vars: CANV[nm] }];
-        else if (nm === 'ジュース') tp = s === 4 ? [{ ...TPL.carton, vars: [3, 4, 5] }] : s === 3 ? [{ ...TPL.can, vars: CANV[nm] }] : [{ ...TPL.pet, vars: PETV[nm] }];
-        else if (nm === '水・炭酸') tp = s === 4 ? [{ ...TPL.can, vars: CANV[nm] }] : [{ ...TPL.pet, vars: PETV[nm] }];
-        else if (nm === '紙パック') tp = s < 2 ? [{ ...TPL.bottleL, vars: [0, 2, 3] }] : s < 4 ? [{ ...TPL.carton, vars: [5, 6, 0] }] : [{ ...TPL.cartonS, vars: [0, 1, 2, 6] }];
-        else if (nm === 'スポーツ' && s >= 3) tp = [{ ...TPL.can, vars: CANV[nm] }];
-        else tp = [{ ...TPL.pet, vars: PETV[nm] }];
-        fill(dg, -dw / 2 + 0.035, dw / 2 - 0.035, y + 0.004, -0.06, -0.5, tp, r, { maxH: hMax, deep: s < 3 ? 2 : 1 });
+    if (!authored) {
+      const sets = ['お茶', '紙パック', '水・炭酸', 'ジュース', 'スポーツ', '乳飲料', 'コーヒー', 'エナジー'];
+      const mCab = M.inner('#dcdfe2', 0.3);
+      k.box(x1 - x0 + 0.1, 0.2, depth + 0.04, mKick, [cx, FY + 0.1, (FZ + zb) / 2 + 0.02]);
+      k.box(x1 - x0 + 0.1, 0.4, depth + 0.1, mCab, [cx, FY + 2.42, (FZ + zb) / 2 + 0.05]);
+      for (const x of [x0 - 0.03, x1 + 0.03]) k.box(0.05, 2.62, depth + 0.1, mCab, [x, FY + 1.31, (FZ + zb) / 2 + 0.05]);
+      k.plane(x1 - x0, 2.02, M.inner('#eef1f2', 0.52), [cx, FY + 1.21, zb + 0.012]);
+      k.box(x1 - x0, 0.03, depth, M.inner('#c9ced3', 0.3), [cx, FY + 0.215, (FZ + zb) / 2]);
+      const hReg = {};
+      for (const nm of new Set(sets)) hReg[nm] = A.glow.region(128, 28, (g, w, h) => { g.fillStyle = TEAL; g.fillRect(0, 0, w, h); U.text(g, nm, w / 2, h / 2 + 1, 17, F.round, '#fff', { weight: 900 }); });
+      const PETV = { 'お茶': [0, 1, 2, 11], '水・炭酸': [3, 4, 15, 10], 'ジュース': [5, 8, 13, 14], 'スポーツ': [7, 3, 12, 4], '乳飲料': [12, 6], 'コーヒー': [9, 6], 'エナジー': [10, 8] };
+      const CANV = { '水・炭酸': [8, 7, 1], 'ジュース': [9, 6, 5, 14], 'コーヒー': [2, 3, 10, 11], 'エナジー': [4, 0, 1, 15, 12], 'スポーツ': [7, 8] };
+      for (let i = 0; i < n; i++) {
+        const xc = x0 + dw * (i + 0.5), nm = sets[i];
+        const dg = S.k.group([xc, FY, FZ], 0); const kd = ctx.kit(dg);
+        // door: frame, glass, handle with stand-offs, gasket strip
+        const dh = 2.02, y0 = 0.2;
+        kd.box(dw - 0.012, 0.055, 0.045, mDark, [0, y0 + 0.028, 0.03]); kd.box(dw - 0.012, 0.07, 0.045, mDark, [0, y0 + dh - 0.035, 0.03]);
+        for (const s of [-1, 1]) kd.box(0.045, dh, 0.045, mDark, [s * (dw / 2 - 0.028), y0 + dh / 2, 0.03]);
+        kd.plane(dw - 0.1, dh - 0.12, mGlass, [0, y0 + dh / 2, 0.035]).castShadow = false;
+        const hs = i % 2 ? -1 : 1, hx = hs * (dw / 2 - 0.085);
+        kd.cyl(0.013, 0.013, 0.78, mMetal, [hx, y0 + 1.05, 0.105], null, 8);
+        for (const yy of [0.72, 1.38]) kd.cyl(0.008, 0.008, 0.06, mMetal, [hx, y0 + yy, 0.075], [Math.PI / 2, 0, 0], 6);
+        S.card(hReg[nm], dw - 0.08, 0.18, [0, y0 + dh + 0.12, 0.105], null, null, kd);
+        // shelves + drinks (behind the glass: z < 0)
+        const r = ctx.rng('kb.cool' + i);
+        for (let s = 0; s < 5; s++) {
+          const y = y0 + 0.03 + s * 0.39;
+          if (s > 0) { kd.box(dw - 0.05, 0.014, 0.62, mMetal, [0, y - 0.007, -0.36]); }
+          kd.box(dw - 0.05, 0.03, 0.01, M.inner('#f7f5ef', 0.45), [0, y - 0.005, -0.045]);
+          S.card(rRail, dw - 0.06, 0.028, [0, y - 0.005, -0.039], null, null, kd);
+          const hMax = 0.36;
+          let tp;
+          if (nm === '乳飲料') tp = s < 2 ? [TPL.carton] : s < 4 ? [TPL.cartonS] : [{ ...TPL.pet, vars: PETV[nm] }];
+          else if (nm === 'コーヒー' || nm === 'エナジー') tp = s === 0 ? [{ ...TPL.pet, vars: PETV[nm] }] : s < 3 ? [{ ...TPL.canL, vars: CANV[nm] }] : [{ ...TPL.can, vars: CANV[nm] }];
+          else if (nm === 'ジュース') tp = s === 4 ? [{ ...TPL.carton, vars: [3, 4, 5] }] : s === 3 ? [{ ...TPL.can, vars: CANV[nm] }] : [{ ...TPL.pet, vars: PETV[nm] }];
+          else if (nm === '水・炭酸') tp = s === 4 ? [{ ...TPL.can, vars: CANV[nm] }] : [{ ...TPL.pet, vars: PETV[nm] }];
+          else if (nm === '紙パック') tp = s < 2 ? [{ ...TPL.bottleL, vars: [0, 2, 3] }] : s < 4 ? [{ ...TPL.carton, vars: [5, 6, 0] }] : [{ ...TPL.cartonS, vars: [0, 1, 2, 6] }];
+          else if (nm === 'スポーツ' && s >= 3) tp = [{ ...TPL.can, vars: CANV[nm] }];
+          else tp = [{ ...TPL.pet, vars: PETV[nm] }];
+          fill(dg, -dw / 2 + 0.035, dw / 2 - 0.035, y + 0.004, -0.06, -0.5, tp, r, { maxH: hMax, deep: s < 3 ? 2 : 1 });
+        }
       }
+      for (let i = 1; i < n; i++) k.box(0.02, 2.02, 0.03, mLed, [x0 + dw * i, FY + 1.21, FZ - 0.06]);
     }
-    for (let i = 1; i < n; i++) k.box(0.02, 2.02, 0.03, mLed, [x0 + dw * i, FY + 1.21, FZ - 0.06]);
     S.box(cx, (FZ + zb) / 2 + 0.06, x1 - x0 + 0.1, depth + 0.16, -1, FY + 2.62);
   }
 
   // ---------------- open chilled case: bento / onigiri / sandwiches / desserts
   {
     const x0 = -5.7, x1 = -1.6, z0 = IZ0, z1 = -11.1, cx = (x0 + x1) / 2, w = x1 - x0;
-    k.box(w, 0.55, z1 - z0, mBody, [cx, FY + 0.275, (z0 + z1) / 2]);
-    k.box(w, 0.09, 0.05, mMetal, [cx, FY + 0.5, z1 + 0.02]);
-    for (let i = 0; i < 40; i++) k.box(0.05, 0.012, 0.03, mDark, [x0 + 0.06 + i * (w - 0.12) / 39, FY + 0.556, z1 - 0.02]);
-    k.box(w, 1.55, 0.1, mBody, [cx, FY + 0.55 + 0.775, z0 + 0.05]);
-    for (const x of [x0 + 0.025, x1 - 0.025]) k.box(0.05, 1.9, z1 - z0, mBody, [x, FY + 0.55 + 0.95 - 0.2, (z0 + z1) / 2]);
-    k.box(w + 0.02, 0.22, 0.68, mTealI, [cx, FY + 2.12, z0 + 0.34]);
-    const rOpenH = A.glow.region(360, 40, (g, W, Hh) => { g.fillStyle = TEAL; g.fillRect(0, 0, W, Hh); U.text(g, 'お弁当 · おにぎり · サンドイッチ', W / 2, Hh / 2 + 1, 22, F.round, '#fff', { weight: 900, maxW: W - 20 }); });
-    S.card(rOpenH, 2.6, 0.2, [cx, FY + 2.12, z0 + 0.685]);
-    k.box(w - 0.1, 0.02, 0.06, mLed, [cx, FY + 2.0, z0 + 0.6]);
-    const shelves = [[0.98, 0.5], [1.34, 0.43], [1.7, 0.36]];
-    for (const [y, d] of shelves) {
-      k.box(w - 0.1, 0.02, d, M.inner('#dfe3e5', 0.4), [cx, FY + y - 0.01, z0 + 0.1 + d / 2]);
-      k.box(w - 0.1, 0.035, 0.012, M.inner('#f7f5ef', 0.45), [cx, FY + y - 0.02, z0 + 0.1 + d + 0.004]);
-      S.card(rRail, w - 0.12, 0.03, [cx, FY + y - 0.02, z0 + 0.1 + d + 0.011]);
-      k.box(w - 0.14, 0.012, 0.04, mLed, [cx, FY + y - 0.03, z0 + 0.14 + d * 0.5]);
+    if (!authored) {
+      k.box(w, 0.55, z1 - z0, mBody, [cx, FY + 0.275, (z0 + z1) / 2]);
+      k.box(w, 0.09, 0.05, mMetal, [cx, FY + 0.5, z1 + 0.02]);
+      for (let i = 0; i < 40; i++) k.box(0.05, 0.012, 0.03, mDark, [x0 + 0.06 + i * (w - 0.12) / 39, FY + 0.556, z1 - 0.02]);
+      k.box(w, 1.55, 0.1, mBody, [cx, FY + 0.55 + 0.775, z0 + 0.05]);
+      for (const x of [x0 + 0.025, x1 - 0.025]) k.box(0.05, 1.9, z1 - z0, mBody, [x, FY + 0.55 + 0.95 - 0.2, (z0 + z1) / 2]);
+      k.box(w + 0.02, 0.22, 0.68, mTealI, [cx, FY + 2.12, z0 + 0.34]);
+      const rOpenH = A.glow.region(360, 40, (g, W, Hh) => { g.fillStyle = TEAL; g.fillRect(0, 0, W, Hh); U.text(g, 'お弁当 · おにぎり · サンドイッチ', W / 2, Hh / 2 + 1, 22, F.round, '#fff', { weight: 900, maxW: W - 20 }); });
+      S.card(rOpenH, 2.6, 0.2, [cx, FY + 2.12, z0 + 0.685]);
+      k.box(w - 0.1, 0.02, 0.06, mLed, [cx, FY + 2.0, z0 + 0.6]);
+      const shelves = [[0.98, 0.5], [1.34, 0.43], [1.7, 0.36]];
+      for (const [y, d] of shelves) {
+        k.box(w - 0.1, 0.02, d, M.inner('#dfe3e5', 0.4), [cx, FY + y - 0.01, z0 + 0.1 + d / 2]);
+        k.box(w - 0.1, 0.035, 0.012, M.inner('#f7f5ef', 0.45), [cx, FY + y - 0.02, z0 + 0.1 + d + 0.004]);
+        S.card(rRail, w - 0.12, 0.03, [cx, FY + y - 0.02, z0 + 0.1 + d + 0.011]);
+        k.box(w - 0.14, 0.012, 0.04, mLed, [cx, FY + y - 0.03, z0 + 0.14 + d * 0.5]);
+      }
+      const g = S.k.group([cx, FY, 0], 0);
+      const r = ctx.rng('kb.open2');
+      fill(g, -w / 2 + 0.07, w / 2 - 0.07, 0.56, z1 - 0.04, z0 + 0.12, [{ kind: 'bento', w: [0.2, 0.22], h: 0.055, d: 0.16, vars: [0, 1, 2, 3, 4, 5, 6, 7], deep: 3, n: [2, 3], stack: 2 }], r);
+      const sh = (i) => z0 + 0.1 + shelves[i][1];
+      fill(g, -w / 2 + 0.07, w / 2 - 0.07, shelves[0][0] + 0.004, sh(0) - 0.01, z0 + 0.12, [{ kind: 'onigiri', w: 0.1, h: 0.092, d: 0.035, vars: [0, 1, 2, 3, 4, 5, 6, 7], deep: 5, n: [3, 4] }], r);
+      fill(g, -w / 2 + 0.07, w / 2 - 0.07, shelves[1][0] + 0.004, sh(1) - 0.01, z0 + 0.12, [{ kind: 'sando', w: 0.13, h: 0.12, d: 0.055, vars: [0, 1, 2, 3], deep: 4, n: [2, 3] }], r);
+      fill(g, -w / 2 + 0.07, w / 2 - 0.07, shelves[2][0] + 0.004, sh(2) - 0.01, z0 + 0.12, [{ ...TPL.boxS, vars: [12, 13, 5], deep: 4 }, { ...TPL.cartonS, vars: [0, 1, 6, 7] }], r);
     }
-    const g = S.k.group([cx, FY, 0], 0);
-    const r = ctx.rng('kb.open2');
-    fill(g, -w / 2 + 0.07, w / 2 - 0.07, 0.56, z1 - 0.04, z0 + 0.12, [{ kind: 'bento', w: [0.2, 0.22], h: 0.055, d: 0.16, vars: [0, 1, 2, 3, 4, 5, 6, 7], deep: 3, n: [2, 3], stack: 2 }], r);
-    const sh = (i) => z0 + 0.1 + shelves[i][1];
-    fill(g, -w / 2 + 0.07, w / 2 - 0.07, shelves[0][0] + 0.004, sh(0) - 0.01, z0 + 0.12, [{ kind: 'onigiri', w: 0.1, h: 0.092, d: 0.035, vars: [0, 1, 2, 3, 4, 5, 6, 7], deep: 5, n: [3, 4] }], r);
-    fill(g, -w / 2 + 0.07, w / 2 - 0.07, shelves[1][0] + 0.004, sh(1) - 0.01, z0 + 0.12, [{ kind: 'sando', w: 0.13, h: 0.12, d: 0.055, vars: [0, 1, 2, 3], deep: 4, n: [2, 3] }], r);
-    fill(g, -w / 2 + 0.07, w / 2 - 0.07, shelves[2][0] + 0.004, sh(2) - 0.01, z0 + 0.12, [{ ...TPL.boxS, vars: [12, 13, 5], deep: 4 }, { ...TPL.cartonS, vars: [0, 1, 6, 7] }], r);
     S.box(cx, (z0 + z1) / 2, w, z1 - z0 + 0.04, -1, FY + 2.25);
   }
 
   // ---------------- register counter
   {
     const x0 = -4.9, x1 = -4.2, z0 = -8.6, z1 = -4.2, cx = (x0 + x1) / 2, cz = (z0 + z1) / 2, len = z1 - z0;
-    k.box(x1 - x0, 0.96, len, mCounter, [cx, FY + 0.48, cz]);
-    k.box(0.02, 0.1, len, mTealI, [x1 + 0.005, FY + 0.8, cz]);
-    k.box(0.02, 0.035, len, mYelI, [x1 + 0.005, FY + 0.72, cz]);
-    k.box(0.04, 0.1, len, mKick, [x1 - 0.02, FY + 0.05, cz]);
-    k.rbox(x1 - x0 + 0.14, 0.05, len + 0.08, 0.02, mTop, [cx + 0.05, FY + 0.985, cz]);
-    const ty = FY + 1.01;
-    const rScreen = A.glow.region(96, 64, (g, w, h) => { g.fillStyle = '#dff1ee'; g.fillRect(0, 0, w, h); g.fillStyle = TEAL; g.fillRect(0, 0, w, 14); U.text(g, 'いらっしゃいませ', w / 2, 36, 11, F.sans, INK, { weight: 700 }); U.text(g, '¥ 0', w / 2, 54, 12, F.en, INK, { weight: 700 }); });
-    const rCust = A.glow.region(96, 48, (g, w, h) => { g.fillStyle = '#10282a'; g.fillRect(0, 0, w, h); U.text(g, '合計', 20, 16, 12, F.sans, '#9ff0e0', { weight: 700 }); U.text(g, '¥498', w - 30, 30, 20, F.en, '#9ff0e0', { weight: 900 }); });
-    const rPad = A.inner.region(64, 96, (g, w, h) => { g.fillStyle = '#3a3346'; g.fillRect(0, 0, w, h); g.fillStyle = '#9fd6e8'; g.fillRect(8, 8, w - 16, 26); for (let i = 0; i < 12; i++) { g.fillStyle = i === 11 ? '#5a9e58' : i === 9 ? '#d9463b' : '#d9d6ce'; U.rr(g, 9 + (i % 3) * 16, 42 + Math.floor(i / 3) * 13, 13, 10, 2); g.fill(); } });
-    const rEM = A.glow.region(64, 64, (g, w, h) => { g.fillStyle = '#2f64b5'; U.rr(g, 0, 0, w, h, 10); g.fill(); g.strokeStyle = '#fbf8f0'; g.lineWidth = 3; for (let i = 0; i < 3; i++) { g.beginPath(); g.arc(24, 32, 8 + i * 8, -0.8, 0.8); g.stroke(); } });
-    for (const z of [-5.9, -7.6]) {
-      // cash drawer + POS body
-      k.box(0.42, 0.11, 0.44, mDark, [cx - 0.08, ty + 0.055, z]);
-      k.box(0.01, 0.03, 0.2, mMetal, [cx + 0.135, ty + 0.05, z]);
-      k.rbox(0.3, 0.1, 0.34, 0.02, M.inner('#5d646c', 0.16), [cx - 0.1, ty + 0.16, z]);
-      // clerk screen on a stand (faces -x)
-      k.cyl(0.02, 0.02, 0.14, mDark, [cx - 0.12, ty + 0.27, z], null, 8);
-      const sg = S.k.group([cx - 0.14, ty + 0.4, z], -Math.PI / 2); const ks = ctx.kit(sg);
-      ks.box(0.34, 0.24, 0.035, mInk, [0, 0, 0], [-0.22, 0, 0]);
-      S.card(rScreen, 0.3, 0.2, [0, 0.004, 0.019], [-0.22, 0, 0], null, ks);
-      // customer display (faces +x) on a pole
-      k.cyl(0.012, 0.012, 0.3, mDark, [cx + 0.02, ty + 0.36, z + 0.12], null, 6);
-      const cg = S.k.group([cx + 0.03, ty + 0.54, z + 0.12], Math.PI / 2); const kc = ctx.kit(cg);
-      kc.box(0.2, 0.11, 0.035, mInk, [0, 0, 0], [-0.1, 0, 0]);
-      S.card(rCust, 0.18, 0.09, [0, 0, 0.019], [-0.1, 0, 0], null, kc);
-      // card reader on swivel stand (faces +x)
-      k.cyl(0.035, 0.045, 0.03, mDark, [cx + 0.24, ty + 0.015, z - 0.18], null, 10);
-      const pg = S.k.group([cx + 0.24, ty + 0.05, z - 0.18], Math.PI / 2); const kp = ctx.kit(pg);
-      kp.rbox(0.085, 0.17, 0.03, 0.01, mInk, [0, 0.07, 0], [-0.5, 0, 0]);
-      S.card(rPad, 0.07, 0.13, [0, 0.075, 0.017], [-0.5, 0, 0], null, kp);
-      // e-money pad, receipt printer (+ paper), scanner in cradle, coin tray
-      k.box(0.12, 0.025, 0.12, mInk, [cx + 0.22, ty + 0.013, z + 0.2]);
-      S.card(rEM, 0.1, 0.1, [cx + 0.22, ty + 0.027, z + 0.2], [-Math.PI / 2, 0, Math.PI / 2]);
-      k.rbox(0.18, 0.13, 0.15, 0.02, M.inner('#e8e8e4', 0.34), [cx - 0.2, ty + 0.065, z - 0.3]);
-      k.box(0.004, 0.06, 0.08, M.inner('#fbfbf8', 0.5), [cx - 0.1, ty + 0.14, z - 0.3], [0, 0, -0.3]);
-      k.box(0.05, 0.06, 0.07, mDark, [cx + 0.04, ty + 0.03, z - 0.34]);
-      const sc = S.k.group([cx + 0.04, ty + 0.08, z - 0.34], 0); const ksc = ctx.kit(sc);
-      ksc.box(0.035, 0.11, 0.04, mInk, [0, 0.02, 0], [0, 0, 0.2]); ksc.box(0.06, 0.05, 0.07, mInk, [0.03, 0.08, 0], [0, 0, -0.4]);
-      ksc.box(0.004, 0.03, 0.05, M.glow('#ff6a5a', 1.0), [0.062, 0.07, 0], [0, 0, -0.4]);
-      k.box(0.16, 0.012, 0.12, M.inner('#b48a62', 0.3), [cx + 0.25, ty + 0.006, z + 0.02]);
-    }
-    // hot-snack warmer (glass case, two trays of individual fried snacks)
-    {
-      const z = -5.02, hw = 0.64, hd = 0.46, hh = 0.5, bx = cx + 0.02;
-      k.box(hd, 0.06, hw, mMetal, [bx, ty + 0.03, z]);
-      k.box(hd, 0.06, hw, mMetal, [bx, ty + hh - 0.03, z]);
-      for (const [dx, dz] of [[-1, -1], [1, -1], [-1, 1], [1, 1]]) k.box(0.025, hh, 0.025, mMetal, [bx + dx * (hd / 2 - 0.012), ty + hh / 2, z + dz * (hw / 2 - 0.012)]);
-      k.box(hd - 0.04, 0.012, hw - 0.04, mLamp, [bx, ty + hh - 0.065, z]);
-      k.plane(hw - 0.04, hh - 0.12, M.glass({ opacity: 0.2 }), [bx + hd / 2, ty + hh / 2, z], [0, Math.PI / 2, 0]).castShadow = false;
-      for (const s of [-1, 1]) k.plane(hd - 0.04, hh - 0.12, M.glass({ opacity: 0.2 }), [bx, ty + hh / 2, z + s * hw / 2], [0, 0, 0]).castShadow = false;
-      k.box(0.02, hh - 0.08, hw - 0.04, M.inner('#e9e6de', 0.4), [bx - hd / 2 + 0.01, ty + hh / 2, z]);
-      const hg = S.k.group([bx, ty, z], Math.PI / 2);
-      const rs = ctx.rng('kb.hot');
-      for (const [ly, items] of [[0.07, 'chicken'], [0.25, 'mixed']]) {
-        ctx.kit(hg).box(hw - 0.06, 0.012, hd - 0.08, mMetal, [0, ly, 0], [-0.12, 0, 0]);
-        for (let i = 0; i < 6; i++) {
-          const x = -hw / 2 + 0.07 + i * (hw - 0.14) / 5;
-          if (items === 'chicken') { for (let j = 0; j < 2; j++) G.add('blob', hg, [x + (rs() - 0.5) * 0.01, ly + 0.01 + j * 0.012, 0.07 - j * 0.12], [0.085, 0.045, 0.1], rs.pick(['#c98a4a', '#d99a50', '#b87a3a']), [0, rs() * 3, 0]); }
-          else if (i < 2) { G.add('mcup', hg, [x, ly + 0.01, 0.04], [0.07, 0.08, 0.05], '#d9463b'); for (let j = 0; j < 3; j++) G.add('blob', hg, [x + (j - 1) * 0.018, ly + 0.08, 0.04], [0.03, 0.028, 0.03], '#c98a4a'); }
-          else if (i < 4) { for (let j = 0; j < 2; j++) G.add('blob', hg, [x, ly + 0.01, 0.07 - j * 0.12], [0.08, 0.035, 0.06], '#d9a05a', [0, 0.3, 0]); }
-          else { G.add('blob', hg, [x, ly + 0.01, 0.02], [0.05, 0.04, 0.16], '#e8c48a', [0, 0, 0]); G.add('blob', hg, [x, ly + 0.035, 0.02], [0.028, 0.028, 0.18], '#c9574a'); }
-        }
-        S.card(rRail, hw - 0.06, 0.02, [0, ly - 0.006, hd / 2 - 0.035], null, null, ctx.kit(hg));
+    if (!authored) {
+      k.box(x1 - x0, 0.96, len, mCounter, [cx, FY + 0.48, cz]);
+      k.box(0.02, 0.1, len, mTealI, [x1 + 0.005, FY + 0.8, cz]);
+      k.box(0.02, 0.035, len, mYelI, [x1 + 0.005, FY + 0.72, cz]);
+      k.box(0.04, 0.1, len, mKick, [x1 - 0.02, FY + 0.05, cz]);
+      k.rbox(x1 - x0 + 0.14, 0.05, len + 0.08, 0.02, mTop, [cx + 0.05, FY + 0.985, cz]);
+      const ty = FY + 1.01;
+      const rScreen = A.glow.region(96, 64, (g, w, h) => { g.fillStyle = '#dff1ee'; g.fillRect(0, 0, w, h); g.fillStyle = TEAL; g.fillRect(0, 0, w, 14); U.text(g, 'いらっしゃいませ', w / 2, 36, 11, F.sans, INK, { weight: 700 }); U.text(g, '¥ 0', w / 2, 54, 12, F.en, INK, { weight: 700 }); });
+      const rCust = A.glow.region(96, 48, (g, w, h) => { g.fillStyle = '#10282a'; g.fillRect(0, 0, w, h); U.text(g, '合計', 20, 16, 12, F.sans, '#9ff0e0', { weight: 700 }); U.text(g, '¥498', w - 30, 30, 20, F.en, '#9ff0e0', { weight: 900 }); });
+      const rPad = A.inner.region(64, 96, (g, w, h) => { g.fillStyle = '#3a3346'; g.fillRect(0, 0, w, h); g.fillStyle = '#9fd6e8'; g.fillRect(8, 8, w - 16, 26); for (let i = 0; i < 12; i++) { g.fillStyle = i === 11 ? '#5a9e58' : i === 9 ? '#d9463b' : '#d9d6ce'; U.rr(g, 9 + (i % 3) * 16, 42 + Math.floor(i / 3) * 13, 13, 10, 2); g.fill(); } });
+      const rEM = A.glow.region(64, 64, (g, w, h) => { g.fillStyle = '#2f64b5'; U.rr(g, 0, 0, w, h, 10); g.fill(); g.strokeStyle = '#fbf8f0'; g.lineWidth = 3; for (let i = 0; i < 3; i++) { g.beginPath(); g.arc(24, 32, 8 + i * 8, -0.8, 0.8); g.stroke(); } });
+      for (const z of [-5.9, -7.6]) {
+        // cash drawer + POS body
+        k.box(0.42, 0.11, 0.44, mDark, [cx - 0.08, ty + 0.055, z]);
+        k.box(0.01, 0.03, 0.2, mMetal, [cx + 0.135, ty + 0.05, z]);
+        k.rbox(0.3, 0.1, 0.34, 0.02, M.inner('#5d646c', 0.16), [cx - 0.1, ty + 0.16, z]);
+        // clerk screen on a stand (faces -x)
+        k.cyl(0.02, 0.02, 0.14, mDark, [cx - 0.12, ty + 0.27, z], null, 8);
+        const sg = S.k.group([cx - 0.14, ty + 0.4, z], -Math.PI / 2); const ks = ctx.kit(sg);
+        ks.box(0.34, 0.24, 0.035, mInk, [0, 0, 0], [-0.22, 0, 0]);
+        S.card(rScreen, 0.3, 0.2, [0, 0.004, 0.019], [-0.22, 0, 0], null, ks);
+        // customer display (faces +x) on a pole
+        k.cyl(0.012, 0.012, 0.3, mDark, [cx + 0.02, ty + 0.36, z + 0.12], null, 6);
+        const cg = S.k.group([cx + 0.03, ty + 0.54, z + 0.12], Math.PI / 2); const kc = ctx.kit(cg);
+        kc.box(0.2, 0.11, 0.035, mInk, [0, 0, 0], [-0.1, 0, 0]);
+        S.card(rCust, 0.18, 0.09, [0, 0, 0.019], [-0.1, 0, 0], null, kc);
+        // card reader on swivel stand (faces +x)
+        k.cyl(0.035, 0.045, 0.03, mDark, [cx + 0.24, ty + 0.015, z - 0.18], null, 10);
+        const pg = S.k.group([cx + 0.24, ty + 0.05, z - 0.18], Math.PI / 2); const kp = ctx.kit(pg);
+        kp.rbox(0.085, 0.17, 0.03, 0.01, mInk, [0, 0.07, 0], [-0.5, 0, 0]);
+        S.card(rPad, 0.07, 0.13, [0, 0.075, 0.017], [-0.5, 0, 0], null, kp);
+        // e-money pad, receipt printer (+ paper), scanner in cradle, coin tray
+        k.box(0.12, 0.025, 0.12, mInk, [cx + 0.22, ty + 0.013, z + 0.2]);
+        S.card(rEM, 0.1, 0.1, [cx + 0.22, ty + 0.027, z + 0.2], [-Math.PI / 2, 0, Math.PI / 2]);
+        k.rbox(0.18, 0.13, 0.15, 0.02, M.inner('#e8e8e4', 0.34), [cx - 0.2, ty + 0.065, z - 0.3]);
+        k.box(0.004, 0.06, 0.08, M.inner('#fbfbf8', 0.5), [cx - 0.1, ty + 0.14, z - 0.3], [0, 0, -0.3]);
+        k.box(0.05, 0.06, 0.07, mDark, [cx + 0.04, ty + 0.03, z - 0.34]);
+        const sc = S.k.group([cx + 0.04, ty + 0.08, z - 0.34], 0); const ksc = ctx.kit(sc);
+        ksc.box(0.035, 0.11, 0.04, mInk, [0, 0.02, 0], [0, 0, 0.2]); ksc.box(0.06, 0.05, 0.07, mInk, [0.03, 0.08, 0], [0, 0, -0.4]);
+        ksc.box(0.004, 0.03, 0.05, M.glow('#ff6a5a', 1.0), [0.062, 0.07, 0], [0, 0, -0.4]);
+        k.box(0.16, 0.012, 0.12, M.inner('#b48a62', 0.3), [cx + 0.25, ty + 0.006, z + 0.02]);
       }
-      const rHotS = A.glow.region(160, 30, (g, w, h) => { g.fillStyle = '#e8506a'; g.fillRect(0, 0, w, h); U.text(g, 'ホットスナック', w / 2, h / 2 + 1, 18, F.round, '#fff', { weight: 900 }); });
-      S.card(rHotS, 0.5, 0.09, [bx + hd / 2 + 0.003, ty + hh - 0.03, z], [0, Math.PI / 2, 0]);
-    }
-    // 中華まん steamer (glass box, white buns)
-    {
-      const z = -6.75, bx = cx + 0.02, sw = 0.38, sd = 0.4, shh = 0.42;
-      k.box(sd, 0.05, sw, mMetal, [bx, ty + 0.025, z]); k.box(sd, 0.04, sw, mMetal, [bx, ty + shh - 0.02, z]);
-      for (const [dx, dz] of [[-1, -1], [1, -1], [-1, 1], [1, 1]]) k.box(0.02, shh, 0.02, mMetal, [bx + dx * (sd / 2 - 0.01), ty + shh / 2, z + dz * (sw / 2 - 0.01)]);
-      k.box(sd - 0.04, shh - 0.08, sw - 0.04, M.glass({ opacity: 0.3 }), [bx, ty + shh / 2, z]).castShadow = false;
-      const hg = S.k.group([bx, ty, z], Math.PI / 2);
-      for (const ly of [0.06, 0.22]) { ctx.kit(hg).box(sw - 0.05, 0.01, sd - 0.06, mMetal, [0, ly, 0]); for (let i = 0; i < 3; i++) for (let j = 0; j < 2; j++) G.add('blob', hg, [-0.1 + i * 0.1, ly + 0.005, 0.07 - j * 0.12], [0.085, 0.06, 0.085], ly > 0.1 && i === 2 ? '#f2d0a0' : '#f4f1ea'); }
-      const rMan = A.glow.region(120, 30, (g, w, h) => { g.fillStyle = '#fbf8f0'; g.fillRect(0, 0, w, h); g.fillStyle = '#d9463b'; g.fillRect(0, 0, 10, h); U.text(g, '中華まん', w / 2 + 4, h / 2 + 1, 18, F.round, '#d9463b', { weight: 900 }); });
-      S.card(rMan, 0.3, 0.075, [bx + sd / 2 + 0.003, ty + shh - 0.02, z], [0, Math.PI / 2, 0]);
-    }
-    // donut case
-    {
-      const z = -8.2;
-      k.box(0.4, 0.02, 0.34, mMetal, [cx, ty + 0.01, z]);
-      k.box(0.4, 0.3, 0.34, M.glass({ opacity: 0.22 }), [cx, ty + 0.17, z]).castShadow = false;
-      for (let i = 0; i < 6; i++) k.mesh(new THREE.TorusGeometry(0.035, 0.016, 6, 12), M.inner(['#d99a4a', '#f7d3de', '#8a5a44', '#f2c230', '#f4ecd8', '#d99a4a'][i], 0.35), [cx - 0.1 + (i % 2) * 0.2, ty + 0.04 + Math.floor(i / 2) * 0.09, z - 0.08 + (i % 3) * 0.08], [Math.PI / 2, 0, 0]);
-    }
-    // self-serve coffee machine (faces the customers, +x)
-    {
-      const z = -4.45, bx = cx + 0.0;
-      const cg = S.k.group([bx, ty, z], Math.PI / 2); const kc = ctx.kit(cg);
-      kc.rbox(0.36, 0.64, 0.42, 0.03, M.inner('#3f3a44', 0.14), [0, 0.32, -0.02]);
-      kc.box(0.3, 0.2, 0.02, M.inner('#2f2a35', 0.1), [0, 0.46, 0.2]);
-      const rCof = A.glow.region(96, 64, (g, w, h) => { g.fillStyle = '#2f2a35'; g.fillRect(0, 0, w, h); g.fillStyle = '#e9a23b'; U.rr(g, 6, 6, w - 12, 18, 4); g.fill(); U.text(g, 'HOT  ·  ICE', w / 2, 16, 11, F.en, '#fff', { weight: 900 }); const b = [['R', '#6fd0c4'], ['L', '#6fd0c4'], ['R', '#8fc3e8'], ['L', '#8fc3e8']]; b.forEach(([t, c], i) => { g.fillStyle = c; U.rr(g, 8 + i * 21, 32, 17, 22, 4); g.fill(); U.text(g, t, 16 + i * 21, 43, 12, F.en, '#2f2a35', { weight: 900 }); }); });
-      S.card(rCof, 0.26, 0.17, [0, 0.46, 0.212], null, null, kc);
-      kc.box(0.24, 0.2, 0.12, M.inner('#1f1c24', 0.05), [0, 0.2, 0.15]);
-      kc.cyl(0.018, 0.012, 0.05, mMetal, [0, 0.28, 0.14], null, 8);
-      kc.box(0.2, 0.015, 0.1, mMetal, [0, 0.105, 0.15]);
-      for (let i = 0; i < 5; i++) kc.box(0.18, 0.004, 0.008, M.inner('#6d747c', 0.2), [0, 0.114, 0.11 + i * 0.02]);
-      kc.box(0.2, 0.12, 0.2, M.glass({ opacity: 0.35, tint: '#6b4a37' }), [0, 0.7, -0.08]).castShadow = false;
-      kc.box(0.18, 0.08, 0.18, M.inner('#4a2c1e', 0.1), [0, 0.68, -0.08]);
-      kc.box(0.21, 0.015, 0.21, mInk, [0, 0.765, -0.08]);
-      G.add('mcup', cg, [0, 0.115, 0.14], [0.08, 0.1, 0.08], '#f4f1e8');
+      // hot-snack warmer (glass case, two trays of individual fried snacks)
+      {
+        const z = -5.02, hw = 0.64, hd = 0.46, hh = 0.5, bx = cx + 0.02;
+        k.box(hd, 0.06, hw, mMetal, [bx, ty + 0.03, z]);
+        k.box(hd, 0.06, hw, mMetal, [bx, ty + hh - 0.03, z]);
+        for (const [dx, dz] of [[-1, -1], [1, -1], [-1, 1], [1, 1]]) k.box(0.025, hh, 0.025, mMetal, [bx + dx * (hd / 2 - 0.012), ty + hh / 2, z + dz * (hw / 2 - 0.012)]);
+        k.box(hd - 0.04, 0.012, hw - 0.04, mLamp, [bx, ty + hh - 0.065, z]);
+        k.plane(hw - 0.04, hh - 0.12, M.glass({ opacity: 0.2 }), [bx + hd / 2, ty + hh / 2, z], [0, Math.PI / 2, 0]).castShadow = false;
+        for (const s of [-1, 1]) k.plane(hd - 0.04, hh - 0.12, M.glass({ opacity: 0.2 }), [bx, ty + hh / 2, z + s * hw / 2], [0, 0, 0]).castShadow = false;
+        k.box(0.02, hh - 0.08, hw - 0.04, M.inner('#e9e6de', 0.4), [bx - hd / 2 + 0.01, ty + hh / 2, z]);
+        const hg = S.k.group([bx, ty, z], Math.PI / 2);
+        const rs = ctx.rng('kb.hot');
+        for (const [ly, items] of [[0.07, 'chicken'], [0.25, 'mixed']]) {
+          ctx.kit(hg).box(hw - 0.06, 0.012, hd - 0.08, mMetal, [0, ly, 0], [-0.12, 0, 0]);
+          for (let i = 0; i < 6; i++) {
+            const x = -hw / 2 + 0.07 + i * (hw - 0.14) / 5;
+            if (items === 'chicken') { for (let j = 0; j < 2; j++) G.add('blob', hg, [x + (rs() - 0.5) * 0.01, ly + 0.01 + j * 0.012, 0.07 - j * 0.12], [0.085, 0.045, 0.1], rs.pick(['#c98a4a', '#d99a50', '#b87a3a']), [0, rs() * 3, 0]); }
+            else if (i < 2) { G.add('mcup', hg, [x, ly + 0.01, 0.04], [0.07, 0.08, 0.05], '#d9463b'); for (let j = 0; j < 3; j++) G.add('blob', hg, [x + (j - 1) * 0.018, ly + 0.08, 0.04], [0.03, 0.028, 0.03], '#c98a4a'); }
+            else if (i < 4) { for (let j = 0; j < 2; j++) G.add('blob', hg, [x, ly + 0.01, 0.07 - j * 0.12], [0.08, 0.035, 0.06], '#d9a05a', [0, 0.3, 0]); }
+            else { G.add('blob', hg, [x, ly + 0.01, 0.02], [0.05, 0.04, 0.16], '#e8c48a', [0, 0, 0]); G.add('blob', hg, [x, ly + 0.035, 0.02], [0.028, 0.028, 0.18], '#c9574a'); }
+          }
+          S.card(rRail, hw - 0.06, 0.02, [0, ly - 0.006, hd / 2 - 0.035], null, null, ctx.kit(hg));
+        }
+        const rHotS = A.glow.region(160, 30, (g, w, h) => { g.fillStyle = '#e8506a'; g.fillRect(0, 0, w, h); U.text(g, 'ホットスナック', w / 2, h / 2 + 1, 18, F.round, '#fff', { weight: 900 }); });
+        S.card(rHotS, 0.5, 0.09, [bx + hd / 2 + 0.003, ty + hh - 0.03, z], [0, Math.PI / 2, 0]);
+      }
+      // 中華まん steamer (glass box, white buns)
+      {
+        const z = -6.75, bx = cx + 0.02, sw = 0.38, sd = 0.4, shh = 0.42;
+        k.box(sd, 0.05, sw, mMetal, [bx, ty + 0.025, z]); k.box(sd, 0.04, sw, mMetal, [bx, ty + shh - 0.02, z]);
+        for (const [dx, dz] of [[-1, -1], [1, -1], [-1, 1], [1, 1]]) k.box(0.02, shh, 0.02, mMetal, [bx + dx * (sd / 2 - 0.01), ty + shh / 2, z + dz * (sw / 2 - 0.01)]);
+        k.box(sd - 0.04, shh - 0.08, sw - 0.04, M.glass({ opacity: 0.3 }), [bx, ty + shh / 2, z]).castShadow = false;
+        const hg = S.k.group([bx, ty, z], Math.PI / 2);
+        for (const ly of [0.06, 0.22]) { ctx.kit(hg).box(sw - 0.05, 0.01, sd - 0.06, mMetal, [0, ly, 0]); for (let i = 0; i < 3; i++) for (let j = 0; j < 2; j++) G.add('blob', hg, [-0.1 + i * 0.1, ly + 0.005, 0.07 - j * 0.12], [0.085, 0.06, 0.085], ly > 0.1 && i === 2 ? '#f2d0a0' : '#f4f1ea'); }
+        const rMan = A.glow.region(120, 30, (g, w, h) => { g.fillStyle = '#fbf8f0'; g.fillRect(0, 0, w, h); g.fillStyle = '#d9463b'; g.fillRect(0, 0, 10, h); U.text(g, '中華まん', w / 2 + 4, h / 2 + 1, 18, F.round, '#d9463b', { weight: 900 }); });
+        S.card(rMan, 0.3, 0.075, [bx + sd / 2 + 0.003, ty + shh - 0.02, z], [0, Math.PI / 2, 0]);
+      }
+      // donut case
+      {
+        const z = -8.2;
+        k.box(0.4, 0.02, 0.34, mMetal, [cx, ty + 0.01, z]);
+        k.box(0.4, 0.3, 0.34, M.glass({ opacity: 0.22 }), [cx, ty + 0.17, z]).castShadow = false;
+        for (let i = 0; i < 6; i++) k.mesh(new THREE.TorusGeometry(0.035, 0.016, 6, 12), M.inner(['#d99a4a', '#f7d3de', '#8a5a44', '#f2c230', '#f4ecd8', '#d99a4a'][i], 0.35), [cx - 0.1 + (i % 2) * 0.2, ty + 0.04 + Math.floor(i / 2) * 0.09, z - 0.08 + (i % 3) * 0.08], [Math.PI / 2, 0, 0]);
+      }
+      // self-serve coffee machine (faces the customers, +x)
+      {
+        const z = -4.45, bx = cx + 0.0;
+        const cg = S.k.group([bx, ty, z], Math.PI / 2); const kc = ctx.kit(cg);
+        kc.rbox(0.36, 0.64, 0.42, 0.03, M.inner('#3f3a44', 0.14), [0, 0.32, -0.02]);
+        kc.box(0.3, 0.2, 0.02, M.inner('#2f2a35', 0.1), [0, 0.46, 0.2]);
+        const rCof = A.glow.region(96, 64, (g, w, h) => { g.fillStyle = '#2f2a35'; g.fillRect(0, 0, w, h); g.fillStyle = '#e9a23b'; U.rr(g, 6, 6, w - 12, 18, 4); g.fill(); U.text(g, 'HOT  ·  ICE', w / 2, 16, 11, F.en, '#fff', { weight: 900 }); const b = [['R', '#6fd0c4'], ['L', '#6fd0c4'], ['R', '#8fc3e8'], ['L', '#8fc3e8']]; b.forEach(([t, c], i) => { g.fillStyle = c; U.rr(g, 8 + i * 21, 32, 17, 22, 4); g.fill(); U.text(g, t, 16 + i * 21, 43, 12, F.en, '#2f2a35', { weight: 900 }); }); });
+        S.card(rCof, 0.26, 0.17, [0, 0.46, 0.212], null, null, kc);
+        kc.box(0.24, 0.2, 0.12, M.inner('#1f1c24', 0.05), [0, 0.2, 0.15]);
+        kc.cyl(0.018, 0.012, 0.05, mMetal, [0, 0.28, 0.14], null, 8);
+        kc.box(0.2, 0.015, 0.1, mMetal, [0, 0.105, 0.15]);
+        for (let i = 0; i < 5; i++) kc.box(0.18, 0.004, 0.008, M.inner('#6d747c', 0.2), [0, 0.114, 0.11 + i * 0.02]);
+        kc.box(0.2, 0.12, 0.2, M.glass({ opacity: 0.35, tint: '#6b4a37' }), [0, 0.7, -0.08]).castShadow = false;
+        kc.box(0.18, 0.08, 0.18, M.inner('#4a2c1e', 0.1), [0, 0.68, -0.08]);
+        kc.box(0.21, 0.015, 0.21, mInk, [0, 0.765, -0.08]);
+        G.add('mcup', cg, [0, 0.115, 0.14], [0.08, 0.1, 0.08], '#f4f1e8');
+      }
     }
     // coffee side station at the counter end: cup stacks, lids, stirrers, sugar/milk, trash slot
     {
@@ -541,25 +550,27 @@ export function buildKonbiniInterior(ctx, C, S, D) {
   // ---------------- magazine rack along the front window (magazines face into the shop)
   {
     const x0 = 2.75, x1 = 5.55, z = -3.05, w = x1 - x0, cx = (x0 + x1) / 2;
-    const rg = S.k.group([cx, FY, z], Math.PI); const kr = ctx.kit(rg); // local +z = into the shop
-    kr.box(w, 1.05, 0.03, M.inner('#e3e1da', 0.3), [0, 0.525, -0.19]);
-    kr.box(w, 0.12, 0.44, M.inner('#cfccc4', 0.25), [0, 0.06, 0]);
-    for (const s of [-1, 1]) kr.box(0.03, 1.05, 0.44, M.inner('#d9d6ce', 0.3), [s * w / 2, 0.525, 0]);
-    const r = ctx.rng('kb.mag2');
-    const n = Math.floor(w / 0.235), sp = (w - 0.06) / n;
-    for (let t = 0; t < 3; t++) {
-      const y = 0.3 + t * 0.29, zz = 0.1 - t * 0.085;
-      kr.box(w - 0.04, 0.015, 0.14, mShelf, [0, y - 0.008, zz], [0.25, 0, 0]);
-      kr.box(w - 0.04, 0.05, 0.012, mTealI, [0, y + 0.015, zz + 0.075]);
-      for (let i = 0; i < n; i++) {
-        const v = r.int(0, 31), nn = r.int(2, 4);
-        for (let j = 0; j < nn; j++) G.add('mag', rg, [-w / 2 + 0.03 + sp * (i + 0.5) + (r() - 0.5) * 0.01, y + 0.004, zz + 0.045 - j * 0.011], [0.2, 0.275, 0.009], white(r), [-0.26, (r() - 0.5) * 0.04, 0], v);
+    if (!authored) {
+      const rg = S.k.group([cx, FY, z], Math.PI); const kr = ctx.kit(rg); // local +z = into the shop
+      kr.box(w, 1.05, 0.03, M.inner('#e3e1da', 0.3), [0, 0.525, -0.19]);
+      kr.box(w, 0.12, 0.44, M.inner('#cfccc4', 0.25), [0, 0.06, 0]);
+      for (const s of [-1, 1]) kr.box(0.03, 1.05, 0.44, M.inner('#d9d6ce', 0.3), [s * w / 2, 0.525, 0]);
+      const r = ctx.rng('kb.mag2');
+      const n = Math.floor(w / 0.235), sp = (w - 0.06) / n;
+      for (let t = 0; t < 3; t++) {
+        const y = 0.3 + t * 0.29, zz = 0.1 - t * 0.085;
+        kr.box(w - 0.04, 0.015, 0.14, mShelf, [0, y - 0.008, zz], [0.25, 0, 0]);
+        kr.box(w - 0.04, 0.05, 0.012, mTealI, [0, y + 0.015, zz + 0.075]);
+        for (let i = 0; i < n; i++) {
+          const v = r.int(0, 31), nn = r.int(2, 4);
+          for (let j = 0; j < nn; j++) G.add('mag', rg, [-w / 2 + 0.03 + sp * (i + 0.5) + (r() - 0.5) * 0.01, y + 0.004, zz + 0.045 - j * 0.011], [0.2, 0.275, 0.009], white(r), [-0.26, (r() - 0.5) * 0.04, 0], v);
+        }
       }
+      for (let i = 0; i < n; i++) { const v = r.int(0, 31); for (let j = 0; j < 3; j++) G.add('cover', rg, [-w / 2 + 0.03 + sp * (i + 0.5), 0.12, 0.14 - j * 0.03], [0.13, 0.16, 0.028], white(r), [-0.1, 0, 0], v); }
+      const rMagSign = A.inner.region(160, 40, (g, w2, h2) => { g.fillStyle = TEAL; g.fillRect(0, 0, w2, h2); U.text(g, '雑誌・コミック', w2 / 2, h2 / 2 + 1, 22, F.sans, '#fff', { weight: 700 }); });
+      kr.box(0.84, 0.22, 0.02, mTealI, [0, 1.16, -0.18]);
+      S.card(rMagSign, 0.8, 0.2, [0, 1.16, -0.168], null, null, kr);
     }
-    for (let i = 0; i < n; i++) { const v = r.int(0, 31); for (let j = 0; j < 3; j++) G.add('cover', rg, [-w / 2 + 0.03 + sp * (i + 0.5), 0.12, 0.14 - j * 0.03], [0.13, 0.16, 0.028], white(r), [-0.1, 0, 0], v); }
-    const rMagSign = A.inner.region(160, 40, (g, w2, h2) => { g.fillStyle = TEAL; g.fillRect(0, 0, w2, h2); U.text(g, '雑誌・コミック', w2 / 2, h2 / 2 + 1, 22, F.sans, '#fff', { weight: 700 }); });
-    kr.box(0.84, 0.22, 0.02, mTealI, [0, 1.16, -0.18]);
-    S.card(rMagSign, 0.8, 0.2, [0, 1.16, -0.168], null, null, kr);
     S.box(cx, z, w, 0.46, -1, FY + 1.05);
   }
 

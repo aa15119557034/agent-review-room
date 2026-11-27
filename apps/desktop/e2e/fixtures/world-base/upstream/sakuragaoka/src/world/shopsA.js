@@ -11,11 +11,11 @@ const OPTIONAL = [
   ['books', () => import('./shopsA/books.js'), 'buildBooks'],
 ];
 
-export async function build(ctx) {
+export async function build(ctx, { konbiniFixtures } = {}) {
   const C = makeCommon(ctx);
   C.G = makeGoods(ctx, C); // instanced shop goods (products, books, cups, flowers, tiles…)
   const out = {};
-  buildKonbini(ctx, C);
+  buildKonbini(ctx, C, konbiniFixtures);
   for (const [name, load, fn] of OPTIONAL) {
     let mod = null;
     try { mod = await load(); } catch (e) { if (!/Cannot find|Failed to fetch|ERR_MODULE_NOT_FOUND|404/.test(String(e))) throw e; }

@@ -119,13 +119,14 @@ export function walkExtrasFromRooms(station, city, layout = null) {
   const lotPlans = [];
   const skipped = [];
   for (const room of rooms) {
-    // 上游 8 家店：只有 { lot, box }，用 layout.lotFrame 现算 frame
+    // 上游店铺的房间与入口均使用 lot 局部坐标。
     if (!room.frame && room.lot && layout?.lotFrame && layout?.lotById) {
       const lot = layout.lotById(room.lot);
       if (!lot) { skipped.push({ name: room.lot, why:'lot not found' }); continue; }
       const frame = layout.lotFrame(lot);
       const geom = lotRoomGeom(frame, room.box);
-      const plan = planLotShopEntry(geom, room.lot);
+      const entrance = room.entrances?.[0];
+      const plan = planLotShopEntry(geom, room.lot, entrance?.width, entrance?.x);
       out.push(...plan.areas);
       lotPlans.push({ geom, plan, name: room.lot });
       continue;
@@ -385,10 +386,7 @@ export function lotRoomGeom(frame, box) {
 }
 
 /** 一家 lot 店铺的可走区 + 地面 + 墙（全部站区局部） */
-// 门位覆盖表：上游各店的门/暖帘坐标不同，先留 null（用 lot 中间），有坐标了再填。
-const LOT_DOOR_X = { W1: null, E1: null, W2: null, W4: null, E2: null, E3: null, E5: null, W6: null };
-
-export function planLotShopEntry(geom, name, doorW = 1.4) {
+export function planLotShopEntry(geom, name, doorW = 1.4, doorX = (geom.lotX0 + geom.lotX1) / 2) {
   const a = geom.aabb;
   const areas = [
     { name: 'room-' + name, x0: a.x0 - 0.2, x1: a.x1 + 0.2, z0: a.z0 - 0.2, z1: a.z1 + 0.2 }
@@ -406,7 +404,7 @@ export function planLotShopEntry(geom, name, doorW = 1.4) {
     z1: a.z1 + 0.5 + (fz > 0 ? grow(fz) : 0)
   });
   return {
-    doorX: LOT_DOOR_X[name] ?? ((geom.lotX0 + geom.lotX1) / 2),
+    doorX,
     areas,
     ground: {
       floor: { cx: geom.cx, cz: geom.cz, w: geom.hw * 2, d: geom.hd * 2, rotY: geom.rotY, y: geom.floorY },
@@ -449,7 +447,7 @@ export function addLotShopSolid(station, lotPlans) {
     wall(geom.lotX1 - T / 2, (geom.lotZ0 + geom.lotZ1) / 2, T, geom.lotZ1 - geom.lotZ0);
     // 前墙：中间留门洞
     const zf = geom.lotZ1 - T / 2;
-    const mid = plan.doorX;   // 优先用覆盖表，没有就 lot 中间
+    const mid = plan.doorX;
     const leftW = (mid - doorHalf) - geom.lotX0;
     const rightW = geom.lotX1 - (mid + doorHalf);
     if (leftW > 0.05) wall(geom.lotX0 + leftW / 2, zf, leftW, T);

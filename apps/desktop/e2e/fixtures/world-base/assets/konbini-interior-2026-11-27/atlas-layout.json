@@ -1,0 +1,447 @@
+{
+  "grid": 8,
+  "tile": 128,
+  "items": {
+    "pear": {
+      "cell": [
+        0,
+        0
+      ],
+      "color": "639f68"
+    },
+    "lime": {
+      "cell": [
+        1,
+        0
+      ],
+      "color": "338d7c"
+    },
+    "momo": {
+      "cell": [
+        2,
+        0
+      ],
+      "color": "d9768b"
+    },
+    "cola": {
+      "cell": [
+        3,
+        0
+      ],
+      "color": "b65a54"
+    },
+    "water": {
+      "cell": [
+        4,
+        0
+      ],
+      "color": "568fb5"
+    },
+    "barley": {
+      "cell": [
+        5,
+        0
+      ],
+      "color": "b88b40"
+    },
+    "sencha": {
+      "cell": [
+        6,
+        0
+      ],
+      "color": "4b8065"
+    },
+    "coffee": {
+      "cell": [
+        7,
+        0
+      ],
+      "color": "514d4c"
+    },
+    "milk": {
+      "cell": [
+        0,
+        1
+      ],
+      "color": "f5f0db"
+    },
+    "cocoa": {
+      "cell": [
+        1,
+        1
+      ],
+      "color": "90614d"
+    },
+    "orange": {
+      "cell": [
+        2,
+        1
+      ],
+      "color": "df8859"
+    },
+    "grape": {
+      "cell": [
+        3,
+        1
+      ],
+      "color": "856e9a"
+    },
+    "soup": {
+      "cell": [
+        4,
+        1
+      ],
+      "color": "d29761"
+    },
+    "shio": {
+      "cell": [
+        5,
+        1
+      ],
+      "color": "dba769"
+    },
+    "miso": {
+      "cell": [
+        6,
+        1
+      ],
+      "color": "ad6d59"
+    },
+    "soba": {
+      "cell": [
+        7,
+        1
+      ],
+      "color": "615f81"
+    },
+    "sea": {
+      "cell": [
+        0,
+        2
+      ],
+      "color": "4d7c70"
+    },
+    "crisp": {
+      "cell": [
+        1,
+        2
+      ],
+      "color": "c67150"
+    },
+    "rice": {
+      "cell": [
+        2,
+        2
+      ],
+      "color": "dcb667"
+    },
+    "castella": {
+      "cell": [
+        3,
+        2
+      ],
+      "color": "dc985c"
+    },
+    "mint": {
+      "cell": [
+        4,
+        2
+      ],
+      "color": "599997"
+    },
+    "umi": {
+      "cell": [
+        5,
+        2
+      ],
+      "color": "3b7385"
+    },
+    "sakura": {
+      "cell": [
+        6,
+        2
+      ],
+      "color": "cf7583"
+    },
+    "choco": {
+      "cell": [
+        7,
+        2
+      ],
+      "color": "76515e"
+    },
+    "paper": {
+      "cell": [
+        0,
+        3
+      ],
+      "color": "e5cfb1"
+    },
+    "towel": {
+      "cell": [
+        1,
+        3
+      ],
+      "color": "9bafad"
+    },
+    "powder": {
+      "cell": [
+        2,
+        3
+      ],
+      "color": "5c8f9f"
+    },
+    "bento": {
+      "cell": [
+        3,
+        3
+      ],
+      "color": "313c43"
+    },
+    "lunch": {
+      "cell": [
+        4,
+        3
+      ],
+      "color": "674b4b"
+    },
+    "sando": {
+      "cell": [
+        5,
+        3
+      ],
+      "color": "edc678"
+    },
+    "salmon": {
+      "cell": [
+        6,
+        3
+      ],
+      "color": "988b61"
+    },
+    "ume": {
+      "cell": [
+        7,
+        3
+      ],
+      "color": "668775"
+    },
+    "seaweed": {
+      "cell": [
+        0,
+        4
+      ],
+      "color": "426d69"
+    },
+    "pudding": {
+      "cell": [
+        1,
+        4
+      ],
+      "color": "d4a35b"
+    },
+    "yogurt": {
+      "cell": [
+        2,
+        4
+      ],
+      "color": "8899a7"
+    },
+    "coast": {
+      "cell": [
+        3,
+        4
+      ],
+      "color": "426b89"
+    },
+    "city": {
+      "cell": [
+        4,
+        4
+      ],
+      "color": "c16c65"
+    },
+    "trail": {
+      "cell": [
+        5,
+        4
+      ],
+      "color": "6c8e75"
+    },
+    "craft": {
+      "cell": [
+        6,
+        4
+      ],
+      "color": "806e9b"
+    },
+    "night": {
+      "cell": [
+        7,
+        4
+      ],
+      "color": "3a505e"
+    },
+    "home": {
+      "cell": [
+        0,
+        5
+      ],
+      "color": "ac8059"
+    },
+    "garden": {
+      "cell": [
+        1,
+        5
+      ],
+      "color": "42796b"
+    },
+    "read": {
+      "cell": [
+        2,
+        5
+      ],
+      "color": "a16a75"
+    },
+    "tag_snacks": {
+      "cell": [
+        3,
+        5
+      ],
+      "color": "396e68"
+    },
+    "tag_meals": {
+      "cell": [
+        4,
+        5
+      ],
+      "color": "895b52"
+    },
+    "tag_daily": {
+      "cell": [
+        5,
+        5
+      ],
+      "color": "4f6b82"
+    },
+    "tag_drinks": {
+      "cell": [
+        6,
+        5
+      ],
+      "color": "3b6f81"
+    },
+    "tag_bento": {
+      "cell": [
+        7,
+        5
+      ],
+      "color": "847050"
+    },
+    "tag_read": {
+      "cell": [
+        0,
+        6
+      ],
+      "color": "655984"
+    },
+    "tag_register": {
+      "cell": [
+        1,
+        6
+      ],
+      "color": "33776d"
+    },
+    "offer": {
+      "cell": [
+        2,
+        6
+      ],
+      "color": "b76560"
+    },
+    "warm": {
+      "cell": [
+        3,
+        6
+      ],
+      "color": "9b6654"
+    },
+    "cold": {
+      "cell": [
+        4,
+        6
+      ],
+      "color": "538c97"
+    },
+    "coffee_menu": {
+      "cell": [
+        5,
+        6
+      ],
+      "color": "71504a"
+    },
+    "price_128": {
+      "cell": [
+        6,
+        6
+      ],
+      "color": "f5eacb"
+    },
+    "price_158": {
+      "cell": [
+        7,
+        6
+      ],
+      "color": "f5eacb"
+    },
+    "price_198": {
+      "cell": [
+        0,
+        7
+      ],
+      "color": "f5eacb"
+    },
+    "price_248": {
+      "cell": [
+        1,
+        7
+      ],
+      "color": "f5eacb"
+    },
+    "price_398": {
+      "cell": [
+        2,
+        7
+      ],
+      "color": "f5eacb"
+    },
+    "price_468": {
+      "cell": [
+        3,
+        7
+      ],
+      "color": "f5eacb"
+    },
+    "pos": {
+      "cell": [
+        4,
+        7
+      ],
+      "color": "1e3742"
+    },
+    "terminal": {
+      "cell": [
+        5,
+        7
+      ],
+      "color": "1e3742"
+    },
+    "customer": {
+      "cell": [
+        6,
+        7
+      ],
+      "color": "1e3742"
+    }
+  }
+}
