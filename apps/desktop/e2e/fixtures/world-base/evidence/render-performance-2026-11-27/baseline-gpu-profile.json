@@ -1,0 +1,498 @@
+{
+  "gpuStages": {
+    "sample-g-rail": {
+      "world": {
+        "median": 14.603264,
+        "p95": 16.877568
+      },
+      "overlay": {
+        "median": 0.346112,
+        "p95": 1.204224
+      },
+      "bloom-down": {
+        "median": 0.07782400000000003,
+        "p95": 0.09190400000000001
+      },
+      "bloom-up": {
+        "median": 0.036864,
+        "p95": 0.04710399999999999
+      },
+      "rays": {
+        "median": 0.269312,
+        "p95": 0.69632
+      },
+      "final": {
+        "median": 0.561152,
+        "p95": 0.925696
+      },
+      "total": {
+        "median": 16.285696,
+        "p95": 18.838528
+      }
+    },
+    "art-b-konbini": {
+      "world": {
+        "median": 9.14432,
+        "p95": 9.974784
+      },
+      "overlay": {
+        "median": 0.293888,
+        "p95": 0.550912
+      },
+      "bloom-down": {
+        "median": 0.06963200000000001,
+        "p95": 0.08089600000000001
+      },
+      "bloom-up": {
+        "median": 0.037888000000000005,
+        "p95": 0.047392000000000004
+      },
+      "rays": {
+        "median": 0.239616,
+        "p95": 0.246784
+      },
+      "final": {
+        "median": 0.602112,
+        "p95": 0.615424
+      },
+      "total": {
+        "median": 10.422208000000001,
+        "p95": 11.204384000000001
+      }
+    }
+  },
+  "topDrawGroups": {
+    "sample-g-rail": [
+      [
+        "world: petalwake-island [ShaderMaterial]",
+        {
+          "draws": 3007,
+          "triangles": 227201936
+        }
+      ],
+      [
+        "world: Sakuragaoka / static / static-batched [MeshToonMaterial]",
+        {
+          "draws": 39091,
+          "triangles": 124951520
+        }
+      ],
+      [
+        "world: petalwake-island / larkhaven [ShaderMaterial]",
+        {
+          "draws": 7081,
+          "triangles": 51162165
+        }
+      ],
+      [
+        "world: vegetation-scatter / vegetation-broadleafA [vegetation-broadleafA:solid]",
+        {
+          "draws": 97,
+          "triangles": 50925776
+        }
+      ],
+      [
+        "world: vegetation-scatter / vegetation-broadleafB [vegetation-broadleafB:solid]",
+        {
+          "draws": 97,
+          "triangles": 47800048
+        }
+      ],
+      [
+        "world: vegetation-scatter / vegetation-grassB [vegetation-grassB:solid]",
+        {
+          "draws": 97,
+          "triangles": 23751420
+        }
+      ],
+      [
+        "world: vegetation-scatter / vegetation-grassA [vegetation-grassA:solid]",
+        {
+          "draws": 97,
+          "triangles": 23693802
+        }
+      ],
+      [
+        "world: vegetation-scatter / vegetation-conifer [vegetation-conifer:solid]",
+        {
+          "draws": 97,
+          "triangles": 22365096
+        }
+      ],
+      [
+        "world: vegetation-scatter / vegetation-bushA [vegetation]",
+        {
+          "draws": 97,
+          "triangles": 17421200
+        }
+      ],
+      [
+        "world: vegetation-scatter / vegetation-bushB [vegetation]",
+        {
+          "draws": 97,
+          "triangles": 17004100
+        }
+      ],
+      [
+        "world: Sakuragaoka / static / houses / houses [foliage-clumps]",
+        {
+          "draws": 97,
+          "triangles": 16906906
+        }
+      ],
+      [
+        "world: Sakuragaoka / static / env-terrain / env-terrain-ground [env-ground]",
+        {
+          "draws": 97,
+          "triangles": 12681780
+        }
+      ],
+      [
+        "world: vegetation-scatter / vegetation-bushA-cards [vegetation-bushA:card]",
+        {
+          "draws": 97,
+          "triangles": 10452720
+        }
+      ],
+      [
+        "world: vegetation-scatter / vegetation-bushB-cards [vegetation-bushB:card]",
+        {
+          "draws": 97,
+          "triangles": 10202460
+        }
+      ],
+      [
+        "world: Sakuragaoka / static / sakura / sakura-mass--1,-1 [sakura:blob]",
+        {
+          "draws": 97,
+          "triangles": 7731676
+        }
+      ],
+      [
+        "world: Sakuragaoka / static / railway / rw-stones-oct [MeshToonMaterial]",
+        {
+          "draws": 97,
+          "triangles": 6684464
+        }
+      ],
+      [
+        "world: Sakuragaoka / static / shopsA-goods-book-W4 [shopsA-goods-book-0.42]",
+        {
+          "draws": 97,
+          "triangles": 5307840
+        }
+      ],
+      [
+        "world: Sakuragaoka / static / sakura / sakura-mass-0,-2 [sakura:blob]",
+        {
+          "draws": 97,
+          "triangles": 5197648
+        }
+      ],
+      [
+        "world: Sakuragaoka / static / plaza / plaza-plants [MeshToonMaterial]",
+        {
+          "draws": 291,
+          "triangles": 5066892
+        }
+      ],
+      [
+        "world: Sakuragaoka / static / sakura / sakura-mass-1,-2 [sakura:blob]",
+        {
+          "draws": 97,
+          "triangles": 4342108
+        }
+      ],
+      [
+        "shadow: Sakuragaoka / static / static-batched [MeshDepthMaterial]",
+        {
+          "draws": 1194,
+          "triangles": 4273422
+        }
+      ],
+      [
+        "world: Sakuragaoka / static / sakura / sakura-mass--2,-2 [sakura:blob]",
+        {
+          "draws": 97,
+          "triangles": 4194280
+        }
+      ],
+      [
+        "world: vegetation-scatter / vegetation-flowerYellow-cards [vegetation-flowerYellow:card]",
+        {
+          "draws": 97,
+          "triangles": 3991356
+        }
+      ],
+      [
+        "world: vegetation-scatter / vegetation-flowerWhite-cards [vegetation-flowerWhite:card]",
+        {
+          "draws": 97,
+          "triangles": 3926754
+        }
+      ],
+      [
+        "world: Sakuragaoka / static / static-batched [MeshBasicMaterial]",
+        {
+          "draws": 5529,
+          "triangles": 3895520
+        }
+      ],
+      [
+        "world: Sakuragaoka / static / sakura / sakura-mass-0,-1 [sakura:blob]",
+        {
+          "draws": 97,
+          "triangles": 3810160
+        }
+      ],
+      [
+        "world: Sakuragaoka / static / sakura / sakura-mass--1,0 [sakura:blob]",
+        {
+          "draws": 97,
+          "triangles": 3805504
+        }
+      ],
+      [
+        "world: Sakuragaoka / static / railway / rw-clips [MeshToonMaterial]",
+        {
+          "draws": 97,
+          "triangles": 3724800
+        }
+      ],
+      [
+        "world: Sakuragaoka / wires [ShaderMaterial]",
+        {
+          "draws": 97,
+          "triangles": 3541664
+        }
+      ],
+      [
+        "world: Sakuragaoka / static / shopsB-inst-sph [shopsB-inst]",
+        {
+          "draws": 97,
+          "triangles": 3535650
+        }
+      ]
+    ],
+    "art-b-konbini": [
+      [
+        "world: petalwake-island [ShaderMaterial]",
+        {
+          "draws": 3492,
+          "triangles": 243506860
+        }
+      ],
+      [
+        "world: Sakuragaoka / static / static-batched [MeshToonMaterial]",
+        {
+          "draws": 15132,
+          "triangles": 81067362
+        }
+      ],
+      [
+        "world: vegetation-scatter / vegetation-broadleafA [vegetation-broadleafA:solid]",
+        {
+          "draws": 97,
+          "triangles": 50925776
+        }
+      ],
+      [
+        "world: vegetation-scatter / vegetation-broadleafB [vegetation-broadleafB:solid]",
+        {
+          "draws": 97,
+          "triangles": 47800048
+        }
+      ],
+      [
+        "world: petalwake-island / larkhaven [ShaderMaterial]",
+        {
+          "draws": 4559,
+          "triangles": 46683093
+        }
+      ],
+      [
+        "world: vegetation-scatter / vegetation-grassB [vegetation-grassB:solid]",
+        {
+          "draws": 97,
+          "triangles": 23751420
+        }
+      ],
+      [
+        "world: vegetation-scatter / vegetation-grassA [vegetation-grassA:solid]",
+        {
+          "draws": 97,
+          "triangles": 23693802
+        }
+      ],
+      [
+        "world: vegetation-scatter / vegetation-conifer [vegetation-conifer:solid]",
+        {
+          "draws": 97,
+          "triangles": 22365096
+        }
+      ],
+      [
+        "world: vegetation-scatter / vegetation-bushA [vegetation]",
+        {
+          "draws": 97,
+          "triangles": 17421200
+        }
+      ],
+      [
+        "world: vegetation-scatter / vegetation-bushB [vegetation]",
+        {
+          "draws": 97,
+          "triangles": 17004100
+        }
+      ],
+      [
+        "world: Sakuragaoka / static / houses / houses [foliage-clumps]",
+        {
+          "draws": 97,
+          "triangles": 16906906
+        }
+      ],
+      [
+        "world: Sakuragaoka / static / env-terrain / env-terrain-ground [env-ground]",
+        {
+          "draws": 97,
+          "triangles": 12681780
+        }
+      ],
+      [
+        "world: vegetation-scatter / vegetation-bushA-cards [vegetation-bushA:card]",
+        {
+          "draws": 97,
+          "triangles": 10452720
+        }
+      ],
+      [
+        "world: vegetation-scatter / vegetation-bushB-cards [vegetation-bushB:card]",
+        {
+          "draws": 97,
+          "triangles": 10202460
+        }
+      ],
+      [
+        "world: Sakuragaoka / static / sakura / sakura-mass--1,-1 [sakura:blob]",
+        {
+          "draws": 97,
+          "triangles": 7731676
+        }
+      ],
+      [
+        "world: Sakuragaoka / static / railway / rw-stones-oct [MeshToonMaterial]",
+        {
+          "draws": 97,
+          "triangles": 6684464
+        }
+      ],
+      [
+        "shadow: Sakuragaoka / static / static-batched [MeshDepthMaterial]",
+        {
+          "draws": 1194,
+          "triangles": 4273422
+        }
+      ],
+      [
+        "world: Sakuragaoka / static / sakura / sakura-mass--2,-2 [sakura:blob]",
+        {
+          "draws": 97,
+          "triangles": 4194280
+        }
+      ],
+      [
+        "world: vegetation-scatter / vegetation-flowerYellow-cards [vegetation-flowerYellow:card]",
+        {
+          "draws": 97,
+          "triangles": 3991356
+        }
+      ],
+      [
+        "world: vegetation-scatter / vegetation-flowerWhite-cards [vegetation-flowerWhite:card]",
+        {
+          "draws": 97,
+          "triangles": 3926754
+        }
+      ],
+      [
+        "world: Sakuragaoka / static / sakura / sakura-mass--1,0 [sakura:blob]",
+        {
+          "draws": 97,
+          "triangles": 3805504
+        }
+      ],
+      [
+        "world: Sakuragaoka / static / railway / rw-clips [MeshToonMaterial]",
+        {
+          "draws": 97,
+          "triangles": 3724800
+        }
+      ],
+      [
+        "world: Sakuragaoka / wires [ShaderMaterial]",
+        {
+          "draws": 97,
+          "triangles": 3541664
+        }
+      ],
+      [
+        "world: Sakuragaoka / static / shopsB-inst-sph [shopsB-inst]",
+        {
+          "draws": 97,
+          "triangles": 3535650
+        }
+      ],
+      [
+        "world: Sakuragaoka / static / houses-far [MeshToonMaterial]",
+        {
+          "draws": 873,
+          "triangles": 3364736
+        }
+      ],
+      [
+        "world: Sakuragaoka / static / railway / rw-plates [MeshToonMaterial]",
+        {
+          "draws": 97,
+          "triangles": 3148620
+        }
+      ],
+      [
+        "world: vegetation-scatter / vegetation-hedge [vegetation]",
+        {
+          "draws": 97,
+          "triangles": 3147456
+        }
+      ],
+      [
+        "world: petalwake-island / fields [ShaderMaterial]",
+        {
+          "draws": 2037,
+          "triangles": 3073542
+        }
+      ],
+      [
+        "world: Sakuragaoka / static / sakura / sakura-mass--1,-2 [sakura:blob]",
+        {
+          "draws": 97,
+          "triangles": 3072960
+        }
+      ],
+      [
+        "world: vegetation-scatter / vegetation-young [vegetation-young:solid]",
+        {
+          "draws": 97,
+          "triangles": 2953068
+        }
+      ]
+    ]
+  },
+  "B-base-typicalDraws": 524.0,
+  "B-base-typicalTriangles": 7736115.0,
+  "B-candidate-typicalDraws": 612.0,
+  "B-candidate-typicalTriangles": 5979093.0,
+  "G-base-typicalDraws": 1032.0,
+  "G-base-typicalTriangles": 8665483.0,
+  "G-candidate-typicalDraws": 1084.0,
+  "G-candidate-typicalTriangles": 6366602.0
+}

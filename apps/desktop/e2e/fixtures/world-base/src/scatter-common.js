@@ -274,6 +274,19 @@ export function makeBatches({ name, model, materials, items }) {
   return out;
 }
 
+/** Group opaque, rigid instances by location so each draw has tight world bounds. */
+export function partitionOpaqueInstances(model, items, cell) {
+  if (!model.geometry || model.cardGeometry || model.windowGeometry || items.length < 128) return [items];
+  const cells = new Map();
+  for (const item of items) {
+    const key = `${Math.floor(item.x / cell)},${Math.floor(item.z / cell)}`;
+    let group = cells.get(key);
+    if (!group) cells.set(key, (group = []));
+    group.push(item);
+  }
+  return [...cells.values()];
+}
+
 // ---- spatial index of rectangles ----------------------------------------------------------------------------------------------
 class RectGrid {
   constructor(cell = 24) { this.cell = cell; this.map = new Map(); this.rects = []; }

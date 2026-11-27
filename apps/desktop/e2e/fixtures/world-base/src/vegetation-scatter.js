@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { loadTable, loadModels, pickWeighted, makeMaterial, makeMaterialSet, makeBatch, makeBatches, limitInstancedDetailDistance, getAerial, getContext, hash32, rngFrom, fbm, noise2, smooth, focusFalloff } from './scatter-common.js';
+import { loadTable, loadModels, pickWeighted, makeMaterial, makeMaterialSet, makeBatch, makeBatches, partitionOpaqueInstances, limitInstancedDetailDistance, getAerial, getContext, hash32, rngFrom, fbm, noise2, smooth, focusFalloff } from './scatter-common.js';
 import { addStationLawn } from './transition.js';
 import { SWARD_COOL, SWARD_WARM, SWARD_WARMTH, SWARD_DAPPLE, SWARD_PAINT_FIELD, SWARD_EXPOSURE } from './island-ground.js';
 import { ATMOSPHERE, CLOUD_SHADOW, NOISE, TERRAIN_LOOKUP, VALUE_NOISE_2D } from '../upstream/petalwake/src/shaders/common.js';
@@ -28,6 +28,7 @@ import { SKY_UNIFORMS } from '../upstream/petalwake/src/world/sky.js';
 export const vegEnabled = () => new URLSearchParams(location.search).get('veg') !== 'off';
 // Keep the complete F and H plantings in their own approved views.
 const MEADOW_DETAIL_DISTANCE = 110;
+const ISLAND_BATCH_CELL = 640;
 
 export const PARAMS = {
   seed: 2112,
@@ -512,10 +513,15 @@ export async function createVegetation({ scene, worldBase, island, station, flow
 
   // ---- batches --------------------------------------------------------------------------------------------------------------------------------------
   let drawCalls = 0, triangles = 0; const counts = {}, lods = [], LP = table.vegetation.lod;
+  const grassModels = new Set(SP.grass.models.map(({ id }) => id));
   for (const [kind, list] of Object.entries(items)) {
     const near = LP && model[kind].spec.near ? model[model[kind].spec.near] : null;
     if (near) { const lod = makeTreeLod({ far: model[kind], near, list, params: LP, materials, root, name: 'vegetation-' + kind }); lods.push(lod); drawCalls += lod.drawCalls; triangles += model[kind].tris * list.length; counts[kind] = list.length; continue; }
-    for (const mesh of makeBatches({ name: 'vegetation-' + kind, model: model[kind], materials, items: list })) { root.add(mesh); drawCalls++; }
+    const groups = grassModels.has(kind) ? partitionOpaqueInstances(model[kind], list, ISLAND_BATCH_CELL) : [list];
+    for (const [index, batch] of groups.entries()) {
+      const name = 'vegetation-' + kind + (groups.length > 1 ? '-cell-' + index : '');
+      for (const mesh of makeBatches({ name, model: model[kind], materials, items: batch })) { root.add(mesh); drawCalls++; }
+    }
     triangles += model[kind].tris * list.length; counts[kind] = list.length;
   }
   // Root grass and the folded blades are visible only in their own habitats, even in reflection views.
@@ -567,18 +573,27 @@ export async function createVegetation({ scene, worldBase, island, station, flow
 }
 
 /**
- * Distance LOD of one far (light) model and its near (v2) model, per instance but without a mesh per tree. The far InstancedMesh holds every tree, sorted by square
- * cell (`params.cell` m); a tree that is near is collapsed there (zero matrix) and written into the near InstancedMesh(es) (capacity `nearMax`, nearest first). The camera
+ * Distance LOD of one far (light) model and its near (v2) model, per instance but without a mesh per tree. A far batch holds its own part of the island;
+ * a tree that is near is collapsed there (zero matrix) and written into the near InstancedMesh(es) (capacity `nearMax`, nearest first). The camera
  * is only compared with the cells' boxes first, and nothing is recomputed until it moved `params.step` m. Hysteresis: near at < nearDist, far again at > nearDist + hysteresis.
  */
 function makeTreeLod({ far: farModel, near, list, params, materials, root, name }) {
   const cell = params.cell, key = r => Math.floor(r.x / cell) * 4096 + Math.floor(r.z / cell), nearMax = params.nearMax;
   const sorted = [...list].sort((a, b) => key(a) - key(b));
-  const farMeshes = makeBatches({ name, model: farModel, materials, items: sorted });
+  const groups = partitionOpaqueInstances(farModel, sorted, ISLAND_BATCH_CELL);
+  const farSlots = new Map();
+  const farMeshes = groups.flatMap((items, index) => {
+    const groupName = groups.length > 1 ? `${name}-cell-${index}` : name;
+    const meshes = makeBatches({ name: groupName, model: farModel, materials, items });
+    const matrices = meshes[0].instanceMatrix.array.slice();
+    const colors = meshes[0].instanceColor.array;
+    items.forEach((item, slot) => farSlots.set(item, { meshes, matrices, colors, slot }));
+    return meshes;
+  });
   const dummy = Array.from({ length: nearMax }, () => ({ x: 0, y: 0, z: 0 })), nearMeshes = makeBatches({ name: name + '-near', model: near, materials, items: dummy });
   for (const m of nearMeshes) { m.count = 0; m.frustumCulled = false; }
   for (const m of farMeshes) root.add(m); for (const m of nearMeshes) root.add(m);
-  const far = farMeshes[0], origM = far.instanceMatrix.array.slice(), origC = far.instanceColor.array.slice(), isNear = new Uint8Array(sorted.length);
+  const isNear = new Uint8Array(sorted.length);
   const cells = new Map();
   sorted.forEach((t, i) => { const k = key(t); let c = cells.get(k); if (!c) cells.set(k, (c = { minX: Infinity, maxX: -Infinity, minZ: Infinity, maxZ: -Infinity, idx: [] })); c.idx.push(i); c.minX = Math.min(c.minX, t.x); c.maxX = Math.max(c.maxX, t.x); c.minZ = Math.min(c.minZ, t.z); c.maxZ = Math.max(c.maxZ, t.z); });
   // debug ?lod=near / ?lod=far: force every tree within `nearForceDist` m to v2 (still capped by nearMax), or none
@@ -596,7 +611,7 @@ function makeTreeLod({ far: farModel, near, list, params, materials, root, name 
       for (const i of c.idx) { const t = sorted[i], d = Math.hypot(t.x - cam.x, t.z - cam.z); if (d < nearDist || (isNear[i] && d < reach)) cand.push([d, i]); }
     }
     cand.sort((a, b) => a[0] - b[0]); if (cand.length > nearMax) cand.length = nearMax;
-    const chosen = new Set(cand.map(c => c[1])); let changed = false;
+    const chosen = new Set(cand.map(c => c[1])), changed = new Set();
     // trees that are no longer near come back, newly near ones are collapsed in the far mesh
     for (const c of cellList) {
       const dx = Math.max(c.minX - cam.x, 0, cam.x - c.maxX), dz = Math.max(c.minZ - cam.z, 0, cam.z - c.maxZ), inReach = dx * dx + dz * dz <= reach * reach;
@@ -604,20 +619,27 @@ function makeTreeLod({ far: farModel, near, list, params, materials, root, name 
         if (!inReach && !isNear[i]) continue;
         const want = chosen.has(i);
         if (want === !!isNear[i]) continue;
-        isNear[i] = want ? 1 : 0; changed = true;
-        for (const mesh of farMeshes) {
-          const matrices = mesh.instanceMatrix.array;
-          if (want) matrices.fill(0, i * 16, i * 16 + 16);
-          else matrices.set(origM.subarray(i * 16, i * 16 + 16), i * 16);
+        isNear[i] = want ? 1 : 0;
+        const { meshes, matrices, slot } = farSlots.get(sorted[i]);
+        const start = slot * 16;
+        for (const mesh of meshes) {
+          const far = mesh.instanceMatrix.array;
+          if (want) far.fill(0, start, start + 16);
+          else far.set(matrices.subarray(start, start + 16), start);
+          changed.add(mesh);
         }
         // Far instance colours are never changed when a tree is hidden.
       }
     }
-    if (changed) for (const mesh of farMeshes) mesh.instanceMatrix.needsUpdate = true;
+    for (const mesh of changed) mesh.instanceMatrix.needsUpdate = true;
     // the near meshes: the chosen trees, nearest first
     nearCount = cand.length;
     for (const m of nearMeshes) {
-      cand.forEach(([, i], n) => { m.instanceMatrix.array.set(origM.subarray(i * 16, i * 16 + 16), n * 16); m.instanceColor.array.set(origC.subarray(i * 3, i * 3 + 3), n * 3); });
+      cand.forEach(([, i], n) => {
+        const { matrices, colors, slot } = farSlots.get(sorted[i]);
+        m.instanceMatrix.array.set(matrices.subarray(slot * 16, slot * 16 + 16), n * 16);
+        m.instanceColor.array.set(colors.subarray(slot * 3, slot * 3 + 3), n * 3);
+      });
       m.count = nearCount; m.instanceMatrix.needsUpdate = true; m.instanceColor.needsUpdate = true;
     }
     return { near: nearCount, far: sorted.length - nearCount };
