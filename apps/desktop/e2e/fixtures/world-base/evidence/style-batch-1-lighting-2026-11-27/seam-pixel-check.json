@@ -1,0 +1,691 @@
+{
+  "defaultVsDiagnosticOn": {
+    "maximumRgbChannelDifference": 0,
+    "pixelsDifferingByMoreThan1": 0
+  },
+  "enabledVsDisabled": {
+    "changedRgbPixelsAbove3": 201283,
+    "full": {
+      "pixels": 1296000,
+      "darkenedBy3": 201054,
+      "brightenedBy3": 0,
+      "lumaPcts": [
+        0.0,
+        0.0,
+        0.0,
+        14.49,
+        26.35
+      ]
+    },
+    "lowerGround": {
+      "pixels": 422100,
+      "darkenedBy3": 170553,
+      "brightenedBy3": 0,
+      "lumaPcts": [
+        0.0,
+        0.0,
+        0.0,
+        21.14,
+        35.92
+      ]
+    },
+    "skyAndUpperBuildings": {
+      "pixels": 330600,
+      "darkenedBy3": 0,
+      "brightenedBy3": 0,
+      "lumaPcts": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    }
+  },
+  "raysByReceiver": {
+    "env-terrain-ground": [
+      {
+        "floor": [
+          367.5,
+          11.079999923706055,
+          1015
+        ],
+        "pixel": [
+          4,
+          725
+        ],
+        "rayHasCaster": true,
+        "pixels": 25,
+        "darkenedBy3": 25,
+        "brightenedBy3": 0,
+        "lumaPcts": [
+          6.86,
+          6.93,
+          7.86,
+          8.86,
+          15.42
+        ]
+      },
+      {
+        "floor": [
+          369.2,
+          11.079999923706055,
+          1015
+        ],
+        "pixel": [
+          258,
+          679
+        ],
+        "rayHasCaster": true,
+        "pixels": 25,
+        "darkenedBy3": 25,
+        "brightenedBy3": 0,
+        "lumaPcts": [
+          16.8,
+          17.35,
+          18.78,
+          19.91,
+          20.23
+        ]
+      },
+      {
+        "floor": [
+          371,
+          11.079999923706055,
+          1015
+        ],
+        "pixel": [
+          449,
+          645
+        ],
+        "rayHasCaster": true,
+        "pixels": 25,
+        "darkenedBy3": 25,
+        "brightenedBy3": 0,
+        "lumaPcts": [
+          17.5,
+          19.14,
+          21.07,
+          25.27,
+          25.85
+        ]
+      },
+      {
+        "floor": [
+          367.5,
+          11.135999917984009,
+          1017
+        ],
+        "pixel": [
+          33,
+          800
+        ],
+        "rayHasCaster": true,
+        "pixels": 25,
+        "darkenedBy3": 25,
+        "brightenedBy3": 0,
+        "lumaPcts": [
+          7.14,
+          7.86,
+          8.78,
+          9.7,
+          17.94
+        ]
+      },
+      {
+        "floor": [
+          369.2,
+          11.135999917984009,
+          1017
+        ],
+        "pixel": [
+          344,
+          728
+        ],
+        "rayHasCaster": true,
+        "pixels": 25,
+        "darkenedBy3": 25,
+        "brightenedBy3": 0,
+        "lumaPcts": [
+          15.17,
+          17.4,
+          19.07,
+          29.56,
+          40.51
+        ]
+      },
+      {
+        "floor": [
+          371,
+          11.135999917984009,
+          1017
+        ],
+        "pixel": [
+          558,
+          677
+        ],
+        "rayHasCaster": true,
+        "pixels": 25,
+        "darkenedBy3": 25,
+        "brightenedBy3": 0,
+        "lumaPcts": [
+          19.86,
+          20.81,
+          22.78,
+          25.97,
+          26.97
+        ]
+      },
+      {
+        "floor": [
+          369.2,
+          11.210199987888338,
+          1019.65
+        ],
+        "pixel": [
+          552,
+          845
+        ],
+        "rayHasCaster": true,
+        "pixels": 25,
+        "darkenedBy3": 25,
+        "brightenedBy3": 0,
+        "lumaPcts": [
+          15.68,
+          16.65,
+          18.42,
+          32.39,
+          43.8
+        ]
+      },
+      {
+        "floor": [
+          371,
+          11.210199987888338,
+          1019.65
+        ],
+        "pixel": [
+          792,
+          748
+        ],
+        "rayHasCaster": false,
+        "pixels": 25,
+        "darkenedBy3": 0,
+        "brightenedBy3": 0,
+        "lumaPcts": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "floor": [
+          371,
+          11.26199996471405,
+          1021.5
+        ],
+        "pixel": [
+          1089,
+          838
+        ],
+        "rayHasCaster": false,
+        "pixels": 25,
+        "darkenedBy3": 0,
+        "brightenedBy3": 0,
+        "lumaPcts": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    ],
+    "station-island-ground-transition": [
+      {
+        "floor": [
+          372.2,
+          11.071010183729229,
+          1015
+        ],
+        "pixel": [
+          548,
+          628
+        ],
+        "rayHasCaster": false,
+        "pixels": 25,
+        "darkenedBy3": 0,
+        "brightenedBy3": 0,
+        "lumaPcts": [
+          0.0,
+          0.0,
+          0.0,
+          0.72,
+          0.88
+        ]
+      },
+      {
+        "floor": [
+          373.1,
+          11.030556353833525,
+          1015
+        ],
+        "pixel": [
+          611,
+          620
+        ],
+        "rayHasCaster": false,
+        "pixels": 25,
+        "darkenedBy3": 0,
+        "brightenedBy3": 0,
+        "lumaPcts": [
+          0.0,
+          0.0,
+          0.0,
+          0.84,
+          0.93
+        ]
+      },
+      {
+        "floor": [
+          372.2,
+          11.126995564717802,
+          1017
+        ],
+        "pixel": [
+          662,
+          654
+        ],
+        "rayHasCaster": true,
+        "pixels": 25,
+        "darkenedBy3": 25,
+        "brightenedBy3": 0,
+        "lumaPcts": [
+          19.29,
+          20.4,
+          23.5,
+          27.08,
+          32.29
+        ]
+      },
+      {
+        "floor": [
+          373.1,
+          11.086477047903458,
+          1017
+        ],
+        "pixel": [
+          727,
+          643
+        ],
+        "rayHasCaster": true,
+        "pixels": 25,
+        "darkenedBy3": 25,
+        "brightenedBy3": 0,
+        "lumaPcts": [
+          14.45,
+          15.47,
+          18.49,
+          20.8,
+          30.35
+        ]
+      },
+      {
+        "floor": [
+          372.2,
+          11.201175671722744,
+          1019.65
+        ],
+        "pixel": [
+          896,
+          707
+        ],
+        "rayHasCaster": false,
+        "pixels": 25,
+        "darkenedBy3": 0,
+        "brightenedBy3": 0,
+        "lumaPcts": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "floor": [
+          373.1,
+          11.160589650878805,
+          1019.65
+        ],
+        "pixel": [
+          956,
+          688
+        ],
+        "rayHasCaster": false,
+        "pixels": 25,
+        "darkenedBy3": 0,
+        "brightenedBy3": 0,
+        "lumaPcts": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "floor": [
+          372.2,
+          11.252961528021835,
+          1021.5
+        ],
+        "pixel": [
+          1168,
+          770
+        ],
+        "rayHasCaster": false,
+        "pixels": 25,
+        "darkenedBy3": 0,
+        "brightenedBy3": 0,
+        "lumaPcts": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "floor": [
+          373.1,
+          11.212325616507698,
+          1021.5
+        ],
+        "pixel": [
+          1211,
+          738
+        ],
+        "rayHasCaster": false,
+        "pixels": 25,
+        "darkenedBy3": 0,
+        "brightenedBy3": 0,
+        "lumaPcts": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    ],
+    "island terrain": [
+      {
+        "floor": [
+          374,
+          10.990163246790559,
+          1015
+        ],
+        "pixel": [
+          666,
+          613
+        ],
+        "rayHasCaster": false,
+        "pixels": 25,
+        "darkenedBy3": 0,
+        "brightenedBy3": 0,
+        "lumaPcts": [
+          0.0,
+          0.0,
+          0.0,
+          0.21,
+          0.72
+        ]
+      },
+      {
+        "floor": [
+          375,
+          10.942723035812373,
+          1015
+        ],
+        "pixel": [
+          720,
+          606
+        ],
+        "rayHasCaster": false,
+        "pixels": 25,
+        "darkenedBy3": 0,
+        "brightenedBy3": 0,
+        "lumaPcts": [
+          0.0,
+          0.0,
+          0.0,
+          0.51,
+          0.72
+        ]
+      },
+      {
+        "floor": [
+          377,
+          10.753082036972014,
+          1015
+        ],
+        "pixel": [
+          810,
+          600
+        ],
+        "rayHasCaster": false,
+        "pixels": 25,
+        "darkenedBy3": 0,
+        "brightenedBy3": 0,
+        "lumaPcts": [
+          0.0,
+          0.0,
+          0.0,
+          0.43,
+          0.72
+        ]
+      },
+      {
+        "floor": [
+          374,
+          11.046011606852211,
+          1017
+        ],
+        "pixel": [
+          782,
+          633
+        ],
+        "rayHasCaster": false,
+        "pixels": 25,
+        "darkenedBy3": 0,
+        "brightenedBy3": 0,
+        "lumaPcts": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "floor": [
+          375,
+          10.997837781906128,
+          1017
+        ],
+        "pixel": [
+          836,
+          624
+        ],
+        "rayHasCaster": false,
+        "pixels": 25,
+        "darkenedBy3": 0,
+        "brightenedBy3": 0,
+        "lumaPcts": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "floor": [
+          377,
+          10.805387417475355,
+          1017
+        ],
+        "pixel": [
+          923,
+          616
+        ],
+        "rayHasCaster": false,
+        "pixels": 25,
+        "darkenedBy3": 0,
+        "brightenedBy3": 0,
+        "lumaPcts": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "floor": [
+          374,
+          11.12003453572592,
+          1019.65
+        ],
+        "pixel": [
+          1006,
+          672
+        ],
+        "rayHasCaster": false,
+        "pixels": 25,
+        "darkenedBy3": 0,
+        "brightenedBy3": 0,
+        "lumaPcts": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "floor": [
+          375,
+          11.071004422505705,
+          1019.65
+        ],
+        "pixel": [
+          1053,
+          657
+        ],
+        "rayHasCaster": false,
+        "pixels": 25,
+        "darkenedBy3": 0,
+        "brightenedBy3": 0,
+        "lumaPcts": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "floor": [
+          377,
+          10.87506871753267,
+          1019.65
+        ],
+        "pixel": [
+          1124,
+          643
+        ],
+        "rayHasCaster": false,
+        "pixels": 25,
+        "darkenedBy3": 0,
+        "brightenedBy3": 0,
+        "lumaPcts": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "floor": [
+          374,
+          11.171710411707558,
+          1021.5
+        ],
+        "pixel": [
+          1245,
+          713
+        ],
+        "rayHasCaster": false,
+        "pixels": 25,
+        "darkenedBy3": 0,
+        "brightenedBy3": 0,
+        "lumaPcts": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "floor": [
+          375,
+          11.122111558914185,
+          1021.5
+        ],
+        "pixel": [
+          1275,
+          691
+        ],
+        "rayHasCaster": false,
+        "pixels": 25,
+        "darkenedBy3": 0,
+        "brightenedBy3": 0,
+        "lumaPcts": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "floor": [
+          377,
+          10.923824548721285,
+          1021.5
+        ],
+        "pixel": [
+          1320,
+          669
+        ],
+        "rayHasCaster": false,
+        "pixels": 25,
+        "darkenedBy3": 0,
+        "brightenedBy3": 0,
+        "lumaPcts": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    ]
+  }
+}

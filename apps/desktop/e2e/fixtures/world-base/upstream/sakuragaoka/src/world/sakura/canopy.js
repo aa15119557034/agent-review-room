@@ -331,12 +331,14 @@ export function emitCrownFans(builder, surf, pads, canopy, spec) {
         axis.addScaledVector(face, -axis.dot(face));
       }
       axis.normalize();
-      const length = underneath ? Math.min(1.30, .48 + pad.rx * .56) : Math.min(.76, .27 + pad.rx * .37);
-      const root = at.clone().addScaledVector(face, -length * .04)
-        .addScaledVector(axis, -length * (underneath ? .08 : .28));
+      const length = underneath ? Math.min(.44, .16 + pad.rx * .19) : Math.min(.26, .09 + pad.rx * .12);
+      // Set most tips into the crown and let a few break its edge at branch ends.
+      const edgeAccent = (group + rank * 2) % 4 === 0;
+      const root = at.clone().addScaledVector(n, -length * (edgeAccent ? .09 : .40))
+        .addScaledVector(axis, -length * .24);
       for (const [turn, width, tone] of [[-.61, .85, .52], [.11, 1, .69], [.73, .72, .41]]) {
         const leafAxis = axis.clone().applyAxisAngle(face, turn + ((rank % 3) - 1) * .14);
-        solidLeaf(builder, root, leafAxis, face, length * width, underneath ? .43 : .10, tone, canopy.palId, spec);
+        solidLeaf(builder, root, leafAxis, face, length * width, underneath ? .22 : .10, tone, canopy.palId, spec);
       }
     }
   }

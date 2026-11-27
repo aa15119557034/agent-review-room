@@ -130,42 +130,56 @@ function stylizedCherry(m, shared) {
   const previous = m.onBeforeCompile;
   const normal = ['#986481', '#cf8fb3', '#f0b9ce'].map(tint => new THREE.Color(tint));
   const weeping = ['#8c556f', '#c481a5', '#edb1c9'].map(tint => new THREE.Color(tint));
+  const nearPink = ['#d9a8cb', '#e8b8db', '#ffd5f1'].map(tint => new THREE.Color(tint));
   m.defines = { ...m.defines, TOON_TREE_CROWN: '' };
   m.onBeforeCompile = function (shader, renderer) {
     previous.call(this, shader, renderer);
     shader.uniforms.uCherryNormal = { value: normal };
     shader.uniforms.uCherryWeeping = { value: weeping };
+    shader.uniforms.uCherryNearPink = { value: nearPink };
     shader.vertexShader = shader.vertexShader
       .replace('#include <common>', '#include <common>\nvarying float vStationCrown;')
       .replace('#include <begin_vertex>', '#include <begin_vertex>\nvStationCrown = 1.0;');
     shader.fragmentShader = shader.fragmentShader
-      .replace('#include <common>', '#include <common>\nvarying float vStationCrown;\nuniform vec3 uCherryNormal[3], uCherryWeeping[3];' + CHERRY_UNDERPAINT)
-      .replace('#include <opaque_fragment>', `
-        vec3 towardLight = ( viewMatrix * vec4( 0.0, 1.0, 0.0, 0.0 ) ).xyz;
+      .replace('#include <common>', '#include <common>\nvarying float vStationCrown;\nuniform vec3 uCherryNormal[3], uCherryWeeping[3], uCherryNearPink[3];' + CHERRY_UNDERPAINT)
+      .replace('#include <normal_fragment_maps>', `
+        #include <normal_fragment_maps>
+        { // The painted crown is albedo. Let the scene light it like other foliage.
+          vec3 towardLight = ( viewMatrix * vec4( 0.0, 1.0, 0.0, 0.0 ) ).xyz;
+          #if NUM_DIR_LIGHTS > 0
+            towardLight = normalize( towardLight + directionalLights[0].direction * 0.42 );
+          #endif
+          float value = dot( normal, towardLight );
+          float edge = clamp( fwidth( value ) * 0.65, 0.012, 0.045 );
+          float side = smoothstep( -0.18 - edge, -0.18 + edge, value );
+          float top = smoothstep( 0.35 - edge, 0.35 + edge, value );
+          float leaf = step( 3.5, vColor.g );
+          float weep = mix( step( 1.5, vColor.g ), step( 4.5, vColor.g ), leaf );
+          float nearPink = 1.0 - smoothstep( 12.0, 28.0, distance( cameraPosition, vPWorld ) );
+          vec3 shaded = mix( mix( uCherryNormal[0], uCherryWeeping[0], weep ), uCherryNearPink[0], nearPink );
+          vec3 middle = mix( mix( uCherryNormal[1], uCherryWeeping[1], weep ), uCherryNearPink[1], nearPink );
+          vec3 sunlit = mix( mix( uCherryNormal[2], uCherryWeeping[2], weep ), uCherryNearPink[2], nearPink );
+          vec3 cherry = mix( mix( shaded, middle, side ), sunlit, top );
+          float tone = clamp( vColor.r, 0.0, 1.0 );
+          float recess = 0.70 + 0.13 * smoothstep( 0.24, 0.38, tone ) + 0.16 * smoothstep( 0.48, 0.62, tone );
+          float bodyTone = mix( recess, mix( 0.81, 1.09, tone ), smoothstep( -0.55, -0.12, value ) );
+          vec3 cherryBody = cherry * bodyTone;
+          float underpaint = 0.33 * nearPink * smoothstep( 0.09, 0.63, -vColor.b );
+          cherryBody = mix( cherryBody, cherryUnderpaint( vPWorld, cherryBody, shaded, middle ), underpaint );
+          vec3 cherryLeafFace = mix( shaded * 0.88, middle, 0.28 + 0.40 * side );
+          float ridge = smoothstep( 0.40, 0.73, tone );
+          cherryLeafFace = mix( cherryLeafFace, sunlit, ridge * ( 0.30 + 0.28 * top ) );
+          diffuseColor.rgb = mix( cherryBody, cherryLeafFace, leaf );
+        }
+      `)
+      .replace('#include <lights_fragment_end>', `
+        #include <lights_fragment_end>
         #if NUM_DIR_LIGHTS > 0
-          towardLight = normalize( towardLight + directionalLights[0].direction * 0.42 );
+          // Approximate light transmitted through the petals from the current sun or moon.
+          float petalLight = dot( directionalLights[0].color, vec3( 0.2126, 0.7152, 0.0722 ) );
+          float petalShade = 1.0 - smoothstep( -0.25, 0.55, dot( normal, directionalLights[0].direction ) );
+          reflectedLight.indirectDiffuse += diffuseColor.rgb * vec3( 1.0, 0.85, 1.0 ) * ( 0.20 * petalLight * petalShade );
         #endif
-        float value = dot( normal, towardLight );
-        float edge = clamp( fwidth( value ) * 0.65, 0.012, 0.045 );
-        float side = smoothstep( -0.18 - edge, -0.18 + edge, value );
-        float top = smoothstep( 0.35 - edge, 0.35 + edge, value );
-        float leaf = step( 3.5, vColor.g );
-        float weep = mix( step( 1.5, vColor.g ), step( 4.5, vColor.g ), leaf );
-        vec3 shaded = mix( uCherryNormal[0], uCherryWeeping[0], weep );
-        vec3 middle = mix( uCherryNormal[1], uCherryWeeping[1], weep );
-        vec3 sunlit = mix( uCherryNormal[2], uCherryWeeping[2], weep );
-        vec3 cherry = mix( mix( shaded, middle, side ), sunlit, top );
-        float tone = clamp( vColor.r, 0.0, 1.0 );
-        float recess = 0.70 + 0.13 * smoothstep( 0.24, 0.38, tone ) + 0.16 * smoothstep( 0.48, 0.62, tone );
-        float bodyTone = mix( recess, mix( 0.81, 1.09, tone ), smoothstep( -0.55, -0.12, value ) );
-        vec3 cherryBody = cherry * bodyTone;
-        float branchesVisible = smoothstep( 0.09, 0.63, -vColor.b ) * ( 1.0 - smoothstep( 19.0, 35.0, distance( cameraPosition, vPWorld ) ) );
-        cherryBody = mix( cherryBody, cherryUnderpaint( vPWorld, cherryBody, shaded, middle ), branchesVisible );
-        vec3 cherryLeafFace = mix( shaded * 0.88, middle, 0.28 + 0.40 * side );
-        float ridge = smoothstep( 0.40, 0.73, tone );
-        cherryLeafFace = mix( cherryLeafFace, sunlit, ridge * ( 0.30 + 0.28 * top ) );
-        outgoingLight = mix( cherryBody, cherryLeafFace, leaf );
-        #include <opaque_fragment>
       `);
   };
   return m;
