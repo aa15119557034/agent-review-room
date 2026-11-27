@@ -64,6 +64,7 @@ function createStaticServer(root = fixture) {
       ['/street-props-v3/', 'props-v3-2026-11-21'],
       ['/trees-v2/', 'trees-v2-2026-11-21'], ['/grass-v2/', 'grass-v2-2026-11-21'], ['/poles-v2/', 'poles-v2-2026-11-21'],
       ['/station-foliage/', 'station-foliage-2026-11-27'],
+      ['/konbini-interior/', 'konbini-interior-2026-11-27'],
     ]) {
       if (pathname.startsWith(route)) { base = path.join(root, 'assets', folder); relative = pathname.slice(route.length); }
     }

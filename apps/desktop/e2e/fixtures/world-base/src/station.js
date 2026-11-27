@@ -12,6 +12,7 @@ import { createZoneUniforms } from './street-zones.js';
 import { addStationTexturedProps } from './textured-props.js';
 import { addArtR1Station } from './art-r1.js';
 import { loadMatureSakura } from './mature-sakura.js';
+import { loadKonbiniFixtures } from './konbini-fixtures.js';
 
 // Keep the upstream dependency order. Characters and camera-centred petal shaders
 // are deliberately omitted; the shared island supplies its own petal field.
@@ -91,6 +92,8 @@ export async function createStation({ scene, renderer, camera, offset = [280, 8,
       const { variants, resources } = await loadMatureSakura(ctx);
       matureResources = resources;
       await module.build(ctx, variants);
+    } else if (name === 'shopsA') {
+      await module.build(ctx, { konbiniFixtures: await loadKonbiniFixtures(ctx) });
     } else await module.build(ctx);
     moduleStats[name] = Math.round(performance.now() - start);
     await new Promise(resolve => setTimeout(resolve, 0));

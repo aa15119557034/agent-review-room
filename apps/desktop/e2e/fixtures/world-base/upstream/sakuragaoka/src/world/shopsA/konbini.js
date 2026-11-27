@@ -91,7 +91,7 @@ export function paintShelf(g, w, h, rows, set, rr, o = {}) {
 }
 
 // ---------------------------------------------------------------- build
-export function buildKonbini(ctx, C) {
+export function buildKonbini(ctx, C, fixtures) {
   const { M, P, U, A, F, T } = C;
   const S = C.space('W1');
   const k = S.k;
@@ -100,7 +100,8 @@ export function buildKonbini(ctx, C) {
   const X0 = -6.0, X1 = 6.0, ZB = -12.0, ZF = -2.6, WT = 0.2;
   const mWall = M.wall('#e8e7e2'), mWall2 = M.wall('#dedcd5'), mAlu = M.t('#b8bdc2'), mAluD = M.t('#8f969d');
   const mTeal = M.t(TEAL), mYel = M.t(YEL);
-  const mIn = M.inner('#efece4', 0.45), mInW = M.inner('#f3f1eb', 0.45);
+  const roomMaterial = fixtures ? M.fluorescent : M.inner;
+  const mIn = roomMaterial('#efece4', 0.45), mInW = roomMaterial('#f3f1eb', 0.45);
   const glass = M.glass({ opacity: 0.2 });
   const H = FY; // floor
 
@@ -138,15 +139,16 @@ export function buildKonbini(ctx, C) {
 
   // ---------------- glazing (front + north)
   const mullion = (x, z, h, alongZ) => k.box(alongZ ? 0.08 : 0.07, h, alongZ ? 0.07 : 0.08, mAlu, [x, FY + h / 2, z]);
-  const frontPanes = [[-5.7, -3.83], [-3.83, -1.97], [-1.97, -0.1], [2.1, 3.9], [3.9, 5.7]];
+  const doorLeft = -0.1, doorRight = 2.1, doorX = (doorLeft + doorRight) / 2, doorWidth = doorRight - doorLeft;
+  const frontPanes = [[-5.7, -3.83], [-3.83, -1.97], [-1.97, doorLeft], [doorRight, 3.9], [3.9, 5.7]];
   const gz = ZF - 0.1;
   for (const [a, b] of frontPanes) { const gl = k.plane(b - a, WTOP - FY - 0.08, glass, [(a + b) / 2, FY + 0.08 + (WTOP - FY - 0.08) / 2, gz]); gl.castShadow = false; }
-  for (const x of [-5.7, -3.83, -1.97, -0.1, 2.1, 3.9, 5.7]) mullion(x, gz, WTOP - FY, false);
+  for (const x of [-5.7, -3.83, -1.97, doorLeft, doorRight, 3.9, 5.7]) mullion(x, gz, WTOP - FY, false);
   k.box(X1 - X0 - 0.6, 0.1, 0.12, mAlu, [0, FY + 0.05, gz]);          // bottom rail
   k.box(X1 - X0 - 0.6, 0.08, 0.12, mAlu, [0, WTOP - 0.02, gz]);       // head rail
   // door transom
-  k.box(2.2, 0.08, 0.1, mAlu, [1.0, FY + 2.24, gz]);
-  { const gl = k.plane(2.2, WTOP - FY - 2.28, glass, [1.0, FY + 2.28 + (WTOP - FY - 2.28) / 2, gz]); gl.castShadow = false; }
+  k.box(doorWidth, 0.08, 0.1, mAlu, [doorX, FY + 2.24, gz]);
+  { const gl = k.plane(doorWidth, WTOP - FY - 2.28, glass, [doorX, FY + 2.28 + (WTOP - FY - 2.28) / 2, gz]); gl.castShadow = false; }
   // north glazing
   const gx = X1 - 0.1;
   const northPanes = [[-9.1, -7.03], [-7.03, -4.97], [-4.97, -2.9]];
@@ -203,18 +205,20 @@ export function buildKonbini(ctx, C) {
   const CANY = FY + 2.45;
   k.box(3.4, 0.1, 1.15, M.t('#e6e5e0'), [1.0, CANY, ZF + 0.575]);
   k.box(3.4, 0.14, 0.04, mAlu, [1.0, CANY, ZF + 1.15]);
-  for (const x of [0.0, 1.0, 2.0]) k.cyl(0.07, 0.07, 0.01, M.glow('#fff1d8', 1.25), [x, CANY - 0.055, ZF + 0.62], null, 12);
+  const downlight = M.glow(fixtures ? '#e5f5ff' : '#fff1d8', 1.25);
+  for (const x of [0.0, 1.0, 2.0]) k.cyl(0.07, 0.07, 0.01, downlight, [x, CANY - 0.055, ZF + 0.62], null, 12);
   // auto-door sensor
   k.box(0.4, 0.07, 0.08, M.t('#d9d9d4'), [1.0, FY + 2.32, ZF + 0.02]);
   k.box(0.2, 0.03, 0.01, M.t('#3a3346'), [1.0, FY + 2.3, ZF + 0.065]);
 
   // ---------------- automatic doors (dynamic)
   const dg = S.dyn(); const panels = [];
+  dg.name = 'w1-auto-door';
   const dz = ZF - 0.18;
   const mDoorGlass = M.glass({ opacity: 0.16 });
   const rAuto = A.lit.region(96, 40, (g, w, h) => { g.fillStyle = '#ffffff'; g.fillRect(0, 0, w, h); U.text(g, '自動ドア', w / 2, h * 0.36, 17, F.sans, '#2c6aa0', { weight: 700 }); U.text(g, 'AUTOMATIC DOOR', w / 2, h * 0.78, 8.5, F.en, '#2c6aa0', { weight: 700 }); });
   for (const s of [-1, 1]) {
-    const pg = new THREE.Group(); pg.position.set(1.0 + s * 0.5, FY, dz); dg.add(pg); const kk = ctx.kit(pg);
+    const pg = new THREE.Group(); pg.position.set(doorX + s * 0.5, FY, dz); dg.add(pg); const kk = ctx.kit(pg);
     kk.box(1.0, 0.06, 0.05, mAlu, [0, 2.17, 0]);
     kk.box(1.0, 0.12, 0.05, mAlu, [0, 0.06, 0]);
     kk.box(0.05, 2.2, 0.05, mAlu, [-0.475, 1.1, 0]);
@@ -222,9 +226,9 @@ export function buildKonbini(ctx, C) {
     const gl = kk.plane(0.9, 2.0, mDoorGlass, [0, 1.12, 0]); gl.castShadow = false;
     const st = kk.mesh(C.regionGeo(rAuto, 0.24, 0.1), rAuto.m, [s * -0.2, 1.05, 0.004]); st.castShadow = false;
     kk.box(0.9, 0.012, 0.004, M.t('#f3c14b'), [0, 1.3, 0.003]);
-    panels.push({ g: pg, s, x0: 1.0 + s * 0.5 });
+    panels.push({ g: pg, s, x0: pg.position.x });
   }
-  const doorW = S.world(1.0, FY, ZF);
+  const doorW = S.world(doorX, FY, ZF);
   let open = 0, prevT = 0;
   ctx.onUpdate((dt) => {
     const p = ctx.player.position;
@@ -238,7 +242,7 @@ export function buildKonbini(ctx, C) {
   });
   ctx.physics.addDynamic(() => {
     if (open > 0.55) return [];
-    const p = S.toW(1.0, dz);
+    const p = S.toW(doorX, dz);
     return [{ cx: p.x, cz: p.z, w: 2.0 * (1 - open), d: 0.1, rotY: S.f.rotY, y0: S.f.y + FY, y1: S.f.y + FY + 2.2 }];
   });
 
@@ -387,14 +391,24 @@ export function buildKonbini(ctx, C) {
 
   // ---------------- interior shell skins (walls, ceiling) + modelled contents (intKonbini.js)
   const IX0 = X0 + WT, IX1 = X1 - WT, IZ0 = ZB + WT, IZ1 = ZF - WT;
-  (ctx.services.shopInteriors ||= []).push({ lot: S.lot.id, box: [IX0, FY, IZ0, IX1, CY, IZ1] }); // room shell (inner wall faces, floor, ground-floor ceiling), lot local: [x0, y0, z0, x1, y1, z1]; read by src/shadow-tint.js
+  const room = { lot: S.lot.id, box: [IX0, FY, IZ0, IX1, CY, IZ1], entrances: [{ x: doorX, width: doorWidth }] };
+  if (fixtures) {
+    // The front door and windows share a continuous light spill. The north
+    // windows use their own span along the corner street.
+    room.glazing = [
+      { axis: 'x', from: frontPanes[0][0], to: frontPanes.at(-1)[1], out: ZF, depth: 6.2, nightDepth: 7.9, gain: 0.61, nightGain: 1.12 },
+      { axis: 'z', from: NW0, to: NW1, out: X1, depth: 4.8, gain: 0.52, nightGain: 0.83 },
+    ];
+    S.g.add(fixtures);
+  }
+  (ctx.services.shopInteriors ||= []).push(room);
   k.plane(IX1 - IX0, IZ1 - IZ0 + 0.1, mInW, [(IX0 + IX1) / 2, CY, (IZ0 + IZ1) / 2], [Math.PI / 2, 0, 0]);
   k.plane(IX1 - IX0, CY - FY, mIn, [(IX0 + IX1) / 2, (FY + CY) / 2, IZ0 + 0.005]);
   k.plane(IZ1 - IZ0, CY - FY, mIn, [IX0 + 0.005, (FY + CY) / 2, (IZ0 + IZ1) / 2], [0, Math.PI / 2, 0]);
   k.plane(NW0 - IZ0, CY - FY, mIn, [IX1 - 0.005, (FY + CY) / 2, (IZ0 + NW0) / 2], [0, -Math.PI / 2, 0]);
   k.box(IX1 - IX0, 0.12, 0.02, M.inner('#b9bcc0', 0.2), [(IX0 + IX1) / 2, FY + 0.06, IZ0 + 0.012]);
   k.box(0.02, 0.12, IZ1 - IZ0, M.inner('#b9bcc0', 0.2), [IX0 + 0.012, FY + 0.06, (IZ0 + IZ1) / 2]);
-  buildKonbiniInterior(ctx, C, S, { FY, CY, IX0, IX1, IZ0, IZ1, NW0, NW1, gx, gz, TEAL, TEAL_D, YEL, CREAM, INK });
+  buildKonbiniInterior(ctx, C, S, { FY, CY, IX0, IX1, IZ0, IZ1, NW0, NW1, gx, gz, TEAL, TEAL_D, YEL, CREAM, INK }, Boolean(fixtures));
 
   // ---------------- exterior: bins, umbrella stand, flags, signs
   {

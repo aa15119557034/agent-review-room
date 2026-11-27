@@ -86,19 +86,21 @@ export function installLitToon(p, boxes) {
   const end = THREE.ShaderChunk.lights_fragment_end;
   if (!end.includes('wbToonBands')) {
     const [e1, e2] = p.lit.edges, w = p.lit.width, [l0, l1, l2] = p.lit.levels;
+    // Shadow tint has already classified the same shop boxes when enabled.
+    const room = end.includes('wbShadowTint') ? '' : indoorGlsl(boxes);
     THREE.ShaderChunk.lights_fragment_end = `${end}
 #if defined( RE_IndirectDiffuse ) && NUM_DIR_LIGHTS > 0
-{ // wbToonBands
+${room}
+if ( stIn < 0.5 && ( uTbK > 0.0 || uTbRim > 0.0 ) ) { // wbToonBands
   float tbLum = max( dot( diffuseColor.rgb, vec3( 0.2126, 0.7152, 0.0722 ) ), 0.02 );
   float tbFull = dot( directionalLights[ 0 ].color, vec3( 0.2126, 0.7152, 0.0722 ) ) * RECIPROCAL_PI;
   float tbU = dot( reflectedLight.directDiffuse, vec3( 0.2126, 0.7152, 0.0722 ) ) / ( tbLum * max( tbFull, 1e-3 ) );
-${indoorGlsl(boxes)}
   float tbQ = ${f(l0)} + ( ${f(l1 - l0)} ) * smoothstep( ${f(e1 - w)}, ${f(e1 + w)}, tbU ) + ( ${f(l2 - l1)} ) * smoothstep( ${f(e2 - w)}, ${f(e2 + w)}, tbU );
-  float tbK = ${f(p.lit.strength)} * uTbK * ( 1.0 - stIn );
+  float tbK = ${f(p.lit.strength)} * uTbK;
   reflectedLight.directDiffuse *= mix( 1.0, tbQ / max( tbU, 0.02 ), tbK );
   // thin warm rim on the sunward side (outdoors only)
   float tbRim = pow( 1.0 - saturate( dot( normal, geometryViewDir ) ), ${f(p.rim.power)} ) * saturate( dot( normal, directionalLights[ 0 ].direction ) * 1.5 ) * smoothstep( ${f(e2 - w)}, ${f(e2 + w)}, tbU );
-  reflectedLight.directDiffuse += diffuseColor.rgb * ${vec3(p.rim.color)} * ( tbRim * ${f(p.rim.strength)} * uTbRim * ( 1.0 - stIn ) );
+  reflectedLight.directDiffuse += diffuseColor.rgb * ${vec3(p.rim.color)} * ( tbRim * ${f(p.rim.strength)} * uTbRim );
 }
 #endif`;
   }
