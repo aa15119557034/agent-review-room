@@ -17,6 +17,14 @@ float swardDapple(vec2 xz, float time) {
   q += vec2(0.13, -0.04) * time;
   float cloud = 0.72 * vnoise(q / vec2(14.0, 9.0) + vec2(17.0, 9.0))
               + 0.28 * vnoise(q / vec2(7.0, 5.2) + vec2(3.0, 21.0));
+  // Feather the cloud's edge across the steep shoulder and keep its dark core.
+  if (xz.x > 995.0 && xz.x < 1111.0 && xz.y > 540.0 && xz.y < 602.0) {
+    vec2 shoulder = (xz - vec2(1053.0, 571.0)) / vec2(58.0, 31.0);
+    float shoulderWeight = 1.0 - smoothstep(0.42, 1.0, dot(shoulder, shoulder));
+    float feather = 0.075 * shoulderWeight;
+    float cloudShade = smoothstep(0.51 - feather, 0.56 + feather, cloud);
+    return coverage * mix(cloudShade, 0.5, 0.36 * shoulderWeight);
+  }
   return coverage * smoothstep(0.51, 0.56, cloud);
 }
 `;

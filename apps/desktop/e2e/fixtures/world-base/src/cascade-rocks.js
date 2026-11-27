@@ -46,7 +46,7 @@ void main(){
   vec3 pigment = vStonePigment * (1.0 - 0.13 * parting);${dayLedge ? `
   // The embedded ledge shares the cliff's muted daylight limestone rather than the gravel's warmth.
   float stoneValue = dot(pigment, vec3(0.2126, 0.7152, 0.0722));
-  pigment = mix(pigment, vec3(stoneValue), 0.52) * vec3(0.79, 0.85, 0.86);` : ''}
+  pigment = mix(pigment, vec3(stoneValue), 0.52) * vec3(0.89, 0.85, 0.81);` : ''}
   vec3 stone = applyAtmosphere(pigment * light * uRockExposure, vStonePos);
   // The geometry supplies its own contours. Keep the post outline off the strata and wet toes.
   gl_FragColor = vec4(stone, 0.0);

@@ -285,7 +285,8 @@ export async function createCity({ scene, station, island, skyline }) {
     const noticeFrame = Frame.at(gb, shop.center[0], shop.baseY, shop.frontage[1]);
     const noticeCount = addLaundryNotices(noticeFrame, noticeSheet, -1.25 + 0.025, -1.25);
     addStandingBoard(noticeFrame, M, noticeSheet, 'prices', -1.55, supportY - shop.baseY, -0.55, 0.3);
-    const alley = addBackAlley({ root, ctx, own: clone, ownTexture: texture => ownedTextures.add(texture), frame, M: H.M, A: H.A, sheet: noticeSheet });
+    const alley = addBackAlley({ root, ctx, own: clone, ownTexture: texture => ownedTextures.add(texture),
+      frame, M: H.M, A: H.A, sheet: noticeSheet, yardY: shop.baseY + .025 });
     stats.artR1 = { notices: noticeCount, alley, standingBoards: 1, triangles: gb.tris - artStart, texturePixels: 1024 * 1024 };
     stats.neighborhoodProps = { laundryCart: { origin: cart.origin.toArray(), triangles: cartTriangles },
       deliveryCorner: { origin: delivery.origin.toArray(), triangles: gb.tris - detailTris } };
@@ -442,8 +443,16 @@ function addConnections(H, frame, placements, ground, worldY) {
       const bottom = min - 0.05;
       // Bottoms are buried. Each later uphill face is covered by the preceding
       // taller step above ground; keep the first face and every downhill riser.
-      frame.boxB(H.M.concrete, '#a9adb3', width, level - bottom, Math.abs(zb - za), x, bottom, (za + zb) / 2,
-        { uv: { world: 2 }, shadow: false, skip: 'd' + (k ? uphillFace : '') });
+      const skip = 'd' + (k ? uphillFace : ''), depth = Math.abs(zb - za), z = (za + zb) / 2;
+      if (name === 'town-apartment-4f-entry') {
+        // Use the existing concrete grain and identical faces. Separate the
+        // tread, exposed sides and riser through their baked stone colours.
+        frame.boxB(H.M.concrete, '#a8a198', width, level - bottom, depth, x, bottom, z, { uv: { world: 2 }, shadow: false, skip: 'tdfb' });
+        frame.boxB(H.M.concrete, '#e4caa4', width, level - bottom, depth, x, bottom, z, { uv: { world: 2 }, shadow: false, skip: 'rldfb' });
+        frame.boxB(H.M.concrete, '#bcb1a5', width, level - bottom, depth, x, bottom, z, { uv: { world: 2 }, shadow: false, skip: 'rlt' + skip });
+      } else {
+        frame.boxB(H.M.concrete, '#a9adb3', width, level - bottom, depth, x, bottom, z, { uv: { world: 2 }, shadow: false, skip });
+      }
     }
     const area = { name, minX: x - width / 2, maxX: x + width / 2, minZ: Math.min(highZ, lowZ), maxZ: Math.max(highZ, lowZ) };
     clearAreas.push(area);

@@ -160,7 +160,7 @@ function makeMask(root, layout) {
 /** Local standing water shares the station's captured street environment.
  * The road owns its material and mask. The station owns the reflection target.
  */
-export function applyWetRoad({ root, ctx, reflections, zones = null }) {
+export function applyWetRoad({ root, ctx, reflections, zones = null, streetSunlight = false }) {
   const targets = [];
   root.traverse(mesh => { if (mesh.isMesh && mesh.name === 'street-asphalt') targets.push(mesh); });
   if (targets.length !== 1) throw new Error(`Wet road expected one street-asphalt mesh, found ${targets.length}`);
@@ -205,6 +205,15 @@ export function applyWetRoad({ root, ctx, reflections, zones = null }) {
       // Wet asphalt reads darker and slightly cooler/more saturated.
       diffuseColor.rgb *= mix(vec3(1.0), vec3(0.42, 0.46, 0.52), wetMask.r);`);
     shader.fragmentShader = insert(shader.fragmentShader, '#include <opaque_fragment>', `
+      ${streetSunlight ? `
+        // West-side sunset through the gap beside the main-street shops.
+        vec2 band = vWetLocal - vec2(0.25, 22.0);
+        float alongSun = dot(band, vec2(0.9659, 0.2588));
+        float acrossSun = dot(band, vec2(-0.2588, 0.9659));
+        float beam = (1.0 - smoothstep(1.16, 1.68, abs(acrossSun)))
+                   * (1.0 - smoothstep(2.35, 3.4, abs(alongSun)));
+        outgoingLight += vec3(0.076, 0.039, 0.012) * beam * (1.0 - 0.44 * wetMask.g);
+      ` : ''}
       if (wetMask.r > 0.002) {
         vec3 N = inverseTransformDirection(normal, viewMatrix);
         vec2 p = vWetLocal;
@@ -229,7 +238,7 @@ export function applyWetRoad({ root, ctx, reflections, zones = null }) {
   };
   // The different callback deliberately opts out of batch2's material rewriting.
   // One isolated road material can still use its original single draw.
-  material.customProgramCacheKey = () => `${upstreamKey}|station-street-reflection-v2${zones ? `|zones${zones.count}` : ''}`;
+  material.customProgramCacheKey = () => `${upstreamKey}|station-street-reflection-v2${streetSunlight ? '|street-sunlight' : ''}${zones ? `|zones${zones.count}` : ''}`;
   mesh.material = material;
   let disposed = false;
   return {

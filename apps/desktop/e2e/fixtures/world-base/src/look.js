@@ -454,12 +454,39 @@ void main(){`, 'cascade rock toes');
     col = mix(col, vec3(0.045, 0.28, 0.25) * (uSunColor * 0.26 + uAmbSky * 0.54), boil * 0.36 * uCascadeLod);`, 'cascade impact lace');
 
     const fall = island.river.fallMat;
+    // Bow the nearest existing sheet between the crest and impact. The close range is
+    // measured per view so the distant fall keeps its prior silhouette and coverage.
+    fall.uniforms.uCascadeFlowDir = { value: island.river.fall.dir };
+    fall.vertexShader = insert(fall.vertexShader, 'varying vec3 vWorld;', `varying vec3 vWorld;
+varying float vCascadeFallNear;
+uniform vec2 uCascadeFlowDir;`, 'cascade depth vertex entry');
+    fall.vertexShader = insert(fall.vertexShader, 'vFall = aFall; vWorld = position;', `vFall = aFall;
+  vCascadeFallNear = (1.0 - smoothstep(52.0, 115.0, distance(cameraPosition, position)))
+    * smoothstep(0.06, 0.28, aFall.z) * (1.0 - smoothstep(0.88, 1.0, aFall.z));
+  float layer = aFall.w / 7.31;
+  float section = max(1.0 - aFall.x * aFall.x, 0.0);
+  float bow = mix(0.36, 1.15, step(1.5, layer)) * section * section;
+  float depth = (layer - 1.0) * (0.22 + 0.38 * section) + bow;
+  vWorld = position;
+  vWorld.xz += uCascadeFlowDir * depth * vCascadeFallNear;`, 'cascade front sheet depth');
+    fall.vertexShader = insert(fall.vertexShader, 'gl_Position = projectionMatrix * viewMatrix * vec4(position, 1.0);',
+      'gl_Position = projectionMatrix * viewMatrix * vec4(vWorld, 1.0);', 'cascade depth projection');
+    fall.fragmentShader = insert(fall.fragmentShader, 'varying vec3 vWorld;', 'varying vec3 vWorld;\nvarying float vCascadeFallNear;', 'cascade depth fragment entry');
+    fall.fragmentShader = insert(fall.fragmentShader, 'float a = (t - uTime) * 0.55;',
+      'float a = (t - uTime) * 0.55 + (seed / 7.31 - 1.0) * 0.16 * vCascadeFallNear;', 'cascade layer phase');
     fall.fragmentShader = insert(fall.fragmentShader, 'float body = mix(1.0, 0.74, smoothstep(0.05, 0.7, k));', `float ribbons = smoothstep(0.26, 0.74, clumps * 0.7 + strands * 0.3);
   float body = mix(1.0, 0.86, smoothstep(0.06, 0.65, k));`, 'cascade sheet coverage');
     fall.fragmentShader = insert(fall.fragmentShader, 'vec3 glass = vec3(0.30, 0.55, 0.52) * (uSunColor * 0.2 * sun + uAmbSky * 0.6);', `vec3 glass = vec3(0.067, 0.34, 0.36) * (uSunColor * (0.12 + 0.25 * sun) + uAmbSky * 0.68);`, 'cascade blue-green ribbons');
     fall.fragmentShader = insert(fall.fragmentShader, 'vec3 col = mix(glass, white, smoothstep(0.0, 0.10, k) * (0.6 + 0.4 * strands));', `float aerated = smoothstep(0.01, 0.24, k);
   float shoulders = smoothstep(0.41, 0.76, abs(u)) * (1.0 - smoothstep(0.82, 0.99, abs(u)));
   float whiteness = clamp(mix(0.16 + 0.50 * ribbons, 0.24 + 0.67 * ribbons, aerated) + shoulders * 0.37, 0.0, 1.0);
+  if (vCascadeFallNear > 0.0) {
+    float front = clamp(seed / 14.62, 0.0, 1.0);
+    float rounded = smoothstep(0.14, 0.95, max(1.0 - u * u, 0.0));
+    float backWater = whiteness * (0.56 + 0.28 * rounded);
+    float frontWater = whiteness * (0.69 + 0.31 * rounded) + rounded * 0.09;
+    whiteness = mix(whiteness, clamp(mix(backWater, frontWater, front), 0.0, 1.0), vCascadeFallNear);
+  }
   vec3 col = mix(glass, white, whiteness);`, 'cascade aeration');
     fall.needsUpdate = true;
   }

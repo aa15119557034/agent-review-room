@@ -44,24 +44,36 @@ export function buildTownApartment(H, F, spec) {
       const ff = F.sub(x, 0, bayFront);
       const entry = fl === 0 && bay === 1;
       const opening = { x: 0, y: y + (entry ? .14 : isSpine ? .76 : .28), w: entry ? 1.12 : isSpine ? 1.24 : 2.18, h: entry ? 2.13 : isSpine ? 1.42 : 2.08 };
-      wallOpening(H, ff, unit, y + .14, FH - .14, opening, isSpine ? tile : plaster, isSpine ? '#c3c5bf' : wall);
+      const overLaundry = shop && fl === 1;
+      wallOpening(H, ff, unit, y + .14, FH - .14, opening, isSpine ? tile : plaster,
+        isSpine ? '#c3c5bf' : overLaundry ? '#e0d8ca' : wall);
       if (entry) recessedDoor(H, ff, opening);
       else recessedWindow(H, ff, opening, S, r, fl);
       openings.push({ face: 'front', floor: fl + 1, ...opening, x, planeZ: bayFront, revealDepth: .26 });
       if (fl > 0 && !isSpine) {
         const outer = floors === 3 ? -.18 : floors === 4 ? -.24 : -.18 - ((fl + bay) % 2) * .12;
         const bw = unit - (floors === 3 ? .30 : .12), slabTop = y + .16;
-        F.boxB(plaster, trim, bw, .16, outer - bayFront + .06, x, y, (outer + bayFront) / 2, { uv: { world: 1.5 } });
+        const slabDepth = outer - bayFront + .06, slabZ = (outer + bayFront) / 2;
+        if (shop && fl === 2) {
+          // The underside of this slab is the ceiling of the laundromat's loggia.
+          F.boxB(plaster, trim, bw, .16, slabDepth, x, y, slabZ, { uv: { world: 1.5 }, skip: 'dfb' });
+          F.boxB(plaster, '#e1d7c5', bw, .16, slabDepth, x, y, slabZ, { uv: { world: 1.5 }, skip: 'rltfb' });
+          F.boxB(plaster, trim, bw, .16, slabDepth, x, y, slabZ, { uv: { world: 1.5 }, skip: 'rltd' });
+        } else {
+          F.boxB(plaster, trim, bw, .16, slabDepth, x, y, slabZ, { uv: { world: 1.5 } });
+        }
         // Finish tile on a real slab, with a narrow metal drip at its exposed lip.
-        F.box(tile, '#b3b6ab', bw - .09, .014, outer - bayFront - .07, x, slabTop + .007, (outer + bayFront) / 2, { uv: { world: 2 }, skip: 'd' });
-        F.box(metal, steel, bw, .055, .035, x, y + .075, outer + .025, { uv: { world: 1 } });
+        F.box(tile, overLaundry ? '#c1b9a9' : '#b3b6ab', bw - .09, .014, outer - bayFront - .07, x, slabTop + .007, slabZ, { uv: { world: 2 }, skip: 'd' });
+        F.box(metal, overLaundry ? '#899890' : steel, bw, .055, .035, x, y + .075, outer + .025, { uv: { world: 1 } });
         const solid = floors === 5 ? .38 : 0;
         if (solid) F.boxB(tile, '#c4c7c1', bw, solid, .11, x, slabTop, outer - .035, { uv: { world: 2 } });
-        railing(F, metal, rail, [x - bw / 2 + .055, slabTop + solid, outer - .04], [x + bw / 2 - .055, slabTop + solid, outer - .04], 1.02 - solid, floors === 3 ? .17 : .20);
+        railing(F, metal, overLaundry ? '#829789' : rail,
+          [x - bw / 2 + .055, slabTop + solid, outer - .04], [x + bw / 2 - .055, slabTop + solid, outer - .04],
+          1.02 - solid, floors === 3 ? .17 : .20);
         for (const side of [-1, 1]) {
           const bx = x + side * (bw / 2 - .045);
           if (floors === 4) {
-            F.boxB(plaster, trim, .13, 2.20, outer - bayFront, bx, slabTop, (outer + bayFront) / 2, { uv: { world: 1.5 } });
+            F.boxB(plaster, overLaundry ? '#d6cbba' : trim, .13, 2.20, outer - bayFront, bx, slabTop, slabZ, { uv: { world: 1.5 } });
             F.box(metal, steel, .17, .035, outer - bayFront + .03, bx, slabTop + 2.22, (outer + bayFront) / 2, { uv: { world: 1 } });
           } else railing(F, metal, rail, [bx, slabTop, bayFront + .09], [bx, slabTop, outer - .04], 1.02, .22);
         }
