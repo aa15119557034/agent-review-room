@@ -1,0 +1,98 @@
+[
+  {
+    "filename": "candidate-evening-art-a-street.png",
+    "identicalPixels": 1295991,
+    "changedAbove3": 0,
+    "maxChannelDelta": 1
+  },
+  {
+    "filename": "candidate-evening-art-b-konbini.png",
+    "identicalPixels": 1296000,
+    "changedAbove3": 0,
+    "maxChannelDelta": 0
+  },
+  {
+    "filename": "candidate-evening-art-c-alley.png",
+    "identicalPixels": 1296000,
+    "changedAbove3": 0,
+    "maxChannelDelta": 0
+  },
+  {
+    "filename": "candidate-evening-art-d-laundry.png",
+    "identicalPixels": 1296000,
+    "changedAbove3": 0,
+    "maxChannelDelta": 0
+  },
+  {
+    "filename": "candidate-evening-sample-e-harbour.png",
+    "identicalPixels": 1296000,
+    "changedAbove3": 0,
+    "maxChannelDelta": 0
+  },
+  {
+    "filename": "candidate-evening-sample-f-hillside.png",
+    "identicalPixels": 1296000,
+    "changedAbove3": 0,
+    "maxChannelDelta": 0
+  },
+  {
+    "filename": "candidate-evening-sample-g-rail.png",
+    "identicalPixels": 1296000,
+    "changedAbove3": 0,
+    "maxChannelDelta": 0
+  },
+  {
+    "filename": "candidate-evening-sample-h-north.png",
+    "identicalPixels": 1296000,
+    "changedAbove3": 0,
+    "maxChannelDelta": 0
+  },
+  {
+    "filename": "candidate-evening-ground-01.png",
+    "identicalPixels": 1295999,
+    "changedAbove3": 0,
+    "maxChannelDelta": 1
+  },
+  {
+    "filename": "candidate-evening-ground-02.png",
+    "identicalPixels": 1296000,
+    "changedAbove3": 0,
+    "maxChannelDelta": 0
+  },
+  {
+    "filename": "candidate-evening-blender-grass-close.png",
+    "identicalPixels": 1296000,
+    "changedAbove3": 0,
+    "maxChannelDelta": 0
+  },
+  {
+    "filename": "candidate-evening-blender-grass-hidden.png",
+    "identicalPixels": 1296000,
+    "changedAbove3": 0,
+    "maxChannelDelta": 0
+  },
+  {
+    "filename": "candidate-evening-blender-leaves-close.png",
+    "identicalPixels": 1296000,
+    "changedAbove3": 0,
+    "maxChannelDelta": 0
+  },
+  {
+    "filename": "candidate-evening-blender-leaves-hidden.png",
+    "identicalPixels": 1296000,
+    "changedAbove3": 0,
+    "maxChannelDelta": 0
+  },
+  {
+    "filename": "candidate-night-art-a-street.png",
+    "identicalPixels": 1295992,
+    "changedAbove3": 0,
+    "maxChannelDelta": 1
+  },
+  {
+    "filename": "candidate-night-art-b-konbini.png",
+    "identicalPixels": 1295999,
+    "changedAbove3": 0,
+    "maxChannelDelta": 1
+  }
+]

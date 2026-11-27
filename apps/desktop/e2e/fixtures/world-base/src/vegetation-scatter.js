@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { loadTable, loadModels, pickWeighted, makeMaterial, makeMaterialSet, makeBatch, makeBatches, getAerial, getContext, hash32, rngFrom, fbm, noise2, smooth, focusFalloff } from './scatter-common.js';
+import { loadTable, loadModels, pickWeighted, makeMaterial, makeMaterialSet, makeBatch, makeBatches, limitInstancedDetailDistance, getAerial, getContext, hash32, rngFrom, fbm, noise2, smooth, focusFalloff } from './scatter-common.js';
 import { addStationLawn } from './transition.js';
 import { SWARD_COOL, SWARD_WARM, SWARD_WARMTH, SWARD_DAPPLE, SWARD_PAINT_FIELD, SWARD_EXPOSURE } from './island-ground.js';
 import { ATMOSPHERE, CLOUD_SHADOW, NOISE, TERRAIN_LOOKUP, VALUE_NOISE_2D } from '../upstream/petalwake/src/shaders/common.js';
@@ -26,6 +26,8 @@ import { SKY_UNIFORMS } from '../upstream/petalwake/src/world/sky.js';
 // Caps (`cap`) thin a class uniformly when the budget (1.5 M triangles, 60 draw calls for props + vegetation) would be exceeded.
 
 export const vegEnabled = () => new URLSearchParams(location.search).get('veg') !== 'off';
+// Keep the complete F and H plantings in their own approved views.
+const MEADOW_DETAIL_DISTANCE = 110;
 
 export const PARAMS = {
   seed: 2112,
@@ -525,7 +527,12 @@ export async function createVegetation({ scene, worldBase, island, station, flow
       const batches = meadowSward[index].carpet
         ? [makeBatch({ name: batchName, model: model[kind], material: carpetMaterial, items: list })]
         : makeBatches({ name: batchName, model: model[kind], materials, items: list });
-      root.add(...batches);
+      for (const mesh of batches) {
+        // Flower-bed base clumps can still use the existing island grass assets.
+        // Only the sculpted Blender tuft variants use this distance tier.
+        if (kind === 'meadowFan' || kind === 'meadowSweep') limitInstancedDetailDistance(mesh, MEADOW_DETAIL_DISTANCE);
+        root.add(mesh);
+      }
       drawCalls += batches.length;
       triangles += model[kind].tris * list.length;
       counts[kind] = (counts[kind] ?? 0) + list.length;
@@ -535,6 +542,7 @@ export async function createVegetation({ scene, worldBase, island, station, flow
     const material = shortSwardMaterial(station.ctx.mat.gradientMap, aerial, island.U.uTime);
     for (const { name, carpet, cells } of meadowSward) for (const [key, { kind, items: tiles }] of cells) {
       const mesh = makeBatch({ name: `vegetation-${name}-sward-${key}`, model: model[kind], material: carpet ? carpetMaterial : material, items: tiles });
+      limitInstancedDetailDistance(mesh, MEADOW_DETAIL_DISTANCE);
       root.add(mesh);
       drawCalls++;
       triangles += model[kind].tris * tiles.length;

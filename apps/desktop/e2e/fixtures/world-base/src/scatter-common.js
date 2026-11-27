@@ -233,6 +233,34 @@ export function makeBatch({ name, model, material, items }) {
   return mesh;
 }
 
+/** Retain the full batch for shadow and picking passes. Only perspective
+ *  colour draws beyond the nearest edge of its world bounds are omitted. */
+export function limitInstancedDetailDistance(mesh, distance) {
+  mesh.computeBoundingBox();
+  const savedWorld = new THREE.Matrix4(), bounds = new THREE.Box3(), eye = new THREE.Vector3();
+  const before = mesh.onBeforeRender, after = mesh.onAfterRender, counts = [];
+  mesh.userData.detailDrawDistance = distance;
+  mesh.onBeforeRender = function (renderer, scene, camera, geometry, material, group) {
+    before.call(this, renderer, scene, camera, geometry, material, group);
+    const count = counts.length ? counts[0] : this.count;
+    counts.push(this.count);
+    if (!camera.isPerspectiveCamera) {
+      this.count = count;
+      return;
+    }
+    if (bounds.isEmpty() || !savedWorld.equals(this.matrixWorld)) {
+      savedWorld.copy(this.matrixWorld);
+      bounds.copy(this.boundingBox).applyMatrix4(savedWorld);
+    }
+    eye.setFromMatrixPosition(camera.matrixWorld);
+    this.count = bounds.distanceToPoint(eye) > distance ? 0 : count;
+  };
+  mesh.onAfterRender = function (renderer, scene, camera, geometry, material, group) {
+    this.count = counts.pop();
+    after.call(this, renderer, scene, camera, geometry, material, group);
+  };
+}
+
 /** One InstancedMesh per part of a model (solid geometry, alpha-card geometry), same records. materials = makeMaterialSet(). */
 export function makeBatches({ name, model, materials, items }) {
   const out = [];

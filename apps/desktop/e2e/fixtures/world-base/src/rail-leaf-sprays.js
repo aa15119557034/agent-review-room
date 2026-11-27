@@ -1,7 +1,9 @@
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { terrainH } from '../upstream/sakuragaoka/src/world/environment/common.js';
+import { limitInstancedDetailDistance } from './scatter-common.js';
 
+const LEAF_DETAIL_DISTANCE = 60;
 // Low sprays follow the measured shoulders of the two R4 shrubs. Their bases sit inside the
 // crowns. Each row gives local x, z, height above ground, yaw, pitch, roll, and scale.
 const placements = {
@@ -60,6 +62,7 @@ export async function addRailLeafSprays(ctx) {
     mesh.castShadow = true;
     mesh.receiveShadow = true;
     mesh.computeBoundingSphere();
+    limitInstancedDetailDistance(mesh, LEAF_DETAIL_DISTANCE);
     ctx.addStatic(mesh);
   }
 }
