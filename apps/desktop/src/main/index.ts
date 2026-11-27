@@ -16,7 +16,7 @@ import {
 import { APP_DISPLAY_NAME, type AppEntry } from "./shell-policy";
 import { DEFAULT_WINDOW_SIZE, MIN_WINDOW_SIZE } from "./window-state";
 import { dirname, join, isAbsolute } from "node:path";
-import { openDatabase, repairInterruptedRuns, WriteQueue } from "@room/db";
+import { openDatabase, readResearchPlan, repairInterruptedRuns, WriteQueue } from "@room/db";
 import { HttpRemoteAgentAdapter } from "@room/remote-client";
 import { IMAGE_URL_SCHEME, AUDIO_URL_SCHEME, IPC_CHANNELS, type ControlEvent } from "@room/schemas";
 import { ChatService } from "./chat";
@@ -34,6 +34,7 @@ import { MediaVoiceStore } from "./voice-store";
 import { VoiceService } from "./voice";
 import { migrateLegacyReviewerNode, NodeService, resolveRunTarget } from "./nodes";
 import { RunOrchestrator } from "./orchestrator";
+import { ProjectResearchService } from "./project-research";
 import { Repository } from "./repository";
 import { SettingsStore } from "./settings";
 import { loadTtsConfigFile, TtsRunner, voiceOptionsOf } from "./tts";
@@ -284,6 +285,7 @@ async function bootstrap(): Promise<void> {
   migrateLegacyReviewerNode(db, settings);
 
   let discussion: DiscussionService | null = null;
+  let research: ProjectResearchService | null = null;
 
   // C-46 / D-46a：项目笔记（存版本 + 从回答里切 room-note + 拼 Prompt 用）
   const github = new GithubSyncService({ db, settings, emit: broadcast });
@@ -304,7 +306,11 @@ async function bootstrap(): Promise<void> {
     getRun: (runId) => db.prepare("SELECT * FROM runs WHERE id = ?").get(runId) as never,
     // 讨论室的收尾要推 message.created / turn.updated / round.updated …，交给 DiscussionService
     onDiscussionSettled: (settlement) => discussion?.settled(settlement),
-    adapterFactory: async (run) => {
+    adapterFactory: async (run, signal) => {
+      if (readResearchPlan(db, run.snapshot_id)) {
+        if (!research) throw new Error("project research service not ready");
+        return research.createAdapter(run, signal);
+      }
       // 讨论室：agent -> node -> 地址与 Token；Phase 0 的评审 Run 沿用原来的 Reviewer 设置
       // C-40 的 model 也在 target 里：和 e2e harness 共用 nodes.ts 的同一份查询
       const target = resolveRunTarget(db, settings, run);
@@ -335,6 +341,7 @@ async function bootstrap(): Promise<void> {
   });
 
   const nodes = new NodeService({ repo, settings });
+  research = new ProjectResearchService({ db, queue, repo, settings, orchestrator, emit: broadcast });
 
   // D-31b：聊天服务。Run 走各自的聊天 profile（只读、无工具），和讨论室的 Run 分开
   const chat = new ChatService({
@@ -470,6 +477,7 @@ async function bootstrap(): Promise<void> {
     activateDirectory: (target) => {
       if(target===null){rmSync(dataLocationFile,{force:true});}
       else {mkdirSync(defaultDataDirectory,{recursive:true});writeFileSync(dataLocationFile+".tmp",JSON.stringify({directory:target}),"utf8");renameSync(dataLocationFile+".tmp",dataLocationFile);}
+      research?.invalidate();
       setTimeout(()=>{app.relaunch();app.quit();},250);
     },
     chooseDirectory: async (title) => { const result = await dialog.showOpenDialog({title, properties:["openDirectory", "createDirectory"]}); return result.canceled ? null : result.filePaths[0] ?? null; },
@@ -513,6 +521,7 @@ async function bootstrap(): Promise<void> {
     voice,
     packs,
     nodes,
+    research,
     appVersion: app.getVersion(),
     recoveredRuns: repaired.repaired.length + repairedChat,
     emit: broadcast,
@@ -526,6 +535,7 @@ async function bootstrap(): Promise<void> {
     event.preventDefault();
     if (shuttingDown) return;
     shuttingDown = true;
+    research?.invalidate();
     ipcMain.removeHandler(IPC_CHANNELS.command);
     ipcMain.removeHandler(IPC_CHANNELS.query);
     powerMonitor.removeListener("suspend", onSuspend);

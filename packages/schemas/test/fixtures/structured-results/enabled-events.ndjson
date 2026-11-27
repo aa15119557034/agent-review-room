@@ -1,0 +1,9 @@
+{"type":"started","seq":0,"ts":"2026-11-16T00:00:00.000Z"}
+{"type":"result_display","seq":1,"ts":"2026-11-16T00:00:00.000Z","result":{"version":1,"block":{"kind":"tool_step","stepId":"fetch-1","tool":"fetch","status":"completed","summary":"已取回合成材料"}}}
+{"type":"result_display","seq":2,"ts":"2026-11-16T00:00:00.000Z","result":{"version":1,"block":{"kind":"citation","citationId":"1","source":{"source":{"kind":"web","url":"https://example.com/material-a"},"version":"9bd7afe5d5065ee698b2e5cd9c2e3392c2a6e4d7839f11130ff7e79a5db548b2","contentHash":"9bd7afe5d5065ee698b2e5cd9c2e3392c2a6e4d7839f11130ff7e79a5db548b2","retrievedAt":"2026-11-16T00:00:00.000Z","status":"readable"},"title":"匿名资料 A"}}}
+{"type":"result_display","seq":3,"ts":"2026-11-16T00:00:00.000Z","result":{"version":1,"block":{"kind":"citation","citationId":"2","source":{"source":{"kind":"web","url":"https://example.com/missing"},"version":null,"contentHash":null,"retrievedAt":"2026-11-16T00:00:00.000Z","status":"missing"},"title":"只找到摘要，正文不可用"}}}
+{"type":"result_display","seq":4,"ts":"2026-11-16T00:00:00.000Z","result":{"version":1,"block":{"kind":"unsupported","originalKind":"future_chart","reason":"unknown_display_kind"}}}
+{"type":"text_delta","seq":5,"ts":"2026-11-16T00:00:00.000Z","text":"匿名协议样本："}
+{"type":"message_complete","seq":6,"ts":"2026-11-16T00:00:00.000Z","text":"匿名协议样本：完整正文包含引用 [1]。\n第二行保留中文和 emoji 🌿。"}
+{"type":"result_display","seq":7,"ts":"2026-11-16T00:00:00.000Z","result":{"version":1,"block":{"kind":"usage","scope":"run","inputTokens":{"status":"unknown","reason":"not_reported"},"outputTokens":{"status":"unknown","reason":"not_reported"},"toolCalls":{"status":"measured","value":1},"cost":{"status":"unknown","reason":"not_reported"}}}}
+{"type":"terminal","seq":8,"ts":"2026-11-16T00:00:00.000Z","result":{"outcome":"completed","exitCode":0}}

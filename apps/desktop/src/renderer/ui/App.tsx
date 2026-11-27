@@ -10,6 +10,7 @@ import { ChatView } from "./chat/ChatView";
 import { ConsoleView } from "./ConsoleView";
 import { NotesSheetHost } from "./notes/NoteSheets";
 import { WorldView } from "./world/WorldView";
+import { SourcePreviewDemo } from "../mock/source-preview";
 
 /**
  * 整体布局：项目 / 四个工作步骤 / 运行记录。
@@ -38,6 +39,7 @@ export function App() {
 function Shell() {
   const view = useAppState((s) => s.view);
   const actions = useActions();
+  const isMock = useIsMock();
   // 秘书在不在线：节点开关机没有事件通知，换页时和每隔一会儿（窗口看得见时）重读一次（C-04）
   useEffect(() => {
     if (view === "settings" || view === "workspace" || view === "desk" || view === "world") return;
@@ -54,6 +56,9 @@ function Shell() {
       document.removeEventListener("visibilitychange", onVisible);
     };
   }, [view, actions]);
+  if (isMock && new URLSearchParams(location.search).has("sources")) {
+    return <div className="shell shell-console"><TopBar /><SourcePreviewDemo /></div>;
+  }
   // 设置和「资料与维护」是同一页的不同分区（C-50），用同一个组件，切换时分区选择不丢
   if (view === "settings" || view === "workspace") {
     return (

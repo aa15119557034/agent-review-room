@@ -1,0 +1,2 @@
+*.json text eol=lf
+*.ndjson text eol=lf

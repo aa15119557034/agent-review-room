@@ -471,6 +471,31 @@ describe("reviewer output message (AC-8)", () => {
     db.close();
   });
 
+  it("cancelling while ordinary review completion waits for the writer suppresses its output", async () => {
+    const { db } = freshDb();
+    const queue = new WriteQueue(), controller = new AbortController();
+    const run = await runningRun(db, queue);
+    let release!: () => void, entered!: () => void;
+    const gate = new Promise<void>((resolve) => { release = resolve; });
+    const waiting = new Promise<void>((resolve) => { entered = resolve; });
+    try {
+      const blocking = queue.run(async () => { entered(); await gate; });
+      await waiting;
+      const finishing = finishRun(db, queue, run.id, {
+        from: "RUNNING", signal: controller.signal, terminal: { type: "completed" },
+        reviewerOutput: { content: "late review result", sourceAgent: "claude-review" },
+      });
+      assert.equal(queue.pending, 2);
+      controller.abort();
+      release(); await blocking;
+      const finished = await finishing;
+      assert.equal(finished.state, "CANCELLED");
+      assert.equal(finished.message, null);
+      assert.equal(count(db, "SELECT count(*) AS n FROM messages"), 0);
+      assert.deepEqual(getRunWithEvents(db, run.id)!.events.map((event) => event.type), ["cancelled"]);
+    } finally { release(); await queue.drain(); db.close(); }
+  });
+
   it("does not store output for error / cancelled / timed_out", async () => {
     for (const terminal of [
       { type: "error" as const, reason: "internal" as const },

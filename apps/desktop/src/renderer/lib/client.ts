@@ -77,7 +77,7 @@ export function describeFailure(err: unknown, agents: readonly { id: string; dis
   if (!(err instanceof ControlFailure)) return err instanceof Error ? err.message : String(err);
   const message = withAgentNames(err.message, agents);
   const hint: Partial<Record<ControlErrorCode, string>> = {
-    stale_snapshot: "这份内容在你查看之后已经变了，请重新打开预览再批准。",
+    stale_snapshot: "这份内容或引用资料在你查看之后已经变了，请更新资料并重新生成预览再批准。",
     already_decided: "这一项已经处理过了。",
     invalid_state: "现在不能这样操作：状态可能已经变了，刷新后再试。",
     reviewer_not_configured: "还没有设置 Reviewer 节点，请先在“设置”里填写节点地址和 Token。",

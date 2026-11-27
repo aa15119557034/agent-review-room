@@ -1,0 +1,13 @@
+{
+  "kind": "synthetic",
+  "capturedAt": "2026-11-16T00:00:00.000Z",
+  "roomCommit": "77e31174b14036d94988e33e0809c0447efa182d",
+  "protocol": 1,
+  "encoding": "UTF-8; compact JSON; LF; no BOM",
+  "hashes": {
+    "legacy-health.json": "cfdf1f9a1b258982cfd0a3c4e3fc8759b1042136d07f370ec8095c11c0b902d4",
+    "legacy-start.json": "8c9f173d3f1d71bdc9754c89f90a33b9dd549e67e1567f7155dacdd4fa6ca4d2",
+    "legacy-accepted.json": "e9e3f280cebe406f21b3ce36ad3b4ff355881f5d60dc926f61b844a10dc5a53f",
+    "legacy-events.ndjson": "9a2e4040941f2c780dec0a56b3f42bf36f712b49da76cbb6979b2849304d0dee"
+  }
+}

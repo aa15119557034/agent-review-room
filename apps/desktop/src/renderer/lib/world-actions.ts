@@ -5,7 +5,7 @@ import { newId } from "./ids";
 import type { AppState } from "./state";
 import type { Store } from "./store";
 import {
-  applyScene, applySnapshot, applyWorldState, dayOf, mergeEventsPage, pathTo, sameContext, worldContext, worldNow,
+  applyScene, applySnapshot, applyWorldState, dayOf, isStaleState, mergeEventsPage, pathTo, sameContext, worldContext, worldNow,
   type WorldContext, type WorldUiState,
 } from "./world";
 
@@ -68,7 +68,10 @@ export function createWorldActions(store: Store<AppState>, client: RoomClient, f
         if (retries > 0) return load(retries - 1);
         return void set((w) => (w.loaded ? w : { ...w, loaded: true }));
       }
+      const stale = isStaleState(get(), data);
       set((w) => applyWorldState(w, data));
+      // 推送比这份回应新：快照不用，设置也不用（可能已经又保存过），按现在的重读
+      if (stale && retries > 0) return load(retries - 1);
       await loadEvents(true);
     } catch (err) {
       set((w) => ({ ...w, loaded: true }));
@@ -132,11 +135,12 @@ export function createWorldActions(store: Store<AppState>, client: RoomClient, f
       // 局或会话对不上（中间又恢复 / 重开过）就不接这份旧回应，按现在的重读
       const now = context();
       const sameAsNow = now !== null && data.world !== null && now.worldId === data.world.id && now.session === data.world.generation.session;
-      if (stillIn(ctx) || sameAsNow) {
+      if ((stillIn(ctx) || sameAsNow) && !isStaleState(get(), data)) {
         set((x) => applyWorldState(x, data));
         set((x) => (x.starting ? { ...x, starting: false } : x));
         await loadEvents(true);
       } else {
+        // 局 / 会话对不上，或推送已经送来更新的快照：这份回应里的设置也可能过时（回应在路上时又保存过），按现在的重读
         set((x) => ({ ...x, starting: false }));
         await load();
       }

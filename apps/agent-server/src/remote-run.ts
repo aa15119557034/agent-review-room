@@ -1,6 +1,7 @@
 import { spawn, type ChildProcess } from "node:child_process";
 import { StringDecoder } from "node:string_decoder";
-import type { RemoteArtifact, RemoteEvent, RemoteTerminal, RunKind, StartRunRequest } from "@room/schemas";
+import { createHash } from "node:crypto";
+import { ProjectResearchRemoteEvent, type ProjectResearchStartRunRequest, type RemoteArtifact, type StructuredRemoteEvent, type ResultDisplay, type RemoteTerminal, type RunKind, type StartRunRequest } from "@room/schemas";
 import type { Profile, ServerConfig } from "./config";
 import { killTree, spawnDetached } from "./process-tree";
 import { createParser, type OutputParser, type ParserOutput, type ParserVerdict } from "./parsers";
@@ -19,6 +20,7 @@ import {
   type HeldArtifact,
 } from "./image-artifact";
 
+type RemoteEvent = StructuredRemoteEvent | ProjectResearchRemoteEvent;
 type SeqEvent = Exclude<RemoteEvent, { type: "heartbeat" }>;
 /** 非零退出时带上 stderr 的最后这么多字 */
 const STDERR_TAIL_CHARS = 400;
@@ -34,6 +36,7 @@ export class RemoteRun {
   readonly runId: string;
   readonly profileId: string;
   readonly contentHash: string;
+  readonly snapshotId: string;
   /** 请求里的模型和强度；undefined = 用 profile 自带的 */
   readonly model: StartRunRequest["model"];
   /** 省略 = text（幂等比较前先归一化） */
@@ -42,6 +45,9 @@ export class RemoteRun {
   readonly attachmentShas: readonly string[];
   /** StartRun.chat 原样序列化（没带 = "none"），幂等比较用 */
   readonly chatKey: string;
+  readonly structuredResults: StartRunRequest["structuredResults"];
+  readonly projectResearch: ProjectResearchStartRunRequest["projectResearch"] | undefined;
+  private readonly pendingResearchDisplays: ResultDisplay[] = [];
 
   private readonly events: SeqEvent[] = [];
   private readonly subscribers = new Set<Subscriber>();
@@ -62,7 +68,7 @@ export class RemoteRun {
   private finishedAt: number | undefined;
 
   constructor(
-    req: StartRunRequest,
+    req: StartRunRequest | ProjectResearchStartRunRequest,
     private readonly profile: Profile,
     private readonly cfg: ServerConfig,
     private readonly onFinished: (run: RemoteRun) => void,
@@ -74,10 +80,13 @@ export class RemoteRun {
     this.runId = req.runId;
     this.profileId = req.profileId;
     this.contentHash = req.snapshot.contentHash;
+    this.snapshotId = req.snapshot.id;
     this.model = req.model;
     this.kind = req.kind ?? "text";
     this.attachmentShas = (req.attachments ?? []).map((a) => a.sha256);
     this.chatKey = chatKeyOf(req.chat);
+    this.structuredResults = req.structuredResults;
+    this.projectResearch = "projectResearch" in req ? req.projectResearch : undefined;
     this.promptFinal = prepared.promptFinal;
     this.limits = {
       idleTimeoutMs: Math.min(req.limits.idleTimeoutMs, profile.maxIdleTimeoutMs),
@@ -91,7 +100,7 @@ export class RemoteRun {
       this.input = prepared.content;
       this.extraArgs = [];
     }
-    this.parser = createParser(profile.parser);
+    this.parser = createParser(profile.parser, this.projectResearch !== undefined);
   }
 
   private readonly limits: { idleTimeoutMs: number; totalTimeoutMs: number };
@@ -152,6 +161,11 @@ export class RemoteRun {
     try {
       let args = [...buildArgs(this.profile, this.model), ...this.extraArgs];
       const env = buildProfileEnv(this.profile);
+      // Local configuration cannot impersonate per-run negotiation through an inherited variable.
+      delete env["ROOM_STRUCTURED_RESULTS_VERSION"];
+      delete env["ROOM_PROJECT_RESEARCH_VERSION"];
+      if (this.structuredResults !== undefined) env["ROOM_STRUCTURED_RESULTS_VERSION"] = String(this.structuredResults.version);
+      if (this.projectResearch !== undefined) env["ROOM_PROJECT_RESEARCH_VERSION"] = String(this.projectResearch.version);
       if (this.kind === "image" && this.profile.imageRun) {
         // 每个 image Run 一个新目录，归属可证明；只从这里取图、只删这里（image-artifact.ts）
         const dir = runOutputDir(this.profile.imageRun.outputDir, this.runId);
@@ -207,12 +221,28 @@ export class RemoteRun {
       // 退出码非 0 时也先问解析器：CLI 因为额度用尽退出时，原因只写在结构化输出里（C-25）
       const { trailing, verdict } = this.parser.finish();
       this.emitParsed(trailing);
+      if (this.pendingOutcome) { this.finish(this.pendingOutcome); return; }
       if (!verdict.ok && verdict.reason === "quota_exhausted") {
         this.finish({ outcome: "error", reason: "quota_exhausted", exitCode: code, message: verdict.message });
       } else if (code !== 0) {
         this.finish({ outcome: "error", reason: "process_exit_nonzero", exitCode: code, message: this.exitMessage(code, verdict) });
       } else if (verdict.ok) {
-        this.push({ type: "message_complete", seq: 0, ts: "", text: verdict.finalText });
+        if (this.projectResearch !== undefined) {
+          const parsed = ProjectResearchRemoteEvent.safeParse({ type: "message_complete", seq: 0, ts: new Date().toISOString(), text: verdict.finalText, source: verdict.source });
+          const digest = createHash("sha256").update(verdict.finalText, "utf8").digest("hex");
+          if (!parsed.success || parsed.data.type !== "message_complete" ||
+              (parsed.data.source !== null && parsed.data.source.contentHash !== digest) ||
+              this.pendingResearchDisplays.some(({ block }) => block.kind === "citation" &&
+                (parsed.data.type !== "message_complete" || parsed.data.source === null ||
+                 block.source.source.kind !== "web" || parsed.data.source.source.kind !== "web" ||
+                 block.source.source.url !== parsed.data.source.source.url || block.source.version !== parsed.data.source.version ||
+                 block.source.contentHash !== parsed.data.source.contentHash))) {
+            this.finish({ outcome: "error", reason: "incomplete_output", exitCode: 0, message: "invalid research original or citation" });
+            return;
+          }
+          this.push(parsed.data);
+          this.flushResearchDisplays(true);
+        } else this.push({ type: "message_complete", seq: 0, ts: "", text: verdict.finalText });
         this.complete();
       } else {
         this.finish({ outcome: "error", reason: verdict.reason, exitCode: 0, message: verdict.message });
@@ -292,9 +322,27 @@ export class RemoteRun {
 
   private emitParsed(items: ParserOutput[]): void {
     for (const item of items) {
-      if (item.kind === "text_delta") this.push({ type: "text_delta", seq: 0, ts: "", text: item.text });
+      if (this.isFinished || this.pendingOutcome) return;
+      if (item.kind === "result_display") {
+        if (this.structuredResults === undefined) this.stop({ outcome: "error", reason: "internal", exitCode: null, message: "unnegotiated structured result" });
+        else if (this.projectResearch !== undefined && (item.result.block.kind === "usage" ||
+          (item.result.block.kind === "citation" && item.result.block.source.status === "readable"))) {
+          if (this.pendingResearchDisplays.length >= 200) this.stop({ outcome: "error", reason: "output_limit_exceeded", exitCode: null });
+          else this.pendingResearchDisplays.push(item.result);
+        }
+        else this.push({ type: "result_display", seq: 0, ts: "", result: item.result });
+      } else if (item.kind === "text_delta") {
+        if (this.projectResearch !== undefined) this.stop({ outcome: "error", reason: "incomplete_output", exitCode: null, message: "research cannot stream partial originals" });
+        else this.push({ type: "text_delta", seq: 0, ts: "", text: item.text });
+      }
       else if (item.kind === "rate_limit") this.onRateLimit?.(item.info);
       else this.push({ type: "output", seq: 0, ts: "", stream: "stdout", data: item.line + "\n" });
+    }
+  }
+
+  private flushResearchDisplays(includeCitations: boolean): void {
+    for (const result of this.pendingResearchDisplays.splice(0)) {
+      if (includeCitations || result.block.kind === "usage") this.push({ type: "result_display", seq: 0, ts: "", result });
     }
   }
 
@@ -339,6 +387,7 @@ export class RemoteRun {
 
   private finish(result: RemoteTerminal): void {
     if (this.isFinished) return; // 单次守卫：保证恰好一个 terminal
+    this.flushResearchDisplays(false);
     this.terminal = result;
     // image Run 不管成败都删掉自己的目录（成功时图已经读进内存）；只删这次 Run 建的那个目录
     if (this.outputDir) {

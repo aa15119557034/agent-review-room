@@ -1,22 +1,39 @@
 import { useEffect, useState } from "react";
-import { RUN_TRANSITIONS, canTransition, type Run } from "@room/schemas";
+import { RUN_TRANSITIONS, canTransition, type Run, type QueryResponse } from "@room/schemas";
 import { runTranscript, selectedRun, terminalEvent } from "../lib/state";
 import { useActions, useAppState } from "./hooks";
 import { FAILURE_REASON_LABEL, RUN_STATE_LABEL, formatClock, formatDuration, formatTime, runTone } from "./labels";
+import { CurrentSourceReferences } from "./CurrentSourceReferences";
+import { ResearchResult } from "./ProjectResearch";
 
 /** 第 4 步：查看当前选中（默认最新）的评审结果 */
 export function ResultStep() {
   const run = useAppState(selectedRun);
+  const actions = useActions();
+  const snapshot = useAppState((s) => run ? s.snapshots[run.snapshotId] : undefined);
+  useEffect(() => { if (run) void actions.ensureSnapshot(run.snapshotId); }, [actions, run?.snapshotId]);
   if (!run) {
     return <p className="step-empty">批准一份 prompt 后，Reviewer 的回复会显示在这里。</p>;
   }
-  return <RunDetail key={run.id} run={run} />;
+  if (!snapshot) return <p className="step-empty">正在读取运行记录…</p>;
+  return snapshot.adapterVersion === "project-research-v1" ? <ResearchRun key={run.id} run={run} /> : <RunDetail key={run.id} run={run} />;
+}
+
+function ResearchRun({ run }: { run: Run }) {
+  const actions = useActions(), [result, setResult] = useState<QueryResponse<"research.result"> | null>(null);
+  useEffect(() => {
+    let current = true;
+    void actions.research.result(run.projectId, run.id).then((value) => { if (current) setResult(value ?? null); });
+    return () => { current = false; };
+  }, [actions, run]);
+  return result ? <ResearchResult result={result} /> : <p className="step-empty">正在读取检索记录…</p>;
 }
 
 function RunDetail({ run }: { run: Run }) {
   const actions = useActions();
   const transcript = useAppState((s) => runTranscript(s, run.id));
   const terminal = useAppState((s) => terminalEvent(s, run.id));
+  const message = useAppState((s) => s.messages.find((m) => "runId" in m && m.runId === run.id));
   const [cancelling, setCancelling] = useState(false);
   const canCancel = canTransition(RUN_TRANSITIONS, run.state, "CANCELLED") && !cancelling;
   const tone = runTone(run.state);
@@ -81,6 +98,7 @@ function RunDetail({ run }: { run: Run }) {
       )}
 
       <SentPrompt snapshotId={run.snapshotId} />
+      {message && <CurrentSourceReferences projectId={message.projectId} owner={{ kind: "message", id: message.id }} references={message.sourceRefs} />}
     </article>
   );
 }
@@ -107,6 +125,7 @@ function SentPrompt({ snapshotId }: { snapshotId: string }) {
               指纹 <span className="hash" title={snapshot.contentHash} data-hash={snapshot.contentHash}>{snapshot.contentHash.slice(0, 12)}</span>
             </p>
             <pre className="prompt-text">{snapshot.content}</pre>
+            <CurrentSourceReferences projectId={snapshot.projectId} owner={{ kind: "snapshot", id: snapshot.id }} references={snapshot.sourceRefs} />
           </>
         ) : (
           <p className="step-empty">正在读取…</p>

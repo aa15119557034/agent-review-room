@@ -12,7 +12,7 @@
  */
 import { randomInt, createHash } from "node:crypto";
 import { deflateSync } from "node:zlib";
-import { StartRunRequest, attachmentImageBlock, attachmentImageSlotMarker, attachmentManifestBlock, type RemoteEvent } from "@room/schemas";
+import { StartRunRequest, attachmentImageBlock, attachmentImageSlotMarker, attachmentManifestBlock, type StructuredRemoteEvent as RemoteEvent } from "@room/schemas";
 import { loadConfig } from "./config";
 import { RemoteRun } from "./remote-run";
 import { checkModel } from "./model-args";
