@@ -145,7 +145,7 @@ async function init() {
     if (islandSward) island.meadow.hide = { ...island.meadow.hide, grass: true };
   }
   const cascadeRocks = await (await import('./cascade-rocks.js')).addCascadeRocks(island);
-  (await import('./cascade-mist.js')).addCascadeMist(island);
+  const cascadeMist = (await import('./cascade-mist.js')).addCascadeMist(island);
   worldBase.cascadeRocks = cascadeRocks;
   look.applyIsland(island);
   if (groundParams) for (const [material, label] of [[island.terrain.material, 'terrain'], [island.transition.material, 'transition']]) {
@@ -385,7 +385,7 @@ async function init() {
   if (toonEnabled() && signLinesEnabled(worldBase.toon27?.params)) worldBase.toonSigns = markSignMaterials(scene);
   // Round 22: render the zone cubes last, once the whole world (glows, signs, weathering, toon chunks) is final and before the
   // first frame, so every screenshot after worldBase.ready sees the same cubes.
-  look.installCascadeLook(scene, island, cascadeRocks);
+  look.installCascadeLook(scene, island, cascadeRocks, cascadeMist, worldBase.cascadeFoliage?.group);
   if (refl) {
     stage('正在烘焙湿路分区反射…');
     const zonesBake = await bakeStreetZones({ world: worldBase, layout: layoutModule, params: refl, uniforms: station.zones.uniforms,

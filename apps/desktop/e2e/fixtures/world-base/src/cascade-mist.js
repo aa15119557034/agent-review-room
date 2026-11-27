@@ -77,4 +77,5 @@ void main(){
   mist.name = 'cascade-plunge-mist';
   mist.renderOrder = 15;
   island.river.group.add(mist);
+  return mist;
 }

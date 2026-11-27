@@ -551,7 +551,7 @@ void main(){`, 'cascade rock toes');
     water.needsUpdate = true;
   }
 
-  function installCascadeLook(scene, island, rocks) {
+  function installCascadeLook(scene, island, rocks, mist, foliage) {
     const terrainMesh = island.terrain.mainView.mesh, waterMesh = island.water.mesh;
     const terrain = terrainMesh.material, water = waterMesh.material;
     const cascadeTerrain = terrain.clone(), cascadeWater = water.clone();
@@ -579,6 +579,9 @@ void main(){`, 'cascade rock toes');
       if (visible) lod.value = 1 - THREE.MathUtils.smoothstep(distance, 400, 550);
       terrainMesh.material = visible ? cascadeTerrain : terrain;
       waterMesh.material = visible ? cascadeWater : water;
+      rocks.group.visible = visible;
+      mist.visible = visible;
+      if (foliage) foliage.visible = visible;
     };
   }
   return {
