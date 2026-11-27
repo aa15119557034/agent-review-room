@@ -10,7 +10,7 @@ const GONDOLA_X = [-2.65, -0.2, 2.3];
 const GONDOLA_BACK = -9.8, GONDOLA_FRONT = -4.6;
 const GONDOLA_W = 0.92, GONDOLA_COLLIDER_BACK = GONDOLA_BACK - 0.2, GONDOLA_COLLIDER_FRONT = GONDOLA_FRONT + 0.34;
 
-export function buildKonbiniInterior(ctx, C, S, D, authored = false) {
+export function buildKonbiniInterior(ctx, C, S, D, authored = false, softHighlights = false) {
   const { A, U, F } = C; const G = C.G; const k = S.k;
   const M = authored ? { ...C.M, inner: C.M.fluorescent } : C.M;
   const { FY, CY, IX0, IX1, IZ0, IZ1, gx, TEAL, TEAL_D, YEL, INK } = D;
@@ -23,7 +23,8 @@ export function buildKonbiniInterior(ctx, C, S, D, authored = false) {
   const mWhite = M.inner('#eceae4', 0.32), mShelf = M.inner('#e2e0d9', 0.32), mBase = M.inner('#cfccc4', 0.25);
   const mKick = M.inner('#8f969d', 0.2), mMetal = M.inner('#b8bdc2', 0.28), mDark = M.inner('#4f5358', 0.16), mInk = M.inner('#3a3346', 0.1);
   const mTealI = M.inner(TEAL, 0.28), mYelI = M.inner(YEL, 0.3), mPeg = M.inner('#dcd9d1', 0.3), mBody = M.inner('#e6e6e2', 0.3);
-  const mGlass = ctx.mat.glass({ opacity: 0.05, streaks: false, tint: '#c9d6de' }), mLamp = M.glow(authored ? '#eaf7ff' : '#fff3dc', 1.3), mLed = M.glow('#f4f9ff', 1.2);
+  const mGlass = ctx.mat.glass({ opacity: 0.05, streaks: false, tint: '#c9d6de' });
+  const mLamp = M.glow(authored ? '#eaf7ff' : '#fff3dc', softHighlights ? 0.91 : 1.3), mLed = M.glow('#f4f9ff', 1.2);
   const mPink = M.inner('#f7d3de', 0.35), mCounter = M.inner('#f1efe9', 0.32), mTop = M.inner('#d6d2c8', 0.3);
 
   // printed price rail (flat graphic) — one strip reused on every shelf edge
@@ -99,11 +100,7 @@ export function buildKonbiniInterior(ctx, C, S, D, authored = false) {
         const tx = x + gap / 2 + w / 2, tz = z + gap / 2 + d / 2;
         const base = (ix + iz) % 2 ? 0.93 : 0.9;
         const edge = Math.min(tx - IX0, IX1 - tx, tz - IZ0);
-        const shelfX = Math.min(...GONDOLA_X.map(sx => Math.max(0, Math.abs(sx - tx) - GONDOLA_W / 2)));
-        const shelfEnd = Math.max(GONDOLA_COLLIDER_BACK - tz, tz - GONDOLA_COLLIDER_FRONT, 0);
-        const shelf = Math.hypot(shelfX, shelfEnd);
-        const shade = Math.min(edge, shelf);
-        const band = authored ? (shade < 0.26 ? 0.64 : shade < 0.51 ? 0.82 : 1) : 1;
+        const band = authored ? (edge < 0.26 ? 0.64 : edge < 0.51 ? 0.82 : 1) : 1;
         const c = tileColor.clone().multiplyScalar((base + rr() * 0.04) * band);
         G.add('tile', S, [tx, FY + 0.005, tz], [w, 1, d], c);
       }

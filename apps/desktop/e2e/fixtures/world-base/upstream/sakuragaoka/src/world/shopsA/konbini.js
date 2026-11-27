@@ -101,7 +101,9 @@ export function buildKonbini(ctx, C, fixtures) {
   const mWall = M.wall('#e8e7e2'), mWall2 = M.wall('#dedcd5'), mAlu = M.t('#b8bdc2'), mAluD = M.t('#8f969d');
   const mTeal = M.t(TEAL), mYel = M.t(YEL);
   const roomMaterial = fixtures ? M.fluorescent : M.inner;
-  const mIn = roomMaterial('#efece4', 0.45), mInW = roomMaterial('#f3f1eb', 0.45);
+  const softHighlights = fixtures?.userData.softenWindowHighlights;
+  const mIn = roomMaterial(softHighlights ? '#cfd8e1' : '#efece4', 0.45);
+  const mInW = roomMaterial(softHighlights ? '#ccd6df' : '#f3f1eb', 0.45);
   const glass = M.glass({ opacity: 0.2 });
   const H = FY; // floor
 
@@ -216,6 +218,12 @@ export function buildKonbini(ctx, C, fixtures) {
   dg.name = 'w1-auto-door';
   const dz = ZF - 0.18;
   const mDoorGlass = M.glass({ opacity: 0.16 });
+  if (softHighlights) ctx.services.konbiniGlazing = {
+    material: glass, fixtures,
+    front: [frontPanes[0][0] - .02, dz - .02, frontPanes.at(-1)[1] + .02, gz + .02],
+    corner: [gx - .02, NW0 - .02, gx + .02, NW1 + .02],
+    bottom: FY, top: WTOP,
+  };
   const rAuto = A.lit.region(96, 40, (g, w, h) => { g.fillStyle = '#ffffff'; g.fillRect(0, 0, w, h); U.text(g, '自動ドア', w / 2, h * 0.36, 17, F.sans, '#2c6aa0', { weight: 700 }); U.text(g, 'AUTOMATIC DOOR', w / 2, h * 0.78, 8.5, F.en, '#2c6aa0', { weight: 700 }); });
   for (const s of [-1, 1]) {
     const pg = new THREE.Group(); pg.position.set(doorX + s * 0.5, FY, dz); dg.add(pg); const kk = ctx.kit(pg);
@@ -408,7 +416,7 @@ export function buildKonbini(ctx, C, fixtures) {
   k.plane(NW0 - IZ0, CY - FY, mIn, [IX1 - 0.005, (FY + CY) / 2, (IZ0 + NW0) / 2], [0, -Math.PI / 2, 0]);
   k.box(IX1 - IX0, 0.12, 0.02, M.inner('#b9bcc0', 0.2), [(IX0 + IX1) / 2, FY + 0.06, IZ0 + 0.012]);
   k.box(0.02, 0.12, IZ1 - IZ0, M.inner('#b9bcc0', 0.2), [IX0 + 0.012, FY + 0.06, (IZ0 + IZ1) / 2]);
-  buildKonbiniInterior(ctx, C, S, { FY, CY, IX0, IX1, IZ0, IZ1, NW0, NW1, gx, gz, TEAL, TEAL_D, YEL, CREAM, INK }, Boolean(fixtures));
+  buildKonbiniInterior(ctx, C, S, { FY, CY, IX0, IX1, IZ0, IZ1, NW0, NW1, gx, gz, TEAL, TEAL_D, YEL, CREAM, INK }, Boolean(fixtures), softHighlights);
 
   // ---------------- exterior: bins, umbrella stand, flags, signs
   {

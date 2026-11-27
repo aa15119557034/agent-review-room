@@ -9,18 +9,35 @@ import { paintWallTile } from '../upstream/petalwake/src/world/wall-paint.js';
 export const FACADE_BOUNCE = { color: [0.12, 0.16, 0.17], sunLo: 0.04, sunHi: 0.5, aoMapIntensity: 0.4 };
 export const PAINTED_STEEL = { metalness: 0.15, normalScale: 0.5 };
 const bounceOn = () => typeof location === 'undefined' || new URLSearchParams(location.search).get('shadowtint') !== 'off';
-function addFacadeBounce(material) {
+function addFacadeBounce(material, rearCorridor) {
   const b = FACADE_BOUNCE, c = b.color.map(x => x.toFixed(3)).join(', ');
   material.aoMapIntensity = b.aoMapIntensity;
   material.onBeforeCompile = shader => {
+    if (rearCorridor) {
+      shader.uniforms.uWbRearMin = { value: rearCorridor.min };
+      shader.uniforms.uWbRearMax = { value: rearCorridor.max };
+      shader.fragmentShader = shader.fragmentShader.replace('#include <common>', `#include <common>
+        #define WB_APARTMENT_REAR_LIGHTING
+        uniform vec3 uWbRearMin;
+        uniform vec3 uWbRearMax;
+        float wbApartmentRear(vec3 p) {
+          vec3 edge = min(p - uWbRearMin, uWbRearMax - p);
+          return smoothstep(0.0, 0.25, min(edge.x, min(edge.y, edge.z)));
+        }`);
+    }
     shader.fragmentShader = shader.fragmentShader.replace('#include <lights_fragment_end>', `#include <lights_fragment_end>
 { // wbFacadeBounce
   float fbLum = dot( diffuseColor.rgb, vec3( 0.2126, 0.7152, 0.0722 ) );
   float fbSun = dot( reflectedLight.directDiffuse, vec3( 0.2126, 0.7152, 0.0722 ) ) / max( fbLum, 0.03 );
-  reflectedLight.indirectDiffuse += diffuseColor.rgb * vec3( ${c} ) * ( 1.0 - smoothstep( ${b.sunLo.toFixed(3)}, ${b.sunHi.toFixed(3)}, fbSun ) );
+  vec3 fbFill = vec3( ${c} );
+  #ifdef WB_APARTMENT_REAR_LIGHTING
+    vec3 fbWorld = cameraPosition + geometryPosition * mat3( viewMatrix );
+    fbFill += vec3(0.095, 0.132, 0.158) * wbApartmentRear(fbWorld);
+  #endif
+  reflectedLight.indirectDiffuse += diffuseColor.rgb * fbFill * ( 1.0 - smoothstep( ${b.sunLo.toFixed(3)}, ${b.sunHi.toFixed(3)}, fbSun ) );
 }`);
   };
-  material.customProgramCacheKey = () => 'wbFacadeBounce:' + c;
+  material.customProgramCacheKey = () => 'wbFacadeBounce:' + c + (rearCorridor ? ':rear' : '');
 }
 
 const SHUTTER = 'worn_shutter';
@@ -39,7 +56,7 @@ function configureTexture(texture, name, colorSpace, anisotropy) {
 
 /** City-local ownership. The caller must dispose this after its GB meshes and
  * must not put these textures in the station's borrowed texture cache. */
-export async function createApartmentSurfaces({ renderer, assetBase = '/apartment-assets/' }) {
+export async function createApartmentSurfaces({ renderer, assetBase = '/apartment-assets/', rearCorridor = null }) {
   const loader = new THREE.TextureLoader(), textures = [], materials = {};
   const anisotropy = Math.min(8, renderer.capabilities.getMaxAnisotropy());
   const results = await Promise.allSettled(['diff', 'nor_gl', 'arm'].map(async channel => {
@@ -92,7 +109,9 @@ export async function createApartmentSurfaces({ renderer, assetBase = '/apartmen
     Object.assign(materials.metal, { map: null, metalnessMap: null, metalness: PAINTED_STEEL.metalness });
     materials.metal.normalScale.set(PAINTED_STEEL.normalScale, PAINTED_STEEL.normalScale);
     materials.metal.userData.paintedSteel = true;
-    if (bounceOn()) for (const material of Object.values(materials)) addFacadeBounce(material);
+    if (bounceOn()) for (const [key, material] of Object.entries(materials)) {
+      addFacadeBounce(material, key === 'plaster' || key === 'metal' ? rearCorridor : null);
+    }
   } catch (error) {
     for (const material of Object.values(materials)) material.dispose();
     for (const texture of textures) texture.dispose();

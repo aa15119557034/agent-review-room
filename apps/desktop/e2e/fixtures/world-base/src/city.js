@@ -129,7 +129,8 @@ export async function createCity({ scene, station, island, skyline }) {
   const visibleGround = visibleBankHeight(station, island, matrix, inverse, heightAt);
   try {
     H.paving = createTownPaving(ctx, ownedMaterials);
-    H.apartmentSurfaces = await createApartmentSurfaces({ renderer: station.ctx.renderer });
+    const rearCorridor = island.timeOfDay === 'evening' ? new THREE.Box3() : null;
+    H.apartmentSurfaces = await createApartmentSurfaces({ renderer: station.ctx.renderer, rearCorridor });
     stats.apartmentSurfaces = H.apartmentSurfaces.stats;
     const shops = station.ctx.services.shopsA.buildContext;
     const signs = getLaundrySigns(shops);
@@ -153,6 +154,13 @@ export async function createCity({ scene, station, island, skyline }) {
       const lot = { minX: site.x + b.minX - 0.15, maxX: site.x + b.maxX + 0.15,
         minZ: site.z + b.minZ - 0.15, maxZ: site.z + b.maxZ + 0.15 };
       const ground = checkLot(site.name, lot), base = foundation(site.name, lot, ground);
+      if (rearCorridor && site.shop) {
+        // Ground-floor access, including the landing and the underside of the next slab.
+        rearCorridor.min.set(root.position.x + site.x + b.minX - 0.26, base.top - 0.27,
+          root.position.z + site.z + b.minZ - 0.48);
+        rearCorridor.max.set(root.position.x + site.x + b.maxX + 0.38, base.top + 3.18,
+          root.position.z + site.z - site.depth + 0.36);
+      }
       const before = gb.tris;
       const metadata = buildTownApartment(H, Frame.at(gb, site.x, base.top - root.position.y, site.z), site);
       if (metadata.shopRoom) (station.ctx.services.shopInteriors ||= []).push({ name: site.name, kind: 'laundry', frame: { x: site.x, y: base.top - root.position.y, z: site.z, rotY: 0 }, box: metadata.shopRoom, entrances: metadata.entrances });

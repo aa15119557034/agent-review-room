@@ -169,6 +169,95 @@ float wbMountainStroke(vec3 p, float footprint) {
          step(0.56, n) * (1.0 - smoothstep(0.75, 2.8, footprint));
 }`;
 
+const HARBOUR_LIGHT = /* glsl */`
+float wbHarbourLight(vec3 p) {
+  // Larkhaven's quay runs from x -176 to 14, at z 1121.5.
+  if (p.x <= -192.0 || p.x >= 30.0 || p.z <= 1091.0 || p.z >= 1170.0 || p.y >= 24.0) return 0.0;
+  return smoothstep(-192.0, -169.0, p.x) * (1.0 - smoothstep(10.0, 30.0, p.x))
+       * smoothstep(1091.0, 1111.0, p.z) * (1.0 - smoothstep(1140.0, 1170.0, p.z))
+       * (1.0 - smoothstep(17.0, 24.0, p.y));
+}
+
+vec3 wbHarbourSun(float flagstone) {
+  float source = dot(uSunColor, vec3(0.2126, 0.7152, 0.0722));
+  // Open sea softens the warmer landward light. Only the new inland flags keep
+  // a little warmth in their direct term; the old rail bed stays blue-grey.
+  return source * mix(vec3(0.595, 0.630, 0.695), vec3(0.725, 0.684, 0.632), flagstone);
+}
+`;
+
+const HARBOUR_MIST = /* glsl */`
+uniform mat4 uWbHarbourCamera;
+vec3 wbHarbourMist(vec3 col, vec2 uv) {
+  vec3 eye = uWbHarbourCamera[3].xyz;
+  // One shallow bank of marine air, running along the quay and out over the sea.
+  vec3 q = (eye - vec3(-62.0, 3.7, 1134.0)) / vec3(132.0, 11.5, 29.0);
+  float nearBank = 1.0 - smoothstep(1.3, 2.1, max(max(abs(q.x), abs(q.y)), abs(q.z)));
+  if (nearBank <= 0.0) return col;
+  vec3 view = wbPos(uv);
+  float depth = length(view);
+  vec3 ray = mat3(uWbHarbourCamera) * (view / max(depth, 0.001)) / vec3(132.0, 11.5, 29.0);
+  float a = dot(ray, ray), b = dot(q, ray), c = dot(q, q) - 1.0;
+  float discriminant = b*b - a*c;
+  if (discriminant <= 0.0) return col;
+  float root = sqrt(discriminant);
+  float from = max(0.0, (-b - root) / a), to = min(depth, (-b + root) / a);
+  float span = to - from;
+  if (span <= 0.0) return col;
+  vec3 center = q + ray * ((from + to) * 0.5);
+  // Integrate a quadratic density that vanishes at the volume boundary.
+  float density = max(0.0, 1.0 - dot(center, center) - a * span*span / 12.0);
+  float fog = nearBank * (1.0 - exp(-0.0125 * span * density));
+  return mix(col, vec3(0.125, 0.385, 0.560), fog);
+}
+`;
+
+/** Larkhaven evening lighting and a low sea mist, using the scene's existing depth. */
+export function applyHarbourEvening(island, finalMaterial, camera) {
+  if (island.timeOfDay !== 'evening') return;
+
+  const terrain = island.terrain.material;
+  let ground = insert(terrain.fragmentShader, 'void main(){', `${HARBOUR_LIGHT}\nvoid main(){`, 'harbour terrain entry');
+  const air = 'col = applyAtmosphere(col, P);';
+  ground = insert(ground, air, `float wbQuay = paved * wbHarbourLight(P);
+  if (wbQuay > 0.0) {
+    float flags = saturate(town.g / max(town.r + town.g, 0.001))
+                * (1.0 - smoothstep(0.04, 0.15, town.b))
+                * (1.0 - smoothstep(1123.9, 1125.2, P.z));
+    vec3 directDelta = mix(wbHarbourSun(0.0) - uSunColor, vec3(0.32, 0.16, 0.035), flags);
+    col += m.c * directDelta * (dif * sh * wbQuay);
+  }
+  ${air}`, 'harbour terrain light');
+  terrain.fragmentShader = ground;
+  terrain.needsUpdate = true;
+
+  const town = island.town.material;
+  let built = insert(town.fragmentShader, 'void main(){', `${HARBOUR_LIGHT}\nvoid main(){`, 'harbour town entry');
+  const ambient = 'amb *= mix(0.42, 1.0, ao);';
+  built = insert(built, ambient, `${ambient}
+  float wbQuay = wbHarbourLight(vWorld);
+  vec3 wbLocalSun = uSunColor;
+  if (wbQuay > 0.0) {
+    float railBed = smoothstep(1124.6, 1125.25, vWorld.z) *
+                    (1.0 - smoothstep(1128.9, 1130.6, vWorld.z));
+    float flags = float(mat == 11) * smoothstep(0.65, 0.90, N.y);
+    float deck = flags * railBed * (1.0 - smoothstep(4.65, 5.0, vWorld.y));
+    float value = dot(alb, vec3(0.2126, 0.7152, 0.0722));
+    alb = mix(alb, value * vec3(0.82, 0.89, 1.00), wbQuay * deck * 0.88);
+    wbLocalSun = mix(uSunColor, wbHarbourSun(flags * (1.0 - railBed)), wbQuay);
+  }`, 'harbour town light');
+  built = insert(built, 'uSunColor * dif * sunVis', 'wbLocalSun * dif * sunVis', 'harbour town diffuse');
+  built = insert(built, 'uSunColor * sunVis * dif', 'wbLocalSun * sunVis * dif', 'harbour town specular');
+  town.fragmentShader = built;
+  town.needsUpdate = true;
+
+  finalMaterial.uniforms.uWbHarbourCamera = { value: camera.matrixWorld };
+  let final = insert(finalMaterial.fragmentShader, 'void main(){', `${HARBOUR_MIST}\nvoid main(){`, 'harbour mist entry');
+  final = insert(final, 'col *= uExposure;', 'col = wbHarbourMist(col, uv);\n    col *= uExposure;', 'harbour mist');
+  finalMaterial.fragmentShader = final;
+  finalMaterial.needsUpdate = true;
+}
+
 /** Terrain and the transition ring (which copied the terrain shader). */
 export function patchGroundShader(material, p, label, painted = null, paintExposure = 1) {
   let s = material.fragmentShader;

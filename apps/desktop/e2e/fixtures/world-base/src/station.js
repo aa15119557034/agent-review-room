@@ -12,7 +12,7 @@ import { createZoneUniforms } from './street-zones.js';
 import { addStationTexturedProps } from './textured-props.js';
 import { addArtR1Station } from './art-r1.js';
 import { loadMatureSakura } from './mature-sakura.js';
-import { loadKonbiniFixtures } from './konbini-fixtures.js';
+import { loadKonbiniFixtures, shadeKonbiniFloor, softenKonbiniGlazing } from './konbini-fixtures.js';
 import { addRailLeafSprays } from './rail-leaf-sprays.js';
 
 // Keep the upstream dependency order. Characters and camera-centred petal shaders
@@ -200,7 +200,9 @@ export async function createStation({ scene, renderer, camera, offset = [280, 8,
       matureResources = resources;
       await module.build(ctx, variants);
     } else if (name === 'shopsA') {
-      await module.build(ctx, { konbiniFixtures: await loadKonbiniFixtures(ctx) });
+      const fixtures = await loadKonbiniFixtures(ctx);
+      await module.build(ctx, { konbiniFixtures: fixtures });
+      shadeKonbiniFloor(ctx.staticRoot.getObjectByName('shopsA-goods-tile-W1'), fixtures);
     } else await module.build(ctx);
     moduleStats[name] = Math.round(performance.now() - start);
     await new Promise(resolve => setTimeout(resolve, 0));
@@ -259,6 +261,7 @@ export async function createStation({ scene, renderer, camera, offset = [280, 8,
   root.rotation.y = rotationY;
   scene.add(root);
   root.updateWorldMatrix(true, true);
+  if (ctx.services.konbiniGlazing) softenKonbiniGlazing(ctx.services.konbiniGlazing);
   streetReflections.setTransform(root.matrixWorld);
   clipMaterials(root, layout.WORLD.play);
   const detailLod = createStationDetailLod({ root: ctx.staticRoot });
