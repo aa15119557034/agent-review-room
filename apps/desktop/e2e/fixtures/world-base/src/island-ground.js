@@ -71,7 +71,7 @@ float wbGStep3(float x, float w){
 }`;
 
 /** Terrain and the transition ring (which copied the terrain shader). */
-export function patchGroundShader(material, p, label, painted = null) {
+export function patchGroundShader(material, p, label, painted = null, paintExposure = 1) {
   let s = material.fragmentShader;
   material.uniforms.uWbGround = material.uniforms.uWbGround || { value: 1 };
   s = insert(s, 'void main(){', `uniform float uWbGround;\n${STEP3}\nvoid main(){`, label + ' entry');
@@ -130,7 +130,7 @@ void main(){`, label + ' station paint');
       warmth = max(warmth, 0.12 * shoulder * sunlit);
     }
     vec3 paint = mix(${v3(new Color(SWARD_COOL).toArray())}, ${v3(new Color(SWARD_WARM).toArray())}, warmth);
-    vec3 paintLit = paint * light * mix(0.92, 1.0, cs);
+    vec3 paintLit = paint * light * mix(0.92, 1.0, cs) * ${f(paintExposure)};
     paintLit = mix(paintLit, fcol * (uSunColor * dif * sh + amb), saturate(tintAmt));
     col = mix(col, paintLit, paintCover * soft);
   }`, label + ' continuous sward lighting');

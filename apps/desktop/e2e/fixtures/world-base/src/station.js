@@ -68,13 +68,17 @@ function clipMaterials(root, bounds) {
 }
 
 export async function createStation({ scene, renderer, camera, offset = [280, 8, 900], rotationY = 0,
-  sunDir = new THREE.Vector3(...layout.SUN_DIR).normalize(), evening = false, groundMaterial, refl = null, onProgress = () => {} }) {
+  sunDir = new THREE.Vector3(...layout.SUN_DIR).normalize(), evening = false, groundMaterial, refl = null, replaceStreetProps = false, onProgress = () => {} }) {
   const root = new THREE.Group();
   root.name = 'Sakuragaoka';
   const localCamera = new THREE.PerspectiveCamera();
   const ctx = createContext({ scene: root, renderer, camera: localCamera, audio: null,
     quality: { name: 'medium', petals: 0, pixelRatio: 1 }, sunDir });
   ctx.people = false;
+  if (replaceStreetProps) {
+    ctx.services.streetPropReplacements = [];
+    (ctx.services.weatheringBakes ??= []).push(new URL('./weathering-decals-vending.json', import.meta.url));
+  }
   const moduleStats = {};
   let matureResources;
   for (const name of STATION_MODULES) {

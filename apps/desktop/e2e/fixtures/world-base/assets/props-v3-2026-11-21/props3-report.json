@@ -1,8 +1,8 @@
 [
   {
-    "file": "prop-vending-drink.glb",
-    "triangles": 86,
-    "bytes": 98196,
+    "file": "prop-vending-drinks.glb",
+    "triangles": 88,
+    "bytes": 79416,
     "size_m": [
       1.04,
       0.79,
@@ -11,8 +11,8 @@
   },
   {
     "file": "prop-vending-coffee.glb",
-    "triangles": 86,
-    "bytes": 98196,
+    "triangles": 88,
+    "bytes": 79420,
     "size_m": [
       1.04,
       0.79,
@@ -21,12 +21,12 @@
   },
   {
     "file": "prop-recycle-bin.glb",
-    "triangles": 84,
-    "bytes": 7768,
+    "triangles": 282,
+    "bytes": 29180,
     "size_m": [
-      0.66,
-      0.66,
-      1.05
+      0.44,
+      0.36,
+      0.87
     ]
   },
   {
@@ -60,13 +60,13 @@
     ]
   },
   {
-    "file": "prop-sign-stop2.glb",
+    "file": "prop-sign-stop.glb",
     "triangles": 22,
-    "bytes": 112036,
+    "bytes": 113504,
     "size_m": [
-      0.82,
+      0.8,
       0.09,
-      2.67
+      2.62
     ]
   }
 ]

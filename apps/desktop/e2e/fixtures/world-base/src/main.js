@@ -131,6 +131,7 @@ async function init() {
   const shadowTint = shadowTintParams ? shadowTintParams[timeOfDay === 'afternoon' ? 'afternoon' : 'evening'] : null;
   island = await createIsland({ scene, renderer, camera, timeOfDay });
   worldBase.island = island;
+  const night = timeOfDay === 'night', evening = timeOfDay !== 'afternoon';
   const scatterQuery = new URLSearchParams(location.search);
   const propsOn = scatterQuery.get('props') !== 'off', vegOn = scatterQuery.get('veg') !== 'off';
   // Art round 2: island-wide ground (flower drifts, pastel petals, painted sward and rock). ?ground=off skips it.
@@ -143,12 +144,11 @@ async function init() {
   }
   look.applyIsland(island);
   if (groundParams) for (const [material, label] of [[island.terrain.material, 'terrain'], [island.transition.material, 'transition']]) {
-    patchGroundShader(material, groundParams, label, islandSward);
+    patchGroundShader(material, groundParams, label, islandSward, night ? 0.35 : 1);
   }
   if (shadowTint) worldBase.shadowTint = { island: patchIslandShadowTint(island, shadowTint) };
-  const evening = island.timeOfDay === 'evening';
-  // Low golden-hour sun: warmer and a little weaker; the sky fill turns cooler so shade reads blue-violet.
-  const sun = new THREE.DirectionalLight(evening ? 0xffc490 : 0xffe4c4, evening ? 2.3 : 2.1);
+  const sun = night ? new THREE.DirectionalLight(0x9abaff, 0.38)
+    : new THREE.DirectionalLight(evening ? 0xffc490 : 0xffe4c4, evening ? 2.3 : 2.1);
   sun.position.copy(island.U.uSunDir.value).multiplyScalar(160).add(new THREE.Vector3(...island.stationPlacement.position));
   sun.target.position.set(...island.stationPlacement.position);
   sun.castShadow = true;
@@ -159,7 +159,8 @@ async function init() {
   Object.assign(sun.shadow.camera, { left: -150, right: 150, top: 150, bottom: -150, near: 1, far: 400 });
   sun.shadow.bias = -0.0002;
   sun.shadow.normalBias = 0.035;
-  skyFill = evening ? new THREE.HemisphereLight(0xb4bce8, 0xa08068, 1.6) : new THREE.HemisphereLight(0xcfe0ff, 0xa89c94, 1.05);
+  skyFill = night ? new THREE.HemisphereLight(0x789bdf, 0x3b405c, 0.62)
+    : evening ? new THREE.HemisphereLight(0xb4bce8, 0xa08068, 1.6) : new THREE.HemisphereLight(0xcfe0ff, 0xa89c94, 1.05);
   scene.add(sun, sun.target, skyFill);
   stage('正在安放车站、店铺与碰撞体…');
   // Art round 22: zoned street cubes + vertical neon streaks on the wet road. toon.json "refl" (absent / on:0 = off);
@@ -169,7 +170,7 @@ async function init() {
   station = await createStation({
     scene, renderer, camera, offset: island.stationPlacement.position,
     rotationY: island.stationPlacement.rotationY, sunDir: island.U.uSunDir.value, evening,
-    groundMaterial: island.transition.material, refl,
+    groundMaterial: island.transition.material, refl, replaceStreetProps: propsOn,
     onProgress: stage,
   });
   worldBase.station = station;
@@ -249,7 +250,7 @@ async function init() {
   if (toonEnabled()) {
     const toonAll = await loadToon(), toonP = applyForm(toonAll[timeOfDay === 'afternoon' ? 'afternoon' : 'evening']);
     originalFillColor = skyFill.color.clone();
-    toonFillColor = new THREE.Color(toonP.skyFill);
+    toonFillColor = night ? originalFillColor.clone() : new THREE.Color(toonP.skyFill);
     if (worldBase.styleState.toon) skyFill.color.copy(toonFillColor);
     const toonBoxes = worldBase.shadowTint?.indoorBox || shopInteriorBoxes(layoutModule, station, 0.05);
     installLitToon(toonP, toonBoxes);
@@ -322,9 +323,9 @@ async function init() {
     const view = worldBase.views[Number(event.key) - 1];
     if (view) setView(view.name);
   });
-  if (island.timeOfDay === 'evening') {
+  if (evening) {
     worldBase.eveningGlow = applyEveningGlow(scene, look);
-    worldBase.eveningSakura = applyEveningSakura(scene);
+    if (!night) worldBase.eveningSakura = applyEveningSakura(scene);
     worldBase.crossingHalos = fadeDistantCrossingHalos(scene);
   }
   // Round 22: wall weathering + posters. After the evening glow, so emissive materials are already known.
@@ -334,21 +335,22 @@ async function init() {
     worldBase.weathering = applyWeathering({ scene, station, island, city: worldBase.city, skyline: worldBase.skyline, params, timeOfDay: island.timeOfDay });
     worldBase.weatheringDecals = addWeatheringDecals({ scene, station, wallMaterials: worldBase.weathering.wallMaterials, vehicleBoxes: worldBase.weathering.vehicleBoxes,
       roots: [station.root, worldBase.city.root, worldBase.skyline.root], gradientMap: station.ctx.mat.gradientMap, explicit: params.decals.explicit,
-      baked: await loadBakedDecals(), forcePlan: new URLSearchParams(location.search).get('decals') === 'plan' });
+      baked: await loadBakedDecals(station.ctx.services.weatheringBakes),
+      forcePlan: new URLSearchParams(location.search).get('decals') === 'plan' });
     worldBase.weatheringMs = +(performance.now() - weatheringStart).toFixed(1);
     // ?weathering=off keeps the previous look for before/after captures.
     if (new URLSearchParams(location.search).get('weathering') === 'off') { worldBase.weathering.setEnabled(false); worldBase.weatheringDecals.setEnabled(false); }
   }
-  // Art round 9: warm fake light pools under the apartment corridor lamps (evening only; ?doorglow=off skips them).
-  if (island.timeOfDay === 'evening' && new URLSearchParams(location.search).get('doorglow') !== 'off') {
+  // Art round 9: warm fake light pools under the apartment corridor lamps.
+  if (evening && new URLSearchParams(location.search).get('doorglow') !== 'off') {
     const params = await loadDoorGlow();
     // Apartment corridor lamps (city-apartments.js) plus the upstream generators' registrations (house porch lamps, shop back doors, station lanterns).
     const lamps = resolveDoorLamps(worldBase.city.root, [...worldBase.city.placements.filter(p => p.type === 'apartment').flatMap(p => p.model.lamps ?? []),
       ...(station.ctx.services.doorLamps ?? [])]);
     if (params && lamps.length) worldBase.doorGlow = addDoorGlow({ parent: worldBase.city.root, lamps, params });
   }
-  // Art round 10: indoor light spilling onto the paving in front of lit shops (evening only; ?shopspill=off skips it).
-  if (island.timeOfDay === 'evening' && new URLSearchParams(location.search).get('shopspill') !== 'off') {
+  // Art round 10: indoor light spilling onto the paving in front of lit shops.
+  if (evening && new URLSearchParams(location.search).get('shopspill') !== 'off') {
     const params = await loadShopSpill();
     if (params) {
       const rooms = station.ctx.services.shopInteriors ?? [];

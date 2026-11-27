@@ -3,10 +3,14 @@ vending-atlas.png  1024x1024  左半：饮料机正面，右半：咖啡机正�
 sign-atlas.png     1024x1024  2x2 四格：限速 40 / 蓝色方向牌 / 菱形警示 / 止まれ
 做法：画 4 倍再缩，字体用 Windows 自带的。
 """
-import math, os
+import argparse, math, os
 from PIL import Image, ImageDraw, ImageFont, ImageFilter
 
-OUT = r'E:\agent-review-room\.tmp\blender-blocks\out\proptex'
+parser = argparse.ArgumentParser()
+parser.add_argument('--output', default=r'E:\agent-review-room\.tmp\blender-blocks\out\proptex')
+parser.add_argument('--recycle-only', action='store_true')
+args = parser.parse_args()
+OUT = args.output
 os.makedirs(OUT, exist_ok=True)
 SS = 2
 
@@ -186,11 +190,25 @@ def make_sign_atlas(size=1024):
     return img
 
 
-v = make_vending_atlas()
-s = make_sign_atlas()
-prev = Image.new('RGB', (1024 + 1024 + 24, 1024), (24, 26, 30))
-prev.paste(v, (0, 0)); prev.paste(s, (1048, 0))
-prev.save(os.path.join(OUT, 'prop-atlas-preview.png'))
+def make_recycle_label():
+    image = Image.new('RGB', (512, 184), (234, 241, 225))
+    d = ImageDraw.Draw(image)
+    d.rectangle((0, 0, 511, 26), fill=(53, 129, 119))
+    d.rectangle((0, 138, 511, 183), fill=(53, 129, 119))
+    d.line((256, 47, 256, 120), fill=(123, 160, 145), width=3)
+    for x, text in [(128, 'かん'), (384, 'びん')]:
+        d.text((x, 78), text, font=font(56), anchor='mm', fill=(29, 62, 65))
+    d.text((256, 157), '資源回収', font=font(31), anchor='mm', fill=(245, 247, 229))
+    image.save(os.path.join(OUT, 'recycle-label.png'))
+
+
+make_recycle_label()
+if not args.recycle_only:
+    v = make_vending_atlas()
+    s = make_sign_atlas()
+    prev = Image.new('RGB', (1024 + 1024 + 24, 1024), (24, 26, 30))
+    prev.paste(v, (0, 0)); prev.paste(s, (1048, 0))
+    prev.save(os.path.join(OUT, 'prop-atlas-preview.png'))
 print('OK', OUT)
 
 
