@@ -43,7 +43,48 @@ export const PARAMS = {
 const _cam = new THREE.Vector3(), _m = new THREE.Matrix4(), _x = new THREE.Vector3(), _y = new THREE.Vector3(0, 1, 0), _z = new THREE.Vector3(), _t = new THREE.Vector3();
 const facing = (x, y, z, fx, fz, sy) => _m.clone().makeBasis(_x.set(fz, 0, -fx), _y.set(0, sy, 0), _z.set(fx, 0, fz)).setPosition(_t.set(x, y, z));
 
-export async function createVegetation({ scene, worldBase, island, station, dryRun = false }) {
+function plantFlowerBeds(ctx, habitats, grassModels, seed) {
+  const blockers = ['walk', 'bld', 'corr', 'prop', 'town', 'solid'];
+  const canPlant = (x, z, clearance) => {
+    const road = ctx.roadDist(x, z);
+    return ctx.cover(x, z) >= 0.6 && ctx.slope(x, z) <= 0.92 && !ctx.isWater(x, z, 0.6)
+      && (!road || road.over >= 0.55 + clearance) && !ctx.obstacle(x, z, clearance, blockers);
+  };
+  return habitats.map(({ name, clusters }, habitatIndex) => {
+    const flowers = [], grass = [], counts = [];
+    for (const [index, [cx, cz, radius, count, primary, accent]] of clusters.entries()) {
+      const r = rngFrom(hash32(seed, 80 + habitatIndex, index));
+      const start = r() * Math.PI * 2;
+      const roots = [];
+      for (let i = 0; i < count * 8 && roots.length < count; i++) {
+        const theta = start + i * 2.399963 + (r() - 0.5) * 0.32;
+        const reach = radius * Math.pow(r(), 0.76);
+        const x = cx + Math.cos(theta) * reach, z = cz + Math.sin(theta) * reach;
+        if (roots.some(p => Math.hypot(p.x - x, p.z - z) < 0.105) || !canPlant(x, z, 0.16)) continue;
+        const species = r() < 0.14 ? accent : primary;
+        const headScale = 1.24 + 0.49 * r();
+        roots.push({ x, y: ctx.groundY(x, z), z, species, headScale });
+      }
+      if (roots.length < 15) continue;
+      flowers.push(...roots);
+      counts.push(roots.length);
+      // Broad short blades at the feet and rim of the flower bed. Bare ground separates the beds.
+      const grassCount = Math.round(2 + radius * 3);
+      for (let i = 0; i < grassCount; i++) {
+        const theta = start + i * 2.399963 + (r() - 0.5) * 0.4;
+        const reach = radius * (0.25 + r() * 0.69);
+        const x = cx + Math.cos(theta) * reach, z = cz + Math.sin(theta) * reach;
+        if (!canPlant(x, z, 0.4)) continue;
+        const kind = pickWeighted(r, grassModels), s = 0.64 + 0.32 * r();
+        grass.push({ kind, x, y: ctx.groundY(x, z) - 0.017, z, yaw: r() * Math.PI * 2,
+          sx: s, sy: 0.63 + 0.29 * r(), sz: s, tint: 0.86 + 0.16 * r() });
+      }
+    }
+    return { name, flowers, grass, counts };
+  });
+}
+
+export async function createVegetation({ scene, worldBase, island, station, flowerBeds = [], dryRun = false }) {
   const t0 = performance.now(), P = PARAMS, T = P.tree, rng = rngFrom(hash32(P.seed, 1));
   const ctx = await getContext({ worldBase, island, station, scene });
   const [aerial, table] = await Promise.all([getAerial(worldBase, island), loadTable()]);
@@ -283,7 +324,11 @@ export async function createVegetation({ scene, worldBase, island, station, dryR
     }
   }
   const wallGrass = tufts.length - beforeWalls;
-  const keptTufts = tufts.length > Gp.cap ? tufts.filter(() => rng() < Gp.cap / tufts.length) : tufts;
+  const planted = tufts.length > Gp.cap ? tufts.filter(() => rng() < Gp.cap / tufts.length) : tufts;
+  const habitats = paintedSward ? flowerBeds : [];
+  const flowerKinds = new Set(SP.flower.models.map(m => m.id));
+  const keptTufts = planted.filter(({ kind, x, z }) => !flowerKinds.has(kind) || !habitats.some(({ bounds: [x0, z0, x1, z1], feather }) =>
+    x > x0 + feather && x < x1 - feather && z > z0 + feather && z < z1 - feather));
   // The station lawn has a separate seed and leaves the existing island batches intact.
   const stationLawn = dryRun ? null : addStationLawn({
     station,
@@ -306,6 +351,11 @@ export async function createVegetation({ scene, worldBase, island, station, dryR
     },
   });
   for (const g of keptTufts) push(g.kind, g);
+  const beds = plantFlowerBeds(ctx, habitats, SP.grass.models, P.seed);
+  for (const bed of beds) {
+    if (!dryRun) island.meadow.addFlowerBed(bed.name, bed.flowers);
+    for (const g of bed.grass) push(g.kind, g);
+  }
 
   // ---- batches --------------------------------------------------------------------------------------------------------------------------------------
   let drawCalls = 0, triangles = 0; const counts = {}, lods = [], LP = table.vegetation.lod;
@@ -322,7 +372,8 @@ export async function createVegetation({ scene, worldBase, island, station, dryR
     return r;
   };
   if (!dryRun) scene.add(root);
-  const summary = { sizeWarnings: model.warnings, trees: keptTrees.length, streetTrees, bushes: keptBushes.length + hedgeBushes.length, hedges: hedgeCount, hedgeBushes: hedgeBushes.length, grass: keptTufts.length, rootGrass, openGrass: open, edgeGrass: edge, wallGrass, flowers: keptTufts.filter(g => SP.flower.models.some(m => m.id === g.kind)).length, thinned, stationLawn };
+  const summary = { sizeWarnings: model.warnings, trees: keptTrees.length, streetTrees, bushes: keptBushes.length + hedgeBushes.length, hedges: hedgeCount, hedgeBushes: hedgeBushes.length, grass: keptTufts.length, rootGrass, openGrass: open, edgeGrass: edge, wallGrass, flowers: keptTufts.filter(g => flowerKinds.has(g.kind)).length, thinned, stationLawn,
+    flowerBeds: beds.map(({ name, grass, counts }) => ({ name, flowersPerCluster: counts, grass: grass.length })) };
   worldBase.scatter = { ...(worldBase.scatter ?? {}), veg: { root, counts, summary, update, lods, materials, drawCalls, triangles, rejects, attempts, ms: +(performance.now() - t0).toFixed(1),
     trees: keptTrees.map(t => ({ kind: t.kind, x: t.x, z: t.z, r: t.r })), bushes: [...keptBushes, ...hedgeBushes].map(t => ({ kind: t.kind, x: t.x, z: t.z, r: t.r })), hedges: items[hk]?.map(h => ({ x: h.x, z: h.z })) ?? [], grass: keptTufts.map(t => ({ x: t.x, z: t.z })) } };
   console.info('[world-base] vegetation', JSON.stringify({ ...summary, drawCalls, triangles, ms: worldBase.scatter.veg.ms }));

@@ -7,6 +7,7 @@ import { terrainH, terrainNormal, fbm, vnoise, ownedByOthers, inCorridor, roadDi
 import { swayFoliage } from './shaders.js';
 import { STAIRS, BENCHES, LAMPS } from './levee.js';
 import { WATER_Y, STONES_X, WEIR_X } from './water.js';
+import { foliageMaterial, shrubGeometry } from '../lib/foliage.js';
 
 // atlas cells
 const TUFT = { short: 0, tall: 1, weed: 2, mixed: 3 };
@@ -184,6 +185,64 @@ export function buildFlora(ctx, tx, env) {
     }
   }
 
+  // The eastern end of R4 has a guardrail and a second, track-side net fence.
+  // Keep these beds on the soil between them, with breaks at the cherry and utility pole.
+  const railBedNear = railRoadEdge + 0.37, railBedFar = L.RAIL.corridorZ0 - 0.38;
+  const railBed = chunk('rail-bank-east');
+  const bedRng = ctx.rng('r4-rail-bank-east');
+  const bedPockets = [
+    // x, cross-strip offset, length radius, tufts, mixed-height yellow flower sprigs
+    [55.15, 0.51, 0.83, 16, 16], [53.57, 0.48, 0.52, 12, 10],
+    [50.22, 0.39, 0.36, 10, 9], [48.79, 0.54, 0.46, 12, 14],
+    [45.48, 0.63, 0.70, 15, 12], [42.62, 0.47, 0.58, 9, 8],
+  ];
+  for (const [center, depth, spread, tufts, flowers] of bedPockets) {
+    for (let i = 0; i < tufts + flowers; i++) {
+      const angle = bedRng() * Math.PI * 2, radius = bedRng() ** 0.72;
+      const x = center + Math.cos(angle) * radius * spread;
+      const z = railBedNear + (railBedFar - railBedNear) * depth + Math.sin(angle) * radius * 0.19;
+      if (!openOK(x, z) || L.POLE_RUNS.R4S.some(p => Math.abs(p.x - x) < 0.43)) continue;
+      const width = 2 * Math.min(z - railBedNear, railBedFar - z) - 0.14; // reserve the wind bend
+      if (i < tufts) {
+        addTuft(railBed, x, z, 0.77 + bedRng() * 0.24, i % 3 ? TUFT.short : TUFT.mixed);
+        const tuft = railBed.tuft.at(-1);
+        tuft.w = Math.min(tuft.w, 0.38, width);
+      } else {
+        const tall = i % 3 !== 0;
+        addFlower(railBed, x, z, tall ? FLW.nano : FLW.dandelion, (tall ? 0.72 : 1.12) * (1.03 - radius * 0.24));
+        const flower = railBed.flower.at(-1);
+        flower.w = Math.min(flower.w, 0.35, width);
+        flower.h = Math.min(flower.h, 0.68);
+      }
+    }
+  }
+
+  const bushLobes = [
+    // Irregular, higher inner lobes, with a low foot on the road side of each mass.
+    [54.21, -52.64, 0.46, 0.57, 0.22, '#f6ffed'], [54.69, -52.72, 0.60, 0.78, 0.25, '#fcffed'],
+    [55.12, -52.66, 0.40, 0.54, 0.24, '#e1f4e0'], [54.61, -52.93, 0.48, 0.42, 0.18, '#d9f3e5'],
+    [49.15, -52.65, 0.51, 0.53, 0.23, '#eaffec'], [49.70, -52.72, 0.64, 0.67, 0.26, '#fbffe8'],
+    [50.17, -52.64, 0.39, 0.46, 0.22, '#e2f7e6'], [49.78, -52.94, 0.46, 0.35, 0.18, '#d0eddf'],
+  ];
+  const bushGeo = shrubGeometry({ rx: 0.60, ry: 0.44, rz: 0.25, detail: 4, seed: 47, lumps: 0.28,
+    puff: 0.18, puffAmp: 0.27, colors: { top: '#b2cd74', mid: '#72a164', base: '#38695b' } }).clone();
+  bushGeo.computeBoundingBox();
+  const bushSize = bushGeo.boundingBox.getSize(new THREE.Vector3());
+  const bushOrigin = bushGeo.boundingBox.getCenter(new THREE.Vector3());
+  bushGeo.translate(-bushOrigin.x, -bushGeo.boundingBox.min.y, -bushOrigin.z);
+  const shrubs = new THREE.InstancedMesh(bushGeo, foliageMaterial(ctx), bushLobes.length);
+  const shrubTransform = new THREE.Matrix4(), shrubTint = new THREE.Color();
+  bushLobes.forEach(([x, z, radiusX, height, radiusZ, tint], i) => {
+    shrubTransform.makeScale(2 * radiusX / bushSize.x, height / bushSize.y, 2 * radiusZ / bushSize.z);
+    shrubTransform.setPosition(x, ground(x, z) - 0.02, z);
+    shrubs.setMatrixAt(i, shrubTransform);
+    shrubs.setColorAt(i, shrubTint.set(tint));
+  });
+  shrubs.castShadow = true; shrubs.receiveShadow = true;
+  shrubs.name = 'env-flora-rail-bank-east-shrubs';
+  shrubs.computeBoundingSphere();
+  ctx.addStatic(shrubs);
+
   // --------------------------------------------------------------- build instanced meshes
   const cardGeo = (n) => {
     const pos = [], uv = [], nrm = [], idx = [];
@@ -213,7 +272,7 @@ export function buildFlora(ctx, tx, env) {
     reed: { geo: cardGeo(3), mat: swayFoliage(ctx, tx.reeds, [0.5, 1], 'reeds'), cells: (c) => [c * 0.5, 0] },
   };
   const M = new THREE.Matrix4(), Q = new THREE.Quaternion(), V = new THREE.Vector3(), S = new THREE.Vector3(), UP = new THREE.Vector3(0, 1, 0), N = new THREE.Vector3(), Qy = new THREE.Quaternion(), col = new THREE.Color();
-  let count = 0, meshes = 0, tris = 0;
+  let count = shrubs.count, meshes = 1, tris = shrubs.count * bushGeo.index.count / 3;
   for (const [name, c] of chunks) {
     for (const kind of Object.keys(kinds)) {
       const list = c[kind]; if (!list.length) continue;

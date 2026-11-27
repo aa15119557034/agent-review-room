@@ -68,10 +68,12 @@ function clipMaterials(root, bounds) {
   }
 }
 
-// SEBA0-1's south-facing plaster wall. It sits behind the boundary blocks of the drive.
-function paintDrivePlaster(material, stationFromWorld) {
+function paintDrivePlaster(material, stationFromWorld, finish) {
   const previous = material.onBeforeCompile, previousKey = material.customProgramCacheKey;
   const limewash = new THREE.Color('#f3efe9');
+  // E2's outer rear face and SEBA0-1's south-facing wall share the limewash,
+  // but their batches retain different plaster textures and wall footprints.
+  const wagashi = finish === 'wagashi-plaster';
   material.onBeforeCompile = function (shader, renderer) {
     previous.call(this, shader, renderer);
     shader.uniforms.uDrivePlaster = { value: limewash };
@@ -83,11 +85,19 @@ function paintDrivePlaster(material, stationFromWorld) {
         uniform mat4 uDriveStationFromWorld;`)
       .replace('#include <color_fragment>', /* glsl */`
         vec3 driveWall = (uDriveStationFromWorld * vec4( vPWorld, 1.0 )).xyz;
+        ${wagashi ? /* glsl */`
+        vec3 rearNormal = mat3(uDriveStationFromWorld) * inverseTransformDirection( normalize( vNormal ), viewMatrix );
+        float driveWallPaint = step( abs( driveWall.x - 15.2 ), 0.008 )
+          * step( 0.99, rearNormal.x )
+          * step( 14.89, driveWall.z ) * step( driveWall.z, 21.61 )
+          * step( 0.588, driveWall.y ) * step( driveWall.y, 6.060 );
+        ` : /* glsl */`
         float driveWallPaint = step( abs( driveWall.z - 22.3984 ), 0.025 )
           * step( 24.89, driveWall.x ) * step( driveWall.x, 33.12 )
           * smoothstep( 0.92, 1.30, driveWall.y ) * step( driveWall.y, 6.66 );
+        `}
         if (driveWallPaint > 0.0) {
-          float dryBrush = pn_noise( vec3( driveWall.x * 1.2, driveWall.y * 0.36, 3.4 ) );
+          float dryBrush = pn_noise( vec3( driveWall.${wagashi ? 'z' : 'x'} * 1.2, driveWall.y * 0.36, 3.4 ) );
           float coat = 0.947 + 0.036 * smoothstep( 0.36, 0.49, dryBrush )
             + 0.021 * smoothstep( 0.60, 0.68, dryBrush );
           diffuseColor.rgb = mix( diffuseColor.rgb, uDrivePlaster * coat, driveWallPaint * 0.94 );
@@ -95,22 +105,23 @@ function paintDrivePlaster(material, stationFromWorld) {
         #include <color_fragment>
       `);
   };
-  material.customProgramCacheKey = () => `${previousKey.call(material)}|residential-drive-plaster`;
+  material.customProgramCacheKey = () => `${previousKey.call(material)}|residential-drive-${finish}`;
   material.needsUpdate = true;
 }
 
 // In SEBA0-2 GroundRect writes station-local (x, -z) to the existing map UVs.
-function paintResidentialDrive(root, { concrete, gravel, plaster }, stationFromWorld) {
-  const finishes = new Map([[concrete.map, 'concrete'], [gravel.map, 'gravel'], [plaster.map, 'plaster']]);
+function paintResidentialDrive(root, { concrete, gravel, plaster }, stationFromWorld, wagashiPlaster) {
+  const finishes = new Map([[concrete.map, 'concrete'], [gravel.map, 'gravel'], [plaster.map, 'plaster'],
+    [wagashiPlaster, 'wagashi-plaster']]);
   const painted = new Set();
   root.traverse(object => {
     if (!object.isMesh) return;
     for (const material of [].concat(object.material)) {
-      const finish = finishes.get(material.map);
+      const finish = material.map && finishes.get(material.map);
       if (!finish || painted.has(material)) continue;
       painted.add(material);
-      if (finish === 'plaster') {
-        paintDrivePlaster(material, stationFromWorld);
+      if (finish === 'plaster' || finish === 'wagashi-plaster') {
+        paintDrivePlaster(material, stationFromWorld, finish);
         continue;
       }
       const previous = material.onBeforeCompile, previousKey = material.customProgramCacheKey;
@@ -250,7 +261,7 @@ export async function createStation({ scene, renderer, camera, offset = [280, 8,
   clipMaterials(root, layout.WORLD.play);
   const detailLod = createStationDetailLod({ root: ctx.staticRoot });
   const inverse = root.matrixWorld.clone().invert();
-  paintResidentialDrive(ctx.staticRoot, ctx.services.houses.buildContext.M, inverse);
+  paintResidentialDrive(ctx.staticRoot, ctx.services.houses.buildContext.M, inverse, ctx.tex.cache.get('sb-plaster'));
   const rotation = root.getWorldQuaternion(new THREE.Quaternion());
   const scratch = new THREE.Vector3();
   const bufferSize = new THREE.Vector2();

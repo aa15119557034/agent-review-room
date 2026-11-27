@@ -4,6 +4,22 @@ import { Color, Matrix4, Vector4 } from 'three';
 export const SWARD_COOL = '#3c8569';
 export const SWARD_WARM = '#b2c449';
 export const SWARD_WARMTH = 'float swardWarmth(float tone) { return smoothstep(0.16, 0.84, tone); }';
+export const SWARD_DAPPLE = /* glsl */`
+float swardMeadow(vec2 xz) {
+  float hillside = 1.0 - smoothstep(85.0, 155.0, distance(xz, vec2(1060.0, 557.0)));
+  float headland = 1.0 - smoothstep(31.0, 58.0, distance(xz, vec2(174.0, -1231.0)));
+  return max(hillside, headland);
+}
+float swardDapple(vec2 xz, float time) {
+  float coverage = swardMeadow(xz);
+  if (coverage <= 0.0) return 0.0;
+  vec2 q = vec2(0.83*xz.x + 0.56*xz.y, -0.56*xz.x + 0.83*xz.y);
+  q += vec2(0.13, -0.04) * time;
+  float cloud = 0.72 * vnoise(q / vec2(14.0, 9.0) + vec2(17.0, 9.0))
+              + 0.28 * vnoise(q / vec2(7.0, 5.2) + vec2(3.0, 21.0));
+  return coverage * smoothstep(0.51, 0.56, cloud);
+}
+`;
 
 // X-51 art round 2 (#254): island-wide ground.
 //  1 flower drifts: the meadow's flower density is gathered into broad drifts (60–250 m) with calm
@@ -35,12 +51,6 @@ const smooth = (a, b, x) => { const t = Math.min(1, Math.max(0, (x - a) / (b - a
 /** Gathers flower density into drifts. Returns stats for the evidence. */
 export function applyFlowerDrifts(terrain, worldSize, p) {
   const S = terrain.splatN, cell = worldSize / S, half = worldSize / 2;
-  const regions = p.regions.map(({ bounds, feather, background, patches }) => ({
-    bounds, feather, background,
-    patches: patches.map(([x, z, length, width, angle, density]) => ({
-      x, z, length, width, cos: Math.cos(angle), sin: Math.sin(angle), density,
-    })),
-  }));
   let before = 0, after = 0;
   for (let j = 0; j < S; j++) {
     const z = j * cell - half;
@@ -50,20 +60,7 @@ export function applyFlowerDrifts(terrain, worldSize, p) {
       const x = i * cell - half;
       const n = 0.6 * valueNoise(x / p.scale, z / p.scale, 7) + 0.3 * valueNoise(x / (p.scale * 0.37), z / (p.scale * 0.37), 11)
         + 0.1 * valueNoise(x / (p.scale * 0.12), z / (p.scale * 0.12), 13);
-      let keep = p.floor + (1 - p.floor) * smooth(p.lo, p.hi, n);
-      for (const { bounds: [x0, z0, x1, z1], feather, background, patches } of regions) {
-        const fade = smooth(0, feather, Math.min(x - x0, x1 - x, z - z0, z1 - z));
-        if (!fade) continue;
-        const ripple = 0.84 + 0.32 * valueNoise(x / 8, z / 8, 31);
-        let patch = 0;
-        for (const { x: cx, z: cz, length, width, cos, sin, density } of patches) {
-          const dx = x - cx, dz = z - cz;
-          const u = (dx * cos + dz * sin) / length;
-          const v = (dz * cos - dx * sin) / width;
-          patch = Math.max(patch, density * (1 - smooth(0.20, 1.12, (u * u + v * v) * ripple)));
-        }
-        keep += (background + (1 - background) * patch - keep) * fade;
-      }
+      const keep = p.floor + (1 - p.floor) * smooth(p.lo, p.hi, n);
       const next = Math.round(f * keep * p.gain);
       before += f; after += next;
       terrain.splat[k] = Math.min(255, next);
@@ -183,12 +180,14 @@ uniform sampler2D uWbStationSwardField;
 uniform vec4 uWbStationSwardRect;
 uniform mat4 uWbWorldToStation;
 ${SWARD_WARMTH}
+${SWARD_DAPPLE}
 void main(){`, label + ' station paint');
     s = insert(s, 'vec3 N = terrainN(P.xz, lodN);\n\n  vec4 splat = texture(uSplatTex, uv);', `
   vec4 splat = texture(uSplatTex, uv);
   // A continuous distance LOD keeps broad grassy folds from taking their
   // lighting scale from the adjacent rendered triangles.
-  float swardLod = mix(0.72, 2.35, smoothstep(32.0, 430.0, dist));
+  float nearbySwardLod = mix(0.72, 1.28, swardMeadow(P.xz));
+  float swardLod = mix(nearbySwardLod, 2.35, smoothstep(32.0, 430.0, dist));
   float swardNormal = smoothstep(0.35, 0.85, splat.a) * uWbGround;
   vec3 N = terrainN(P.xz, mix(lodN, swardLod, swardNormal));`, label + ' continuous grass normals');
     // The meadow at the apartment's outer fence suppresses blades in the splat
@@ -217,6 +216,10 @@ void main(){`, label + ' station paint');
     tone *= mix(1.0, 0.70, smoothstep(240.0, 650.0, dist));
     float warmth = 0.64 * swardWarmth(tone);
     float light = mix(0.35, 0.49, sunlit);
+    float meadowExposure = swardMeadow(P.xz) * sunlit;
+    float dappleShade = swardDapple(P.xz, uTime);
+    warmth = mix(warmth, max(warmth, 0.24 + 0.49 * swardWarmth(tone)), meadowExposure);
+    warmth *= 1.0 - 0.83 * dappleShade;
     if (uWbStationSwardRect.z > 0.0) {
       vec2 lawnXY = localXZ - uWbStationSwardRect.xy;
       vec2 beyondLawn = max(max(-lawnXY, lawnXY - uWbStationSwardRect.zw), vec2(0.0));
@@ -234,6 +237,7 @@ void main(){`, label + ' station paint');
     vec3 paint = mix(${v3(new Color(SWARD_COOL).toArray())}, ${v3(new Color(SWARD_WARM).toArray())}, warmth);
     vec3 paintLit = paint * light * mix(0.92, 1.0, cs) * ${f(paintExposure)};
     paintLit = mix(paintLit, fcol * (uSunColor * dif * sh + amb), saturate(tintAmt));
+    paintLit *= mix(vec3(1.0), vec3(0.54, 0.73, 0.88), dappleShade * mix(0.65, 1.0, sunlit));
     col = mix(col, paintLit, paintCover * soft);
   }`, label + ' continuous sward lighting');
     if (label === 'terrain') {
@@ -313,17 +317,27 @@ export function patchPetals(vertexShader, p, shortOpenStems = false) {
     `vec3 petal = flowerPetal(species, rnd.z);
   petal = mix(vec3(dot(petal, vec3(0.299, 0.587, 0.114))), petal, ${f(p.petalSat)}) * ${f(p.petalGain)} + ${f(p.petalLift)};`, 'petal palette');
   if (shortOpenStems) {
+    shader = insert(shader, 'void main(){', `#ifdef FLOWER_BED
+${SWARD_DAPPLE}
+#endif
+void main(){`, 'flower bed dapple');
+    const silhouette = 'vec4 shp = flowerShape(species);';
+    shader = insert(shader, silhouette, `#ifdef FLOWER_BED
+  petal *= mix(vec3(1.0), vec3(0.88, 0.94, 1.0), swardDapple(xz, uTime));
+  #endif
+  ${silhouette}`, 'flower bed shade');
     const stem = 'float stemH = mix(0.58, 1.04, rnd.x) * shp.w * (0.7 + 0.3 * splat.a);';
-    const regions = p.drift.regions.map(({ bounds: [x0, z0, x1, z1], feather }) =>
-      `smoothstep(0.0, ${f(feather)}, min(min(xz.x - ${f(x0)}, ${f(x1)} - xz.x), min(xz.y - (${f(z0)}), (${f(z1)}) - xz.y)))`);
-    const driftStyle = regions.reduce((a, b) => `max(${a}, ${b})`, '0.0');
     shader = insert(shader, stem, `${stem}
+  #ifndef FLOWER_BED
   stemH *= mix(0.58, 1.0, max(wbTownMask(xz), smoothstep(0.13, 0.38, splat.r)));
-  float wbDriftStyle = ${driftStyle};
-  // Clear low flower silhouettes in the foreground, smaller color accents on the far slope.
-  float wbTallStem = smoothstep(0.76, 0.97, rnd.x);
-  stemH *= mix(1.0, mix(0.56, 0.92, wbTallStem), wbDriftStyle);
-  headR *= mix(1.0, mix(1.12, 0.69, farK), wbDriftStyle);`, 'flower drift silhouettes');
+  #endif`, 'short open-meadow stems');
+    const habitats = p.flowerBeds.map(({ bounds: [x0, z0, x1, z1], feather }) =>
+      `smoothstep(0.0, ${f(feather)}, min(min(xz.x - ${f(x0)}, ${f(x1)} - xz.x), min(xz.y - (${f(z0)}), (${f(z1)}) - xz.y)))`);
+    const cover = habitats.reduce((a, b) => `max(${a}, ${b})`, '0.0');
+    const keep = 'float keep = step(r2.x, dens * 1.08) * step(0.03, dens);';
+    shader = insert(shader, keep, `${keep}
+  // Keep the established broad drifts and replace only the open scatter between these beds.
+  keep *= 1.0 - ${cover};`, 'flower bed spacing');
   }
   return shader;
 }
