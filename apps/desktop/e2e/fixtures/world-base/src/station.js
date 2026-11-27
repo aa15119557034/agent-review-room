@@ -13,6 +13,7 @@ import { addStationTexturedProps } from './textured-props.js';
 import { addArtR1Station } from './art-r1.js';
 import { loadMatureSakura } from './mature-sakura.js';
 import { loadKonbiniFixtures } from './konbini-fixtures.js';
+import { addRailLeafSprays } from './rail-leaf-sprays.js';
 
 // Keep the upstream dependency order. Characters and camera-centred petal shaders
 // are deliberately omitted; the shared island supplies its own petal field.
@@ -68,6 +69,112 @@ function clipMaterials(root, bounds) {
   }
 }
 
+function paintDrivePlaster(material, stationFromWorld, finish) {
+  const previous = material.onBeforeCompile, previousKey = material.customProgramCacheKey;
+  const limewash = new THREE.Color('#f3efe9');
+  // E2's outer rear face and SEBA0-1's south-facing wall share the limewash,
+  // but their batches retain different plaster textures and wall footprints.
+  const wagashi = finish === 'wagashi-plaster';
+  material.onBeforeCompile = function (shader, renderer) {
+    previous.call(this, shader, renderer);
+    shader.uniforms.uDrivePlaster = { value: limewash };
+    shader.uniforms.uDriveStationFromWorld = { value: stationFromWorld };
+    shader.fragmentShader = shader.fragmentShader
+      .replace('#include <common>', `#include <common>
+        #define STATION_DRIVE_PLASTER
+        uniform vec3 uDrivePlaster;
+        uniform mat4 uDriveStationFromWorld;`)
+      .replace('#include <color_fragment>', /* glsl */`
+        vec3 driveWall = (uDriveStationFromWorld * vec4( vPWorld, 1.0 )).xyz;
+        ${wagashi ? /* glsl */`
+        vec3 rearNormal = mat3(uDriveStationFromWorld) * inverseTransformDirection( normalize( vNormal ), viewMatrix );
+        float driveWallPaint = step( abs( driveWall.x - 15.2 ), 0.008 )
+          * step( 0.99, rearNormal.x )
+          * step( 14.89, driveWall.z ) * step( driveWall.z, 21.61 )
+          * step( 0.588, driveWall.y ) * step( driveWall.y, 6.060 );
+        ` : /* glsl */`
+        float driveWallPaint = step( abs( driveWall.z - 22.3984 ), 0.025 )
+          * step( 24.89, driveWall.x ) * step( driveWall.x, 33.12 )
+          * smoothstep( 0.92, 1.30, driveWall.y ) * step( driveWall.y, 6.66 );
+        `}
+        if (driveWallPaint > 0.0) {
+          float dryBrush = pn_noise( vec3( driveWall.${wagashi ? 'z' : 'x'} * 1.2, driveWall.y * 0.36, 3.4 ) );
+          float coat = 0.947 + 0.036 * smoothstep( 0.36, 0.49, dryBrush )
+            + 0.021 * smoothstep( 0.60, 0.68, dryBrush );
+          diffuseColor.rgb = mix( diffuseColor.rgb, uDrivePlaster * coat, driveWallPaint * 0.94 );
+        }
+        #include <color_fragment>
+      `);
+  };
+  material.customProgramCacheKey = () => `${previousKey.call(material)}|residential-drive-${finish}`;
+  material.needsUpdate = true;
+}
+
+// In SEBA0-2 GroundRect writes station-local (x, -z) to the existing map UVs.
+function paintResidentialDrive(root, { concrete, gravel, plaster }, stationFromWorld, wagashiPlaster) {
+  const finishes = new Map([[concrete.map, 'concrete'], [gravel.map, 'gravel'], [plaster.map, 'plaster'],
+    [wagashiPlaster, 'wagashi-plaster']]);
+  const painted = new Set();
+  root.traverse(object => {
+    if (!object.isMesh) return;
+    for (const material of [].concat(object.material)) {
+      const finish = material.map && finishes.get(material.map);
+      if (!finish || painted.has(material)) continue;
+      painted.add(material);
+      if (finish === 'plaster' || finish === 'wagashi-plaster') {
+        paintDrivePlaster(material, stationFromWorld, finish);
+        continue;
+      }
+      const previous = material.onBeforeCompile, previousKey = material.customProgramCacheKey;
+      const isConcrete = finish === 'concrete';
+      const color = new THREE.Color(isConcrete ? '#eeede8' : '#d7d4cb');
+      material.onBeforeCompile = function (shader, renderer) {
+        previous.call(this, shader, renderer);
+        shader.uniforms.uDriveBase = { value: color };
+        shader.fragmentShader = shader.fragmentShader
+          .replace('#include <common>', `#include <common>\nuniform vec3 uDriveBase;\n${isConcrete ? '#define STATION_DRIVE_CONCRETE' : ''}`)
+          .replace('#include <color_fragment>', /* glsl */`
+            vec2 driveXZ = vMapUv * vec2( ${isConcrete ? '2.0, -2.0' : '1.5, -1.5'} );
+            vec2 driveIn = smoothstep( vec2( 22.20, 23.52 ), vec2( 22.45, 23.75 ), driveXZ );
+            vec2 driveOut = 1.0 - smoothstep( vec2( 28.95, 26.98 ), vec2( 29.35, 27.22 ), driveXZ );
+            float drivePaint = driveIn.x * driveIn.y * driveOut.x * driveOut.y;
+            ${isConcrete ? /* glsl */`
+            vec2 driveJointDist = abs( fract( vMapUv ) - 0.5 );
+            vec2 driveJointAA = clamp( fwidth( vMapUv ) * 0.62, 0.0008, 0.016 );
+            vec2 driveJoints = 1.0 - smoothstep( vec2( 0.0013 ), vec2( 0.0040 ) + driveJointAA, driveJointDist );
+            if (drivePaint > 0.0) {
+              float slabTint = pn_hash( vec3( floor( vMapUv - 0.5 ), 0.0 ) );
+              float driveJoint = max( driveJoints.x, driveJoints.y );
+              vec3 driveFinish = uDriveBase * (0.977 + 0.036 * slabTint) * (1.0 - 0.13 * driveJoint);
+              diffuseColor.rgb = mix( diffuseColor.rgb, driveFinish, drivePaint * 0.98 );
+            }
+            ` : /* glsl */`
+            float gravelAA = clamp( max( fwidth( driveXZ.x ), fwidth( driveXZ.y ) ) * 11.0, 0.018, 0.20 );
+            if (drivePaint > 0.0) {
+              vec2 grit = driveXZ * 20.0;
+              vec2 gritCell = floor( grit );
+              float gritSeed = pn_hash( vec3( gritCell, 7.0 ) );
+              vec2 gritShift = vec2( fract( 7.12 * gritSeed ), fract( 29.35 * gritSeed ) ) * 0.38 - 0.19;
+              vec2 chip = abs( fract( grit ) - 0.5 - gritShift );
+              float chipDist = max( max( chip.x * 0.85, chip.y ), dot( chip, vec2( 0.66, 0.75 ) ) );
+              float chipSize = 0.12 + 0.14 * gritSeed;
+              float chipPaint = 1.0 - smoothstep( chipSize - gravelAA, chipSize + gravelAA, chipDist );
+              chipPaint *= step( 0.46, gritSeed ) * (1.0 - smoothstep( 0.10, 0.20, gravelAA ));
+              float bedTone = mix( 0.925, 1.032, smoothstep( 0.29, 0.68, pn_noise( vec3( driveXZ * 3.2, 4.6 ) ) ) );
+              float chipTone = gritSeed > 0.80 ? 1.095 : 0.82;
+              vec3 driveFinish = uDriveBase * mix( bedTone, chipTone, chipPaint * 0.75 );
+              diffuseColor.rgb = mix( diffuseColor.rgb, driveFinish, drivePaint );
+            }
+            `}
+            #include <color_fragment>
+          `);
+      };
+      material.customProgramCacheKey = () => `${previousKey.call(material)}|residential-drive-${finish}`;
+      material.needsUpdate = true;
+    }
+  });
+}
+
 export async function createStation({ scene, renderer, camera, offset = [280, 8, 900], rotationY = 0,
   sunDir = new THREE.Vector3(...layout.SUN_DIR).normalize(), evening = false, groundMaterial, refl = null, replaceStreetProps = false,
   vendingGlow = null, onProgress = () => {} }) {
@@ -105,6 +212,7 @@ export async function createStation({ scene, renderer, camera, offset = [280, 8,
   gravel.wrapS = gravel.wrapT = THREE.RepeatWrapping;
   gravel.repeat.set(1.9, 1.9);
   const streetscape = addStreetscape({ ctx, root });
+  await addRailLeafSprays(ctx);
   const artR1 = addArtR1Station({ ctx });
   onProgress('textured-props');
   const texturedProps = await addStationTexturedProps({ ctx, root });
@@ -155,6 +263,7 @@ export async function createStation({ scene, renderer, camera, offset = [280, 8,
   clipMaterials(root, layout.WORLD.play);
   const detailLod = createStationDetailLod({ root: ctx.staticRoot });
   const inverse = root.matrixWorld.clone().invert();
+  paintResidentialDrive(ctx.staticRoot, ctx.services.houses.buildContext.M, inverse, ctx.tex.cache.get('sb-plaster'));
   const rotation = root.getWorldQuaternion(new THREE.Quaternion());
   const scratch = new THREE.Vector3();
   const bufferSize = new THREE.Vector2();

@@ -1,0 +1,22 @@
+[
+  {
+    "variant": "candidate",
+    "time": "evening",
+    "round": null,
+    "errors": {
+      "page": [],
+      "network": [],
+      "world": []
+    }
+  },
+  {
+    "variant": "candidate",
+    "time": "night",
+    "round": null,
+    "errors": {
+      "page": [],
+      "network": [],
+      "world": []
+    }
+  }
+]

@@ -271,10 +271,18 @@ varying vec3 vPetal;
 varying vec3 vShape;    // petal count, eye size, eye darkness
 varying vec3 vDisc;     // head disc coords, and how far the head has simplified to a plain disc
 varying vec3 vStrip;    // how hard the wake has raked this spot, this flower's own luck, how bare it is
+#ifdef FLOWER_BED
+attribute vec4 aFlowerBed; // world.xz, species, head scale
+#endif
 
 void main(){
+  #ifdef FLOWER_BED
+  vec2 xz = aFlowerBed.xy;
+  vec4 rnd = hash42(xz * 6.3 + 19.1);
+  #else
   vec4 rnd;
   vec2 xz = placeInstance(rnd);
+  #endif
   vec2 uv = worldUV(xz);
   float y = terrainH(xz);
   vec4 splat = textureLod(uSplatTex, uv, 0.0);
@@ -284,8 +292,11 @@ void main(){
   splat.a *= 1.0 - smoothstep(0.08, 0.5, townMaskV(xz).a);
   light.r *= townShadowV(root + vec3(0.0, 0.35, 0.0));
   float d = distance(root, uCamPos);
-  // flowers gather in drifts: denser splat -> more of the candidates bloom
   vec4 r2 = hash42(xz * 3.7 + 1.9);
+  #ifdef FLOWER_BED
+  float fade = (1.0 - smoothstep(64.0, 96.0, d)) * step(0.35, splat.a);
+  #else
+  // flowers gather in drifts: denser splat -> more of the candidates bloom
   float dens = splat.r * splat.a;
   float keep = step(r2.x, dens * 1.08) * step(0.03, dens);
   // ---- one continuous field across the shells. Each flower has a rank; the fraction of this
@@ -298,8 +309,14 @@ void main(){
   float share = smoothstep(uShell.y, uShell.z, d) * (1.0 - smoothstep(uShell.w * 0.85, uShell.w, d));
   float thr = want * share;
   float fade = smoothstep(0.0, 0.3 * thr + 1e-5, thr - rank) * keep;
+  #endif
   // most candidates do not bloom at any one moment: skip the rest of the work for those
   if (fade <= 0.0){ gl_Position = vec4(2.0, 2.0, 2.0, 1.0); return; }
+  #ifdef FLOWER_BED
+  float uSize = aFlowerBed.w;
+  float farK = 0.42 * smoothstep(18.0, 70.0, d);
+  float species = aFlowerBed.z;
+  #else
   // those that remain grow with distance, so the cover - and the colour - holds
   float uSize = 1.15 * pow(dn, 0.75);
   float farK = pow(clamp((d - 6.0) / 110.0, 0.0, 1.0), 0.7);
@@ -310,6 +327,7 @@ void main(){
   float species = textureLod(uSplatTex, (floor(juv * sres) + 0.5) / sres, 0.0).g;
   // a few strays from the next drift over
   species = clamp(species + (r2.y > 0.93 ? (r2.y - 0.965) * 9.0 : 0.0), 0.0, 1.0);
+  #endif
 
   vec3 petal = flowerPetal(species, rnd.z);
   // species silhouettes
@@ -318,6 +336,10 @@ void main(){
   float eyeDark = (species >= SP4 && rnd.z < 0.66) ? 1.0 : 0.0;
   float headR = uSize * mix(0.052, 0.080, rnd.w) * shp.z;
   float stemH = mix(0.58, 1.04, rnd.x) * shp.w * (0.7 + 0.3 * splat.a);
+  #ifdef FLOWER_BED
+  stemH *= mix(0.265, 0.365, smoothstep(0.62, 0.96, rnd.w));
+  headR *= mix(1.50, 1.94, rnd.z);
+  #endif
   // ---- the wake has been here: the map says what share of the petals it took. They come off one
   // at a time as that share climbs (in the fragment shader) - a flower at the edge of a track, or
   // in the middle of a slow one, loses one or two; in the middle of a fast one only the eye is
@@ -361,7 +383,11 @@ void main(){
     vec3 hn = normalize(tipTan * 0.55 + up * 0.55 + uSunDir * 0.30 + vec3(rnd.x - 0.5, 0.0, rnd.z - 0.5) * 0.7);
     // with distance a head stands in for a whole clump: it turns to face the eye, as a clump
     // seen from the side still shows its colour
-    hn = normalize(mix(hn, normalize(uCamPos - root), 0.16 + 0.50 * farK));
+    float facing = 0.16 + 0.50 * farK;
+    #ifdef FLOWER_BED
+    facing += mix(0.16, 0.27, rnd.y);
+    #endif
+    hn = normalize(mix(hn, normalize(uCamPos - root), facing));
     vec3 tx = normalize(cross(hn, vec3(0.31, 0.2, 0.93)));
     vec3 ty = cross(hn, tx);
     float r = length(position.xy);
@@ -409,6 +435,9 @@ void main(){
     float pa = abs(fract(a * k / 6.2831853 + 0.5) - 0.5) * 2.0;
     // petal outline: broad blade, pinched at the gaps, little notches at the tip
     float outline = mix(1.0, 0.36, pow(pa, k > 10.0 ? 1.1 : 2.4));
+    #ifdef FLOWER_BED
+    outline += 0.12 * pow(pa, 1.5);
+    #endif
     outline *= 1.0 - 0.07 * cos(pa * 9.0) * step(k, 9.0);
     float fw = max(fwidth(r) * 1.5, 0.02);
     // torn off by the wake: every petal has its own breaking point, so a flower at the edge of
@@ -507,6 +536,31 @@ export class Meadow {
       ...flowerShells(q.flowers).map((d) => new Shell(this, d, 'flower')),
     ];
     this.quality = name;
+  }
+
+  /** An authored bed shares the near-shell geometry, lighting and wind, with fixed world-space roots. */
+  addFlowerBed(name, flowers) {
+    if (!flowers.length) return;
+    const geo = flowerGeometry(0);
+    const bounds = new THREE.Box3();
+    const p = new THREE.Vector3();
+    const data = new Float32Array(flowers.length * 4);
+    flowers.forEach(({ x, y, z, species, headScale }, i) => {
+      data.set([x, z, species, headScale], i * 4);
+      bounds.expandByPoint(p.set(x, y, z));
+    });
+    // Allow for the head above the root, wind, and the terrain height texture's interpolated roots.
+    geo.boundingBox = bounds.expandByScalar(2);
+    geo.boundingSphere = bounds.getBoundingSphere(new THREE.Sphere());
+    geo.setAttribute('aFlowerBed', new THREE.InstancedBufferAttribute(data, 4));
+    geo.instanceCount = flowers.length;
+    const material = this.shells.find(s => s.kind === 'flower').material();
+    material.defines.FLOWER_BED = 1;
+    const mesh = new THREE.Mesh(geo, material);
+    mesh.name = `meadow-flower-bed-${name}`;
+    mesh.matrixAutoUpdate = false;
+    mesh.renderOrder = 60;
+    this.group.add(mesh);
   }
 
   /** Coarse max-pooled masks so empty cells (sea, rock, bare meadow) cost nothing. */

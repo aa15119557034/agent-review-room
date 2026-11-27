@@ -35,3 +35,14 @@ blender --background --factory-startup --python-exit-code 1 --python build-folia
 blender --background --factory-startup --python-exit-code 1 --python build-street-crowns.py -- --build-source
 blender --background street-crowns.blend --python-exit-code 1 --python build-street-crowns.py
 ```
+
+## R4 轨旁叶枝
+
+[rail-leaf-sprays.blend](./rail-leaf-sprays.blend) 里可编辑三种叶枝，共 17 片叶。每片叶以有厚度的闭合网格建模，叶缘、弧面和隆起的中脉由几何定义。顶点色区分暖绿叶面、冷绿叶背和叶脉。GLB 共 1,672 个三角面，三个网格的局部原点各在枝条基部。场景沿两丛低灌木的肩部摆放短叶枝，保留团块轮廓。
+
+保存编辑结果后，运行第一条命令重新导出 GLB。第二条命令从配方重建 `.blend` 和 `.glb`。
+
+```text
+blender --background rail-leaf-sprays.blend --python-exit-code 1 --python build-rail-leaf-sprays.py
+blender --background --factory-startup --python-exit-code 1 --python build-rail-leaf-sprays.py -- --build-source
+```

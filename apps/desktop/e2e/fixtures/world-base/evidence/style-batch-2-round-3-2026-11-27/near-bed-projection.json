@@ -1,0 +1,230 @@
+[
+  {
+    "index": 0,
+    "visible": 26,
+    "near": 26,
+    "screen": [
+      227,
+      755
+    ],
+    "centerDistance": 3.988637543707157,
+    "depthDistanceRange": [
+      3.469,
+      4.645
+    ],
+    "rectPixels": [
+      41,
+      716,
+      381,
+      804
+    ]
+  },
+  {
+    "index": 1,
+    "visible": 32,
+    "near": 32,
+    "screen": [
+      1119,
+      820
+    ],
+    "centerDistance": 6.790844575921427,
+    "depthDistanceRange": [
+      5.983,
+      7.49
+    ],
+    "rectPixels": [
+      1005,
+      776,
+      1260,
+      868
+    ]
+  },
+  {
+    "index": 2,
+    "visible": 8,
+    "near": 0,
+    "screen": [
+      288,
+      620
+    ],
+    "centerDistance": 10.074926565129655,
+    "depthDistanceRange": [
+      0,
+      0
+    ],
+    "rectPixels": [
+      246,
+      604,
+      322,
+      618
+    ]
+  },
+  {
+    "index": 3,
+    "visible": 37,
+    "near": 0,
+    "screen": [
+      1036,
+      744
+    ],
+    "centerDistance": 10.559399177616294,
+    "depthDistanceRange": [
+      0,
+      0
+    ],
+    "rectPixels": [
+      930,
+      698,
+      1154,
+      748
+    ]
+  },
+  {
+    "index": 4,
+    "visible": 16,
+    "near": 0,
+    "screen": [
+      966,
+      644
+    ],
+    "centerDistance": 17.62801158677235,
+    "depthDistanceRange": [
+      0,
+      0
+    ],
+    "rectPixels": [
+      926,
+      638,
+      1015,
+      652
+    ]
+  },
+  {
+    "index": 5,
+    "visible": 32,
+    "near": 0,
+    "screen": [
+      1306,
+      689
+    ],
+    "centerDistance": 19.241711888026497,
+    "depthDistanceRange": [
+      0,
+      0
+    ],
+    "rectPixels": [
+      1238,
+      682,
+      1397,
+      708
+    ]
+  },
+  {
+    "index": 6,
+    "visible": 21,
+    "near": 0,
+    "screen": [
+      1197,
+      664
+    ],
+    "centerDistance": 25.108910581407432,
+    "depthDistanceRange": [
+      0,
+      0
+    ],
+    "rectPixels": [
+      1163,
+      653,
+      1238,
+      681
+    ]
+  },
+  {
+    "index": 7,
+    "visible": 2,
+    "near": 0,
+    "screen": [
+      122,
+      560
+    ],
+    "centerDistance": 16.3650696703486,
+    "depthDistanceRange": [
+      0,
+      0
+    ],
+    "rectPixels": [
+      137,
+      540,
+      150,
+      547
+    ]
+  },
+  {
+    "index": 8,
+    "visible": 15,
+    "near": 0,
+    "screen": [
+      469,
+      565
+    ],
+    "centerDistance": 21.750982913596854,
+    "depthDistanceRange": [
+      0,
+      0
+    ],
+    "rectPixels": [
+      434,
+      562,
+      486,
+      565
+    ]
+  },
+  {
+    "index": 9,
+    "visible": 0,
+    "near": 0,
+    "screen": [
+      1462,
+      677
+    ],
+    "centerDistance": 35.040376567146566,
+    "depthDistanceRange": [
+      0,
+      0
+    ]
+  },
+  {
+    "index": 10,
+    "visible": 0,
+    "near": 0,
+    "screen": [
+      1511,
+      682
+    ],
+    "centerDistance": 28.713509480486625,
+    "depthDistanceRange": [
+      0,
+      0
+    ]
+  },
+  {
+    "index": 11,
+    "visible": 26,
+    "near": 26,
+    "screen": [
+      706,
+      720
+    ],
+    "centerDistance": 4.497077069751781,
+    "depthDistanceRange": [
+      3.9,
+      5.002
+    ],
+    "rectPixels": [
+      598,
+      710,
+      801,
+      788
+    ]
+  }
+]

@@ -49,6 +49,12 @@ if (uWx > 0.0 && vWxMask.x > 0.01) {
   float wxU = dot(wxP.xz, vec2(-wxN.z, wxN.x));
   vec2 wxPc = mix(wxP.xz, vec2(wxU, wxP.y), wxWall);
   float wxK = uWx * uWxClass * vWxMask.x;
+  #ifdef STATION_DRIVE_CONCRETE
+    wxK *= 1.0 - 0.83 * drivePaint;
+  #endif
+  #ifdef STATION_DRIVE_PLASTER
+    wxK *= 1.0 - 0.8 * driveWallPaint;
+  #endif
   vec3 wxC = diffuseColor.rgb;
   // 3 blotches: lightness, a warm/cool tilt and saturation
   vec4 wxT1 = wxTex(wxPc * uWxFreq.x + wxSeed), wxT2 = wxTex(wxPc * uWxFreq.y + wxSeed * 2.1 + 7.0);

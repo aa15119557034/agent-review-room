@@ -1,0 +1,164 @@
+{
+  "redSplatAndAllChannelsIdenticalTo5d4ae7a": 4194304,
+  "beds": [
+    {
+      "name": "hillside",
+      "count": 314,
+      "grass": 59,
+      "checks": [
+        {
+          "count": 32,
+          "radius": 1.26,
+          "inner": 13
+        },
+        {
+          "count": 21,
+          "radius": 0.82,
+          "inner": 7
+        },
+        {
+          "count": 22,
+          "radius": 0.91,
+          "inner": 12
+        },
+        {
+          "count": 37,
+          "radius": 1.35,
+          "inner": 17
+        },
+        {
+          "count": 24,
+          "radius": 1.12,
+          "inner": 8
+        },
+        {
+          "count": 35,
+          "radius": 1.4,
+          "inner": 11
+        },
+        {
+          "count": 21,
+          "radius": 0.91,
+          "inner": 10
+        },
+        {
+          "count": 34,
+          "radius": 1.29,
+          "inner": 11
+        },
+        {
+          "count": 27,
+          "radius": 1.05,
+          "inner": 12
+        },
+        {
+          "count": 33,
+          "radius": 1.34,
+          "inner": 17
+        },
+        {
+          "count": 28,
+          "radius": 1.16,
+          "inner": 9
+        }
+      ],
+      "maxMask": 0,
+      "minCover": 0.9853160434477501,
+      "minTownRoadMargin": null,
+      "bounds": {
+        "min": [
+          1030.8245418283427,
+          58.39100549174811,
+          567.4812063926527
+        ],
+        "max": [
+          1071.8045453871596,
+          68.57659993009486,
+          591.1835156853642
+        ]
+      }
+    },
+    {
+      "name": "tower",
+      "count": 359,
+      "grass": 66,
+      "checks": [
+        {
+          "count": 28,
+          "radius": 1,
+          "inner": 10
+        },
+        {
+          "count": 33,
+          "radius": 1.19,
+          "inner": 12
+        },
+        {
+          "count": 34,
+          "radius": 1.21,
+          "inner": 15
+        },
+        {
+          "count": 31,
+          "radius": 1.13,
+          "inner": 12
+        },
+        {
+          "count": 22,
+          "radius": 0.87,
+          "inner": 9
+        },
+        {
+          "count": 37,
+          "radius": 1.38,
+          "inner": 16
+        },
+        {
+          "count": 34,
+          "radius": 1.32,
+          "inner": 16
+        },
+        {
+          "count": 26,
+          "radius": 1.06,
+          "inner": 12
+        },
+        {
+          "count": 22,
+          "radius": 0.96,
+          "inner": 9
+        },
+        {
+          "count": 32,
+          "radius": 1.2,
+          "inner": 12
+        },
+        {
+          "count": 38,
+          "radius": 1.4,
+          "inner": 20
+        },
+        {
+          "count": 22,
+          "radius": 0.86,
+          "inner": 9
+        }
+      ],
+      "maxMask": 0.009307526331990987,
+      "minCover": 0.7007879614646835,
+      "minTownRoadMargin": 1.6753829549823256,
+      "bounds": {
+        "min": [
+          162.72825073929357,
+          132.79160252813685,
+          -1244.0024750790622
+        ],
+        "max": [
+          195.43943046110675,
+          138.45271323034086,
+          -1216.175923055686
+        ]
+      }
+    }
+  ]
+}

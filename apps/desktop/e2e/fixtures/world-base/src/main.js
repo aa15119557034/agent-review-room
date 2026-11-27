@@ -238,7 +238,7 @@ async function init() {
   {
     if (propsOn || vegOn) stage('正在铺放街道道具与植被…');
     if (propsOn) worldBase.streetProps = await (await import('./street-props.js')).createStreetProps({ scene, worldBase, island, station, vendingGlow });
-    if (vegOn) worldBase.vegetation = await (await import('./vegetation-scatter.js')).createVegetation({ scene, worldBase, island, station });
+    if (vegOn) worldBase.vegetation = await (await import('./vegetation-scatter.js')).createVegetation({ scene, worldBase, island, station, flowerBeds: groundParams?.flowerBeds });
   }
   // Round 11: the shop-room boxes are installed after the town edge is built (the laundromat registers its room there). No program
   // using the lit chunks has compiled yet: the first render is after init.
