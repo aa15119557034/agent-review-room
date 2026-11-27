@@ -214,14 +214,14 @@ def crown_normal_proxy(mesh, custom=False):
     return normal_at
 
 
-def fit_crown_surface(obj, target, normal_at, fitted_normals=False):
+def fit_crown_surface(obj, target, normal_at, fitted_normals=False, palette=('426e50', '80a95f')):
     low = [min(v.co[i] for v in obj.data.vertices) for i in range(3)]
     high = [max(v.co[i] for v in obj.data.vertices) for i in range(3)]
     scale = [(target[1][i]-target[0][i])/(high[i]-low[i]) for i in range(3)]
     color = obj.data.color_attributes.get('PlantColor') or obj.data.color_attributes.new(
         name='PlantColor', type='FLOAT_COLOR', domain='POINT')
     obj.data.color_attributes.active_color = color
-    shade, light = linear('426e50'), linear('80a95f')
+    shade, light = map(linear, palette)
     normals = []
     for v in obj.data.vertices:
         uvw = [(v.co[i]-low[i])/(high[i]-low[i]) for i in range(3)]
@@ -550,10 +550,11 @@ def build_source():
     bpy.ops.wm.save_as_mainfile(filepath=str(ROOT / 'station-foliage.blend'))
 
 
-if '--build-source' in sys.argv:
-    build_source()
-else:
-    for name in GALLERY_LAYOUT:
-        scene = bpy.data.scenes[name]
-        bpy.context.window.scene = scene
-        export_glb(name, [obj for obj in scene.objects if obj.type == 'MESH'])
+if __name__ == '__main__':
+    if '--build-source' in sys.argv:
+        build_source()
+    else:
+        for name in GALLERY_LAYOUT:
+            scene = bpy.data.scenes[name]
+            bpy.context.window.scene = scene
+            export_glb(name, [obj for obj in scene.objects if obj.type == 'MESH'])

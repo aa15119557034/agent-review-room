@@ -1,40 +1,79 @@
 import * as THREE from 'three';
 import { hedgeGeometry } from '../upstream/sakuragaoka/src/world/lib/foliage.js';
 
+const HEDGE_PAINT_SIZE = 512;
+function hedgePaint() {
+  const canvas = document.createElement('canvas');
+  canvas.width = canvas.height = HEDGE_PAINT_SIZE;
+  const g = canvas.getContext('2d'), size = HEDGE_PAINT_SIZE;
+  g.fillStyle = '#587451';
+  g.fillRect(0, 0, size, size);
+  const leaf = (x, y, angle, length, width, color) => {
+    g.save();
+    g.translate(x, y);
+    g.rotate(angle);
+    g.fillStyle = color;
+    g.beginPath();
+    g.moveTo(0, 0);
+    g.bezierCurveTo(length * .25, -width * .62, length * .66, -width * .69, length, 0);
+    g.bezierCurveTo(length * .69, width * .65, length * .26, width * .64, 0, 0);
+    g.fill();
+    g.restore();
+  };
+  for (let row = 0; row < 4; row++) for (let col = 0; col < 4; col++) {
+    const seed = col + row * 4;
+    const x = (col + .48 + .30 * Math.sin(seed * 2.7)) * size / 4;
+    const y = (row + .54 + .29 * Math.sin(seed * 1.9)) * size / 4;
+    const tilt = .44 * Math.sin(seed * 3.2);
+    // Wrap the edge clusters to keep the repeat invisible at the curved crown.
+    for (const ox of [-size, 0, size]) for (const oy of [-size, 0, size]) {
+      const px = x + ox, py = y + oy;
+      if (px < -80 || py < -80 || px > size + 80 || py > size + 80) continue;
+      leaf(px - 11, py + 18, 2.70 + tilt, 59, 44, '#4c674a');
+      leaf(px - 2, py + 19, .68 + tilt, 65, 43, '#688253');
+      leaf(px - 12, py + 7, -2.34 + tilt, 69, 46, '#6e8a5e');
+      leaf(px - 4, py + 8, -.45 + tilt, 75, 48, '#799361');
+      leaf(px + 3, py + 8, -1.24 + tilt, 67, 40, '#8da36b');
+      leaf(px + 4, py + 14, .36 + tilt, 49, 26, '#9aac73');
+      leaf(px - 4, py + 5, -2.80 + tilt, 37, 24, '#a7b27a');
+    }
+  }
+  const map = new THREE.CanvasTexture(canvas);
+  map.name = 'town-painted-hedge-leaf-groups';
+  map.colorSpace = THREE.SRGBColorSpace;
+  map.wrapS = map.wrapT = THREE.RepeatWrapping;
+  map.repeat.set(1 / 1.28, 1 / .86);
+  map.anisotropy = 4;
+  return map;
+}
+
 // Original evergreen sprigs. One cutout atlas and four instanced folded-card pools;
 // no transparent sorting, lobe meshes, extra lights or station texture-cache entries.
 function leafAtlas() {
   const canvas = document.createElement('canvas'); canvas.width = canvas.height = 1024;
   const g = canvas.getContext('2d'); g.clearRect(0, 0, 1024, 1024);
   const palettes = [
-    ['#687b52', '#a0ad7a', '#425d42'], ['#526c49', '#8a9d69', '#344e3c'],
-    ['#7c895a', '#bac18d', '#526c49'], ['#65794c', '#a5b57c', '#405d40'],
+    ['#657956', '#779061', '#536b4e'], ['#586f52', '#6c825b', '#4b614b'],
+    ['#708357', '#839366', '#5b7353'], ['#637753', '#768959', '#526b4b'],
   ];
   for (let variant = 0; variant < 4; variant++) {
     g.save(); g.translate((variant % 2) * 512, Math.floor(variant / 2) * 512);
     const [mid, light, shade] = palettes[variant];
-    g.lineCap = 'round'; g.strokeStyle = '#7d7752'; g.lineWidth = 5;
+    g.lineCap = 'round'; g.strokeStyle = shade; g.lineWidth = 8;
     g.beginPath(); g.moveTo(256, 504); g.bezierCurveTo(247, 332, 275, 184, 256, 42); g.stroke();
     const leaf = (x, y, angle, length, width, index) => {
       g.save(); g.translate(x, y); g.rotate(angle);
-      const fill = g.createLinearGradient(0, -width, length, width * .65);
-      fill.addColorStop(0, shade); fill.addColorStop(.42, mid); fill.addColorStop(1, light);
-      g.fillStyle = fill; g.beginPath(); g.moveTo(0, 0);
+      g.fillStyle = mid; g.beginPath(); g.moveTo(0, 0);
       g.bezierCurveTo(length * .18, -width * .72, length * .61, -width, length, -.035 * length);
       g.bezierCurveTo(length * .74, width * .57, length * .22, width * .7, 0, 0); g.fill();
-      // The fine central vein and alternating secondaries follow the blade,
-      // instead of putting a noise field over an otherwise featureless card.
-      g.strokeStyle = 'rgba(210,219,164,0.48)'; g.lineWidth = 1.65;
-      g.beginPath(); g.moveTo(3, 0); g.quadraticCurveTo(length * .5, -width * .1, length * .94, -.035 * length); g.stroke();
-      g.lineWidth = .9; g.strokeStyle = 'rgba(195,208,145,0.28)';
-      for (let k = 1; k < 6; k++) for (const side of [-1, 1]) {
-        const t = k / 7, vx = length * t, vy = -width * .07 * Math.sin(t * Math.PI);
-        g.beginPath(); g.moveTo(vx, vy); g.quadraticCurveTo(vx - length * .07, vy + side * width * .28,
-          vx - length * .12, vy + side * width * .50 * Math.sin(t * Math.PI)); g.stroke();
+      g.fillStyle = shade; g.beginPath(); g.moveTo(length * .05, 0);
+      g.quadraticCurveTo(length * .48, width * .04, length * .84, -width * .05);
+      g.quadraticCurveTo(length * .50, width * .56, length * .05, 0); g.fill();
+      if (index % 2 === 0) {
+        g.fillStyle = light; g.beginPath(); g.moveTo(length * .24, -width * .18);
+        g.quadraticCurveTo(length * .52, -width * .64, length * .76, -width * .28);
+        g.quadraticCurveTo(length * .54, -width * .30, length * .24, -width * .18); g.fill();
       }
-      // A few pale edge catches; no opaque outline around the leaf silhouette.
-      if (index % 2 === 0) { g.strokeStyle = 'rgba(217,222,177,0.19)'; g.lineWidth = 1;
-        g.beginPath(); g.moveTo(length * .1, -width * .21); g.quadraticCurveTo(length * .55, -width * .85, length * .94, -width * .14); g.stroke(); }
       g.restore();
     };
     for (let i = 0; i < 7; i++) {
@@ -42,7 +81,7 @@ function leafAtlas() {
       const x = 256 + Math.sin((504 - y) / 460 * Math.PI) * 8;
       const length = (variant === 0 ? 145 : 168) - i * 7;
       leaf(x, y, side < 0 ? -2.72 + i * .045 : -.43 - i * .025,
-        length, variant === 0 ? 32 : 46 - i * 1.6, i);
+        length, variant === 0 ? 41 : 52 - i * 1.6, i);
     }
     leaf(256, 73, -Math.PI / 2, 53, 20, 8);
     if (variant === 3) {
@@ -75,6 +114,14 @@ function cardGeometry(variant) {
 
 export function createTownPlants({ root, frame, materials, gradientMap }) {
   const texture = leafAtlas();
+  const canopyMap = hedgePaint();
+  const plain = materials.plain;
+  const canopyMaterial = plain.clone();
+  canopyMaterial.onBeforeCompile = plain.onBeforeCompile;
+  canopyMaterial.customProgramCacheKey = () => plain.customProgramCacheKey() + '|painted-hedge';
+  canopyMaterial.userData.wbNoFlat = true;
+  canopyMaterial.name = 'town-hedge-painted-canopy';
+  canopyMaterial.map = canopyMap;
   const material = new THREE.MeshToonMaterial({ color: '#ffffff', map: texture, gradientMap,
     alphaTest: .42, side: THREE.DoubleSide, transparent: false, depthWrite: true });
   material.name = 'town-evergreen-leaf-cards'; material.shadowSide = THREE.DoubleSide;
@@ -138,10 +185,19 @@ export function createTownPlants({ root, frame, materials, gradientMap }) {
     const center = (x0 + x1) / 2, base = ground(center, z);
     const geometry = hedgeGeometry({
       length: x1 - x0 - .12, h: .62, d: .46, spacing: .13,
-      colors: { top: '#71815a', mid: '#51664d', base: '#3a5041' },
-      seed: Math.floor(random() * 65536), ground: x => ground(center + x, z) - base,
+      colors: { top: '#687e58', mid: '#566d50', base: '#415644' },
+      seed: Math.floor(random() * 65536), ground: x => ground(center + x, z) - base, surfaceUV: true,
     });
-    const mesh = new THREE.Mesh(geometry, materials.plain);
+    const { uv, color } = geometry.attributes;
+    for (let i = 0; i < uv.count; i++) {
+      uv.setX(i, uv.getX(i) + center * .37 + z * .18);
+      // The atlas supplies leaf hues. The baked foliage colours supply only the
+      // body shading so two green layers do not multiply into an olive mass.
+      const lum = .2126 * color.getX(i) + .7152 * color.getY(i) + .0722 * color.getZ(i);
+      const tone = .72 + .28 * THREE.MathUtils.smoothstep(lum, .055, .23);
+      color.setXYZ(i, tone, tone, tone);
+    }
+    const mesh = new THREE.Mesh(geometry, canopyMaterial);
     mesh.name = active.name + '-canopy';
     mesh.position.set(center, base, z);
     mesh.castShadow = mesh.receiveShadow = true;
@@ -153,6 +209,7 @@ export function createTownPlants({ root, frame, materials, gradientMap }) {
     const { position } = geometry.attributes;
     const a = new THREE.Vector3(), b = new THREE.Vector3(), c = new THREE.Vector3();
     const ab = new THREE.Vector3(), ac = new THREE.Vector3(), normal = new THREE.Vector3(), tip = new THREE.Vector3();
+    let sprig = 0;
     for (let i = 0; i < position.count; i++) {
       a.fromBufferAttribute(position, i).add(mesh.position);
       include(a.toArray());
@@ -170,13 +227,20 @@ export function createTownPlants({ root, frame, materials, gradientMap }) {
         if (tip.y < ground(tip.x, tip.z) + .08) continue;
         const direction = [normal.x + .9 * (random() - .5), .55 + normal.y, normal.z + .45 * (random() - .5)];
         const length = .095 + .05 * random();
-        card(tip.toArray(), direction, length, length, random() * 2 * Math.PI,
-          Math.floor(random() * 3), 1 + .32 * random());
+        const roll = random() * 2 * Math.PI, variant = Math.floor(random() * 3), value = 1 + .32 * random();
+        // Gather the existing surface sprigs into leaf clusters across staggered
+        // sections of the clipped canopy. Keep the original pose of each sprig.
+        const along = (tip.x - center) / .36 + (tip.z < z ? .5 : 0);
+        const section = Math.floor(along), dx = (along - section - .5) / .45;
+        const middle = base + .35 + .10 * Math.sin(section * 2.4 + z);
+        const dy = (tip.y - middle) / .20;
+        const stride = dx * dx + dy * dy < 1 ? 2 : 14;
+        if (sprig++ % stride === 0) card(tip.toArray(), direction, length, length, roll, variant, value);
       }
     }
   }
   return {
-    texture, material, records,
+    texture, material, canopyMap, canopyMaterial, records,
     hedge({ name, x0, x1, z, ground, random:r, footprint, canopyRandom }) {
       begin(name, 'hedge', footprint); const n = Math.max(2, Math.ceil((x1 - x0) / .38));
       for (let i = 0; i < n; i++) {
@@ -236,11 +300,12 @@ export function createTownPlants({ root, frame, materials, gradientMap }) {
         mesh.computeBoundingBox();mesh.computeBoundingSphere();mesh.castShadow=true;mesh.receiveShadow=true;
         root.add(mesh);cards+=list.length;draws++;
       }
-      return { system:'Original veined leaf sprigs on folded cutout cards; connected woody stems',
+      const texturePixels = 1024 ** 2 + HEDGE_PAINT_SIZE ** 2;
+      return { system:'Painted hedge leaf groups and three-tone leaf sprigs; connected woody stems',
         records, plants:records.length, cards, leafTriangles:cards*4, branchTriangles,canopyTriangles,totalTriangles:cards*4+branchTriangles+canopyTriangles,
         leafDrawCalls:draws,shadowDrawCalls:draws,transparentDrawCalls:0,lobeMeshes:0,
         atlas:{width:1024,height:1024,colorSpace:texture.colorSpace,alphaTest:material.alphaTest,mipmaps:true,variants:4},
-        ownedTextures:1,newTexturePixels:1024*1024,textureRGBA8WithMipsEstimateBytes:Math.ceil(1024*1024*4*4/3),
+        ownedTextures:2,newTexturePixels:texturePixels,textureRGBA8WithMipsEstimateBytes:Math.ceil(texturePixels*4*4/3),
         scope:'23 planted groups: ten front hedges, ten rear shrubs, two garden trees and one shop pot; original root locations and protected clearing rectangles retained.',
         limits:'No LOD currently: four instanced cutout draws across this compact town. Visible leaf layering and alpha-shadow cost require GPU inspection.' };
     },

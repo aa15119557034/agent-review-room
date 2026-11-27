@@ -280,7 +280,7 @@ export function applyWeathering({ scene, station, island, city, skyline, params,
       const cls = classify(m, mesh);
       if (!cls) return m;
       let c = clones.get(m);
-      if (!c) { c = cloneOwned(m); patchMaterial(c, uniforms, params.classScale[cls]); clones.set(m, c); counts[cls]++; }
+      if (!c) { c = cloneOwned(m); patchMaterial(c, uniforms, params.classScale[cls] * (m.userData.wxScale ?? 1)); clones.set(m, c); counts[cls]++; }
       return c;
     });
     if (next.some((m, i) => m !== list[i])) { if (addMask(mesh.geometry, meshSeed(mesh), mesh, vehicleBoxes)) maskedGeometries.push(mesh.geometry); swaps.push([mesh, mesh.material]); mesh.material = Array.isArray(mesh.material) ? next : next[0]; }

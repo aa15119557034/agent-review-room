@@ -41,10 +41,10 @@
     "models": {
       "broadleafA": { "base": "/station-foliage/", "file": "canopy-a-far.glb", "size": [5.194, 6.993, 4.161], "vertexColors": true, "toonCrown": true, "snapGround": true, "radius": 2.6, "fit": "height", "near": "broadleafA3" },
       "broadleafB": { "base": "/station-foliage/", "file": "canopy-b-far.glb", "size": [5.027, 7.382, 4.579], "vertexColors": true, "toonCrown": true, "snapGround": true, "radius": 2.6, "fit": "height", "near": "broadleafB3" },
-      "cherry": { "file": "veg-tree-cherry.glb", "size": [5.54, 5.68, 4.66], "origin": [0, 0, 0], "radius": 2.7 },
+      "cherry": { "base": "/station-foliage/", "file": "island-cherry-crown.glb", "size": [5.54, 5.68, 4.66], "vertexColors": true, "toonCrown": "cherry", "origin": [0, 0, 0], "radius": 2.7 },
       "conifer": { "base": "/station-foliage/", "file": "station-cedar-far.glb", "size": [4.090, 9.02, 3.378], "vertexColors": true, "toonCrown": true, "snapGround": true, "radius": 1.8, "fit": "height", "near": "conifer2" },
       "conifer2": { "base": "/station-foliage/", "file": "station-cedar.glb", "size": [3.983, 9.02, 3.66], "vertexColors": true, "toonCrown": true, "snapGround": true, "radius": 1.8 },
-      "young": { "file": "veg-tree-young.glb", "size": [1.52, 3.57, 1.45], "origin": [0, 0, 0], "radius": 0.8 },
+      "young": { "base": "/station-foliage/", "file": "street-young-crown.glb", "size": [1.52, 3.57, 1.45], "vertexColors": true, "toonCrown": true, "origin": [0, 0, 0], "radius": 0.8 },
       "bushA": { "base": "/station-foliage/", "file": "bank-shrub-a.glb", "size": [1.856, 1.066, 1.915], "vertexColors": true, "snapGround": true, "radius": 0.9 },
       "bushB": { "base": "/station-foliage/", "file": "bank-shrub-b.glb", "size": [2.205, 1.108, 2.112], "vertexColors": true, "snapGround": true, "radius": 0.9 },
       "hedge": { "base": "/station-foliage/", "file": "edge-hedge.glb", "size": [2.444, 1.143, 1.015], "vertexColors": true, "snapGround": true, "radius": 1.2 },

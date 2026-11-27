@@ -194,6 +194,56 @@ export function addStationLawn({ station, bounds, heightAt, canGrow, shadeAt, pa
   return { groups, patches: cells.length, blades: cells.length * blades.length, triangles: cells.length * indices.length / 3 };
 }
 
+const STATION_GROUND_SHADOW = `
+#ifndef PI2
+  #define PI2 6.283185307179586
+#endif
+#include <shadowmap_pars_fragment>
+#if defined(USE_SHADOWMAP) && NUM_DIR_LIGHT_SHADOWS > 0
+  uniform mat4 directionalShadowMatrix[NUM_DIR_LIGHT_SHADOWS];
+#endif
+
+float stationGroundSun(vec3 point, vec3 normal) {
+  #if defined(USE_SHADOWMAP) && NUM_DIR_LIGHT_SHADOWS > 0
+    DirectionalLightShadow sun = directionalLightShadows[0];
+    vec4 coord = directionalShadowMatrix[0] * vec4(point + normal * sun.shadowNormalBias, 1.0);
+    vec3 uvz = coord.xyz / coord.w;
+    vec2 border = min(uvz.xy, 1.0 - uvz.xy);
+    float inside = min(border.x, border.y);
+    if (inside <= 0.0 || uvz.z < 0.0 || uvz.z > 1.0) return 1.0;
+    float visibility = getShadow(directionalShadowMap[0], sun.shadowMapSize,
+      sun.shadowIntensity, sun.shadowBias, sun.shadowRadius, coord);
+    return mix(1.0, visibility, smoothstep(0.0, 0.016, inside));
+  #else
+    return 1.0;
+  #endif
+}
+`;
+
+/** Reuse the station sun depth in the island ground and both sides of its join. */
+export function installStationGroundShadows(meshes) {
+  const materials = new Set();
+  for (const mesh of meshes) {
+    mesh.receiveShadow = true;
+    materials.add(mesh.material);
+  }
+  for (const material of materials) {
+    const shadow = 'float sh = shadowBaked * cs * riderShadow(P) * townShadow(P, N);';
+    if (!material.fragmentShader.includes(shadow) || !material.fragmentShader.includes('void main(){')) {
+      throw new Error('Island ground lighting changed; update station shadow receiver');
+    }
+    // Let Three bind the same directional shadow texture used by station materials,
+    // including the map generated at the first street reflection face.
+    material.lights = true;
+    Object.assign(material.uniforms, THREE.UniformsUtils.clone(THREE.UniformsLib.lights));
+    material.fragmentShader = material.fragmentShader
+      .replace('void main(){', STATION_GROUND_SHADOW + '\nvoid main(){')
+      .replace(shadow, `float sceneryShadow = min(townShadow(P, N), stationGroundSun(P, N));
+  float sh = shadowBaked * cs * riderShadow(P) * sceneryShadow;`);
+    material.needsUpdate = true;
+  }
+}
+
 /** A narrow, explicit join between the station's ground and the island heightfield. */
 export function createGroundTransition({ rect, stationHeight, islandHeight, terrainMaterial, width = 2, spacing = 1 }) {
   const inner = [[rect.minX, rect.minZ], [rect.maxX, rect.minZ], [rect.maxX, rect.maxZ], [rect.minX, rect.maxZ]];

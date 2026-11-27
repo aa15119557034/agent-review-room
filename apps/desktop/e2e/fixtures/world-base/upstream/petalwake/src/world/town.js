@@ -12,11 +12,37 @@ import { U, shared } from '../core/ctx.js';
 import { NOISE, NOISE_TEX, ATMOSPHERE, CLOUD_SHADOW, TERRAIN_LOOKUP, WIND, SHADOW, TOWN_SHADOW } from '../shaders/common.js';
 import { SKY_UNIFORMS } from './sky.js';
 import { materialArrays, loadImage, dataTex } from './terrain.js';
+import { paintWallTile } from './wall-paint.js';
 import { SPR } from '../fx/particles.js';
 import { waveHeight } from './water.js';
 
 const NEAR = 135, MID = 560;       // metres: beyond NEAR the finest detail goes, beyond MID the middle level too
 const MAX_TOWNS = 2;               // shadow maps the world shaders can read
+const PAINTED_WALLS = new Set(['masonry', 'ashlar', 'plaster', 'brick']);
+
+function paintWallLayers(mats, tiles) {
+  const color = mats.color.image;
+  const size = color.width, stride = size * size * 4;
+  const sRGB = new THREE.Color(), mean = new THREE.Color();
+  const painted = new Float32Array(16);
+  for (const [layer, kind] of tiles.order.entries()) {
+    if (!PAINTED_WALLS.has(kind)) continue;
+    const g = paintWallTile(kind, size).getContext('2d');
+    const pixels = g.getImageData(0, 0, size, size).data;
+    color.data.set(pixels, layer * stride);
+    mean.setRGB(0, 0, 0);
+    let samples = 0;
+    for (let y = 4; y < size; y += 8) for (let x = 4; x < size; x += 8) {
+      const p = (y * size + x) * 4;
+      sRGB.setRGB(pixels[p] / 255, pixels[p + 1] / 255, pixels[p + 2] / 255, THREE.SRGBColorSpace);
+      mean.r += sRGB.r; mean.g += sRGB.g; mean.b += sRGB.b;
+      samples++;
+    }
+    tiles.mean[kind] = [mean.r / samples, mean.g / samples, mean.b / samples];
+    painted[layer] = 1;
+  }
+  return painted;
+}
 
 export class Town {
   static async load(renderer, base = './assets') {
@@ -57,6 +83,7 @@ export class Town {
   }
 
   _material(mats, tiles) {
+    const painted = paintWallLayers(mats, tiles);
     const tile = new Float32Array(16).fill(2.5);
     const lum = new Float32Array(16).fill(0.5);
     tiles.order.forEach((n, i) => { tile[i] = tiles.tile[n]; const m = tiles.mean[n]; lum[i] = Math.max(0.2126 * m[0] + 0.7152 * m[1] + 0.0722 * m[2], 0.02); });
@@ -64,6 +91,7 @@ export class Town {
       ...shared(...SKY_UNIFORMS, 'uTime', 'uLightTex', 'uHeightTex', 'uSplatTex', 'uWorld', 'uNoiseTex', 'uWind', 'uWakeTex', 'uWake', 'uShadowTex', 'uShadowMat', 'uShadowOn',
         'uTownSh0', 'uTownSh1', 'uTownShM0', 'uTownShM1', 'uTownShP'),
       uMatC: { value: mats.color }, uMatN: { value: mats.normal }, uTile: { value: tile }, uLum: { value: lum },
+      uPaintedWall: { value: painted },
     };
     this.material = new THREE.ShaderMaterial({ uniforms, vertexShader: VERT, fragmentShader: FRAG });
     this.depthMaterial = new THREE.ShaderMaterial({
@@ -299,6 +327,7 @@ uniform sampler2DArray uMatC;
 uniform sampler2DArray uMatN;
 uniform float uTile[16];
 uniform float uLum[16];     // each material's mean brightness: a painted surface keeps its grain, not its colour
+uniform float uPaintedWall[16];
 varying vec3 vWorld;
 varying vec3 vN;
 varying vec2 vUv;
@@ -322,20 +351,23 @@ void main(){
     float tile = uTile[mat];
     vec3 uvw = vec3(vUv / tile, float(mat));
     vec4 c = texture(uMatC, uvw);
-    vec3 nt = texture(uMatN, uvw).xyz;
     // painted wood keeps only the grain's light and dark
     float l = dot(c.rgb, vec3(0.2126, 0.7152, 0.0722));
     alb = mix(c.rgb * vCol.rgb, vec3(min(l / uLum[mat] * 0.92, 1.5)) * vCol.rgb, vCol.a);
-    rough = mix(0.62, 0.98, nt.z);
-    // tangent frame from the lie of the uvs on the surface
-    vec3 dp1 = dFdx(vWorld), dp2 = dFdy(vWorld);
-    vec2 du1 = dFdx(vUv), du2 = dFdy(vUv);
-    vec3 dp2p = cross(dp2, N), dp1p = cross(N, dp1);
-    vec3 T = dp2p * du1.x + dp1p * du2.x, B = dp2p * du1.y + dp1p * du2.y;
-    float inv = inversesqrt(max(max(dot(T, T), dot(B, B)), 1e-12));
-    vec2 nxy = (nt.xy * 2.0 - 1.0) * vec2(1.0, -1.0);
-    float fade = 1.0 - smoothstep(60.0, 260.0, length(uCamPos - vWorld));
-    N = normalize(N + (T * nxy.x + B * nxy.y) * inv * 0.85 * fade);
+    rough = 0.95;
+    if (uPaintedWall[mat] < 0.5) {
+      vec3 nt = texture(uMatN, uvw).xyz;
+      rough = mix(0.62, 0.98, nt.z);
+      // Tangent frame from the surface UVs, only for the unchanged materials.
+      vec3 dp1 = dFdx(vWorld), dp2 = dFdy(vWorld);
+      vec2 du1 = dFdx(vUv), du2 = dFdy(vUv);
+      vec3 dp2p = cross(dp2, N), dp1p = cross(N, dp1);
+      vec3 T = dp2p * du1.x + dp1p * du2.x, B = dp2p * du1.y + dp1p * du2.y;
+      float inv = inversesqrt(max(max(dot(T, T), dot(B, B)), 1e-12));
+      vec2 nxy = (nt.xy * 2.0 - 1.0) * vec2(1.0, -1.0);
+      float fade = 1.0 - smoothstep(60.0, 260.0, length(uCamPos - vWorld));
+      N = normalize(N + (T * nxy.x + B * nxy.y) * inv * 0.85 * fade);
+    }
   } else if (mat == 13) {            // metal
     metal = 1.0; rough = 0.42;
   } else if (mat == 14) {            // window glass

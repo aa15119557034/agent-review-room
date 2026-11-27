@@ -7,6 +7,7 @@ import { addDoorGlow, loadDoorGlow, resolveDoorLamps } from './door-glow.js';
 import { applyEveningGlow, applyEveningSakura, fadeDistantCrossingHalos } from './evening-glow.js';
 import * as layoutModule from '../upstream/sakuragaoka/src/world/layout.js';
 import { createStation } from './station.js';
+import { installStationGroundShadows } from './transition.js';
 import { reflEnabled, bakeStreetZones, createReflControl } from './street-zones.js';
 import { createLook } from './look.js';
 import { createSkyline } from './skyline.js';
@@ -174,6 +175,7 @@ async function init() {
     groundMaterial: island.transition.material, refl, replaceStreetProps: propsOn, vendingGlow,
     onProgress: stage,
   });
+  installStationGroundShadows([island.terrain.mainView.mesh, island.transition, ...station.groundBlend.meshes]);
   worldBase.station = station;
   // Interpolate the existing ramp values for softer boundaries between tones.
   const ramp = station.ctx.mat.gradientMap;
