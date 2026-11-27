@@ -18,8 +18,13 @@ const vec3 = (v) => `vec3(${f3(v)})`;
 const unionBox = (boxes) => [0, 1, 2].map((i) => Math.min(...boxes.map((b) => b.aabb[i]))).concat([3, 4, 5].map((i) => Math.max(...boxes.map((b) => b.aabb[i]))));
 const inAabb = (b) => `all( greaterThan( stW, ${vec3(b.slice(0, 3))} ) ) && all( lessThan( stW, ${vec3(b.slice(3))} ) )`;
 /** One room: world position is taken into the lot frame (x along the frontage, z toward the street), y stays world. */
-const inRoom = (b) => `{ vec2 d = stW.xz - vec2( ${f3(b.o)} ); vec3 q = vec3( dot( d, vec2( ${f3(b.ex)} ) ), stW.y, dot( d, vec2( ${f3(b.ez)} ) ) );
-      if ( all( greaterThan( q, ${vec3(b.min)} ) ) && all( lessThan( q, ${vec3(b.max)} ) ) ) { stIn = 1.0;${b.lamp ? ` stLamp = ${vec3(b.lamp)};` : ''} } }`;
+const inRoom = (b) => {
+  const height = b.max[1] - b.min[1];
+  const y0 = (b.min[1] + height * 0.62).toFixed(4), y1 = (b.min[1] + height * 0.88).toFixed(4);
+  const upper = b.lampUpper ? ` + ${vec3(b.lampUpper)} * smoothstep( ${y0}, ${y1}, q.y )` : '';
+  return `{ vec2 d = stW.xz - vec2( ${f3(b.o)} ); vec3 q = vec3( dot( d, vec2( ${f3(b.ex)} ) ), stW.y, dot( d, vec2( ${f3(b.ez)} ) ) );
+      if ( all( greaterThan( q, ${vec3(b.min)} ) ) && all( lessThan( q, ${vec3(b.max)} ) ) ) { stIn = 1.0;${b.lamp ? ` stLamp = ${vec3(b.lamp)}${upper};` : ''} } }`;
+};
 export function indoorGlsl(boxes) {
   const u = unionBox(boxes);
   // Inside any room (inner wall faces, floor, ground-floor ceiling) the fill is off: rooms keep their warm lamp-lit colours.
@@ -99,9 +104,12 @@ export function shopInteriorBoxes(layout, station, pad, lamps = null) {
     const min = [box[0] - pad, box[1] + y - pad, box[2] - pad], max = [box[3] + pad, box[4] + y + pad, box[5] + pad];
     const xs = [], zs = [];
     for (const lx of [min[0], max[0]]) for (const lz of [min[2], max[2]]) { xs.push(o[0] + lx * ex[0] + lz * ez[0]); zs.push(o[1] + lx * ex[1] + lz * ez[1]); }
-    // Round 11: rooms whose own materials are plain lit toon (the laundromat) get their tube lights as an albedo-multiplied fill.
-    const lamp = lamps?.rooms?.[id] ? lamps.color.map((v) => v * lamps.rooms[id]) : null;
-    return { id, o, ex, ez, min, max, lamp, aabb: [Math.min(...xs), min[1], Math.min(...zs), Math.max(...xs), max[1], Math.max(...zs)] };
+    // A brighter ceiling reads through storefront glass without raising the shelves or floor by the same amount.
+    const lighting = lamps?.rooms?.[id];
+    const strength = typeof lighting === 'number' ? lighting : lighting?.strength;
+    const lamp = strength ? lamps.color.map(v => v * strength) : null;
+    const lampUpper = lighting?.upper ? lamps.color.map(v => v * lighting.upper) : null;
+    return { id, o, ex, ez, min, max, lamp, lampUpper, aabb: [Math.min(...xs), min[1], Math.min(...zs), Math.max(...xs), max[1], Math.max(...zs)] };
   });
 }
 

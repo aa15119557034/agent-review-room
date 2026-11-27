@@ -241,7 +241,9 @@ async function init() {
   // using the lit chunks has compiled yet: the first render is after init.
   if (shadowTint) {
     // No program using the lit chunk has compiled yet (first render is after init), so the box can be known here.
-    const boxes = shopInteriorBoxes(layoutModule, station, shadowTintParams.indoorPad, shadowTintParams.indoorLamp);
+    const indoorLamp = shadowTintParams.indoorLamp;
+    const lamps = night ? { ...indoorLamp, rooms: { ...indoorLamp.rooms, W1: { strength: 0.25, upper: 0.29 } } } : indoorLamp;
+    const boxes = shopInteriorBoxes(layoutModule, station, shadowTintParams.indoorPad, lamps);
     installLitShadowTint(shadowTint, boxes);
     look.setShadowTint(shadowTintUniforms(shadowTint), boxes, shadowTintParams.indoorFade);
     worldBase.shadowTint.indoorBox = boxes;
@@ -354,7 +356,7 @@ async function init() {
     const params = await loadShopSpill();
     if (params) {
       const rooms = station.ctx.services.shopInteriors ?? [];
-      const raw = [...shopFrontsFromRooms(layoutModule, rooms, params)];
+      const raw = shopFrontsFromRooms(layoutModule, rooms, params, night);
       worldBase.city.root.updateWorldMatrix(true, true);
       const t0 = performance.now();
       const fronts = groundSpillFronts(raw, [station.root, worldBase.city.root], params, worldBase.city.root.position);

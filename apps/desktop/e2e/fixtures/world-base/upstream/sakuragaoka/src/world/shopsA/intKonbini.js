@@ -6,6 +6,10 @@
 // back-room door. Only printed things (labels, screens, signs, price rails) are textures.
 import * as THREE from 'three';
 
+const GONDOLA_X = [-2.65, -0.2, 2.3];
+const GONDOLA_BACK = -9.8, GONDOLA_FRONT = -4.6;
+const GONDOLA_W = 0.92, GONDOLA_COLLIDER_BACK = GONDOLA_BACK - 0.2, GONDOLA_COLLIDER_FRONT = GONDOLA_FRONT + 0.34;
+
 export function buildKonbiniInterior(ctx, C, S, D, authored = false) {
   const { A, U, F } = C; const G = C.G; const k = S.k;
   const M = authored ? { ...C.M, inner: C.M.fluorescent } : C.M;
@@ -84,15 +88,24 @@ export function buildKonbiniInterior(ctx, C, S, D, authored = false) {
   // ---------------- floor: grout base + individual tiles
   {
     const cx = (IX0 + IX1) / 2, cz = (IZ0 + IZ1) / 2;
-    const fl = k.plane(IX1 - IX0, IZ1 - IZ0, M.inner('#b9b6ae', 0.2), [cx, FY + 0.002, cz], [-Math.PI / 2, 0, 0]); fl.castShadow = false;
+    const tileColor = new THREE.Color(authored ? '#aab8c9' : '#f1efe8');
+    const fl = k.plane(IX1 - IX0, IZ1 - IZ0, M.inner(authored ? '#8592a4' : '#b9b6ae', 0.2), [cx, FY + 0.002, cz], [-Math.PI / 2, 0, 0]); fl.castShadow = false;
     const ts = 0.4, gap = 0.008;
     let ix = 0;
     for (let x = IX0; x < IX1 - 1e-3; x += ts, ix++) {
       let iz = 0;
       for (let z = IZ0; z < IZ1 - 1e-3; z += ts, iz++) {
         const w = Math.min(ts, IX1 - x) - gap, d = Math.min(ts, IZ1 - z) - gap;
-        const base = (ix + iz) % 2 ? 0.93 : 0.9, c = new THREE.Color(authored ? '#ebf0f5' : '#f1efe8').multiplyScalar(base + rr() * 0.04);
-        G.add('tile', S, [x + gap / 2 + w / 2, FY + 0.005, z + gap / 2 + d / 2], [w, 1, d], c);
+        const tx = x + gap / 2 + w / 2, tz = z + gap / 2 + d / 2;
+        const base = (ix + iz) % 2 ? 0.93 : 0.9;
+        const edge = Math.min(tx - IX0, IX1 - tx, tz - IZ0);
+        const shelfX = Math.min(...GONDOLA_X.map(sx => Math.max(0, Math.abs(sx - tx) - GONDOLA_W / 2)));
+        const shelfEnd = Math.max(GONDOLA_COLLIDER_BACK - tz, tz - GONDOLA_COLLIDER_FRONT, 0);
+        const shelf = Math.hypot(shelfX, shelfEnd);
+        const shade = Math.min(edge, shelf);
+        const band = authored ? (shade < 0.26 ? 0.64 : shade < 0.51 ? 0.82 : 1) : 1;
+        const c = tileColor.clone().multiplyScalar((base + rr() * 0.04) * band);
+        G.add('tile', S, [tx, FY + 0.005, tz], [w, 1, d], c);
       }
     }
     // entrance mat (woven, raised a little)
@@ -196,10 +209,11 @@ export function buildKonbiniInterior(ctx, C, S, D, authored = false) {
     }
   }
   // Preserve the fixture footprints in the original W1 physics context.
-  for (const [x, first, second] of [[-2.65, PLAN.snacks, PLAN.sweets], [-0.2, PLAN.noodle, PLAN.bread], [2.3, PLAN.daily, PLAN.grocery]]) {
-    const z0 = -9.8, z1 = -4.6;
-    if (!authored) gondola(x, z0, z1, [first, second]);
-    S.box(x, (z0 + z1) / 2 + 0.07, 0.92, z1 - z0 + 0.54, -1, FY + GH + 0.4);
+  const floorPlan = [[PLAN.snacks, PLAN.sweets], [PLAN.noodle, PLAN.bread], [PLAN.daily, PLAN.grocery]];
+  for (const [i, x] of GONDOLA_X.entries()) {
+    if (!authored) gondola(x, GONDOLA_BACK, GONDOLA_FRONT, floorPlan[i]);
+    S.box(x, (GONDOLA_COLLIDER_BACK + GONDOLA_COLLIDER_FRONT) / 2, GONDOLA_W,
+      GONDOLA_COLLIDER_FRONT - GONDOLA_COLLIDER_BACK, -1, FY + GH + 0.4);
   }
 
   // hanging category signs (printed boards on wires)

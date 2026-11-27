@@ -149,9 +149,9 @@ if (process.type === 'renderer') {
       const cooler = feet();
       aisleResults.push({ cooler, panels: panels() });
       if (cooler[2] < -10.9 || cooler[2] > -10.3) throw new Error('W1 cooler collider failed: '+JSON.stringify(cooler));
-      lookAtInRoom(-1.45,-9.9,-4.35,-5.45,-5,67);
+      lookAtInRoom(-3.65,-9.35,-4.50,-6.1,-8,64);
       await snap('checkout');
-      lookAtInRoom(3.72,-9.75,2.01,-3.1,-6,65);
+      lookAtInRoom(4.48,-5.33,4.0,-3.06,-20,53);
       await snap('magazines');
       // Walk through the door in reverse using the same physical player.
       walkTo(1.0,-4.2,180,0);

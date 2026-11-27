@@ -396,8 +396,8 @@ export function buildKonbini(ctx, C, fixtures) {
     // The front door and windows share a continuous light spill. The north
     // windows use their own span along the corner street.
     room.glazing = [
-      { axis: 'x', from: frontPanes[0][0], to: frontPanes.at(-1)[1], out: ZF, depth: 6.2, gain: 0.61 },
-      { axis: 'z', from: NW0, to: NW1, out: X1, depth: 4.8, gain: 0.52 },
+      { axis: 'x', from: frontPanes[0][0], to: frontPanes.at(-1)[1], out: ZF, depth: 6.2, gain: 0.61, nightGain: 1.12 },
+      { axis: 'z', from: NW0, to: NW1, out: X1, depth: 4.8, gain: 0.52, nightGain: 0.83 },
     ];
     S.g.add(fixtures);
   }

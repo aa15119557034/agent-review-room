@@ -104,7 +104,7 @@ class Fixture:
         for batch,name in ((self.solid,'paint'),(self.atlas,'labels'),(self.glass,'glass'),(self.glow,'lights')):
             batch.add_to(self.root,self.materials[name],name)
 
-    def box(self,x,y,z,w,h,d,color=CREAM,*,label=None,face='front',layer='paint',tilt=0):
+    def box(self,x,y,z,w,h,d,color=CREAM,*,label=None,face='front',layer='paint',tilt=0,on_shelf=False):
         batch = self.atlas if label else {'paint':self.solid,'glass':self.glass,'lights':self.glow}[layer]
         c = (1.0,1.0,1.0,1.0) if label else linear(color)
         x0,x1=x-w/2,x+w/2
@@ -113,9 +113,11 @@ class Fixture:
                 (x0,y,t),(x1,y,t),(x1,y+h,t+tilt),(x0,y+h,t+tilt)]
         first = batch.vertices(points,c)
         for name,indices in FACES.items():
+            if on_shelf and name == 'bottom':
+                continue
             batch.face(first,indices,tile_uv(label,solid=name!=face) if label else None)
 
-    def tube(self,x,y,z,rings,color,*,side='front',label=None,sides=8):
+    def tube(self,x,y,z,rings,color,*,side='front',label=None,sides=8,lid_from=None):
         batch = self.atlas if label else self.solid
         dx,dz=AXIS[side]
         phase=atan2(dz,dx)-pi/sides
@@ -130,47 +132,54 @@ class Fixture:
             for i in range(sides):
                 j=(i+1)%sides
                 # The primary label faces the aisle, with the rest of the sleeve in the base ink.
-                uv=tile_uv(label,solid=(i!=0 or row!=0)) if label else None
+                if lid_from is not None and row >= lid_from:
+                    uv = tile_uv('price_128', solid=True)
+                else:
+                    uv=tile_uv(label,solid=(i!=0 or row!=0)) if label else None
                 batch.face(first,(start+j,start+i,start+i+sides,start+j+sides),uv,True)
         # Bottom caps are never exposed. The top is a closed horizontal polygon.
         cap=tuple(reversed(range((len(rings)-1)*sides,len(rings)*sides)))
-        caps=tile_uv(label,True)[0:1]*len(cap) if label else None
+        lid = 'price_128' if lid_from is not None else label
+        caps=tile_uv(lid,True)[0:1]*len(cap) if lid else None
         batch.face(first,cap,caps)
 
     def bag(self,x,y,z,side,w,h,t,label):
         sx,sz=AXIS[side]
         along=(sz, -sx)
-        profile=[(-.43,0),(.43,0),(.50,.12),(.46,.89),(.38,1),(-.38,1),(-.46,.89),(-.50,.12)]
+        profile=[(-.43,0),(.43,0),(.50,.15),(.43,1),(-.43,1),(-.50,.15)]
         points=[(x+along[0]*u*w+sx*q*t,y+v*h,z+along[1]*u*w+sz*q*t)
                 for q in (-.50,.50) for u,v in profile]
         batch=self.atlas
         first=batch.vertices(points,(1.0,1.0,1.0,1.0))
         swatch=tile_uv(label,True)[0:1]
-        for i in range(8):
-            j=(i+1)%8
-            batch.face(first,(i,j,j+8,i+8),swatch*4)
+        count = len(profile)
+        for i in range(1, count):
+            j = (i + 1) % count
+            batch.face(first, (i, j, j + count, i + count), swatch * 4)
         u0,v0=tile_uv(label)[0]
         u1,v1=tile_uv(label)[2]
-        batch.face(first,tuple(range(8,16)),tuple((u0+(u+.5)*(u1-u0),v0+v*(v1-v0)) for u,v in profile))
-        batch.face(first,tuple(reversed(range(8))),swatch*8)
+        batch.face(first, tuple(range(count, count * 2)),
+                   tuple((u0 + (u + .5) * (u1 - u0), v0 + v * (v1 - v0)) for u, v in profile))
+        batch.face(first, tuple(reversed(range(count))), swatch * count)
 
     def packed(self,x,y,z,side,label,w,h,kind):
         palette=ATLAS['items'][label]['color']
         if kind=='bottle':
             r=w*.50
-            self.tube(x,y,z,[(0,r),(.67*h,r),(.84*h,r*.78),(.92*h,r*.37)],palette,
-                      side=side,label=label,sides=6)
-            self.tube(x,y+h*.90,z,[(0,r*.42),(.10*h,r*.42)],'e1dcca',sides=6)
-        elif kind=='cup':
+            self.tube(x, y, z, [(0, r), (.70*h, r), (.88*h, .46*r), (h, .46*r)], palette,
+                      side=side, label=label, sides=6, lid_from=2)
+        elif kind in ('cup', 'can'):
             r=w*.54
-            self.tube(x,y,z,[(0,r*.72),(h*.84,r*.93)],palette,side=side,label=label,sides=6)
-            self.tube(x,y+h*.84,z,[(0,r),(.16*h,r)],'f8ebcc',sides=6)
+            taper = .74 if kind == 'cup' else 1
+            self.tube(x, y, z, [(0, r*taper), (.88*h, r), (h, r)], palette,
+                      side=side, label=label, sides=6, lid_from=1)
         elif kind=='bag':
-            self.bag(x,y,z,side,w,h,.105,label)
+            self.bag(x, y, z, side, w, h, w*.55, label)
         else:
             along_x=side in ('front','back')
-            self.box(x,y,z,w if along_x else .115,h,.115 if along_x else w,
-                     label=label,face=side)
+            depth = w * (.58 if kind == 'box' else .85)
+            self.box(x, y, z, w if along_x else depth, h, depth if along_x else w,
+                     label=label, face=side, on_shelf=True)
 
 
 def make_material(name,atlas=None,alpha=1.0,emission=0.0):
@@ -215,7 +224,7 @@ def gondola(name,x,index,materials):
     for z in (-9.90,-7.20,-4.50):
         for side in (-1,1):
             f.box(x+side*.075,FLOOR+.10,z,.030,1.30,.038,METAL)
-    for level,h in enumerate((.13,.48,.83,1.18)):
+    for level,h in enumerate((.13, .415, .70, .985, 1.27)):
         y=FLOOR+h
         for side in (-1,1):
             direction='right' if side>0 else 'left'
@@ -224,25 +233,26 @@ def gondola(name,x,index,materials):
             f.box(x+side*.444,y+.001,center,.012,.028,length-.10,PORCELAIN)
             labels,kinds=ITEM_LINES[(index+(side<0))%len(ITEM_LINES)]
             rng=Random(3000+index*31+level*17+(side>0)*7)
-            z=-9.74
+            z=-9.76
             group=0
             while z<-4.69:
                 kind=kinds[(group+level)%len(kinds)]
-                count=3+rng.randrange(4)
+                count = rng.randrange(4, 9)
                 product=labels[(group*2+level+(side>0))%len(labels)]
+                width = rng.uniform(.076, .119)
+                height = rng.uniform(.102, .152) if kind != 'bag' else rng.uniform(.125, .175)
                 for i in range(count):
-                    w=rng.uniform(.135,.206)
-                    if z+w*.52>-4.51:
+                    if z + width*.52 > -4.51:
                         break
-                    h=rng.uniform(.17,.25) if kind!='bag' else rng.uniform(.21,.279)
-                    f.packed(x+side*(.324-rng.uniform(0,.031)),y+.045,z,direction,product,w,h,kind)
+                    f.packed(x + side*(.349 - rng.uniform(0, .027)), y + .042, z,
+                             direction, product, width, height, kind)
                     if i==0:
                         f.box(x+side*.453,y+.019,z,.008,.058,.093,
                               label='price_'+PRICES[(group+level+index)%len(PRICES)],face=direction)
-                    z+=w+rng.uniform(.018,.038)
+                    z += width + rng.uniform(.012, .027)
                 else:
                     group+=1
-                    z+=.061+(group%3==1)*.06
+                    z += .041 + (group%4 == 2)*.045
                     continue
                 break
     # End cards are readable from the entrance and the stock-room aisle.
@@ -277,16 +287,21 @@ def coolers(materials):
         f.box(x+w/2-.09,FLOOR+.92,-11.047,.028,.475,.046,INK)
         f.box(x+w/2-.09,FLOOR+1.06,-11.036,.038,.21,.030,METAL)
         f.box(x-w/2+.066,FLOOR+.233,-11.425,.025,2.028,.018,'d9efee',layer='lights')
-        for level,h in enumerate((.23,.62,1.01,1.43,1.83)):
+        for level,h in enumerate((.23, .55, .87, 1.19, 1.53, 1.87)):
             y=FLOOR+h
             f.box(x,y,-11.453,w-.068,.038,.493,'c2d6d1')
             f.box(x,y+.006,-11.201,w-.072,.047,.022,CREAM)
             f.box(x+w*.24,y+.013,-11.184,.10,.034,.014,label='price_'+PRICES[(bay+level)%len(PRICES)])
-            for j in range(8):
-                label=DRINKS[(level*3+bay*2+j//2)%len(DRINKS)]
-                packed='box' if label in ('milk','coffee','cocoa') else 'bottle'
-                col=x-w/2+.113+j*.134
-                f.packed(col,y+.038,-11.282,'front',label,.106,.275-(j%3)*.012,packed)
+            for j in range(12):
+                label = DRINKS[(level*3 + bay*2 + j//3) % len(DRINKS)]
+                if label in ('milk', 'coffee', 'cocoa'):
+                    kind, width, height = 'carton', .066, .139
+                elif label in ('lime', 'cola', 'orange', 'grape'):
+                    kind, width, height = 'can', .061, .106
+                else:
+                    kind, width, height = 'bottle', .071, .179
+                col = x - w/2 + .103 + j*.089
+                f.packed(col, y + .038, -11.282, 'front', label, width, height, kind)
         # A single lightly tinted pane leaves the stocked shelves legible.
         f.box(x,FLOOR+.166,-11.074,w-.098,2.115,.006,'cde9ef',layer='glass')
         f.box(x+(.24 if bay%2 else -.22),FLOOR+.194,-11.063,.099,.164,.008,label='cold')
@@ -313,14 +328,14 @@ def bento_case(materials):
         f.box(center,y,-11.429,4.02,.037,.478,COLD)
         f.box(center,y+.007,-11.185,4.025,.045,.030,INK)
         f.box(center,y+.014,-11.158,4.013,.026,.017,CREAM)
-        for i in range(13):
-            x=-5.485+i*.306
+        for i in range(18):
+            x = -5.51 + i*.215
             label=item_rows[row][i//3%4]
             if row==0:
-                f.box(x,y+.042,-11.381,.267,.055,.178,INK)
-                f.box(x,y+.097,-11.381,.248,.021,.165,label=label,face='top')
+                f.box(x, y + .038, -11.381, .182, .043, .142, INK, on_shelf=True)
+                f.box(x, y + .080, -11.381, .169, .018, .13, label=label, face='top', on_shelf=True)
             else:
-                f.packed(x,y+.042,-11.32,'front',label,.185,.143,'box')
+                f.packed(x, y + .038, -11.32, 'front', label, .119, .108, 'box')
             if i%3==0:
                 f.box(x,y+.013,-11.143,.1,.033,.008,label='price_'+PRICES[(i//3+row+2)%len(PRICES)])
     for side in (-1,1):
