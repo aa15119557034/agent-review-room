@@ -242,11 +242,15 @@ function cellTable() {
   return cells;
 }
 
-export async function loadBakedDecals() {
-  try {
-    const response = await fetch(new URL('./weathering-decals.json', import.meta.url));
-    return response.ok ? await response.json() : null;
-  } catch { return null; }
+export async function loadBakedDecals(variants = []) {
+  const sources = [new URL('./weathering-decals.json', import.meta.url), ...variants];
+  const plans = await Promise.all(sources.map(async url => {
+    try {
+      const response = await fetch(url);
+      return response.ok ? await response.json() : null;
+    } catch { return null; }
+  }));
+  return plans.filter(Boolean);
 }
 
 export function addWeatheringDecals({ scene, station, wallMaterials, vehicleBoxes = [], roots, gradientMap, explicit = [], baked = null, forcePlan = false }) {
@@ -256,9 +260,11 @@ export function addWeatheringDecals({ scene, station, wallMaterials, vehicleBoxe
   texture.colorSpace = THREE.SRGBColorSpace; texture.anisotropy = 4; texture.generateMipmaps = true; texture.minFilter = THREE.LinearMipmapLinearFilter; texture.name = 'weathering-decal-atlas';
   const material = new THREE.MeshToonMaterial({ name: 'weathering-decals', map: texture, gradientMap, alphaTest: 0.5, polygonOffset: true, polygonOffsetFactor: -2, polygonOffsetUnits: -4 });
   let plan = null, source = 'baked', t0 = performance.now();
-  if (baked && !forcePlan) {
+  if (baked?.length && !forcePlan) {
     for (const root of roots) root.updateMatrixWorld(true);
-    if (baked.fingerprint === fingerprint(collectTargets(roots))) plan = baked; else source = 'planned (scene changed)';
+    const signature = fingerprint(collectTargets(roots));
+    plan = baked.find(candidate => candidate.fingerprint === signature);
+    if (!plan) source = 'planned (scene changed)';
   } else source = forcePlan ? 'planned (forced)' : 'planned (no baked file)';
   if (!plan) plan = planWeatheringDecals({ station, wallMaterials, vehicleBoxes, roots, explicit });
   const planMs = performance.now() - t0;
@@ -286,7 +292,7 @@ export function addWeatheringDecals({ scene, station, wallMaterials, vehicleBoxe
   const mesh = new THREE.Mesh(geometry, material); mesh.name = 'weathering-decals'; mesh.receiveShadow = true; mesh.castShadow = false; mesh.frustumCulled = false; mesh.userData.noDecal = true; mesh.userData.walkable = false;
   scene.add(mesh);
   let disposed = false;
-  return { mesh, plan, stats: { ...stats, source, planMs: +planMs.toFixed(1), rays: plan.stats?.rays ?? 0, explicit: { placed: plan.items.filter(i => explicit.some(e => e.area === i.area)).length, adjusted: plan.stats?.explicitAdjusted ?? [], missed: plan.stats?.explicitFailed ?? [] }, drawCalls: 1, triangles: indices.length / 3 },
+  return { mesh, plan, stats: { ...stats, source, planMs: +planMs.toFixed(1), rays: source === 'baked' ? 0 : (plan.stats?.rays ?? 0), explicit: { placed: plan.items.filter(i => explicit.some(e => e.area === i.area)).length, adjusted: plan.stats?.explicitAdjusted ?? [], missed: plan.stats?.explicitFailed ?? [] }, drawCalls: 1, triangles: indices.length / 3 },
     setEnabled(on) { mesh.visible = on; },
     dispose() { if (disposed) return; disposed = true; mesh.removeFromParent(); geometry.dispose(); material.dispose(); texture.dispose(); } };
 }

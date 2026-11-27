@@ -173,14 +173,17 @@ function applySkyLook(p) {
 
 /** Adopt the native island into the caller's renderer and scene, without starting the game. */
 export async function createIsland({ scene, renderer, camera, assetBase = '/assets', timeOfDay = 'evening' }) {
-  // Evening (#254 C19) moves the sun, sky palette and the terrain's baked sun
-  // shadow together; 'afternoon' keeps Petalwake's original bake for comparison.
-  if (timeOfDay !== 'evening' && timeOfDay !== 'afternoon') throw new Error('Unknown time of day: ' + timeOfDay);
-  const evening = timeOfDay === 'evening' ? await json(new URL('./evening.json', import.meta.url)) : null;
+  if (!['afternoon', 'evening', 'night'].includes(timeOfDay)) throw new Error('Unknown time of day: ' + timeOfDay);
+  // Night uses the evening bake and direction as low moonlight.
+  const [evening, night] = await Promise.all([
+    timeOfDay === 'afternoon' ? null : json(new URL('./evening.json', import.meta.url)),
+    timeOfDay === 'night' ? json(new URL('./night.json', import.meta.url)) : null,
+  ]);
   if (evening) ENV.evening = evening.env;
+  if (night) ENV.night = night.env;
   applyEnv(timeOfDay);
   const skyNew = new URLSearchParams(location.search).get('sky') !== 'old';
-  const skyLook = skyNew ? (await json(new URL('./sky.json', import.meta.url)))[timeOfDay] : null;
+  const skyLook = skyNew ? night?.sky ?? (await json(new URL('./sky.json', import.meta.url)))[timeOfDay] : null;
   if (skyLook) applySkyLook(skyLook);
   U.uTime.value = 0;
   U.uShadowOn.value = 0;

@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 import { loadTable, loadModels, pickWeighted, makeMaterialSet, makeBatches, getAerial, getContext, hash32, rngFrom } from './scatter-common.js';
+import { addVendingSpill } from './vending-spill.js';
 
 // X-51 street props (2026-11-21): island-wide, rule driven; nothing here knows a camera. Models, sizes, origin offsets, radii and all weights live in
 // src/props-veg.json ("props"): the rules ask for a GROUP (pole, vending, signStop, ...) and never name a GLB. Wires are generated (wireCount = the pole's attach.offsets).
@@ -39,12 +40,13 @@ const _m = new THREE.Matrix4(), _x = new THREE.Vector3(), _y = new THREE.Vector3
 /** Matrix with +Z toward (fx, fz), x stretched by sx, standing on y. */
 const facing = (x, y, z, fx, fz, sx = 1) => { const l = Math.hypot(fx, fz) || 1; fx /= l; fz /= l; return _m.clone().makeBasis(_x.set(fz * sx, 0, -fx * sx), _y, _z.set(fx, 0, fz)).setPosition(_t.set(x, y, z)); };
 
-export async function createStreetProps({ scene, worldBase, island, station, dryRun = false }) {
+export async function createStreetProps({ scene, worldBase, island, station, vendingGlow = null, dryRun = false }) {
   const t0 = performance.now(), P = PARAMS, rng = rngFrom(hash32(P.seed, 1));
   const ctx = await getContext({ worldBase, island, station, scene });
   const [aerial, table] = await Promise.all([getAerial(worldBase, island), loadTable()]);
   const model = await loadModels(table.props), GROUPS = table.props.groups, pick = g => pickWeighted(rng, GROUPS[g]), RAD = id => model[id].radius;
-  const materials = makeMaterialSet({ gradientMap: station.ctx.mat.gradientMap, aerial, name: 'street-props' }), material = materials.shared;
+  const windowLight = vendingGlow ? (vendingGlow === 'night' ? 0.70 : 0.48) : 0;
+  const materials = makeMaterialSet({ gradientMap: station.ctx.mat.gradientMap, aerial, name: 'street-props', windowLight }), material = materials.shared;
   const root = new THREE.Group(); root.name = 'street-props';
   const items = {}, all = [], rejects = {};
   const bump = k => { rejects[k] = (rejects[k] ?? 0) + 1; return null; };
@@ -218,6 +220,14 @@ export async function createStreetProps({ scene, worldBase, island, station, dry
     }
   }
 
+  // Preserve original station fixtures, pads and colliders; swap only the registered visuals.
+  for (const p of station.ctx.services.streetPropReplacements ?? []) {
+    const matrix = facing(p.x, p.y, p.z, Math.sin(p.rotY), Math.cos(p.rotY)).premultiply(station.root.matrixWorld);
+    const { x, y, z } = new THREE.Vector3().setFromMatrixPosition(matrix);
+    add(p.kind, x, y, z, matrix, { station: true, stationId: p.stationId });
+    stationItems++;
+  }
+
   // ---- guardrails: where the ground drops away beside a street -----------------------------------------------------------------------------------------
   let guardSegs = 0;
   const G = P.guard;
@@ -250,11 +260,29 @@ export async function createStreetProps({ scene, worldBase, island, station, dry
     const wires = new THREE.Mesh(geometry, material); wires.name = 'street-props-wires'; wires.frustumCulled = true; wires.userData.walkable = false;
     root.add(wires); drawCalls++; wireTris = geometry.index.count / 3; triangles += wireTris; counts.wireTubes = wireGeoms.length;
   }
+  let vendingSpill = null;
+  if (vendingGlow && !dryRun) {
+    const kinds = new Set(GROUPS.vending.map(entry => entry.id));
+    const machines = all.filter(p => kinds.has(p.kind)).map(p => ({
+      station: p.station, baseY: p.y,
+      terrainFloor: Math.abs(p.y - island.terrain.heightAt(p.x, p.z)) < 0.03,
+      source: model[p.kind].windowGeometry.boundingBox.getCenter(new THREE.Vector3()).applyMatrix4(p.item.matrix),
+      forward: new THREE.Vector3(0, 0, 1).transformDirection(p.item.matrix),
+    }));
+    for (const p of station.ctx.services.stationVending ?? []) {
+      machines.push({ station: true, stationId: p.id, baseY: p.floorY + station.root.position.y,
+        source: station.toWorld(new THREE.Vector3().fromArray(p.source)),
+        forward: new THREE.Vector3().fromArray(p.forward).transformDirection(station.root.matrixWorld) });
+    }
+    vendingSpill = addVendingSpill({ parent: root, machines, station, city: worldBase.city, town: island.town, terrain: island.terrain, surfaceAt,
+      strength: vendingGlow === 'night' ? 0.28 : 0.22 });
+    drawCalls += Number(Boolean(vendingSpill.mesh)); triangles += vendingSpill.triangles;
+  }
   if (!dryRun) scene.add(root);
   const sum = group => GROUPS[group].reduce((n, e) => n + (counts[e.id] ?? 0), 0);
   const summary = { poles: sum('pole'), wireSpans, wireBlocked, wireTubes: wireGeoms.length, signs, corners, frontage, station: stationItems, guardrails: guardSegs,
     vending: sum('vending'), postboxes: sum('postbox'), hydrants: sum('hydrant'), sizeWarnings: model.warnings };
-  worldBase.scatter = { ...(worldBase.scatter ?? {}), props: { root, counts, summary, drawCalls, triangles, wireTris, items: all, junctions: junctions.length, rejects, runs: poleRuns.length, ms: +(performance.now() - t0).toFixed(1), contextStats: ctx.stats } };
+  worldBase.scatter = { ...(worldBase.scatter ?? {}), props: { root, counts, summary, drawCalls, triangles, wireTris, items: all, junctions: junctions.length, rejects, runs: poleRuns.length, ms: +(performance.now() - t0).toFixed(1), contextStats: ctx.stats, vendingSpill } };
   console.info('[world-base] street props', JSON.stringify({ ...summary, drawCalls, triangles, ms: worldBase.scatter.props.ms }));
   return worldBase.scatter.props;
 }

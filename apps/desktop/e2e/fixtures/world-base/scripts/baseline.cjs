@@ -61,6 +61,7 @@ function createStaticServer(root = fixture) {
       relative = pathname.slice('/vegetation/'.length);
     }
     for (const [route, folder] of [
+      ['/street-props-v3/', 'props-v3-2026-11-21'],
       ['/trees-v2/', 'trees-v2-2026-11-21'], ['/grass-v2/', 'grass-v2-2026-11-21'], ['/poles-v2/', 'poles-v2-2026-11-21'],
       ['/station-foliage/', 'station-foliage-2026-11-27'],
     ]) {

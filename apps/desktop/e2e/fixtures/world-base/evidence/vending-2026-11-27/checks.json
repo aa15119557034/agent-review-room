@@ -1,0 +1,623 @@
+{
+  "selection": {
+    "seed": 81675,
+    "town": "town-1",
+    "stopView": "stop-sign"
+  },
+  "evening": {
+    "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "votes": [
+      {
+        "kind": "vendCoffee",
+        "lot": "m_townhall",
+        "road": "larkhaven:crown",
+        "position": [
+          -48.93591468472766,
+          5.99280691767026,
+          1029.4185957096943
+        ],
+        "transform": [
+          -0.3778969974266074,
+          0,
+          0.9258476436952003,
+          0,
+          0,
+          1,
+          0,
+          0,
+          -0.9258476436952003,
+          0,
+          -0.3778969974266074,
+          0,
+          -48.93591468472766,
+          5.99280691767026,
+          1029.4185957096943,
+          1
+        ]
+      },
+      {
+        "kind": "vendDrinks",
+        "lot": "v_barn_b",
+        "road": "cairnwick:south",
+        "position": [
+          168.72986007884558,
+          132.21064239914182,
+          -1129.0652341478528
+        ],
+        "transform": [
+          0.4847940063116779,
+          0,
+          -0.8746283619025127,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0.8746283619025127,
+          0,
+          0.4847940063116779,
+          0,
+          168.72986007884558,
+          132.21064239914182,
+          -1129.0652341478528,
+          1
+        ]
+      },
+      {
+        "kind": "vendCoffee",
+        "lot": "h_crane",
+        "road": "larkhaven:quay",
+        "position": [
+          -22.999999999999975,
+          4.496910095214844,
+          1116.05
+        ],
+        "transform": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          -22.999999999999975,
+          4.496910095214844,
+          1116.05,
+          1
+        ]
+      }
+    ],
+    "summaryBefore": {
+      "poles": 43,
+      "wireSpans": 26,
+      "wireBlocked": 4,
+      "wireTubes": 78,
+      "signs": 11,
+      "corners": 0,
+      "frontage": 16,
+      "station": 6,
+      "guardrails": 91,
+      "vending": 5,
+      "postboxes": 8,
+      "hydrants": 9,
+      "sizeWarnings": []
+    },
+    "summaryAfter": {
+      "poles": 43,
+      "wireSpans": 26,
+      "wireBlocked": 4,
+      "wireTubes": 78,
+      "signs": 11,
+      "corners": 0,
+      "frontage": 16,
+      "station": 11,
+      "guardrails": 91,
+      "vending": 5,
+      "postboxes": 8,
+      "hydrants": 9,
+      "sizeWarnings": []
+    },
+    "positions": {
+      "A-main-street": [
+        278.8,
+        10.488,
+        936,
+        -0.003277842930440409,
+        -0.009834585659995631,
+        -3.223795934194156e-05,
+        0.9999462663720154,
+        35.63777782904556
+      ],
+      "town-1": [
+        -53.62656116528548,
+        8.09280691767026,
+        1029.6642287580216,
+        -0.09478013307148185,
+        -0.6824676820188055,
+        -0.08994668976267195,
+        0.7191412812344793,
+        51
+      ],
+      "W1-forecourt": [
+        279.2,
+        10.6338,
+        914.75,
+        -0.11127377188518371,
+        0.6012894251542404,
+        0.08505285096418323,
+        0.7866607829496725,
+        46
+      ],
+      "stop-sign": [
+        -64.59528457420782,
+        6.5389528054411805,
+        1099.8307500222572,
+        0.02855540192744288,
+        0.727845813025689,
+        -0.03036487241380864,
+        0.6844728161183825,
+        43
+      ],
+      "recycle-bin": [
+        276.62,
+        9.790759999999999,
+        914.9699999999999,
+        -0.17439751235108494,
+        0.6323063126195656,
+        0.14902161012736828,
+        0.739977563458682,
+        47
+      ]
+    },
+    "lighting": {
+      "groundPatches": 7,
+      "wallPatches": 2,
+      "triangles": 476,
+      "w1Wall": {
+        "min": [
+          272.61199951171875,
+          8.732878684997559,
+          914.7000122070312
+        ],
+        "max": [
+          272.61199951171875,
+          10.132878303527832,
+          915
+        ]
+      }
+    },
+    "machineBatches": [
+      {
+        "name": "street-props-vendDrinks",
+        "type": "MeshToonMaterial",
+        "count": 3,
+        "emissiveIntensity": 1,
+        "triangles": 84
+      },
+      {
+        "name": "street-props-vendDrinks-cards",
+        "type": "MeshToonMaterial",
+        "count": 3,
+        "emissiveIntensity": 1,
+        "triangles": 2
+      },
+      {
+        "name": "street-props-vendDrinks-window",
+        "type": "MeshToonMaterial",
+        "count": 3,
+        "emissiveIntensity": 0.48,
+        "triangles": 2
+      },
+      {
+        "name": "street-props-vendCoffee",
+        "type": "MeshToonMaterial",
+        "count": 2,
+        "emissiveIntensity": 1,
+        "triangles": 84
+      },
+      {
+        "name": "street-props-vendCoffee-cards",
+        "type": "MeshToonMaterial",
+        "count": 2,
+        "emissiveIntensity": 1,
+        "triangles": 2
+      },
+      {
+        "name": "street-props-vendCoffee-window",
+        "type": "MeshToonMaterial",
+        "count": 2,
+        "emissiveIntensity": 0.48,
+        "triangles": 2
+      },
+      {
+        "name": "vending-spill",
+        "type": "ShaderMaterial",
+        "count": 1,
+        "triangles": null
+      }
+    ],
+    "stationVending": [
+      {
+        "id": "V3a",
+        "meshCount": 28,
+        "floorY": 0.4539137254901961,
+        "source": [
+          -4.9285,
+          1.6589137254901962,
+          13.9
+        ],
+        "forward": [
+          1,
+          0,
+          6.123233995736766e-17
+        ]
+      },
+      {
+        "id": "V3b",
+        "meshCount": 28,
+        "floorY": 0.4237176470588235,
+        "source": [
+          -4.9285,
+          1.6287176470588236,
+          12.8
+        ],
+        "forward": [
+          1,
+          0,
+          6.123233995736766e-17
+        ]
+      }
+    ],
+    "cache": "baked",
+    "registration": [
+      {
+        "kind": "recycleBin",
+        "x": 16.52,
+        "y": 0,
+        "z": -24.45,
+        "rotY": 0
+      },
+      {
+        "kind": "recycleBin",
+        "x": 30.77,
+        "y": 1.25,
+        "z": -35.95,
+        "rotY": 3.141592653589793
+      },
+      {
+        "kind": "recycleBin",
+        "x": -5.28,
+        "y": 0.27692,
+        "z": 14.67,
+        "rotY": 1.5707963267948966
+      },
+      {
+        "kind": "recycleBin",
+        "x": -8.719999999999999,
+        "y": 0,
+        "z": -59.370000000000005,
+        "rotY": -1.5707963267948966
+      },
+      {
+        "kind": "recycleBin",
+        "x": -16.26,
+        "y": 0,
+        "z": -29.970000000000002,
+        "rotY": 1.5707963267948966
+      }
+    ]
+  },
+  "night": {
+    "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "votes": [
+      {
+        "kind": "vendCoffee",
+        "lot": "m_townhall",
+        "road": "larkhaven:crown",
+        "position": [
+          -48.93591468472766,
+          5.99280691767026,
+          1029.4185957096943
+        ],
+        "transform": [
+          -0.3778969974266074,
+          0,
+          0.9258476436952003,
+          0,
+          0,
+          1,
+          0,
+          0,
+          -0.9258476436952003,
+          0,
+          -0.3778969974266074,
+          0,
+          -48.93591468472766,
+          5.99280691767026,
+          1029.4185957096943,
+          1
+        ]
+      },
+      {
+        "kind": "vendDrinks",
+        "lot": "v_barn_b",
+        "road": "cairnwick:south",
+        "position": [
+          168.72986007884558,
+          132.21064239914182,
+          -1129.0652341478528
+        ],
+        "transform": [
+          0.4847940063116779,
+          0,
+          -0.8746283619025127,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0.8746283619025127,
+          0,
+          0.4847940063116779,
+          0,
+          168.72986007884558,
+          132.21064239914182,
+          -1129.0652341478528,
+          1
+        ]
+      },
+      {
+        "kind": "vendCoffee",
+        "lot": "h_crane",
+        "road": "larkhaven:quay",
+        "position": [
+          -22.999999999999975,
+          4.496910095214844,
+          1116.05
+        ],
+        "transform": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          -22.999999999999975,
+          4.496910095214844,
+          1116.05,
+          1
+        ]
+      }
+    ],
+    "summaryBefore": {
+      "poles": 43,
+      "wireSpans": 26,
+      "wireBlocked": 4,
+      "wireTubes": 78,
+      "signs": 11,
+      "corners": 0,
+      "frontage": 16,
+      "station": 6,
+      "guardrails": 91,
+      "vending": 5,
+      "postboxes": 8,
+      "hydrants": 9,
+      "sizeWarnings": []
+    },
+    "summaryAfter": {
+      "poles": 43,
+      "wireSpans": 26,
+      "wireBlocked": 4,
+      "wireTubes": 78,
+      "signs": 11,
+      "corners": 0,
+      "frontage": 16,
+      "station": 11,
+      "guardrails": 91,
+      "vending": 5,
+      "postboxes": 8,
+      "hydrants": 9,
+      "sizeWarnings": []
+    },
+    "positions": {
+      "A-main-street": [
+        278.8,
+        10.488,
+        936,
+        -0.003277842930440409,
+        -0.009834585659995631,
+        -3.223795934194156e-05,
+        0.9999462663720154,
+        35.63777782904556
+      ],
+      "town-1": [
+        -53.62656116528548,
+        8.09280691767026,
+        1029.6642287580216,
+        -0.09478013307148185,
+        -0.6824676820188055,
+        -0.08994668976267195,
+        0.7191412812344793,
+        51
+      ],
+      "W1-forecourt": [
+        279.2,
+        10.6338,
+        914.75,
+        -0.11127377188518371,
+        0.6012894251542404,
+        0.08505285096418323,
+        0.7866607829496725,
+        46
+      ],
+      "stop-sign": [
+        -64.59528457420782,
+        6.5389528054411805,
+        1099.8307500222572,
+        0.02855540192744288,
+        0.727845813025689,
+        -0.03036487241380864,
+        0.6844728161183825,
+        43
+      ],
+      "recycle-bin": [
+        276.62,
+        9.790759999999999,
+        914.9699999999999,
+        -0.17439751235108494,
+        0.6323063126195656,
+        0.14902161012736828,
+        0.739977563458682,
+        47
+      ]
+    },
+    "lighting": {
+      "groundPatches": 7,
+      "wallPatches": 2,
+      "triangles": 476,
+      "w1Wall": {
+        "min": [
+          272.61199951171875,
+          8.732878684997559,
+          914.7000122070312
+        ],
+        "max": [
+          272.61199951171875,
+          10.132878303527832,
+          915
+        ]
+      }
+    },
+    "machineBatches": [
+      {
+        "name": "street-props-vendDrinks",
+        "type": "MeshToonMaterial",
+        "count": 3,
+        "emissiveIntensity": 1,
+        "triangles": 84
+      },
+      {
+        "name": "street-props-vendDrinks-cards",
+        "type": "MeshToonMaterial",
+        "count": 3,
+        "emissiveIntensity": 1,
+        "triangles": 2
+      },
+      {
+        "name": "street-props-vendDrinks-window",
+        "type": "MeshToonMaterial",
+        "count": 3,
+        "emissiveIntensity": 0.7,
+        "triangles": 2
+      },
+      {
+        "name": "street-props-vendCoffee",
+        "type": "MeshToonMaterial",
+        "count": 2,
+        "emissiveIntensity": 1,
+        "triangles": 84
+      },
+      {
+        "name": "street-props-vendCoffee-cards",
+        "type": "MeshToonMaterial",
+        "count": 2,
+        "emissiveIntensity": 1,
+        "triangles": 2
+      },
+      {
+        "name": "street-props-vendCoffee-window",
+        "type": "MeshToonMaterial",
+        "count": 2,
+        "emissiveIntensity": 0.7,
+        "triangles": 2
+      },
+      {
+        "name": "vending-spill",
+        "type": "ShaderMaterial",
+        "count": 1,
+        "triangles": null
+      }
+    ],
+    "stationVending": [
+      {
+        "id": "V3a",
+        "meshCount": 28,
+        "floorY": 0.4539137254901961,
+        "source": [
+          -4.9285,
+          1.6589137254901962,
+          13.9
+        ],
+        "forward": [
+          1,
+          0,
+          6.123233995736766e-17
+        ]
+      },
+      {
+        "id": "V3b",
+        "meshCount": 28,
+        "floorY": 0.4237176470588235,
+        "source": [
+          -4.9285,
+          1.6287176470588236,
+          12.8
+        ],
+        "forward": [
+          1,
+          0,
+          6.123233995736766e-17
+        ]
+      }
+    ],
+    "cache": "baked",
+    "registration": [
+      {
+        "kind": "recycleBin",
+        "x": 16.52,
+        "y": 0,
+        "z": -24.45,
+        "rotY": 0
+      },
+      {
+        "kind": "recycleBin",
+        "x": 30.77,
+        "y": 1.25,
+        "z": -35.95,
+        "rotY": 3.141592653589793
+      },
+      {
+        "kind": "recycleBin",
+        "x": -5.28,
+        "y": 0.27692,
+        "z": 14.67,
+        "rotY": 1.5707963267948966
+      },
+      {
+        "kind": "recycleBin",
+        "x": -8.719999999999999,
+        "y": 0,
+        "z": -59.370000000000005,
+        "rotY": -1.5707963267948966
+      },
+      {
+        "kind": "recycleBin",
+        "x": -16.26,
+        "y": 0,
+        "z": -29.970000000000002,
+        "rotY": 1.5707963267948966
+      }
+    ]
+  }
+}

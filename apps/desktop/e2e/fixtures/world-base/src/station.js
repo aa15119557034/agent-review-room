@@ -68,13 +68,19 @@ function clipMaterials(root, bounds) {
 }
 
 export async function createStation({ scene, renderer, camera, offset = [280, 8, 900], rotationY = 0,
-  sunDir = new THREE.Vector3(...layout.SUN_DIR).normalize(), evening = false, groundMaterial, refl = null, onProgress = () => {} }) {
+  sunDir = new THREE.Vector3(...layout.SUN_DIR).normalize(), evening = false, groundMaterial, refl = null, replaceStreetProps = false,
+  vendingGlow = null, onProgress = () => {} }) {
   const root = new THREE.Group();
   root.name = 'Sakuragaoka';
   const localCamera = new THREE.PerspectiveCamera();
   const ctx = createContext({ scene: root, renderer, camera: localCamera, audio: null,
     quality: { name: 'medium', petals: 0, pixelRatio: 1 }, sunDir });
   ctx.people = false;
+  if (replaceStreetProps) {
+    ctx.services.streetPropReplacements = [];
+    ctx.services.stationVending = [];
+    (ctx.services.weatheringBakes ??= []).push(new URL('./weathering-decals-vending.json', import.meta.url));
+  }
   const moduleStats = {};
   let matureResources;
   for (const name of STATION_MODULES) {
@@ -118,7 +124,25 @@ export async function createStation({ scene, renderer, camera, offset = [280, 8,
   const islandTextures = new Set(Object.values(groundMaterial.uniforms).map(uniform => uniform.value).filter(value => value?.isTexture));
   const trimMs = Math.round(performance.now() - clipStart);
   const batchStart = performance.now();
+  // Tint the already-packed emissive atlas per display, then let static batching
+  // bake the tint into vertex colours. The original artwork stays shared.
+  const displayMaterials = new Map();
+  const displayTint = vendingGlow ? new THREE.Color('#fffaf1').multiplyScalar(vendingGlow === 'night' ? 1.14 : 1.10) : null;
+  for (const display of ctx.services.stationVending ?? []) {
+    if (displayTint) for (const mesh of display.meshes) {
+      const source = mesh.material;
+      if (!displayMaterials.has(source)) {
+        const tinted = source.clone();
+        tinted.color.multiply(displayTint);
+        displayMaterials.set(source, tinted);
+      }
+      mesh.material = displayMaterials.get(source);
+    }
+    display.meshCount = display.meshes.length;
+    delete display.meshes;
+  }
   const batch = batchStatic(ctx.staticRoot, { mat: ctx.mat });
+  for (const material of displayMaterials.values()) material.dispose();
   const batchMs = Math.round(performance.now() - batchStart);
   root.position.fromArray(offset);
   root.rotation.y = rotationY;
