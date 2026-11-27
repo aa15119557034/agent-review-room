@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { CommitSha, IsoTimestamp, RunId, Sha256Hex, SnapshotId, prefixedId } from "./common";
 import { PermissionDecision, PermissionRequest } from "./permission";
+import { ResultDisplay, SourceReference, StructuredResultOptIn } from "./structured-results";
 import {
   AttachmentImageSlot,
   StartRunAttachments,
@@ -34,6 +35,32 @@ import {
 export const REMOTE_PROTOCOL_VERSION = 1 as const;
 
 export const ProfileId = z.string().regex(/^[a-z0-9][a-z0-9-]{0,63}$/);
+
+/** 只有列出的 profile 可接收本次 Run 的显式 opt-in。 */
+export const StructuredResultCapability = StructuredResultOptIn.extend({
+  profiles: z.array(ProfileId).min(1).max(64)
+    .refine((profiles) => new Set(profiles).size === profiles.length, "profile 不能重复"),
+}).strict();
+export type StructuredResultCapability = z.infer<typeof StructuredResultCapability>;
+
+/** P2-C11b: one explicit project query; no prompt assembly or implicit trimming. */
+export const ProjectResearchQuery = z.string().min(1).refine(
+  (query) => query === query.trim() && [...query].length <= 128 && !/[\uD800-\uDFFF]/u.test(query),
+  "检索词须为 1–128 个 Unicode 字符，无首尾空白或孤立代理项",
+);
+export const ProjectResearchOptIn = z.object({ version: z.literal(1) }).strict();
+export const ProjectResearchCapability = ProjectResearchOptIn.extend({
+  profiles: z.array(ProfileId).min(1).max(64)
+    .refine((profiles) => new Set(profiles).size === profiles.length, "profile 不能重复"),
+}).strict();
+export type ProjectResearchCapability = z.infer<typeof ProjectResearchCapability>;
+
+/** A fetched original, not a search snippet. Consumers must independently hash the full text. */
+export const ProjectResearchSource = SourceReference.refine(
+  (ref) => ref.source.kind === "web" && ref.status === "readable" && ref.version === ref.contentHash,
+  "检索原文须为可读网页，version 为正文 SHA-256",
+);
+export const PROJECT_RESEARCH_MAX_BODY_BYTES = 512 * 1024;
 
 /** 持久 Run 账本的身份；重建账本必须换身份，不能冒充旧账本证明旧 Run 已停。 */
 export const RemoteRunLedgerId = prefixedId("rled");
@@ -259,11 +286,13 @@ export const RunLimits = z
   })
   .strict();
 
-export const StartRunRequest = z
+const startRunRequestBase = z
   .object({
     protocol: z.literal(REMOTE_PROTOCOL_VERSION),
     runId: RunId,
     profileId: ProfileId,
+    /** 不支持的节点必须省略；仅能力声明且本次开启才可发 result_display，正文仍完整。 */
+    structuredResults: StructuredResultOptIn.optional(),
     /**
      * 先从 health.capabilities.runFence 协商取得。与当前账本不同则 409 run_ledger_mismatch，不能准入。
      * 最终准入处（所有 await 校验之后）再次按同 RunId 原子核对 fence；持久 admitted 后才可 spawn。
@@ -331,7 +360,9 @@ export const StartRunRequest = z
      */
     kind: RunKind.optional(),
   })
-  .strict()
+  .strict();
+
+export const StartRunRequest = startRunRequestBase
   .refine(
     (r) => !r.chat?.memory || occursExactlyOnce(r.snapshot.content, r.chat.memory.marker),
     "chat.memory.marker 必须在 snapshot.content 里恰好出现一次",
@@ -350,6 +381,9 @@ export const StartRunRequest = z
   )
   .refine((r) => r.kind !== "image" || r.attachments === undefined, "image Run 不能带附件")
   .superRefine((r, ctx) => {
+    if (r.structuredResults !== undefined && (r.kind === "image" || r.expectedWorldProfile !== undefined)) {
+      ctx.addIssue({ code: "custom", path: ["structuredResults"], message: "首片结构化结果仅用于普通文本 Run" });
+    }
     if (r.expectedWorldProfile === undefined) return;
     const reject = (path: string[], message: string) => ctx.addIssue({ code: "custom", path, message });
     if (r.expectedLedgerId === undefined) reject(["expectedLedgerId"], "世界请求必须绑定 ledger");
@@ -361,6 +395,27 @@ export const StartRunRequest = z
     if (r.imageSlot !== undefined) reject(["imageSlot"], "世界请求不能携带图片槽位");
     if (r.kind === "image") reject(["kind"], "世界请求只接受 text Run");
   });
+
+/**
+ * P2-C11b candidate wire parser: existing HTTP handlers still use StartRunRequest and reject this flag.
+ * Wiring must explicitly choose this parser, check both capabilities and compare both opt-ins for idempotency.
+ */
+export const ProjectResearchStartRunRequest = startRunRequestBase.extend({
+  projectResearch: ProjectResearchOptIn,
+}).superRefine((r, ctx) => {
+  const { projectResearch: _, ...legacy } = r;
+  const checked = StartRunRequest.safeParse(legacy);
+  if (!checked.success) for (const issue of checked.error.issues) ctx.addIssue(issue);
+  const reject = (key: string, message: string) => ctx.addIssue({ code: "custom", path: [key], message });
+  if (r.structuredResults?.version !== 1) reject("structuredResults", "检索须同时协商结构化结果");
+  for (const key of ["chat", "model", "attachments", "imageSlot", "expectedWorldProfile"] as const) {
+    if (r[key] !== undefined) reject(key, "首片项目检索不接受此字段");
+  }
+  if (r.kind === "image") reject("kind", "项目检索只接受 text Run");
+  if (r.snapshot.commitSha !== undefined) reject("snapshot", "项目检索不发送工程 commit");
+  if (!ProjectResearchQuery.safeParse(r.snapshot.content).success) reject("snapshot", "检索正文须为原样批准的查询");
+});
+export type ProjectResearchStartRunRequest = z.infer<typeof ProjectResearchStartRunRequest>;
 
 export const StartRunResponse = z.object({
   runId: RunId,
@@ -406,9 +461,13 @@ export const RemoteTerminal = z.discriminatedUnion("outcome", [
   z.object({ outcome: z.literal("timed_out"), kind: z.enum(["idle", "total"]) }),
 ]);
 
+const remoteStarted = z.object({ type: z.literal("started"), ...seqd });
+const remoteOutput = z.object({ type: z.literal("output"), ...seqd, stream: z.enum(["stdout", "stderr"]), data: z.string() });
+const remoteTerminal = z.object({ type: z.literal("terminal"), ...seqd, result: RemoteTerminal });
+const remoteHeartbeat = z.object({ type: z.literal("heartbeat"), ts: IsoTimestamp, lastSeq: z.number().int().min(-1) });
 export const RemoteEvent = z.discriminatedUnion("type", [
-  z.object({ type: z.literal("started"), ...seqd }),
-  z.object({ type: z.literal("output"), ...seqd, stream: z.enum(["stdout", "stderr"]), data: z.string() }),
+  remoteStarted,
+  remoteOutput,
   /**
    * 节点已经解析好的回复文字（profile 配置了 parser 时才会出现，例如 claude-stream-json）。
    * 有解析器时 stdout 不再以 output 事件转发，stderr 照常转发。
@@ -431,9 +490,50 @@ export const RemoteEvent = z.discriminatedUnion("type", [
     finalPromptHash: Sha256Hex,
     memory: MemoryManifest.nullable(),
   }),
-  z.object({ type: z.literal("terminal"), ...seqd, result: RemoteTerminal }),
-  z.object({ type: z.literal("heartbeat"), ts: IsoTimestamp, lastSeq: z.number().int().min(-1) }),
+  remoteTerminal,
+  remoteHeartbeat,
 ]);
+
+/**
+ * 仅成功协商 C11 的消费者使用；RemoteEvent 保留旧格式，纯契约不提前改适配器。
+ * result_display 只能在 started 之后、terminal 之前；usage 可在 message_complete 之后。
+ * terminal 后的展示事件一律丢弃并记诊断；时序约束由消费端执行，单事件 schema 不证明生命周期合法。
+ */
+const remoteResultDisplay = z.object({ type: z.literal("result_display"), ...seqd, result: ResultDisplay }).strict();
+export const StructuredRemoteEvent = z.discriminatedUnion("type", [
+  ...RemoteEvent.options,
+  remoteResultDisplay,
+]);
+export type StructuredRemoteEvent = z.infer<typeof StructuredRemoteEvent>;
+
+/**
+ * P2-C11b: choose this parser only after both capabilities and both request opt-ins agree.
+ * message_complete carries the authoritative body once, plus its original's metadata (or explicit null).
+ * Persist and verify the original before accepting its readable citation. Lifecycle/DB checks are not
+ * established by parsing one event; see P2-C11b-项目检索接线契约.md.
+ */
+export const ProjectResearchRemoteEvent = z.discriminatedUnion("type", [
+  remoteStarted,
+  remoteOutput, // diagnostics only; never an original
+  remoteTerminal,
+  remoteHeartbeat,
+  remoteResultDisplay,
+  z.object({
+    type: z.literal("message_complete"), ...seqd,
+    text: z.string().min(1).max(PROJECT_RESEARCH_MAX_BODY_BYTES),
+    source: ProjectResearchSource.nullable(),
+  }).strict(),
+]).superRefine((event, ctx) => {
+  if (event.type === "terminal" && event.result.outcome === "completed" && event.result.artifact !== undefined) {
+    ctx.addIssue({ code: "custom", path: ["result", "artifact"], message: "项目检索不能返回图片产物" });
+  }
+  if (event.type !== "message_complete") return;
+  if (new TextEncoder().encode(event.text).byteLength > PROJECT_RESEARCH_MAX_BODY_BYTES ||
+      /[\uD800-\uDFFF]/u.test(event.text) || event.text.trim().length === 0) {
+    ctx.addIssue({ code: "custom", path: ["text"], message: "检索结果须为非空有效 Unicode 正文，最多 512 KiB UTF-8" });
+  }
+});
+export type ProjectResearchRemoteEvent = z.infer<typeof ProjectResearchRemoteEvent>;
 
 /**
  * 支持 runFence 的节点对未知 ID 也须先持久禁止创建，才可响应 202 {ok:true}。
@@ -487,6 +587,8 @@ export const NodeHealth = z.object({
       quota: z.boolean().optional(),
       /** 可协商的持久准入 fence 与按 RunId 查询证据；不改变已有 runs 列表。 */
       runFence: RemoteRunFenceCapability.optional(),
+      structuredResults: StructuredResultCapability.optional(),
+      projectResearch: ProjectResearchCapability.optional(),
       /** 经节点实际校验的隔离映射；缺席/未知 recipe 不可用于世界模型，不按名称推断。 */
       worldProfiles: z.array(WorldProfileCapability).max(64).optional(),
     })
@@ -495,6 +597,13 @@ export const NodeHealth = z.object({
   (h) => (h.memoryProfiles ?? []).every((p) => h.profiles.includes(p)),
   "memoryProfiles 里的 profile 必须都在 profiles 里",
 ).superRefine((h, ctx) => {
+  if (h.capabilities?.structuredResults?.profiles.some((profile) => !h.profiles.includes(profile))) {
+    ctx.addIssue({ code: "custom", path: ["capabilities", "structuredResults", "profiles"], message: "结构化结果 profile 必须在 profiles 中" });
+  }
+  if (h.capabilities?.projectResearch?.profiles.some((profile) =>
+    !h.profiles.includes(profile) || !h.capabilities?.structuredResults?.profiles.includes(profile))) {
+    ctx.addIssue({ code: "custom", path: ["capabilities", "projectResearch", "profiles"], message: "检索 profile 须同时声明结构化结果能力" });
+  }
   const mappings = h.capabilities?.worldProfiles;
   if (mappings === undefined || mappings.length === 0) return;
   const issue = (path: (string | number)[], message: string) => ctx.addIssue({ code: "custom", path, message });
@@ -588,5 +697,17 @@ export type StartRunResponse = z.infer<typeof StartRunResponse>;
 export type RemoteEvent = z.infer<typeof RemoteEvent>;
 export type RemoteTerminal = z.infer<typeof RemoteTerminal>;
 export type NodeHealth = z.infer<typeof NodeHealth>;
+
+/** 已 parse 的契约对象：节点能力与本次请求同时成立才可发新展示事件。不能据此授予工具权限。 */
+export const canEmitStructuredResults = (health: NodeHealth, request: StartRunRequest): boolean =>
+  request.structuredResults?.version === 1 &&
+  health.capabilities?.structuredResults?.version === 1 &&
+  health.capabilities.structuredResults.profiles.includes(request.profileId) &&
+  request.kind !== "image" && request.expectedWorldProfile === undefined;
+/** Parsed objects only; missing capability is unsupported, never inferred from a profile's name. */
+export const canRunProjectResearch = (health: NodeHealth, request: StartRunRequest | ProjectResearchStartRunRequest): boolean =>
+  canEmitStructuredResults(health, request) && "projectResearch" in request && request.projectResearch.version === 1 &&
+  health.capabilities?.projectResearch?.version === 1 &&
+  health.capabilities.projectResearch.profiles.includes(request.profileId);
 export type RemoteRunSummary = z.infer<typeof RemoteRunSummary>;
 export type RemoteErrorCode = z.infer<typeof RemoteErrorCode>;

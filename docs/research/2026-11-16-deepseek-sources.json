@@ -1,0 +1,157 @@
+{
+  "schemaVersion": 1,
+  "checkedOn": "2026-11-16",
+  "task": "X-38b",
+  "project": {
+    "repository": "aa15119557034/agent-review-room",
+    "baseCommit": "8ab6bd36378e69d8355eb0386c55c29ba5504bc5",
+    "priorProposal": 207
+  },
+  "verification": "Source and documentation inspection only; no upstream runtime or paid API validation.",
+  "repositories": [
+    {
+      "repository": "deepseek-ai/chat-demo",
+      "commit": "5d5dd754ebc1948e977ddb880a9eb5aa25f37b4c",
+      "license": "MIT",
+      "files": [
+        {
+          "path": "README.md",
+          "url": "https://github.com/deepseek-ai/chat-demo/blob/5d5dd754ebc1948e977ddb880a9eb5aa25f37b4c/README.md"
+        },
+        {
+          "path": "LICENSE",
+          "url": "https://github.com/deepseek-ai/chat-demo/blob/5d5dd754ebc1948e977ddb880a9eb5aa25f37b4c/LICENSE"
+        },
+        {
+          "path": "package.json",
+          "url": "https://github.com/deepseek-ai/chat-demo/blob/5d5dd754ebc1948e977ddb880a9eb5aa25f37b4c/package.json"
+        },
+        {
+          "path": "src/services/api/sse.ts",
+          "url": "https://github.com/deepseek-ai/chat-demo/blob/5d5dd754ebc1948e977ddb880a9eb5aa25f37b4c/src/services/api/sse.ts"
+        },
+        {
+          "path": "src/services/api/parseEvent.ts",
+          "url": "https://github.com/deepseek-ai/chat-demo/blob/5d5dd754ebc1948e977ddb880a9eb5aa25f37b4c/src/services/api/parseEvent.ts"
+        },
+        {
+          "path": "src/services/api/speech.ts",
+          "url": "https://github.com/deepseek-ai/chat-demo/blob/5d5dd754ebc1948e977ddb880a9eb5aa25f37b4c/src/services/api/speech.ts"
+        },
+        {
+          "path": "src/services/chat/reply.ts",
+          "url": "https://github.com/deepseek-ai/chat-demo/blob/5d5dd754ebc1948e977ddb880a9eb5aa25f37b4c/src/services/chat/reply.ts"
+        },
+        {
+          "path": "src/services/chat/history/README.md",
+          "url": "https://github.com/deepseek-ai/chat-demo/blob/5d5dd754ebc1948e977ddb880a9eb5aa25f37b4c/src/services/chat/history/README.md"
+        }
+      ]
+    },
+    {
+      "repository": "deepseek-ai/deepseek-harness",
+      "commit": "39163dd30f703a79079e2d2446545cff3c453738",
+      "license": "MIT",
+      "files": [
+        {
+          "path": "README.md",
+          "url": "https://github.com/deepseek-ai/deepseek-harness/blob/39163dd30f703a79079e2d2446545cff3c453738/README.md"
+        },
+        {
+          "path": "docs/architecture.md",
+          "url": "https://github.com/deepseek-ai/deepseek-harness/blob/39163dd30f703a79079e2d2446545cff3c453738/docs/architecture.md"
+        },
+        {
+          "path": "packages/sdk/README.md",
+          "url": "https://github.com/deepseek-ai/deepseek-harness/blob/39163dd30f703a79079e2d2446545cff3c453738/packages/sdk/README.md"
+        },
+        {
+          "path": "packages/sdk/client/README.md",
+          "url": "https://github.com/deepseek-ai/deepseek-harness/blob/39163dd30f703a79079e2d2446545cff3c453738/packages/sdk/client/README.md"
+        },
+        {
+          "path": "SAFETY.md",
+          "url": "https://github.com/deepseek-ai/deepseek-harness/blob/39163dd30f703a79079e2d2446545cff3c453738/SAFETY.md"
+        }
+      ]
+    },
+    {
+      "repository": "deepseek-ai/dsh-superagent-prototype",
+      "commit": "8c32a9dc5d72c033816c6a8110b37f40cf94fba4",
+      "license": "MIT",
+      "files": [
+        {
+          "path": "README.md",
+          "url": "https://github.com/deepseek-ai/dsh-superagent-prototype/blob/8c32a9dc5d72c033816c6a8110b37f40cf94fba4/README.md"
+        },
+        {
+          "path": "docs/007-architecture.md",
+          "url": "https://github.com/deepseek-ai/dsh-superagent-prototype/blob/8c32a9dc5d72c033816c6a8110b37f40cf94fba4/docs/007-architecture.md"
+        }
+      ],
+      "note": "Same default-branch commit as the 2026-11-05 investigation; prototype remains research software."
+    }
+  ],
+  "serviceDocs": [
+    {
+      "id": "release",
+      "url": "https://api-docs.deepseek.com/updates/",
+      "use": "2026-11-13 application APIs and chat-demo release"
+    },
+    {
+      "id": "chatbot",
+      "url": "https://api-docs.deepseek.com/guides/build_a_chatbot/",
+      "use": "Protocols, service-managed parameters, per-inference-step output limit"
+    },
+    {
+      "id": "web-tools",
+      "url": "https://api-docs.deepseek.com/guides/web_tools/",
+      "use": "Structured events, signature-bound read-link context"
+    },
+    {
+      "id": "search",
+      "url": "https://api-docs.deepseek.com/guides/search/",
+      "use": "Independent Search and Fetch APIs"
+    },
+    {
+      "id": "files",
+      "url": "https://api-docs.deepseek.com/guides/document_parsing/",
+      "use": "Parsing purposes, file references, limits and incomplete figures"
+    },
+    {
+      "id": "ocr",
+      "url": "https://api-docs.deepseek.com/guides/ocr/",
+      "use": "Standalone OCR capability"
+    },
+    {
+      "id": "files-api",
+      "url": "https://api-docs.deepseek.com/guides/files_api/",
+      "use": "Upload and delete receipts; parsed documents cannot be downloaded; rechecked for PR 255 review"
+    },
+    {
+      "id": "asr",
+      "url": "https://api-docs.deepseek.com/guides/asr/",
+      "use": "Whole-file upload, duration/format limits, no streaming recognition"
+    },
+    {
+      "id": "tts",
+      "url": "https://api-docs.deepseek.com/guides/tts/",
+      "use": "Voices, streaming, no speed control, truncation failures"
+    },
+    {
+      "id": "pricing",
+      "url": "https://api-docs.deepseek.com/quick_start/pricing/",
+      "use": "Separate token/tool/page/audio billing; no prices frozen as implementation constants"
+    }
+  ],
+  "pendingRuntimeChecks": [
+    "Windows subprocess/descendant termination",
+    "Per-attempt response attribution",
+    "Approval relay and failure-closed behavior",
+    "Session restoration and external-state reconciliation",
+    "Actual source completeness and citation quality",
+    "Paid API latency, use and billed cost",
+    "History migration, merge, backup and recovery",
+    "Speech quality and format compatibility"
+  ]
+}

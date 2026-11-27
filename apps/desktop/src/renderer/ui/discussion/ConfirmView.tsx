@@ -6,6 +6,7 @@ import { effortLabel, modelLabel } from "../../lib/models";
 import { useActions, useAppState } from "../hooks";
 import { imageSrc } from "../../lib/media";
 import { HoldButton } from "../HoldButton";
+import { CurrentSourceReferences } from "../CurrentSourceReferences";
 
 /**
  * 发送前确认（C-22；C-33b 照草案「确认第 2 轮」重排）。
@@ -36,6 +37,7 @@ export function ConfirmView() {
   const allSame = hashes.size === 1 && c.batch.items.length > 1;
   const total = c.batch.items.reduce((n, i) => n + i.tokenEstimate, 0);
   const decided = c.batch.state !== "READY_FOR_REVIEW";
+  const stale = d.staleBatchIds.includes(c.batch.id);
   const offline = c.batch.items.filter((i) => d.status[i.recipient]?.availability !== "available");
   const plan = round?.planVersionId ? d.plans.find((p) => p.id === round.planVersionId) : undefined;
   const n = c.batch.items.length;
@@ -162,6 +164,7 @@ export function ConfirmView() {
               </ul>
             </section>
           )}
+          {snapshot && <CurrentSourceReferences projectId={snapshot.projectId} owner={{ kind: "snapshot", id: snapshot.id }} references={snapshot.sourceRefs} />}
           {snapshot ? <pre className="confirm-prompt">{snapshot.content}</pre> : <p>正在加载内容……</p>}
         </div>
       </div>
@@ -169,6 +172,11 @@ export function ConfirmView() {
       <footer className="confirm-bottom">
         {decided ? (
           <p className="confirm-note">这一批已经{c.batch.state === "APPROVED" ? "盖过章" : "处理过"}了。</p>
+        ) : stale ? (
+          <>
+            <p className="field-error" role="alert">这份预览或引用资料已经失效，这一批未发送。请退回这批、更新资料，再重新生成预览。</p>
+            <button type="button" className="button-outline" onClick={() => void actions.rejectBatch("旧预览或引用资料失效，需要重建")}>退回去重建</button>
+          </>
         ) : rejecting ? (
           <form
             className="confirm-reject"

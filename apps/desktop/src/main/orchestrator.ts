@@ -1,5 +1,6 @@
 import {
   appendRunEvent,
+  assertPromptSourcesCurrent,
   finishRun,
   finishSummaryFromRun,
   finishTurnFromRun,
@@ -57,7 +58,7 @@ export interface OrchestratorDeps {
   readonly db: SqliteDatabase;
   readonly queue: WriteQueue;
   /** 每次 run 新建一个 adapter；讨论室的 Run 按 run.adapter_id 选 profile */
-  readonly adapterFactory: (run: RunRow) => Promise<AgentAdapter>;
+  readonly adapterFactory: (run: RunRow, signal: AbortSignal) => Promise<AgentAdapter>;
   /** 讨论室的 Run 收尾后回调（main 用它推 message.created / turn.updated …） */
   readonly onDiscussionSettled?: (settlement: DiscussionSettlement) => void;
   readonly emit: (event: ControlEvent) => void;
@@ -114,7 +115,7 @@ export class RunOrchestrator {
       currentState = starting.state;
       this.#deps.emit({ type: "run.updated", run: toContractRun(starting) });
 
-      const adapter = await this.#deps.adapterFactory(run);
+      const adapter = await this.#deps.adapterFactory(run, controller.signal);
       const session = await adapter.startSession({ projectId: run.project_id });
 
       const running = await transitionRun(this.#deps.db, this.#deps.queue, run.id, "STARTING", "RUNNING", {
@@ -123,6 +124,7 @@ export class RunOrchestrator {
       currentState = running.state;
       this.#deps.emit({ type: "run.updated", run: toContractRun(running) });
 
+      assertPromptSourcesCurrent(this.#deps.db, run.snapshot_id, run.project_id);
       const events = adapter.run(session.sessionId, run.id, input, {
         signal: controller.signal,
         onPermissionRequest: async () => ({ decision: "deny", decidedBy: "system" }),
@@ -162,7 +164,7 @@ export class RunOrchestrator {
         ts: new Date().toISOString(),
       } as AgentEvent, null, input.reviewerAgent, input.discussion);
     } catch (error) {
-      const current = this.#deps.getRun(run.id);
+      const current = this.#deps.db.open ? this.#deps.getRun(run.id) : undefined;
       // QUEUED 也要收尾：第一次 transitionRun(QUEUED → STARTING) 失败时（比如数据库忙 / 被触发器拒绝），
       // Run 还停在 QUEUED，讨论的 Turn 会一直是 running，这一轮永远到不了待汇总。
       if (
@@ -170,7 +172,7 @@ export class RunOrchestrator {
         (current.state === "QUEUED" || current.state === "STARTING" || current.state === "RUNNING")
       ) {
         await this.#finish(run.id, current.state, {
-          type: "error",
+          type: controller.signal.aborted ? "cancelled" : "error",
           reason: "internal",
           message: error instanceof Error ? error.message : String(error),
           eventId: run.id + "-internal",
@@ -212,6 +214,7 @@ export class RunOrchestrator {
       finished = await finishRun(this.#deps.db, this.#deps.queue, runId, {
         from,
         terminal,
+        ...(this.#active.get(runId) ? { signal: this.#active.get(runId)!.signal } : {}),
         // 只有 completed 才落 reviewer_output；截断/失败的结果不能当正式结论。
         // 这一步和终态在同一个事务里，见 packages/db 的 finishRun。
         ...(event.type === "completed" && completedText !== null
@@ -311,7 +314,7 @@ export class RunOrchestrator {
                 : failure ?? ({ kind: "failed", failureReason: "internal" } as const);
         const finished = await finishTurnFromRun(this.#deps.db, this.#deps.queue, { runId, terminal });
         // D-46a：回答落库成功之后才记笔记（迟到 / 被取代 / 空回答的结果都不记）
-        if (noteExtract !== null && !emptyAnswer) this.#recordNote(discussion.turnId, noteExtract);
+        if (noteExtract !== null && finished.messageId !== null) this.#recordNote(discussion.turnId, noteExtract);
         settlement = {
           turnId: finished.turnId,
           roundId: finished.roundId,

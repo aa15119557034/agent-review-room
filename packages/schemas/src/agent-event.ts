@@ -2,6 +2,7 @@ import { z } from "zod";
 import { IsoTimestamp, RunId, Sha256Hex } from "./common";
 import { PermissionDecision, PermissionRequest } from "./permission";
 import { MemoryManifest } from "./remote-protocol";
+import { ResultDisplay } from "./structured-results";
 
 /**
  * Orchestrator 内部统一的 Agent 事件（V0.3 §23 / V0.4 §22）。
@@ -73,10 +74,20 @@ export const AgentEvent = z.discriminatedUnion("type", [
 ]);
 
 export type AgentEvent = z.infer<typeof AgentEvent>;
+/**
+ * P2-C11 消费端接线后使用，复用已有事件流/存储，不是另开一条通道。
+ * result_display 只在 Run 启动后、首个终态前消费；usage 可在 message_complete 之后。
+ * 终态后到达的展示事件丢弃并记诊断，不修改终态或旧记录。
+ */
+export const StructuredAgentEvent = z.discriminatedUnion("type", [
+  ...AgentEvent.options,
+  z.object({ ...base, type: z.literal("result_display"), result: ResultDisplay }).strict(),
+]);
+export type StructuredAgentEvent = z.infer<typeof StructuredAgentEvent>;
 export type FailureReason = z.infer<typeof FailureReason>;
 
 export const TERMINAL_EVENT_TYPES = ["completed", "error", "cancelled", "timed_out"] as const;
 export type TerminalAgentEvent = Extract<AgentEvent, { type: (typeof TERMINAL_EVENT_TYPES)[number] }>;
 
-export const isTerminalEvent = (e: AgentEvent): e is TerminalAgentEvent =>
+export const isTerminalEvent = (e: StructuredAgentEvent): e is TerminalAgentEvent =>
   (TERMINAL_EVENT_TYPES as readonly string[]).includes(e.type);

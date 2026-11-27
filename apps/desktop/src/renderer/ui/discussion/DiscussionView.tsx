@@ -36,6 +36,7 @@ import { ReviewView } from "./ReviewView";
 import { FirstPlan } from "./FirstPlan";
 import { NewTopic } from "./NewTopic";
 import { EmptyState, GettingStarted, LoadingState, useSetup } from "../EmptyState";
+import { ProjectResearch } from "../ProjectResearch";
 
 /**
  * 讨论室主页（C-21，画布「① 主页 · 讨论」）。
@@ -253,6 +254,7 @@ function Conversation() {
           <SideIcon />
         </button>
       </header>
+      <ProjectResearch />
       <Timeline />
       <Composer />
     </>

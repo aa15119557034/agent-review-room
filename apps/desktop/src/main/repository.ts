@@ -1,5 +1,5 @@
-import { assemblePrompt } from "@room/core";
-import { approveAndCreateRun, type RunRow, type SqliteDatabase, ulid, type WriteQueue, writeTransaction } from "@room/db";
+import { assemblePrompt, withSourceContext } from "@room/core";
+import { approveAndCreateRun, mergeSourceRefs, readSourceRefs, resolveSourceReference, runSourceRefs, sourceRefsCurrent, validateSourceRefs, type RunRow, type SqliteDatabase, ulid, type WriteQueue, writeTransaction } from "@room/db";
 import {
   AgentModelSettings,
   BatchModel,
@@ -53,6 +53,7 @@ const toMessage = (row: Record<string, unknown>): Message => {
     id: row["id"] as string,
     projectId: row["project_id"] as string,
     content: row["content"] as string,
+    ...(row["source_refs"] == null ? {} : { sourceRefs: readSourceRefs(row["source_refs"] as string)! }),
     createdAt: row["created_at"] as string,
   };
   const kind = row["kind"];
@@ -114,6 +115,7 @@ const toSnapshot = (row: Record<string, unknown>): PromptSnapshot => ({
   projectId: row["project_id"] as string,
   content: row["content"] as string,
   contentHash: row["content_hash"] as string,
+  ...(row["source_refs"] == null ? {} : { sourceRefs: readSourceRefs(row["source_refs"] as string)! }),
   nonce: row["nonce"] as string,
   contributionIds: JSON.parse(row["contribution_ids"] as string) as string[],
   taskInstruction: row["task_instruction"] as string,
@@ -123,7 +125,8 @@ const toSnapshot = (row: Record<string, unknown>): PromptSnapshot => ({
   synthesisVersion: (row["synthesis_version"] as number | null) ?? null,
   branch: (row["branch"] as string | null) ?? null,
   commitSha: (row["commit_sha"] as string | null) ?? null,
-  projectNoteId: (row["project_note_id"] as string | null) ?? null,
+  ...(row["adapter_version"] === "project-research-v1" && row["project_note_id"] == null
+    ? {} : { projectNoteId: (row["project_note_id"] as string | null) ?? null }),
   createdAt: row["created_at"] as string,
 });
 
@@ -339,18 +342,20 @@ export class Repository {
     return { id, name, fromConversationId: null, createdAt };
   }
 
-  async addSource(projectId: string, sourceAgent: string, content: string): Promise<Message> {
+  async addSource(projectId: string, sourceAgent: string, content: string, sourceRefs?: Message["sourceRefs"]): Promise<Message> {
     const id = "msg_" + ulid();
     const createdAt = now();
-    await writeTransaction(this.#db, this.#queue, () => {
+    const refs = await writeTransaction(this.#db, this.#queue, () => {
+      const refs = validateSourceRefs(this.#db, { projectId }, sourceRefs, content);
       this.#db
         .prepare(
-          "INSERT INTO messages (id, project_id, kind, source_agent, run_id, content, created_at) " +
-            "VALUES (?, ?, 'source_input', ?, NULL, ?, ?)",
+          "INSERT INTO messages (id, project_id, kind, source_agent, run_id, content, created_at, source_refs) " +
+            "VALUES (?, ?, 'source_input', ?, NULL, ?, ?, ?)",
         )
-        .run(id, projectId, sourceAgent, content, createdAt);
+        .run(id, projectId, sourceAgent, content, createdAt, refs === undefined ? null : JSON.stringify(refs));
+      return refs;
     });
-    return { id, projectId, kind: "source_input", sourceAgent, content, createdAt };
+    return { id, projectId, kind: "source_input", sourceAgent, content, createdAt, ...(refs === undefined ? {} : { sourceRefs: refs }) };
   }
 
   /** 「只发言」：写进时间线，不发给任何 Agent，也不用盖章 */
@@ -432,17 +437,20 @@ export class Repository {
     });
 
     const contributions = rows.map(toContribution);
-    const assembled = assemblePrompt({
+    const sourceRefs = mergeSourceRefs(contributions.map((c) => this.getMessage(c.sourceMessageId).sourceRefs));
+    validateSourceRefs(this.#db, { projectId: input.projectId }, sourceRefs);
+    const assembled = withSourceContext(assemblePrompt({
       contributions: contributions.map((c) => ({ id: c.id, type: c.type, title: c.title, content: c.content })),
       taskInstruction: input.taskInstruction,
       reviewerAgent: input.reviewerAgent,
-    });
+    }), (sourceRefs ?? []).map((ref) => resolveSourceReference(this.#db, { projectId: input.projectId }, ref)));
 
     const snapshotId = "snap_" + ulid();
     const approvalId = "apr_" + ulid();
     const createdAt = now();
 
     await writeTransaction(this.#db, this.#queue, () => {
+      validateSourceRefs(this.#db, { projectId: input.projectId }, sourceRefs);
       // 旧的待审审批作废（没有产生 Run 的）
       this.#db
         .prepare(
@@ -455,8 +463,8 @@ export class Repository {
       this.#db
         .prepare(
           "INSERT INTO prompt_snapshots (id, project_id, content, content_hash, nonce, contribution_ids, " +
-            "task_instruction, reviewer_agent, adapter_version, token_estimate, synthesis_version, branch, commit_sha, created_at) " +
-            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NULL, NULL, NULL, ?)",
+            "task_instruction, reviewer_agent, adapter_version, token_estimate, synthesis_version, branch, commit_sha, created_at, source_refs) " +
+            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NULL, NULL, NULL, ?, ?)",
         )
         .run(
           snapshotId,
@@ -470,6 +478,7 @@ export class Repository {
           assembled.adapterVersion,
           assembled.tokenEstimate,
           createdAt,
+          assembled.sourceRefs === undefined ? null : JSON.stringify(assembled.sourceRefs),
         );
 
       this.#db
@@ -496,6 +505,7 @@ export class Repository {
         branch: null,
         commitSha: null,
         createdAt,
+        ...(assembled.sourceRefs === undefined ? {} : { sourceRefs: assembled.sourceRefs }),
       },
       approval: {
         id: approvalId,
@@ -598,7 +608,7 @@ export class Repository {
   ): { seq: number; eventId: string; type: string; payload: unknown; ts: string }[] {
     const rows = this.#db
       .prepare(
-        "SELECT seq, event_id AS eventId, type, payload, ts FROM run_events WHERE run_id = ? AND seq > ? ORDER BY seq",
+        "SELECT seq, event_id AS eventId, type, payload, ts FROM run_events WHERE run_id = ? AND seq > ? AND type <> 'result_display' ORDER BY seq",
       )
       .all(runId, after) as { seq: number; eventId: string; type: string; payload: string; ts: string }[];
     return rows.map((r) => ({
@@ -850,6 +860,23 @@ export class Repository {
     ).map(toPlan);
   }
 
+  /** Current Prompt view only; timeline reads retain the original messages and partial text. */
+  discussionContext(round: Pick<Round, "id" | "projectId">): {
+    messages: Message[];
+    turns: (Turn & { sourceRefs?: Message["sourceRefs"] })[];
+  } {
+    const scope = { projectId: round.projectId };
+    return {
+      messages: this.listMessagesByRound(round.id).filter((message) => sourceRefsCurrent(this.#db, scope, message.sourceRefs)),
+      turns: this.listTurns(round.id).map((turn) => {
+        if (turn.partialText === null || turn.runId === null) return turn;
+        const sourceRefs = runSourceRefs(this.#db, turn.runId);
+        if (!sourceRefsCurrent(this.#db, scope, sourceRefs)) return { ...turn, partialText: null };
+        return sourceRefs === undefined ? turn : { ...turn, sourceRefs };
+      }),
+    };
+  }
+
   /**
    * 拼讨论 Prompt 用的历史：只取**已经汇总**的轮（作废 / 未结束的不发给 Agent）。
    * 每轮带上它的消息、Turn 和汇总，core 自己决定最近两轮发全文、更早的用摘要。
@@ -860,7 +887,7 @@ export class Repository {
   ): {
     round: Round;
     messages: Message[];
-    turns: Turn[];
+    turns: (Turn & { sourceRefs?: Message["sourceRefs"] })[];
     summary: { record: RoundSummary; message: Extract<Message, { kind: "summary" }> } | null;
   }[] {
     const rounds = (
@@ -870,12 +897,7 @@ export class Repository {
     ).map(toRound);
 
     return rounds.map((round) => {
-      const messages = (
-        this.#db.prepare("SELECT * FROM messages WHERE round_id = ? ORDER BY created_at, rowid").all(round.id) as Record<string, unknown>[]
-      ).map(toMessage);
-      const turns = (
-        this.#db.prepare("SELECT * FROM turns WHERE round_id = ? ORDER BY created_at, rowid").all(round.id) as Record<string, unknown>[]
-      ).map(toTurn);
+      const { messages, turns } = this.discussionContext(round);
       const record = this.getRoundSummary(round.id);
       const message = record === null ? undefined : messages.find((m) => m.id === record.messageId);
       return {

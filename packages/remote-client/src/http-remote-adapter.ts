@@ -11,6 +11,9 @@ import type {
 } from "@room/core";
 import {
   NodeHealth,
+  ProjectResearchRemoteEvent,
+  ProjectResearchStartRunRequest,
+  canRunProjectResearch,
   REMOTE_PROTOCOL_VERSION,
   RemoteEvent,
   RemoteRunSummary,
@@ -57,6 +60,11 @@ export interface HttpRemoteAgentAdapterOptions extends RemoteNodeConfig {
   /** 启动请求遇到网络错误时的重试次数，默认 3 */
   startAttempts?: number;
   log?: (message: string) => void;
+  /** Main owns persistence and workspace validity; this adapter only negotiates the wire. */
+  projectResearch?: {
+    beforeStart: (request: ProjectResearchStartRunRequest) => void;
+    onEvent: (event: ProjectResearchRemoteEvent) => Promise<void>;
+  };
 }
 
 type Emitted = DistributiveOmit<AgentEvent, "eventId" | "runId" | "seq" | "ts">;
@@ -116,9 +124,10 @@ export class HttpRemoteAgentAdapter implements RemoteAgentAdapter {
   readonly #cancelConfirmMs: number;
   readonly #startAttempts: number;
   readonly #log: (m: string) => void;
+  readonly #projectResearch: HttpRemoteAgentAdapterOptions["projectResearch"];
 
   constructor(options: HttpRemoteAgentAdapterOptions) {
-    const { token, model, fetchImpl, adapterId, reconnectDelayMs, cancelConfirmMs, startAttempts, log, ...node } = options;
+    const { token, model, fetchImpl, adapterId, reconnectDelayMs, cancelConfirmMs, startAttempts, log, projectResearch, ...node } = options;
     if (token.length < 32) throw new Error("remote node token must be at least 32 characters");
     this.node = Object.freeze({ ...node, baseUrl: node.baseUrl.replace(/\/+$/, "") });
     this.#token = token;
@@ -127,7 +136,8 @@ export class HttpRemoteAgentAdapter implements RemoteAgentAdapter {
     this.id = adapterId ?? `remote:${node.nodeId}:${node.profileId}`;
     this.#reconnectDelayMs = reconnectDelayMs ?? 500;
     this.#cancelConfirmMs = cancelConfirmMs ?? 15_000;
-    this.#startAttempts = startAttempts ?? 3;
+    this.#startAttempts = projectResearch ? 1 : startAttempts ?? 3;
+    this.#projectResearch = projectResearch;
     this.#log = log ?? (() => {});
   }
 
@@ -304,15 +314,38 @@ export class HttpRemoteAgentAdapter implements RemoteAgentAdapter {
                 outcome = "deadline";
                 break;
               }
-              const parsed = RemoteEvent.safeParse(safeJson(line));
+              const parsed = this.#projectResearch ? ProjectResearchRemoteEvent.safeParse(safeJson(line)) : RemoteEvent.safeParse(safeJson(line));
               if (!parsed.success) {
+                if (this.#projectResearch) {
+                  void this.#sendCancel(runId, "检索事件格式无效");
+                  yield emit({ type: "error", reason: "postprocess", message: "检索节点返回了无效事件" });
+                  return;
+                }
                 this.#log(`[remote] ignoring malformed event line`);
                 continue;
               }
               const ev = parsed.data;
               if (ev.type === "heartbeat") continue;
+              if (this.#projectResearch) {
+                if (cancelRequested) {
+                  yield emit({ type: "cancelled", reason: "检索已取消" });
+                  return;
+                }
+                try {
+                  // Validate even duplicate sequences: a conflicting replay is not a harmless reconnect.
+                  await this.#projectResearch.onEvent(ProjectResearchRemoteEvent.parse(ev));
+                } catch {
+                  void this.#sendCancel(runId, "检索结果校验失败");
+                  yield emit(opts.signal.aborted
+                    ? { type: "cancelled", reason: "检索已取消" }
+                    : { type: "error", reason: "postprocess", message: "检索结果与批准内容或当前工作区不一致" });
+                  return;
+                }
+              }
               if (ev.seq <= lastSeq) continue; // 重连补发时可能重复
               lastSeq = ev.seq;
+              // Research originals and display blocks were committed atomically by main, not reviewer output.
+              if (ev.type === "result_display" || this.#projectResearch && ev.type === "message_complete") continue;
               const mapped = mapRemoteEvent(ev);
               if (mapped) yield emit(mapped);
               if (ev.type === "terminal") {
@@ -414,7 +447,7 @@ export class HttpRemoteAgentAdapter implements RemoteAgentAdapter {
     input: AgentInput,
     opts: RunOptions,
   ): Promise<{ ok: true } | { ok: false; event: Emitted }> {
-    const body = JSON.stringify({
+    const request = {
       protocol: REMOTE_PROTOCOL_VERSION,
       runId,
       profileId: this.node.profileId,
@@ -431,17 +464,33 @@ export class HttpRemoteAgentAdapter implements RemoteAgentAdapter {
       ...(input.chat === undefined ? {} : { chat: input.chat }),
       // C-42a / C-42g / C-42h：图片本体和位置标记原样带上（发送前已核过），不改 content
       ...(input.attachments === undefined ? {} : { attachments: input.attachments, imageSlot: input.imageSlot }),
-    });
+      ...(this.#projectResearch ? { projectResearch: { version: 1 }, structuredResults: { version: 1 } } : {}),
+    };
+    if (this.#projectResearch) {
+      try {
+        const research = ProjectResearchStartRunRequest.parse(request);
+        const health = await this.health(opts.signal);
+        if (!canRunProjectResearch(health, research)) throw new Error("research capability not available");
+        if (opts.signal.aborted) return { ok: false, event: { type: "cancelled", reason: "开始前已取消" } };
+        this.#projectResearch.beforeStart(research);
+      } catch {
+        return { ok: false, event: opts.signal.aborted
+          ? { type: "cancelled", reason: "开始前已取消" }
+          : { type: "error", reason: "remote_rejected", message: "检索计划、节点能力或工作区已经变化，请重新准备" } };
+      }
+    }
+    const body = JSON.stringify(request);
 
     let lastError = "";
     for (let attempt = 1; attempt <= this.#startAttempts; attempt++) {
       let res: Response;
       try {
-        res = await this.#request("/v1/runs", { method: "POST", headers: this.#headers(true), body });
+        res = await this.#request("/v1/runs", { method: "POST", headers: this.#headers(true), body, ...(this.#projectResearch ? { signal: opts.signal } : {}) });
       } catch (err) {
         lastError = describe(err);
+        if (this.#projectResearch) void this.#sendCancel(runId, "检索启动未确认");
         if (opts.signal.aborted) return { ok: false, event: { type: "cancelled", reason: "开始前已取消" } };
-        await sleep(this.#reconnectDelayMs * attempt);
+        if (attempt < this.#startAttempts) await sleep(this.#reconnectDelayMs * attempt);
         continue; // 同一个 runId 重试是安全的：节点按 runId 幂等
       }
       if (res.status === 200 || res.status === 202) {
@@ -451,7 +500,7 @@ export class HttpRemoteAgentAdapter implements RemoteAgentAdapter {
       if (res.status >= 500) {
         lastError = `HTTP ${res.status}`;
         await res.body?.cancel();
-        await sleep(this.#reconnectDelayMs * attempt);
+        if (attempt < this.#startAttempts) await sleep(this.#reconnectDelayMs * attempt);
         continue;
       }
       const err = ErrorBody.safeParse(await res.json().catch(() => ({})));

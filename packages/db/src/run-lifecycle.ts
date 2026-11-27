@@ -8,6 +8,8 @@ import { RUN_TRANSITIONS, type FailureReason, type RunState, type RunSubstate } 
 import type { SqliteDatabase } from "./database";
 import { ulid } from "./ulid";
 import { type WriteQueue, writeTransaction } from "./write-queue";
+import { assertPromptSourcesCurrent, mergeSourceRefs, runSourceRefs, SourceUnavailableError, validateCurrentSourceRefs } from "./sources";
+import { assertOrdinarySnapshot, readResearchPlan, ProjectResearchError } from "./research-plan";
 
 /**
  * Run 生命周期（D-06）。
@@ -132,6 +134,7 @@ function insertRun(
   adapterId: string,
   now: string,
 ): void {
+  assertPromptSourcesCurrent(db, approval.snapshot_id, approval.project_id);
   try {
     db.prepare(
       "INSERT INTO runs (id, project_id, approval_id, snapshot_id, adapter_id, state, created_at) " +
@@ -162,6 +165,7 @@ export async function createRunFromApproval(
       throw new ApprovalNotConsumableError(input.approvalId, "project_mismatch", approval.state);
     }
 
+    assertOrdinarySnapshot(db, approval.snapshot_id);
     insertRun(db, runId, approval, input.adapterId, now);
     return readRun(db, runId)!;
   });
@@ -171,6 +175,9 @@ export interface ApproveAndCreateRunInput {
   approvalId: string;
   /** 用户在界面上看到的 snapshot hash（AC-6 的防陈旧批准） */
   expectedSnapshotHash: string;
+  expectedResearchHash?: string;
+  /** Captured workspace/config guard, also checked after waiting for the writer. */
+  beforeWrite?: () => void;
   adapterId: string;
   decidedVia?: "desktop" | "mobile" | null;
   runId?: string;
@@ -191,6 +198,7 @@ export async function approveAndCreateRun(
   const runId = input.runId ?? "run_" + ulid();
 
   return writeTransaction(db, queue, () => {
+    input.beforeWrite?.();
     const approval = readApproval(db, input.approvalId);
     if (approval === undefined) throw new ApprovalNotConsumableError(input.approvalId, "not_found");
 
@@ -200,6 +208,10 @@ export async function approveAndCreateRun(
     if (snapshot === undefined) throw new ApprovalNotConsumableError(input.approvalId, "not_found");
     if (snapshot.content_hash !== input.expectedSnapshotHash) {
       throw new StaleSnapshotError(input.approvalId);
+    }
+    const research = readResearchPlan(db, approval.snapshot_id);
+    if (research ? research.researchHash !== input.expectedResearchHash || input.adapterId !== "remote:" + research.plan.target.profileId : input.expectedResearchHash !== undefined) {
+      throw new ProjectResearchError("research approval does not match its plan and target", "stale_snapshot");
     }
 
     const updated = db
@@ -309,15 +321,16 @@ export function appendRunEventTx(
   db: SqliteDatabase,
   runId: string,
   event: RunEventInput,
-  options: { allowTerminal?: boolean } = {},
+  options: { allowTerminal?: boolean; chat?: boolean } = {},
 ): StoredEvent {
   if (TERMINAL_TYPES.has(event.type) && options.allowTerminal !== true) {
     throw new Error("terminal event \"" + event.type + "\" must go through finishRun(), not appendRunEvent()");
   }
 
   const ts = event.ts ?? new Date().toISOString();
+  const ownerColumn = options.chat === true ? "chat_run_id" : "run_id";
   const row = db
-    .prepare("SELECT COALESCE(MAX(seq) + 1, 0) AS next FROM run_events WHERE run_id = ?")
+    .prepare("SELECT COALESCE(MAX(seq) + 1, 0) AS next FROM run_events WHERE " + ownerColumn + " = ?")
     .get(runId) as { next: number };
   const seq = row.next;
   const eventId = event.eventId ?? runId + "_" + seq;
@@ -331,7 +344,7 @@ export function appendRunEventTx(
   const payload = { ...base, eventId, runId, seq, ts, type: event.type };
 
   db.prepare(
-    "INSERT INTO run_events (run_id, seq, event_id, type, payload, ts) VALUES (?, ?, ?, ?, ?, ?)",
+    "INSERT INTO run_events (" + ownerColumn + ", seq, event_id, type, payload, ts) VALUES (?, ?, ?, ?, ?, ?)",
   ).run(runId, seq, eventId, event.type, JSON.stringify(payload), ts);
 
   return { seq, eventId, ts };
@@ -358,6 +371,7 @@ const TERMINAL_TO_STATE: Record<TerminalType, RunState> = {
 
 /** Reviewer 的正式结论（只会在 completed 时写入）。 */
 export interface ReviewOutput {
+  readonly sourceRefs?: import("@room/schemas").Message["sourceRefs"];
   /** 原样保存 message_complete.text */
   readonly content: string;
   /** snapshot 的 reviewerAgent */
@@ -366,6 +380,7 @@ export interface ReviewOutput {
 }
 
 export interface ReviewMessageRow {
+  sourceRefs?: import("@room/schemas").Message["sourceRefs"];
   id: string;
   projectId: string;
   runId: string;
@@ -375,6 +390,7 @@ export interface ReviewMessageRow {
 }
 
 export interface FinishRunInput {
+  signal?: AbortSignal;
   from: RunState;
   terminal: {
     type: TerminalType;
@@ -403,35 +419,41 @@ export async function finishRun(
   runId: string,
   input: FinishRunInput,
 ): Promise<FinishedRun> {
-  const to = TERMINAL_TO_STATE[input.terminal.type];
   const now = input.now ?? new Date().toISOString();
 
-  assertTransition(RUN_TRANSITIONS, "run", input.from, to);
-
-  const payload: Record<string, unknown> = { type: input.terminal.type };
-  if (input.terminal.reason !== undefined) payload["reason"] = input.terminal.reason;
-  if (input.terminal.message !== undefined) payload["message"] = input.terminal.message;
-  if (input.terminal.kind !== undefined) payload["kind"] = input.terminal.kind;
-
   return writeTransaction(db, queue, () => {
+    const run = readRun(db, runId);
+    if (run === undefined || run.state !== input.from) throw new RunStateConflictError(runId, input.from, run?.state ?? null);
+    if (input.reviewerOutput !== undefined) assertOrdinarySnapshot(db, run.snapshot_id);
+    let terminal: FinishRunInput["terminal"] = input.signal?.aborted ? { type: "cancelled" } : input.terminal;
+    let sourceRefs: ReturnType<typeof runSourceRefs>;
+    if (terminal.type === "completed" && input.reviewerOutput !== undefined) {
+      try { sourceRefs = validateCurrentSourceRefs(db, { projectId: run.project_id }, mergeSourceRefs([input.reviewerOutput.sourceRefs, runSourceRefs(db, runId)])); }
+      catch (error) {
+        if (!(error instanceof SourceUnavailableError)) throw error;
+        terminal = { type: "error", reason: "postprocess", message: error.message };
+      }
+    }
+    const to = TERMINAL_TO_STATE[terminal.type];
+    assertTransition(RUN_TRANSITIONS, "run", input.from, to);
+    const payload: Record<string, unknown> = { ...terminal };
     transitionRunTx(db, runId, input.from, to, {
       substate: null,
-      failureReason: input.terminal.type === "error" ? (input.terminal.reason ?? "internal") : null,
+      failureReason: terminal.type === "error" ? (terminal.reason ?? "internal") : null,
       finishedAt: now,
     });
 
-    appendRunEventTx(db, runId, { type: input.terminal.type, ts: now, payload }, { allowTerminal: true });
+    appendRunEventTx(db, runId, { type: terminal.type, ts: now, payload }, { allowTerminal: true });
 
     let message: ReviewMessageRow | null = null;
-    if (input.terminal.type === "completed" && input.reviewerOutput !== undefined) {
-      const run = readRun(db, runId)!;
+    if (terminal.type === "completed" && input.reviewerOutput !== undefined) {
       const messageId = input.reviewerOutput.messageId ?? "msg_" + ulid();
       const createdAt = now;
 
       db.prepare(
-        "INSERT INTO messages (id, project_id, kind, source_agent, run_id, content, created_at) " +
-          "VALUES (?, ?, 'reviewer_output', ?, ?, ?, ?)",
-      ).run(messageId, run.project_id, input.reviewerOutput.sourceAgent, runId, input.reviewerOutput.content, createdAt);
+        "INSERT INTO messages (id, project_id, kind, source_agent, run_id, content, created_at, source_refs) " +
+          "VALUES (?, ?, 'reviewer_output', ?, ?, ?, ?, ?)",
+      ).run(messageId, run.project_id, input.reviewerOutput.sourceAgent, runId, input.reviewerOutput.content, createdAt, sourceRefs === undefined ? null : JSON.stringify(sourceRefs));
 
       message = {
         id: messageId,
@@ -439,6 +461,7 @@ export async function finishRun(
         runId,
         sourceAgent: input.reviewerOutput.sourceAgent,
         content: input.reviewerOutput.content,
+        ...(sourceRefs === undefined ? {} : { sourceRefs }),
         createdAt,
       };
     }

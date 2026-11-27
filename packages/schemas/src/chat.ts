@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { SourceReferences } from "./structured-results";
 import { AudioRef, ChatMessageId, ConversationId, IsoTimestamp, prefixedId, ProjectNoteId, RunId, Sha256Hex, SnapshotId } from "./common";
 import { FailureReason } from "./agent-event";
 import { RunState, RunSubstate } from "./state-machines";
@@ -287,6 +288,11 @@ export type ChatMessageState = z.infer<typeof ChatMessageState>;
 const chatMessageBase = {
   id: ChatMessageId,
   conversationId: ConversationId,
+  /**
+   * 与消息同一事务写入后不可修改；撤回/重新解析不回写旧引用。
+   * 共用挂载位有意覆盖用户/秘书消息；D08 首片只由 main 为秘书回答写入，不采信用户自报引用。
+   */
+  sourceRefs: SourceReferences.optional(),
   /** 主控机时间（撤回窗口按它算） */
   createdAt: IsoTimestamp,
 };
@@ -533,6 +539,12 @@ export type ChatAgentOutput = z.infer<typeof ChatAgentOutput>;
 export const ChatSnapshot = z
   .object({
     id: SnapshotId,
+    /**
+     * 与 Snapshot 同一事务写入后不可修改；撤回只影响后续使用，不回写旧版本/hash/status。
+     * 仅展示和溯源，不在 contentHash 中，不能证明模型确实读过资料或盖章绑定了这些来源。
+     * 以后若需盖章绑定来源，须另开契约将来源清单写入 content，像附件清单一样受 hash 覆盖。
+     */
+    sourceRefs: SourceReferences.optional(),
     purpose: z.enum(["reply", "history_summary", "window_handoff"]),
     conversationId: ConversationId,
     userMessageId: ChatMessageId.nullable(),
