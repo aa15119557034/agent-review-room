@@ -55,6 +55,9 @@ if (uWx > 0.0 && vWxMask.x > 0.01) {
   #ifdef STATION_DRIVE_PLASTER
     wxK *= 1.0 - 0.8 * driveWallPaint;
   #endif
+  #ifdef WB_APARTMENT_REAR_LIGHTING
+    wxK *= 1.0 - 0.46 * wbApartmentRear(wxP);
+  #endif
   vec3 wxC = diffuseColor.rgb;
   // 3 blotches: lightness, a warm/cool tilt and saturation
   vec4 wxT1 = wxTex(wxPc * uWxFreq.x + wxSeed), wxT2 = wxTex(wxPc * uWxFreq.y + wxSeed * 2.1 + 7.0);

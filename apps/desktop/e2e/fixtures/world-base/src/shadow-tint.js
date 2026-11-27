@@ -101,7 +101,7 @@ export function patchIslandShadowTint(island, p) {
  */
 export function shopInteriorBoxes(layout, station, pad, lamps = null) {
   const root = station.root.position, rooms = station.ctx.services.shopInteriors || [];
-  return rooms.map(({ lot, frame, name, box }) => {
+  return rooms.map(({ lot, frame, name, box, lampColor }) => {
     // A room is either in a shop lot (lot id) or in a town building with its own frame (station-root space: x, y, z, rotY).
     const id = lot ?? name, f = frame ?? layout.lotFrame(layout.lotById(lot)), c = Math.cos(f.rotY), s = Math.sin(f.rotY);
     const o = [f.x + root.x, f.z + root.z], ex = [c, -s], ez = [s, c], y = f.y + root.y;
@@ -111,8 +111,9 @@ export function shopInteriorBoxes(layout, station, pad, lamps = null) {
     // A brighter ceiling reads through storefront glass without raising the shelves or floor by the same amount.
     const lighting = lamps?.rooms?.[id];
     const strength = typeof lighting === 'number' ? lighting : lighting?.strength;
-    const lamp = strength ? lamps.color.map(v => v * strength) : null;
-    const lampUpper = lighting?.upper ? lamps.color.map(v => v * lighting.upper) : null;
+    const color = lampColor ?? lamps?.color;
+    const lamp = strength ? color.map(v => v * strength) : null;
+    const lampUpper = lighting?.upper ? color.map(v => v * lighting.upper) : null;
     return { id, o, ex, ez, min, max, lamp, lampUpper, aabb: [Math.min(...xs), min[1], Math.min(...zs), Math.max(...xs), max[1], Math.max(...zs)] };
   });
 }

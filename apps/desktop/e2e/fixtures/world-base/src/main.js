@@ -5,6 +5,7 @@ import { loadToon, toonEnabled, gradeEnabled, applyForm, installLitToon, install
 import { addShopSpill, loadShopSpill, shopFrontsFromRooms, groundSpillFronts } from './shop-spill.js';
 import { addDoorGlow, loadDoorGlow, resolveDoorLamps } from './door-glow.js';
 import { applyEveningGlow, applyEveningSakura, fadeDistantCrossingHalos } from './evening-glow.js';
+import { applyStationNightArt } from './station-night-art.js';
 import * as layoutModule from '../upstream/sakuragaoka/src/world/layout.js';
 import { createStation } from './station.js';
 import { installStationGroundShadows } from './transition.js';
@@ -19,7 +20,7 @@ import { makeShared } from './block-common.js';
 import { midbandEnabled, layoutMidband } from './midband-blocks.js';
 import { applyWeathering, loadWeatheringParams } from './weathering.js';
 import { addWeatheringDecals, loadBakedDecals } from './weathering-decals.js';
-import { groundEnabled, loadGround, applyFlowerDrifts, patchGroundShader, patchPetals } from './island-ground.js';
+import { groundEnabled, loadGround, applyFlowerDrifts, patchGroundShader, patchPetals, applyHarbourEvening } from './island-ground.js';
 import { getMats as getVehicleMats } from '../upstream/sakuragaoka/src/world/vehicles/atlas.js';
 
 const canvas = document.querySelector('#world');
@@ -152,8 +153,9 @@ async function init() {
     patchGroundShader(material, groundParams, label, islandSward, night ? 0.35 : 1);
   }
   if (shadowTint) worldBase.shadowTint = { island: patchIslandShadowTint(island, shadowTint) };
+  if (timeOfDay === 'evening') applyHarbourEvening(island, look.pipeline.finalMat, camera);
   const sun = night ? new THREE.DirectionalLight(0x9abaff, 0.38)
-    : new THREE.DirectionalLight(evening ? 0xffc490 : 0xffe4c4, evening ? 2.3 : 2.1);
+    : new THREE.DirectionalLight(evening ? 0xffb569 : 0xffe4c4, evening ? 4.0 : 2.1);
   sun.position.copy(island.U.uSunDir.value).multiplyScalar(160).add(new THREE.Vector3(...island.stationPlacement.position));
   sun.target.position.set(...island.stationPlacement.position);
   sun.castShadow = true;
@@ -165,7 +167,7 @@ async function init() {
   sun.shadow.bias = -0.0002;
   sun.shadow.normalBias = 0.035;
   skyFill = night ? new THREE.HemisphereLight(0x789bdf, 0x3b405c, 0.62)
-    : evening ? new THREE.HemisphereLight(0xb4bce8, 0xa08068, 1.6) : new THREE.HemisphereLight(0xcfe0ff, 0xa89c94, 1.05);
+    : evening ? new THREE.HemisphereLight(0xa6b4e8, 0x74688f, 1.18) : new THREE.HemisphereLight(0xcfe0ff, 0xa89c94, 1.05);
   scene.add(sun, sun.target, skyFill);
   stage('正在安放车站、店铺与碰撞体…');
   // Art round 22: zoned street cubes + vertical neon streaks on the wet road. toon.json "refl" (absent / on:0 = off);
@@ -261,7 +263,9 @@ async function init() {
   }
   // Round 27: outlines + cel bands (?toon=off keeps round 26). Same shop-room boxes as the shadow tint.
   if (toonEnabled()) {
-    const toonAll = await loadToon(), toonP = applyForm(toonAll[timeOfDay === 'afternoon' ? 'afternoon' : 'evening']);
+    const toonAll = await loadToon();
+    const toonP = applyForm(toonAll[timeOfDay === 'afternoon' ? 'afternoon' : 'evening']);
+    if (night) toonP.rim = toonAll.nightRim;
     originalFillColor = skyFill.color.clone();
     toonFillColor = night ? originalFillColor.clone() : new THREE.Color(toonP.skyFill);
     if (worldBase.styleState.toon) skyFill.color.copy(toonFillColor);
@@ -340,7 +344,8 @@ async function init() {
   });
   if (evening) {
     worldBase.eveningGlow = applyEveningGlow(scene, look);
-    if (!night) worldBase.eveningSakura = applyEveningSakura(scene);
+    if (night) worldBase.stationNightArt = applyStationNightArt(scene, island);
+    else worldBase.eveningSakura = applyEveningSakura(scene);
     worldBase.crossingHalos = fadeDistantCrossingHalos(scene);
   }
   // Round 22: wall weathering + posters. After the evening glow, so emissive materials are already known.

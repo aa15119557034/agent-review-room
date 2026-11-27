@@ -24,7 +24,8 @@ function inventoryAt(name, original, pinned = expected?.filter(file => file.proj
   const projectFiles = [];
   for (const file of files(original)) {
     // The evening bake writes its generated shadow map next to the upstream light map.
-    if (name === 'petalwake' && file === path.join(original, 'assets', 'terrain', 'light-evening.png')) continue;
+    if (name === 'petalwake' && ['light-evening.png', 'light-evening-low.png'].some(lightMap =>
+      file === path.join(original, 'assets', 'terrain', lightMap))) continue;
     projectFiles.push({ project: name, path: path.relative(original, file).replaceAll('\\', '/'), sha256: hash(file) });
   }
   if (pinned) {

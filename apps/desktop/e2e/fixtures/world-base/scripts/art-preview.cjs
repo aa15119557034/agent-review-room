@@ -10,9 +10,8 @@ const { verifyStationArt } = require('./prepare-station-art.cjs');
 
 const root = path.resolve(__dirname, '..');
 const sources = JSON.parse(fs.readFileSync(path.join(root, 'sources.json'), 'utf8'));
-const evening = JSON.parse(fs.readFileSync(path.join(root, 'src/evening.json'), 'utf8'));
+const presets = ['evening', 'night'];
 const upstream = path.join(root, '.local', 'petalwake-' + sources.petalwake.commit);
-const light = path.join(upstream, 'assets', evening.lightMap);
 const [command = 'serve', portInput] = process.argv.slice(2);
 if (!['serve', 'prepare', 'verify'].includes(command) || process.argv.length > (command === 'serve' ? 4 : 3)) {
   throw new Error('Usage: node scripts/art-preview.cjs prepare | verify | serve [port]');
@@ -24,19 +23,26 @@ if (command === 'prepare') {
   props.prepare({root, source});
   apartments.prepare({root, source});
   const python = process.env.WORLD_PREVIEW_PYTHON || (process.platform === 'win32' ? 'python' : 'python3');
-  execFileSync(python, [path.join(__dirname, 'bake-evening-light.py'), upstream], {
-    cwd:root, stdio:'inherit', windowsHide:true,
-    env:{...process.env, PYTHONDONTWRITEBYTECODE:'1', NUMBA_CACHE_DIR:path.join(root,'.local','art-preview-numba-cache')},
-  });
+  for (const preset of presets) {
+    const options = preset === 'night' ? ['--night'] : [];
+    execFileSync(python, [path.join(__dirname, 'bake-evening-light.py'), ...options, upstream], {
+      cwd:root, stdio:'inherit', windowsHide:true,
+      env:{...process.env, PYTHONDONTWRITEBYTECODE:'1', NUMBA_CACHE_DIR:path.join(root,'.local','art-preview-numba-cache')},
+    });
+  }
 }
 
 const release = verifyStationArt(root);
 const propFiles = props.verifyPreparedAssets(root).files.length;
 const apartmentFiles = apartments.verifyPreparedAssets(root).files.length;
-if (!fs.existsSync(light)) throw new Error('Missing evening light map. Run node scripts/art-preview.cjs prepare.');
-const lightSHA = crypto.createHash('sha256').update(fs.readFileSync(light)).digest('hex');
 console.log('Verified ' + apartmentFiles + ' apartment textures, ' + propFiles + ' prop files and station art ' + release.sha256);
-console.log('Evening light SHA-256 ' + lightSHA);
+for (const preset of presets) {
+  const {lightMap} = JSON.parse(fs.readFileSync(path.join(root, 'src', preset + '.json'), 'utf8'));
+  const light = path.join(upstream, 'assets', lightMap);
+  if (!fs.existsSync(light)) throw new Error('Missing ' + preset + ' light map. Run node scripts/art-preview.cjs prepare.');
+  const lightSHA = crypto.createHash('sha256').update(fs.readFileSync(light)).digest('hex');
+  console.log(preset + ' light SHA-256 ' + lightSHA);
+}
 
 if (command === 'serve') {
   const port = Number(portInput ?? 4173);
