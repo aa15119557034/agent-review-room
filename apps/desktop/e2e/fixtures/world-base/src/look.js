@@ -454,13 +454,57 @@ void main(){`, 'cascade rock toes');
     col = mix(col, vec3(0.045, 0.28, 0.25) * (uSunColor * 0.26 + uAmbSky * 0.54), boil * 0.36 * uCascadeLod);`, 'cascade impact lace');
 
     const fall = island.river.fallMat;
+    // Keep the wide sheet as the rim and stagger the narrower veils in a curved cross-section.
+    fall.uniforms.uCascadeFlowDir = { value: island.river.fall.dir };
+    fall.vertexShader = insert(fall.vertexShader, 'varying vec3 vWorld;', `varying vec3 vWorld;
+varying float vCascadeFallNear;
+uniform vec2 uCascadeFlowDir;`, 'cascade depth vertex entry');
+    fall.vertexShader = insert(fall.vertexShader, 'vFall = aFall; vWorld = position;', `vFall = aFall;
+  vCascadeFallNear = (1.0 - smoothstep(52.0, 115.0, distance(cameraPosition, position)))
+    * smoothstep(0.06, 0.28, aFall.z) * (1.0 - smoothstep(0.965, 1.0, aFall.z));
+  float layer = aFall.w / 7.31;
+  float section = max(1.0 - aFall.x * aFall.x, 0.0);
+  float bow = mix(0.36, 1.38, step(1.5, layer)) * section * section;
+  float depth = (layer - 1.0) * (0.22 + 0.50 * section) + bow;
+  float stagger = (1.0 - layer) * (0.91 + 0.28 * sin(aFall.z * 9.0 + layer * 1.8));
+  float shape = vCascadeFallNear * (1.0 - smoothstep(0.92, 1.0, aFall.z));
+  vec2 across = vec2(-uCascadeFlowDir.y, uCascadeFlowDir.x);
+  vWorld = position;
+  vWorld.xz += (uCascadeFlowDir * depth + across * stagger) * shape;`, 'cascade front sheet depth');
+    fall.vertexShader = insert(fall.vertexShader, 'gl_Position = projectionMatrix * viewMatrix * vec4(position, 1.0);',
+      'gl_Position = projectionMatrix * viewMatrix * vec4(vWorld, 1.0);', 'cascade depth projection');
+    fall.fragmentShader = insert(fall.fragmentShader, 'varying vec3 vWorld;', 'varying vec3 vWorld;\nvarying float vCascadeFallNear;', 'cascade depth fragment entry');
+    fall.fragmentShader = insert(fall.fragmentShader, 'float a = (t - uTime) * 0.55;',
+      'float a = (t - uTime) * 0.55 + (seed / 7.31 - 1.0) * 0.31 * vCascadeFallNear;', 'cascade layer phase');
     fall.fragmentShader = insert(fall.fragmentShader, 'float body = mix(1.0, 0.74, smoothstep(0.05, 0.7, k));', `float ribbons = smoothstep(0.26, 0.74, clumps * 0.7 + strands * 0.3);
   float body = mix(1.0, 0.86, smoothstep(0.06, 0.65, k));`, 'cascade sheet coverage');
+    fall.fragmentShader = insert(fall.fragmentShader, 'if (alpha < 0.02) discard;', `float rim = 0.0;
+  float front = clamp(seed / 14.62, 0.0, 1.0);
+  if (vCascadeFallNear > 0.0) {
+    // The broad sheet just outside the two inner veils catches light on either fold.
+    float outerSheet = 1.0 - abs(front * 2.0 - 1.0);
+    float flank = abs(u) + (clumps - 0.5) * 0.05;
+    rim = outerSheet * smoothstep(0.65, 0.79, flank) * (1.0 - smoothstep(0.88, 0.99, flank));
+    rim *= mix(0.72, 1.0, strands);
+    // The central veils cover a fraction of the MSAA samples so the following layers can show through.
+    float veil = min(0.59, alpha * mix(0.38, 0.62, ribbons) + ribbons * 0.10);
+    float rimCoverage = rim * (0.89 + 0.10 * clumps);
+    alpha = mix(alpha, max(veil, rimCoverage), vCascadeFallNear);
+  }
+  if (alpha < 0.02) discard;`, 'cascade rim coverage');
     fall.fragmentShader = insert(fall.fragmentShader, 'vec3 glass = vec3(0.30, 0.55, 0.52) * (uSunColor * 0.2 * sun + uAmbSky * 0.6);', `vec3 glass = vec3(0.067, 0.34, 0.36) * (uSunColor * (0.12 + 0.25 * sun) + uAmbSky * 0.68);`, 'cascade blue-green ribbons');
     fall.fragmentShader = insert(fall.fragmentShader, 'vec3 col = mix(glass, white, smoothstep(0.0, 0.10, k) * (0.6 + 0.4 * strands));', `float aerated = smoothstep(0.01, 0.24, k);
   float shoulders = smoothstep(0.41, 0.76, abs(u)) * (1.0 - smoothstep(0.82, 0.99, abs(u)));
   float whiteness = clamp(mix(0.16 + 0.50 * ribbons, 0.24 + 0.67 * ribbons, aerated) + shoulders * 0.37, 0.0, 1.0);
-  vec3 col = mix(glass, white, whiteness);`, 'cascade aeration');
+  vec3 col = mix(glass, white, whiteness);
+  if (vCascadeFallNear > 0.0) {
+    vec3 veilTint = glass * mix(vec3(0.70, 0.83, 1.05), vec3(0.94, 1.08, 1.15), front);
+    float foam = mix(0.17, 0.42, ribbons) * mix(0.68, 1.0, front);
+    vec3 veilColor = mix(veilTint, white, foam);
+    vec3 rimLight = white * vec3(1.08, 1.17, 1.24);
+    vec3 sectionColor = mix(veilColor, rimLight, smoothstep(0.03, 0.76, rim));
+    col = mix(col, sectionColor, vCascadeFallNear);
+  }`, 'cascade aeration');
     fall.needsUpdate = true;
   }
 

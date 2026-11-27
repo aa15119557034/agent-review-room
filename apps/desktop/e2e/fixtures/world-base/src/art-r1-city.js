@@ -148,9 +148,9 @@ export function addStandingBoard(F, M, sheet, face, x, y, z, ry = 0.25) {
   s.box(M.metal, '#8e949b', 0.012, 0.012, lean * 1.6, 0, h * 0.4, 0);
 }
 
-/** Chain-link, shade net, cardboard and pipe layers for the rear passage (shot C). Station-local
- *  metres; the passage floor is y = 4.78 and the rear wall plane is z = -131. */
-export function addBackAlley({ root, ctx, own, ownTexture, frame, M, A, sheet }) {
+/** Chain-link, enclosure and utility dressing for the laundromat rear passage (shot C).
+ *  All dimensions are station-local. The rear wall plane is z = -131. */
+export function addBackAlley({ root, ctx, own, ownTexture, frame, M, A, sheet, yardY }) {
   const FLOOR = 4.78, FENCE_Z = -133.0, HEIGHT = 2.1;
   const tile = ownCanvasTexture(128, 128, (g, w, h) => {
     g.clearRect(0, 0, w, h);
@@ -191,6 +191,20 @@ export function addBackAlley({ root, ctx, own, ownTexture, frame, M, A, sheet })
     const n = Math.round(len / 2.4);
     for (let i = 0; i <= n; i++) bar(0.07, HEIGHT + 0.9, 0.07, Math.min(x0, x1) + len * i / n, y0 + (HEIGHT - 0.9) / 2, FENCE_Z, 'art-r1-fence-post');
   }
+  // Opaque service-yard screen behind the near fence. The existing gate and steel
+  // stairs stay clear, with 195 mm from the stair's outside edge to the screen face.
+  const screen = { minX: 1.35, maxX: 7.26, minZ: -133.45, maxZ: -133.37, top: 7.1 };
+  const width = screen.maxX - screen.minX, cx = (screen.minX + screen.maxX) / 2;
+  const cz = (screen.minZ + screen.maxZ) / 2, depth = screen.maxZ - screen.minZ;
+  const plinth = 0.36, panelTop = screen.top - 0.055;
+  frame.boxB(M.concrete, '#8c9186', width, plinth, depth, cx, yardY, cz, { uv: { world: 1 } });
+  frame.boxB(M.plain, '#6f8279', width, panelTop - yardY - plinth, depth, cx, yardY + plinth, cz);
+  frame.boxB(M.metal, '#64746d', width + 0.04, 0.055, depth + 0.016, cx, panelTop, cz);
+  // Raised joints and the top cap give the painted panels scale through the mesh.
+  for (let x = screen.minX + 0.03; x < screen.maxX; x += width / 8) {
+    frame.boxB(M.metal, '#75867c', 0.035, panelTop - yardY - plinth, 0.026,
+      x, yardY + plinth, screen.maxZ + 0.007);
+  }
   // Two small colour spots on the fence face: a red prohibition disc and a blue notice.
   const spot = (name, w, h, x, y, z) => {
     const [u0, v0, u1, v1] = tileUV(name), geo = new THREE.PlaneGeometry(w, h);
@@ -214,6 +228,16 @@ export function addBackAlley({ root, ctx, own, ownTexture, frame, M, A, sheet })
   stack(-2.7, -132.6, [[0.7, 0.46, 0.5, -0.06], [0.55, 0.38, 0.42, 0.15, 0.02]]);
   stack(-3.45, -132.5, [[0.44, 0.3, 0.36, 0.12]]);
   stack(-6.8, -132.55, [[0.66, 0.4, 0.48, 0.05], [0.6, 0.3, 0.44, -0.1], [0.4, 0.26, 0.34, 0.2, 0.05]]);
+  // Slatted service crate beside the box stack, beyond the stair landing.
+  const binX = 5.75, binZ = -132.7, binW = 0.42, binD = 0.32;
+  frame.boxB(M.plain, '#42564f', binW, 0.055, binD, binX, yardY, binZ);
+  for (const dx of [-0.19, 0.19]) for (const dz of [-0.14, 0.14]) {
+    frame.boxB(M.plain, '#677b62', 0.036, 0.25, 0.036, binX + dx, yardY + 0.055, binZ + dz);
+  }
+  for (const y of [0.10, 0.18, 0.26]) {
+    for (const dz of [-0.14, 0.14]) frame.box(M.plain, '#647961', binW, 0.052, 0.032, binX, yardY + y, binZ + dz);
+    for (const dx of [-0.19, 0.19]) frame.box(M.plain, '#536754', 0.032, 0.052, binD, binX + dx, yardY + y, binZ);
+  }
   // Pipes run above the door heads and the corridor lamps (round 3: 2.58 / 2.72 m clears both; round 2: at hip height they crossed two doors and read as handrails),
   // two horizontal runs fed by a riser beside the meters, with clips.
   const pipe = '#a7b5bb', clip = '#586369';
@@ -222,7 +246,14 @@ export function addBackAlley({ root, ctx, own, ownTexture, frame, M, A, sheet })
     for (let x = -3.4; x < 2.4; x += 1.4) frame.box(M.metal, clip, 0.05, 0.1, 0.05, x, FLOOR + y, -131.07);
   }
   frame.cyl(M.metal, pipe, 0.04, 2.72, -3.6, FLOOR + 1.36, -131.1, { seg: 8 });
-  return { fence: runs.length, cardboardStacks: 4, pipeRuns: 3, spots: 3 };
+  // Feed the lower run into a wall outlet clear of the two existing stickers.
+  const riserX = 3.94, pipeZ = -131.10, topY = FLOOR + 2.58, baseY = yardY + 0.14;
+  frame.cyl(M.metal, pipe, 0.034, riserX - 2.3, (riserX + 2.3) / 2, topY, pipeZ, { rz: Math.PI / 2, seg: 8 });
+  frame.cyl(M.metal, pipe, 0.034, topY - baseY, riserX, (topY + baseY) / 2, pipeZ, { seg: 8 });
+  for (const y of [baseY, baseY + 0.64, topY - 0.16]) {
+    frame.box(M.metal, clip, 0.095, 0.065, 0.118, riserX, y, -131.068);
+  }
+  return { fence: runs.length, screen: { ...screen, bottom: yardY }, cardboardStacks: 4, serviceCrates: 1, pipeRuns: 5, spots: 3 };
 }
 
 /** Art round 3: rear-corridor dressing as a rule (city.js installs it as H.artRearCorridor for every

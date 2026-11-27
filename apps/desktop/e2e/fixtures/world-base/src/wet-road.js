@@ -5,6 +5,42 @@ import { zoneGlsl } from './street-zones.js';
 const SIZE = 512;
 const BOUNDS = { x0: -4, z0: 4, x1: 4, z1: 34 };
 const DECALS = new Set(['street-lines', 'street-paint', 'street-glyphs', 'street-util-decals', 'street-util-top']);
+const SUNLIT_PAVING = new Set(['street-sidewalk', 'street-curbs', 'street-lgutter',
+  'street-tactile-dots', 'street-tactile-bars', 'street-lines', 'street-paint', 'street-glyphs']);
+const STREET_BEAM = /* glsl */`
+  uniform vec2 uStreetBeamPole;
+  uniform vec2 uStreetBeamBoard;
+
+  float streetBeam(vec2 position) {
+    // Low light enters at the gap between E2 and E3, widening down the street.
+    const vec2 direction = vec2(0.9363, 0.3511);
+    const vec2 perpendicular = vec2(-0.3511, 0.9363);
+    vec2 band = position - vec2(0.05, 22.12);
+    float along = dot(band, direction);
+    float across = dot(band, perpendicular);
+    float width = mix(1.62, 1.02, smoothstep(-4.5, 5.35, along));
+    float nearEdge = width + 0.16 * sin(along * 0.83 + 0.6);
+    float farEdge = width + 0.23 * sin(along * 0.91 - 0.8);
+    float gap = smoothstep(-nearEdge - 0.55, -nearEdge + 0.35, across)
+              * (1.0 - smoothstep(farEdge - 0.4, farEdge + 0.57, across));
+    float strength = smoothstep(-6.1, -3.0, along)
+                   * (1.0 - smoothstep(4.9, 6.3, along))
+                   * mix(0.40, 1.0, smoothstep(-5.15, 4.7, along));
+    float beam = gap * strength;
+    if (beam < 0.001) return 0.0;
+
+    // Project the east curb pole and the shop's A-board along the same light ray.
+    vec2 pole = position - uStreetBeamPole;
+    float travel = -dot(pole, direction);
+    float penumbra = 0.14 + 0.025 * clamp(travel, 0.0, 12.0);
+    float poleShadow = smoothstep(-0.17, 0.18, travel)
+                     * (1.0 - smoothstep(0.095, 0.095 + penumbra, abs(dot(pole, perpendicular))));
+    vec2 board = position - uStreetBeamBoard + direction * 2.45;
+    float boardShadow = (1.0 - smoothstep(1.46, 1.78, abs(dot(board, direction))))
+                      * (1.0 - smoothstep(0.17, 0.44, abs(dot(board, perpendicular))));
+    return beam * (1.0 - max(poleShadow * 0.85, boardShadow * 0.74));
+  }
+`;
 const GROUPS = [
   // Lane-wide damp bands (refs 10/11 in #252): at street-level grazing angles a
   // 1 m patch collapses to a few pixel rows, so patches span most of a lane.
@@ -23,6 +59,41 @@ function smooth(a, b, x) {
 function insert(source, needle, replacement) {
   if (!source.includes(needle)) throw new Error(`Wet road shader entry changed: ${needle}`);
   return source.replace(needle, replacement);
+}
+
+function lightPaving(root, uniforms, streetSunlight) {
+  const lit = [];
+  root.traverse(mesh => {
+    if (!mesh.isMesh || !SUNLIT_PAVING.has(mesh.name)) return;
+    // Keep the same standalone receivers in all palettes so their decal
+    // fingerprint does not depend on whether the sunset material is active.
+    mesh.userData.noBatch = true;
+    if (!streetSunlight) return;
+    const source = mesh.material;
+    const material = source.clone();
+    const sourceKey = source.customProgramCacheKey();
+    material.onBeforeCompile = function (shader, renderer) {
+      source.onBeforeCompile.call(this, shader, renderer);
+      shader.uniforms.uSunPatchWorldToLocal = uniforms.uStreetWorldToLocal;
+      shader.uniforms.uStreetBeamPole = uniforms.uStreetBeamPole;
+      shader.uniforms.uStreetBeamBoard = uniforms.uStreetBeamBoard;
+      shader.vertexShader = insert(shader.vertexShader, '#include <common>', `#include <common>
+        uniform mat4 uSunPatchWorldToLocal;
+        varying vec2 vSunPatch;`);
+      shader.vertexShader = insert(shader.vertexShader, '#include <project_vertex>', `#include <project_vertex>
+        vSunPatch = (uSunPatchWorldToLocal * modelMatrix * vec4(transformed, 1.0)).xz;`);
+      shader.fragmentShader = insert(shader.fragmentShader, '#include <common>', `#include <common>
+        varying vec2 vSunPatch;
+        ${STREET_BEAM}`);
+      shader.fragmentShader = insert(shader.fragmentShader, '#include <opaque_fragment>', `
+        outgoingLight += vec3(0.24, 0.086, 0.024) * streetBeam(vSunPatch);
+        #include <opaque_fragment>`);
+    };
+    material.customProgramCacheKey = () => `${sourceKey}|station-sunset-paving`;
+    mesh.material = material;
+    lit.push({ mesh, source, material });
+  });
+  return lit;
 }
 
 function makeMask(root, layout) {
@@ -160,7 +231,7 @@ function makeMask(root, layout) {
 /** Local standing water shares the station's captured street environment.
  * The road owns its material and mask. The station owns the reflection target.
  */
-export function applyWetRoad({ root, ctx, reflections, zones = null }) {
+export function applyWetRoad({ root, ctx, reflections, zones = null, streetSunlight = false }) {
   const targets = [];
   root.traverse(mesh => { if (mesh.isMesh && mesh.name === 'street-asphalt') targets.push(mesh); });
   if (targets.length !== 1) throw new Error(`Wet road expected one street-asphalt mesh, found ${targets.length}`);
@@ -177,6 +248,13 @@ export function applyWetRoad({ root, ctx, reflections, zones = null }) {
     // Art r22: zoned cubes (street-zones.js). Absent with ?refl=old: the shader below is then character for character the r21 one.
     ...(zones ? zones.uniforms : {}),
   };
+  if (streetSunlight) {
+    const pole = ctx.L.POLE_RUNS.R1E[0];
+    const board = ctx.L.lotToWorld(ctx.L.lotById('E3'), -0.85, -0.55);
+    uniforms.uStreetBeamPole = { value: new THREE.Vector2(pole.x, pole.z) };
+    uniforms.uStreetBeamBoard = { value: new THREE.Vector2(board.x, board.z) };
+  }
+  const lit = lightPaving(root, uniforms, streetSunlight);
   const upstreamCompile = original.onBeforeCompile;
   const upstreamKey = original.customProgramCacheKey();
   material.onBeforeCompile = function (shader, renderer) {
@@ -196,6 +274,7 @@ export function applyWetRoad({ root, ctx, reflections, zones = null }) {
       uniform vec4 uWetBounds;
       ${STREET_REFLECTION_GLSL}
       ${zones ? zoneGlsl(zones.count) : ''}
+      ${streetSunlight ? STREET_BEAM : ''}
       varying vec3 vWetWorld;
       varying vec2 vWetLocal;`);
     shader.fragmentShader = insert(shader.fragmentShader, '#include <map_fragment>', `#include <map_fragment>
@@ -225,16 +304,19 @@ export function applyWetRoad({ root, ctx, reflections, zones = null }) {
         outgoingLight = mix(outgoingLight, reflection, weight);
         ${zones ? '}' : ''}
       }
+      ${streetSunlight ? `
+        outgoingLight += vec3(0.39, 0.146, 0.036) * streetBeam(vWetLocal) * (1.0 - 0.42 * wetMask.g);
+      ` : ''}
       #include <opaque_fragment>`);
   };
   // The different callback deliberately opts out of batch2's material rewriting.
   // One isolated road material can still use its original single draw.
-  material.customProgramCacheKey = () => `${upstreamKey}|station-street-reflection-v2${zones ? `|zones${zones.count}` : ''}`;
+  material.customProgramCacheKey = () => `${upstreamKey}|station-street-reflection-v2${streetSunlight ? '|street-sunlight' : ''}${zones ? `|zones${zones.count}` : ''}`;
   mesh.material = material;
   let disposed = false;
   return {
     material, maskTexture: texture,
-    stats: { ...stats, materials: 1, extraPasses: 0, extraRenderTargets: 0, reflection: 'shared station street cube' },
+    stats: { ...stats, materials: 1 + lit.length, extraPasses: 0, extraRenderTargets: 0, reflection: 'shared station street cube' },
     uniforms,
     get enabled() { return uniforms.uWetEnabled.value === 1; },
     setEnabled(enabled) { uniforms.uWetEnabled.value = enabled ? 1 : 0; },
@@ -243,6 +325,10 @@ export function applyWetRoad({ root, ctx, reflections, zones = null }) {
       disposed = true;
       uniforms.uWetEnabled.value = 0;
       if (mesh.material === material) mesh.material = original;
+      for (const paving of lit) {
+        if (paving.mesh.material === paving.material) paving.mesh.material = paving.source;
+        paving.material.dispose();
+      }
       material.dispose();
       texture.dispose();
     },

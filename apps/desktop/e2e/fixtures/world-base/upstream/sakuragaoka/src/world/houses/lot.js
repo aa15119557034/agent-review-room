@@ -204,6 +204,11 @@ export function buildLot(H, D) {
       const GF = F.sub(hinge, gy(hinge, fz), fz, -ang);
       GF.box(M.atlasCut, '#ffffff', lw, 1.0, 0.03, -s * lw / 2, 0.55, 0, { uv: { rect: H.A.rects.gate_alu, white: H.A.white, faces: 'front+back' }, noOutline: true });
       GF.box(M.plain, '#5c4a3e', 0.04, 1.0, 0.04, -s * 0.02, 0.55, 0);
+      // The lattice remains a cutout. Its opaque edge rails carry the outline.
+      const leafFrame = '#849095', rail = 0.03;
+      GF.box(M.plain, leafFrame, lw, rail, 0.039, -s * lw / 2, 0.05 + rail / 2, 0, { shadow: false });
+      GF.box(M.plain, leafFrame, lw, rail, 0.039, -s * lw / 2, 1.05 - rail / 2, 0, { shadow: false });
+      GF.box(M.plain, leafFrame, rail, 1.0 - 2 * rail, 0.039, -s * (lw - rail / 2), 0.55, 0, { shadow: false });
     }
     if (!open) H.col(F, gateX, fz, gateW, 0.12, 0, gy(gateX, fz) - 0.5, gy(gateX, fz) + 1.05);
   }

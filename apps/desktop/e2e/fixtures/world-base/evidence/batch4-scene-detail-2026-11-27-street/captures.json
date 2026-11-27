@@ -1,0 +1,402 @@
+{
+  "profiles": [
+    {
+      "variant": "candidate",
+      "time": "evening",
+      "round": null,
+      "errors": {
+        "page": [],
+        "network": [],
+        "world": []
+      }
+    }
+  ],
+  "baseline": {
+    "candidate-evening-art-a-street.png": {
+      "name": "art-a-street",
+      "eye": [
+        278.8,
+        10.488,
+        936
+      ],
+      "rotation": [
+        -0.003277842930440409,
+        -0.009834585659995631,
+        -3.223795934194156e-05,
+        0.9999462663720154
+      ],
+      "fov": 35.63777782904556,
+      "direction": [
+        0.019667903082122552,
+        -0.006555967694040891,
+        -0.9997850733412393
+      ],
+      "world": [
+        0.9998065597712203,
+        0,
+        0.01966832576599103,
+        0,
+        0.00012894490831770922,
+        0.9999785094128747,
+        -0.006554699506150283,
+        0,
+        -0.01966790308212255,
+        0.006555967694040889,
+        0.9997850733412391,
+        0,
+        278.8,
+        10.488,
+        936,
+        1
+      ],
+      "projection": [
+        1.9444444444444444,
+        0,
+        0,
+        0,
+        0,
+        3.1111111111111107,
+        0,
+        0,
+        0,
+        0,
+        -1.000025000312504,
+        -1,
+        0,
+        0,
+        -0.4000050000625008,
+        0
+      ],
+      "scene": {
+        "width": 1440,
+        "height": 900,
+        "dpr": 1,
+        "timeOfDay": "evening",
+        "frozen": 5000,
+        "stationTime": 5,
+        "islandTime": 5,
+        "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "webgl": 0,
+        "worldErrors": [],
+        "decals": {
+          "source": "baked",
+          "fingerprint": "1055:2727829:296620.2:943601.4"
+        }
+      },
+      "variant": "candidate",
+      "time": "evening",
+      "filename": "candidate-evening-art-a-street.png"
+    },
+    "candidate-evening-art-b-konbini.png": {
+      "name": "art-b-konbini",
+      "eye": [
+        279.1,
+        9.8184,
+        912.8
+      ],
+      "rotation": [
+        0.013653878147403252,
+        0.5849950384089397,
+        -0.009850566433920587,
+        0.8108620986267578
+      ],
+      "fov": 58,
+      "direction": [
+        -0.948431612193484,
+        0.033667889556717234,
+        -0.315188753296918
+      ],
+      "world": [
+        0.315367542755708,
+        6.938893903907228e-18,
+        -0.9489696059285707,
+        0,
+        0.03194980388508459,
+        0.9994330759049336,
+        0.010617759599272487,
+        0,
+        0.948431612193484,
+        -0.033667889556717234,
+        0.315188753296918,
+        0,
+        279.1,
+        9.8184,
+        912.8,
+        1
+      ],
+      "projection": [
+        1.1275298470446398,
+        0,
+        0,
+        0,
+        0,
+        1.8040477552714236,
+        0,
+        0,
+        0,
+        0,
+        -1.000025000312504,
+        -1,
+        0,
+        0,
+        -0.4000050000625008,
+        0
+      ],
+      "scene": {
+        "width": 1440,
+        "height": 900,
+        "dpr": 1,
+        "timeOfDay": "evening",
+        "frozen": 5000,
+        "stationTime": 5,
+        "islandTime": 5,
+        "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "webgl": 0,
+        "worldErrors": [],
+        "decals": {
+          "source": "baked",
+          "fingerprint": "1055:2727829:296620.2:943601.4"
+        }
+      },
+      "variant": "candidate",
+      "time": "evening",
+      "filename": "candidate-evening-art-b-konbini.png"
+    }
+  },
+  "cameras": [
+    {
+      "name": "art-a-street",
+      "eye": [
+        278.8,
+        10.488,
+        936
+      ],
+      "rotation": [
+        -0.003277842930440409,
+        -0.009834585659995631,
+        -3.223795934194156e-05,
+        0.9999462663720154
+      ],
+      "fov": 35.63777782904556,
+      "direction": [
+        0.019667903082122552,
+        -0.006555967694040891,
+        -0.9997850733412393
+      ],
+      "world": [
+        0.9998065597712203,
+        0,
+        0.01966832576599103,
+        0,
+        0.00012894490831770922,
+        0.9999785094128747,
+        -0.006554699506150283,
+        0,
+        -0.01966790308212255,
+        0.006555967694040889,
+        0.9997850733412391,
+        0,
+        278.8,
+        10.488,
+        936,
+        1
+      ],
+      "projection": [
+        1.9444444444444444,
+        0,
+        0,
+        0,
+        0,
+        3.1111111111111107,
+        0,
+        0,
+        0,
+        0,
+        -1.000025000312504,
+        -1,
+        0,
+        0,
+        -0.4000050000625008,
+        0
+      ],
+      "scene": {
+        "width": 1440,
+        "height": 900,
+        "dpr": 1,
+        "timeOfDay": "evening",
+        "frozen": 5000,
+        "stationTime": 5,
+        "islandTime": 5,
+        "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "webgl": 0,
+        "worldErrors": [],
+        "decals": {
+          "source": "baked",
+          "fingerprint": "1055:2727829:296620.2:943601.4"
+        }
+      },
+      "variant": "candidate",
+      "time": "evening",
+      "filename": "candidate-evening-art-a-street.png"
+    },
+    {
+      "name": "art-b-konbini",
+      "eye": [
+        279.1,
+        9.8184,
+        912.8
+      ],
+      "rotation": [
+        0.013653878147403252,
+        0.5849950384089397,
+        -0.009850566433920587,
+        0.8108620986267578
+      ],
+      "fov": 58,
+      "direction": [
+        -0.948431612193484,
+        0.033667889556717234,
+        -0.315188753296918
+      ],
+      "world": [
+        0.315367542755708,
+        6.938893903907228e-18,
+        -0.9489696059285707,
+        0,
+        0.03194980388508459,
+        0.9994330759049336,
+        0.010617759599272487,
+        0,
+        0.948431612193484,
+        -0.033667889556717234,
+        0.315188753296918,
+        0,
+        279.1,
+        9.8184,
+        912.8,
+        1
+      ],
+      "projection": [
+        1.1275298470446398,
+        0,
+        0,
+        0,
+        0,
+        1.8040477552714236,
+        0,
+        0,
+        0,
+        0,
+        -1.000025000312504,
+        -1,
+        0,
+        0,
+        -0.4000050000625008,
+        0
+      ],
+      "scene": {
+        "width": 1440,
+        "height": 900,
+        "dpr": 1,
+        "timeOfDay": "evening",
+        "frozen": 5000,
+        "stationTime": 5,
+        "islandTime": 5,
+        "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "webgl": 0,
+        "worldErrors": [],
+        "decals": {
+          "source": "baked",
+          "fingerprint": "1055:2727829:296620.2:943601.4"
+        }
+      },
+      "variant": "candidate",
+      "time": "evening",
+      "filename": "candidate-evening-art-b-konbini.png"
+    }
+  ],
+  "source": {
+    "candidate": {
+      "head": "3846b06afaf699c07441d281e8eeb16720c45fbf",
+      "runtimeBase": "a617d875a55dbacb74036fc744f06f5a5b42057e",
+      "tree": "4e5bc4a75fc67ec08ff115eebf214918f6c7703e",
+      "changed": {
+        "README.md": "114429411d336042fe9225118de5182caa29c15a99658a34764a677fbcf69042",
+        "scripts/art-preview.cjs": "1cc921c39302a05f392d1a1677c10c7e49457b7cd0c143735227f23ba53b0fd0",
+        "scripts/bake-evening-light.py": "921373f3feeff90fcad3431c9b6c0fb6114eaf00668971821c7175eb6268e7a5",
+        "scripts/benchmark-freeze.cjs": "14b4c6f52c39c7051d36d8e10d885c3969cd8a089bacab176ee4fc6f89163cbe",
+        "scripts/benchmark-render.cjs": "9c47f31234d0263fd2fb78eff58e750c26907dbff4d7812b8287d79f1e181d87",
+        "scripts/prepare.cjs": "df318671e037c5f24dbe576f092336f713bb2134cfb26935cd03ed89fc756876",
+        "src/apartment-surfaces.js": "9d021ab9190f493f9c19198ccbcf9b845d6055361dbc0ac0d3b60418ecc1c5fe",
+        "src/art-r1-city.js": "db32dd3ed1ac09ed4052b2a70f0887b3e2fd509223b02a32794c6f2ae48c51d6",
+        "src/cascade-rocks.js": "497ccfb82979188a743e550dfc2ec771ed45f5de7b1068f81ac29b95ec60a31a",
+        "src/city-apartments.js": "83e112b13753213aef29da21aa20eff0308961e892300b4aa2e0c7268c3af901",
+        "src/city.js": "f5dfb494843fc9eb95c004455b4b4f05a91a6347663e0e81ee711ec761a190c6",
+        "src/evening.json": "323295996b6d83d360bd31ba2a1b73f188c2c620fd1f689e6d30c302701c493d",
+        "src/harbour-cart.js": "0e75a5d91300bd2635814f04436e1074a05f126482bf609e34669a39840eca15",
+        "src/island-ground.js": "039de28b50062318f90e39a997b266a652745ac3ae3c9fa01e08675c057b9d94",
+        "src/island-ground.json": "eeff36290bc9ac81148d10495442c902bf0465ad69ad594e14f336a4d77420da",
+        "src/island.js": "f3f8fabbc11c7fbcf6ea1b98b7b9dbaa84d040e77a95f73f913649769eebd04b",
+        "src/konbini-fixtures.js": "703bae8dd8f479bc268b6616f33d40a0ded5488a6405fe8fcab1e08471971573",
+        "src/look.js": "d0b453b6d3559f5fc8b639e09dee72fd720978fa309f9d42d1dcf0beb17c3a29",
+        "src/main.js": "f1a5d956acb898ec759ac3e08a0fc3331019f464e71e4bd2315f3481853715ad",
+        "src/neighborhood-props.js": "d90b3196351f7ba726d0f745f8a185a82a7262c4f7476172fa6ae7266eab9466",
+        "src/night.json": "6a45ead1bceb9b3be6853b68d15b1605b26696dc08153e508400e09260bb8b20",
+        "src/scatter-common.js": "260ba9a224124a1eef308cc0a64784719f23fe69aa8db3229ed7862496e3caef",
+        "src/shadow-tint.js": "75d6b1eb7e8658d80777bfa07456a19e58fe18abe4af487c9528861e0fa69019",
+        "src/shop-spill.js": "41947fff4171af81a292f90b9515889d8dd232fcbcedd47d9c2beeafd7f8a029",
+        "src/station-night-art.js": "488165e5e36c68eab20f7d034b13d115641eb5071530bee17b9bc485cfc1943f",
+        "src/station.js": "b270ac344b695d0b28ff9b1d88082204854a5026d766d46973248e0c266da3ad",
+        "src/toon.js": "340ecb98771a47adbb8796faeb79f33c3b731368dc5e69d1490ecdda6bc46857",
+        "src/toon.json": "19c02161d6d28b976e5d5314c75f67770452202591303d3398828eedaffbac4b",
+        "src/vegetation-scatter.js": "997bbd22b76df7ee828a351eb2d56d66b7e8e879c964bd1ee8b62938f792e170",
+        "src/weathering-decals-combined.json": "1d93824297af94e6933c9c7a2adf89b85063d0b82a3255891c97d01e91a31499",
+        "src/weathering-decals-konbini.json": "b1c1be412bfab14c1344df3af1af5e925fdad2a0c8084f1f7ae4ab8ca2878c87",
+        "src/weathering.js": "55b692b64c0b384dcb4165d85c765cca75a3fee2c0dc0b1baa0c4ad7b1333047",
+        "src/wet-road.js": "00c74226de65aa4ef7c3adc706dd6a471d57a6308eb30aa759948939c398ae61",
+        "upstream/petalwake/src/core/pipeline.js": "32e75a235510170d29075501f625970a83effd78538672a457e6bd735cb0390a",
+        "upstream/petalwake/src/world/meadow.js": "38aec1005418d5f5f9f059f36c177eb3835270918a7b367602f7bda60d1e6ba0",
+        "upstream/petalwake/src/world/props.js": "ee6913e7133a03d4c7057224aad3dd2a687cf2da12815d76b7a8eba4c27204ce",
+        "upstream/sakuragaoka/src/world/houses/lot.js": "9c62999f24835618fe6fa6b20ce6c4273f097fbab528fd1390c35f338ba5abbf",
+        "upstream/sakuragaoka/src/world/shopsA/intKonbini.js": "857baabbd21862b54f39bd17aa8a26184ad4396d7ece9119c7ba3e8660714d91",
+        "upstream/sakuragaoka/src/world/shopsA/konbini.js": "fad4fe782346b378a1ae93e2cfd2d977cdf8e38966cef89096c27fcef068aa3c"
+      },
+      "served": {
+        "src/main.js": "f1a5d956acb898ec759ac3e08a0fc3331019f464e71e4bd2315f3481853715ad",
+        "src/look.js": "d0b453b6d3559f5fc8b639e09dee72fd720978fa309f9d42d1dcf0beb17c3a29",
+        "src/island-ground.js": "039de28b50062318f90e39a997b266a652745ac3ae3c9fa01e08675c057b9d94",
+        "src/weathering-decals-combined.json": "1d93824297af94e6933c9c7a2adf89b85063d0b82a3255891c97d01e91a31499",
+        "src/apartment-surfaces.js": "9d021ab9190f493f9c19198ccbcf9b845d6055361dbc0ac0d3b60418ecc1c5fe",
+        "src/art-r1-city.js": "db32dd3ed1ac09ed4052b2a70f0887b3e2fd509223b02a32794c6f2ae48c51d6",
+        "src/cascade-rocks.js": "497ccfb82979188a743e550dfc2ec771ed45f5de7b1068f81ac29b95ec60a31a",
+        "src/city-apartments.js": "83e112b13753213aef29da21aa20eff0308961e892300b4aa2e0c7268c3af901",
+        "src/city.js": "f5dfb494843fc9eb95c004455b4b4f05a91a6347663e0e81ee711ec761a190c6",
+        "src/evening.json": "323295996b6d83d360bd31ba2a1b73f188c2c620fd1f689e6d30c302701c493d",
+        "src/harbour-cart.js": "0e75a5d91300bd2635814f04436e1074a05f126482bf609e34669a39840eca15",
+        "src/island-ground.json": "eeff36290bc9ac81148d10495442c902bf0465ad69ad594e14f336a4d77420da",
+        "src/island.js": "f3f8fabbc11c7fbcf6ea1b98b7b9dbaa84d040e77a95f73f913649769eebd04b",
+        "src/konbini-fixtures.js": "703bae8dd8f479bc268b6616f33d40a0ded5488a6405fe8fcab1e08471971573",
+        "src/neighborhood-props.js": "d90b3196351f7ba726d0f745f8a185a82a7262c4f7476172fa6ae7266eab9466",
+        "src/night.json": "6a45ead1bceb9b3be6853b68d15b1605b26696dc08153e508400e09260bb8b20",
+        "src/scatter-common.js": "260ba9a224124a1eef308cc0a64784719f23fe69aa8db3229ed7862496e3caef",
+        "src/shadow-tint.js": "75d6b1eb7e8658d80777bfa07456a19e58fe18abe4af487c9528861e0fa69019",
+        "src/shop-spill.js": "41947fff4171af81a292f90b9515889d8dd232fcbcedd47d9c2beeafd7f8a029",
+        "src/station-night-art.js": "488165e5e36c68eab20f7d034b13d115641eb5071530bee17b9bc485cfc1943f",
+        "src/station.js": "b270ac344b695d0b28ff9b1d88082204854a5026d766d46973248e0c266da3ad",
+        "src/toon.js": "340ecb98771a47adbb8796faeb79f33c3b731368dc5e69d1490ecdda6bc46857",
+        "src/toon.json": "19c02161d6d28b976e5d5314c75f67770452202591303d3398828eedaffbac4b",
+        "src/vegetation-scatter.js": "997bbd22b76df7ee828a351eb2d56d66b7e8e879c964bd1ee8b62938f792e170",
+        "src/weathering-decals-konbini.json": "b1c1be412bfab14c1344df3af1af5e925fdad2a0c8084f1f7ae4ab8ca2878c87",
+        "src/weathering.js": "55b692b64c0b384dcb4165d85c765cca75a3fee2c0dc0b1baa0c4ad7b1333047",
+        "src/wet-road.js": "00c74226de65aa4ef7c3adc706dd6a471d57a6308eb30aa759948939c398ae61",
+        "upstream/petalwake/src/core/pipeline.js": "32e75a235510170d29075501f625970a83effd78538672a457e6bd735cb0390a",
+        "upstream/petalwake/src/world/meadow.js": "38aec1005418d5f5f9f059f36c177eb3835270918a7b367602f7bda60d1e6ba0",
+        "upstream/petalwake/src/world/props.js": "ee6913e7133a03d4c7057224aad3dd2a687cf2da12815d76b7a8eba4c27204ce",
+        "upstream/sakuragaoka/src/world/houses/lot.js": "9c62999f24835618fe6fa6b20ce6c4273f097fbab528fd1390c35f338ba5abbf",
+        "upstream/sakuragaoka/src/world/shopsA/intKonbini.js": "857baabbd21862b54f39bd17aa8a26184ad4396d7ece9119c7ba3e8660714d91",
+        "upstream/sakuragaoka/src/world/shopsA/konbini.js": "fad4fe782346b378a1ae93e2cfd2d977cdf8e38966cef89096c27fcef068aa3c"
+      }
+    },
+    "preloadSha256": "6deda8457b5c1f654a1c995ff4b028de29b3b36de7c0c3cc11185033ecef0d83"
+  }
+}

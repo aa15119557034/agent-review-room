@@ -365,6 +365,10 @@ void main(){
   vec3 l3 = vec3(ldir.x, 0.0, ldir.y);
   vec3 p2 = up * (stemH * cos(tilt)) + l3 * (stemH * sin(tilt));
   vec3 p1 = up * (stemH * 0.62) + l3 * (stemH * sin(tilt) * 0.12);
+  // Keep the root and its tangent fixed. The upper stem and crown follow the
+  // same breeze; distant flowers still serve as upright colour clusters.
+  float nod = (0.075 + 0.070 * rnd.z) * (1.0 - farK);
+  p2 += (l3 - up * 0.26) * (stemH * nod);
 
   vec3 P, n;
   float part = position.z;
@@ -380,7 +384,7 @@ void main(){
   } else {
     // head: a shallow cup turned to the sky, the sun, and along its stem
     vec3 tipTan = normalize(p2 - p1);
-    vec3 hn = normalize(tipTan * 0.55 + up * 0.55 + uSunDir * 0.30 + vec3(rnd.x - 0.5, 0.0, rnd.z - 0.5) * 0.7);
+    vec3 hn = normalize(tipTan * 0.55 + up * 0.55 + l3 * nod + uSunDir * 0.30 + vec3(rnd.x - 0.5, 0.0, rnd.z - 0.5) * 0.7);
     // with distance a head stands in for a whole clump: it turns to face the eye, as a clump
     // seen from the side still shows its colour
     float facing = 0.16 + 0.50 * farK;

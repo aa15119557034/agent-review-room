@@ -177,7 +177,7 @@ function paintResidentialDrive(root, { concrete, gravel, plaster }, stationFromW
 
 export async function createStation({ scene, renderer, camera, offset = [280, 8, 900], rotationY = 0,
   sunDir = new THREE.Vector3(...layout.SUN_DIR).normalize(), evening = false, groundMaterial, refl = null, replaceStreetProps = false,
-  vendingGlow = null, onProgress = () => {} }) {
+  vendingGlow = null, streetSunlight = false, onProgress = () => {} }) {
   const root = new THREE.Group();
   root.name = 'Sakuragaoka';
   const localCamera = new THREE.PerspectiveCamera();
@@ -231,7 +231,7 @@ export async function createStation({ scene, renderer, camera, offset = [280, 8,
   const streetReflections = await createStreetReflections(root, layout, evening);
   // Art r22: zoned street cubes for the wet road (params from toon.json, baked later by main.js). refl = null keeps r21.
   const zones = refl ? { count: refl.zones.length, params: refl, uniforms: createZoneUniforms(refl) } : null;
-  const wetRoad = applyWetRoad({ root, ctx, reflections: streetReflections, zones });
+  const wetRoad = applyWetRoad({ root, ctx, reflections: streetReflections, zones, streetSunlight });
   // These textures belong to the island; the station owns only the blend mesh
   // and material. Disposing the district must not invalidate island rendering.
   const islandTextures = new Set(Object.values(groundMaterial.uniforms).map(uniform => uniform.value).filter(value => value?.isTexture));

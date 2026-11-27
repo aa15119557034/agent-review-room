@@ -21,6 +21,7 @@ import { midbandEnabled, layoutMidband } from './midband-blocks.js';
 import { applyWeathering, loadWeatheringParams } from './weathering.js';
 import { addWeatheringDecals, loadBakedDecals } from './weathering-decals.js';
 import { groundEnabled, loadGround, applyFlowerDrifts, patchGroundShader, patchPetals, applyHarbourEvening } from './island-ground.js';
+import { applyHarbourCart } from './harbour-cart.js';
 import { getMats as getVehicleMats } from '../upstream/sakuragaoka/src/world/vehicles/atlas.js';
 
 const canvas = document.querySelector('#world');
@@ -154,6 +155,7 @@ async function init() {
   }
   if (shadowTint) worldBase.shadowTint = { island: patchIslandShadowTint(island, shadowTint) };
   if (timeOfDay === 'evening') applyHarbourEvening(island, look.pipeline.finalMat, camera);
+  applyHarbourCart(island);
   const sun = night ? new THREE.DirectionalLight(0x9abaff, 0.38)
     : new THREE.DirectionalLight(evening ? 0xffb569 : 0xffe4c4, evening ? 4.0 : 2.1);
   sun.position.copy(island.U.uSunDir.value).multiplyScalar(160).add(new THREE.Vector3(...island.stationPlacement.position));
@@ -178,6 +180,7 @@ async function init() {
     scene, renderer, camera, offset: island.stationPlacement.position,
     rotationY: island.stationPlacement.rotationY, sunDir: island.U.uSunDir.value, evening,
     groundMaterial: island.transition.material, refl, replaceStreetProps: propsOn, vendingGlow,
+    streetSunlight: timeOfDay === 'evening',
     onProgress: stage,
   });
   installStationGroundShadows([island.terrain.mainView.mesh, island.transition, ...station.groundBlend.meshes]);

@@ -102,11 +102,12 @@ export function buildKonbini(ctx, C, fixtures) {
   const mTeal = M.t(TEAL), mYel = M.t(YEL);
   const roomMaterial = fixtures ? M.fluorescent : M.inner;
   const warmInterior = fixtures?.userData.warmInterior;
-  // The two original shell surfaces share an emissive batch. Change their painted
-  // albedo without splitting the batch or changing the exterior decal receivers.
+  // Keep the wall's fluorescent fill. The ceiling paints a warmer bounce
+  // independently of the light strips and the rest of the room.
   const shellEmissive = warmInterior ? { emissive: roomMaterial('#f3f1eb', 0.45).emissive } : {};
   const mIn = roomMaterial(warmInterior ? '#c6bdaf' : '#efece4', 0.45, shellEmissive);
-  const mInW = roomMaterial(warmInterior ? '#b5ada0' : '#f3f1eb', 0.45, shellEmissive);
+  const mInW = roomMaterial(warmInterior ? '#e4d6bd' : '#f3f1eb', 0.45,
+    warmInterior ? { emissive: '#c7c5be' } : {});
   const glass = M.glass({ opacity: 0.2 });
   const H = FY; // floor
 
@@ -414,7 +415,10 @@ export function buildKonbini(ctx, C, fixtures) {
     S.g.add(fixtures);
   }
   (ctx.services.shopInteriors ||= []).push(room);
-  k.plane(IX1 - IX0, IZ1 - IZ0 + 0.1, mInW, [(IX0 + IX1) / 2, CY, (IZ0 + IZ1) / 2], [Math.PI / 2, 0, 0]);
+  const ceiling = k.plane(IX1 - IX0, IZ1 - IZ0 + 0.1, mInW, [(IX0 + IX1) / 2, CY, (IZ0 + IZ1) / 2], [Math.PI / 2, 0, 0]);
+  ceiling.name = 'w1-ceiling';
+  // Keep the same receiver layout even when the afternoon palette shares paint with the walls.
+  ceiling.userData.noBatch = true;
   k.plane(IX1 - IX0, CY - FY, mIn, [(IX0 + IX1) / 2, (FY + CY) / 2, IZ0 + 0.005]);
   k.plane(IZ1 - IZ0, CY - FY, mIn, [IX0 + 0.005, (FY + CY) / 2, (IZ0 + IZ1) / 2], [0, Math.PI / 2, 0]);
   k.plane(NW0 - IZ0, CY - FY, mIn, [IX1 - 0.005, (FY + CY) / 2, (IZ0 + NW0) / 2], [0, -Math.PI / 2, 0]);

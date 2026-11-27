@@ -56,22 +56,30 @@ function canPlantMeadow(ctx, x, z, clearance) {
     && (!road || road.over >= 0.55 + clearance) && !ctx.obstacle(x, z, clearance, meadowBlockers);
 }
 
+function growFlowerCluster(ctx, cluster, r, size, neighbours = []) {
+  const [cx, cz, radius, count, primary, accent] = cluster;
+  const start = r() * Math.PI * 2;
+  const roots = [];
+  for (let i = 0; i < count * 8 && roots.length < count; i++) {
+    const theta = start + i * 2.399963 + (r() - 0.5) * 0.32;
+    const reach = radius * Math.pow(r(), 0.76);
+    const x = cx + Math.cos(theta) * reach, z = cz + Math.sin(theta) * reach;
+    if (roots.some(p => Math.hypot(p.x - x, p.z - z) < 0.105) || !canPlantMeadow(ctx, x, z, 0.16)) continue;
+    if (neighbours.some(p => Math.hypot(p.x - x, p.z - z) < 0.125)) continue;
+    const species = r() < 0.14 ? accent : primary;
+    const headScale = (1.24 + 0.49 * r()) * size;
+    roots.push({ x, y: ctx.groundY(x, z), z, species, headScale });
+  }
+  return { roots, start };
+}
+
 function plantFlowerBeds(ctx, habitats, grassModels, seed) {
-  return habitats.map(({ name, clusters }, habitatIndex) => {
+  return habitats.map(({ name, clusters, extraClusters = [], flowerHeadScale = 1 }, habitatIndex) => {
     const flowers = [], grass = [], counts = [];
-    for (const [index, [cx, cz, radius, count, primary, accent]] of clusters.entries()) {
+    for (const [index, cluster] of clusters.entries()) {
+      const [cx, cz, radius] = cluster;
       const r = rngFrom(hash32(seed, 80 + habitatIndex, index));
-      const start = r() * Math.PI * 2;
-      const roots = [];
-      for (let i = 0; i < count * 8 && roots.length < count; i++) {
-        const theta = start + i * 2.399963 + (r() - 0.5) * 0.32;
-        const reach = radius * Math.pow(r(), 0.76);
-        const x = cx + Math.cos(theta) * reach, z = cz + Math.sin(theta) * reach;
-        if (roots.some(p => Math.hypot(p.x - x, p.z - z) < 0.105) || !canPlantMeadow(ctx, x, z, 0.16)) continue;
-        const species = r() < 0.14 ? accent : primary;
-        const headScale = 1.24 + 0.49 * r();
-        roots.push({ x, y: ctx.groundY(x, z), z, species, headScale });
-      }
+      const { roots, start } = growFlowerCluster(ctx, cluster, r, flowerHeadScale);
       if (roots.length < 15) continue;
       flowers.push(...roots);
       counts.push(roots.length);
@@ -86,6 +94,14 @@ function plantFlowerBeds(ctx, habitats, grassModels, seed) {
         grass.push({ kind, x, y: ctx.groundY(x, z) - 0.017, z, yaw: r() * Math.PI * 2,
           sx: s, sy: 0.30 + 0.15 * r(), sz: s, tint: 0.82 + 0.15 * r() });
       }
+    }
+    // Extend the flower drifts separately from their established grass underplanting.
+    for (const [index, cluster] of extraClusters.entries()) {
+      const r = rngFrom(hash32(seed, 95 + habitatIndex, index));
+      const { roots } = growFlowerCluster(ctx, cluster, r, flowerHeadScale, flowers);
+      if (roots.length < 15) continue;
+      flowers.push(...roots);
+      counts.push(roots.length);
     }
     return { name, flowers, grass, counts };
   });
