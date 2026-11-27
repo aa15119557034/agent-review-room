@@ -14,6 +14,7 @@ const PLUMES = [
 
 export function addCascadeMist(island) {
   const { base, dir } = island.river.fall;
+  const afternoon = island.timeOfDay === 'afternoon';
   const centers = [], offsets = [], indices = [];
   for (const [across, ahead, y, width, height, phase] of PLUMES) {
     const i = centers.length / 3;
@@ -67,9 +68,9 @@ void main(){
   float volume = ntex(p * vec2(26.0, 34.0) + vec2(vPhase * 17.0, -uTime * 9.0)).r;
   float billows = ntex(p * 69.0 + vec2(uTime * 6.0, vPhase * 31.0 - uTime * 12.0)).g;
   float edge = 1.0 - smoothstep(0.33, 1.0, length(p) + (volume - 0.5) * 0.40);
-  float alpha = edge * smoothstep(0.34, 0.74, volume * 0.74 + billows * 0.26) * 0.71;
+  float alpha = edge * smoothstep(0.34, 0.74, volume * 0.74 + billows * 0.26) * ${afternoon ? '0.80' : '0.71'};
   alpha *= (1.0 - smoothstep(0.83, 1.0, abs(p.x))) * (1.0 - smoothstep(0.8, 1.0, abs(p.y)));
-  vec3 light = vec3(0.90, 0.95, 1.0) * (uSunColor * 0.22 + uAmbSky * 0.83);
+  vec3 light = vec3(0.90, 0.95, 1.0) * (uSunColor * ${afternoon ? '0.28' : '0.22'} + uAmbSky * 0.83);
   gl_FragColor = vec4(applyAtmosphere(light, vWorld), alpha);
 }`,
   });

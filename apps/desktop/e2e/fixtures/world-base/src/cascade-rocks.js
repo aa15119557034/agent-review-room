@@ -14,7 +14,7 @@ export const CASCADE_ROCK_SHELVES = [
 ];
 const HIGH_LEDGE = { name: 'cascade-high-ledge', offset: [20.013, 2.524], outward: [-0.879, -0.477], rad: [3.15, 2.75], seat: -0.47 };
 
-function paintMaterial(island) {
+function paintMaterial(island, dayLedge = false) {
   const uniforms = Object.fromEntries([...SKY_UNIFORMS, 'uWorld', 'uHeightTex', 'uSplatTex', 'uLightTex']
     .map(name => [name, island.U[name]]));
   const { timeOfDay } = island;
@@ -43,7 +43,10 @@ void main(){
   vec3 light = mix(vec3(0.57, 0.66, 0.77), vec3(0.91, 0.91, 0.94), sun);
   float bed = vStonePos.y - vStonePos.x * 0.022 + 0.12 * sin(vStonePos.z * 0.73);
   float parting = smoothstep(0.74, 1.0, sin(bed * 7.0)) * (1.0 - max(n.y, 0.0));
-  vec3 pigment = vStonePigment * (1.0 - 0.13 * parting);
+  vec3 pigment = vStonePigment * (1.0 - 0.13 * parting);${dayLedge ? `
+  // The embedded ledge shares the cliff's muted daylight limestone rather than the gravel's warmth.
+  float stoneValue = dot(pigment, vec3(0.2126, 0.7152, 0.0722));
+  pigment = mix(pigment, vec3(stoneValue), 0.52) * vec3(0.79, 0.85, 0.86);` : ''}
   vec3 stone = applyAtmosphere(pigment * light * uRockExposure, vStonePos);
   // The geometry supplies its own contours. Keep the post outline off the strata and wet toes.
   gl_FragColor = vec4(stone, 0.0);
@@ -55,6 +58,7 @@ void main(){
 export async function addCascadeRocks(island) {
   const gltf = await new GLTFLoader().loadAsync(MODEL_URL.href);
   const material = paintMaterial(island);
+  const ledgePaint = island.timeOfDay === 'afternoon' ? paintMaterial(island, true) : material;
   const group = new THREE.Group();
   group.name = 'cascade-rock-shelves';
   const { base } = island.river.fall;
@@ -66,7 +70,7 @@ export async function addCascadeRocks(island) {
     const y = island.terrain.heightAt(x, z) + shelf.seat;
     object.position.set(x, y, z);
     object.rotation.y = Math.atan2(...shelf.outward);
-    object.material = material;
+    object.material = shelf === HIGH_LEDGE ? ledgePaint : material;
     object.userData.walkable = false;
     group.add(object);
     placed.push({ ...shelf, world: [x, y, z] });

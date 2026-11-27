@@ -323,10 +323,16 @@ export function createLook(renderer, camera) {
   }
 
   function applyCascade(island, ground, water, { shelves, ledge }) {
+    const afternoon = island.timeOfDay === 'afternoon';
+    const stoneBands = (afternoon
+      ? [[0.132, 0.114, 0.094], [0.161, 0.137, 0.109], [0.192, 0.161, 0.124], [0.225, 0.190, 0.144]]
+      : [[0.186, 0.165, 0.153], [0.254, 0.232, 0.202], [0.341, 0.311, 0.262], [0.404, 0.365, 0.305]])
+      .map(rgb => `vec3(${rgb.join(', ')})`);
     ground.uniforms.uCascadeFoot = { value: new THREE.Vector2(island.river.fall.base.x, island.river.fall.base.z) };
-    ground.uniforms.uCascadeLedge = { value: new THREE.Vector3(...ledge.world).add(new THREE.Vector3(ledge.outward[0], 0, ledge.outward[1])) };
+    ground.uniforms.uCascadeLedge = { value: new THREE.Vector3(...ledge.world) };
+    ground.uniforms.uCascadeLedgeTangent = { value: new THREE.Vector2(ledge.outward[1], -ledge.outward[0]) };
     ground.fragmentShader = insert(ground.fragmentShader, 'void main(){',
-      'uniform vec2 uCascadeFoot;\nuniform vec3 uCascadeLedge;\nuniform float uCascadeLod;\nvoid main(){', 'cascade rock entry');
+      'uniform vec2 uCascadeFoot;\nuniform vec3 uCascadeLedge;\nuniform vec2 uCascadeLedgeTangent;\nuniform float uCascadeLod;\nvoid main(){', 'cascade rock entry');
     ground.fragmentShader = insert(ground.fragmentShader, 'float pebW = lowW * smoothstep(0.25, 0.6, cliffy);',
       `float pebW = lowW * smoothstep(0.25, 0.6, cliffy);
   float gorge = (1.0 - smoothstep(55.0, 145.0, distance(P.xz, uCascadeFoot))) * uCascadeLod;`, 'cascade terrain region');
@@ -343,37 +349,38 @@ export function createLook(renderer, camera) {
     }`, 'cascade bank gravel');
     ground.fragmentShader = insert(ground.fragmentShader, 'rockAmt = hblend(rockW, m.h, rh, 0.9);', `
     if (gorge > 0.0){
-      float layerHeight = bed + (lateral - 0.5) * 3.0;
-      float layerIndex = floor(layerHeight * 0.205);
-      float joint = fract(layerHeight * 0.205);
+      float layerHeight = ${afternoon ? 'P.y - P.x * 0.022' : 'bed'} + (lateral - 0.5) * 3.0;
+      float band = (layerHeight ${afternoon ? '+ 1.5 * sin(layerHeight * 0.24)' : ''}) * ${afternoon ? '0.136' : '0.205'};
+      float layerIndex = floor(band);
+      float joint = fract(band);
       float slab = ntex(vec2(layerIndex * 17.0 + 4.0, (P.x - P.z) * 0.39)).r;
-      vec3 stone = mix(vec3(0.186, 0.165, 0.153), vec3(0.254, 0.232, 0.202), smoothstep(0.31, 0.40, slab));
-      stone = mix(stone, vec3(0.341, 0.311, 0.262), smoothstep(0.49, 0.56, slab));
-      stone = mix(stone, vec3(0.404, 0.365, 0.305), smoothstep(0.64, 0.70, slab));
+      vec3 stone = mix(${stoneBands[0]}, ${stoneBands[1]}, smoothstep(0.31, 0.40, slab));
+      stone = mix(stone, ${stoneBands[2]}, smoothstep(0.49, 0.56, slab));
+      stone = mix(stone, ${stoneBands[3]}, smoothstep(0.64, 0.70, slab));
       float seam = (1.0 - smoothstep(0.035, 0.099, min(joint, 1.0 - joint))) * mix(0.38, 0.87, lateral);
-      float face = 0.90 + 0.19 * wallH;
+      float face = ${afternoon ? '1.0' : '0.90 + 0.19 * wallH'};
       stone = mix(stone * face, vec3(0.116, 0.104, 0.107), seam * 0.66);
       stone = mix(stone, stone * vec3(0.48, 0.54, 0.56), tide * 0.63);
       stone = mix(stone, vec3(0.16, 0.20, 0.086), moss * 0.58);
       rc = mix(rc, stone, gorge);
       rh = mix(rh, 0.70 - 0.28 * seam, gorge);
       rr = mix(rr, mix(0.84, 0.52, tide), gorge);
-      rn = normalize(mix(rn, N, gorge * 0.60));
+      rn = normalize(mix(rn, N, gorge * ${afternoon ? '0.98' : '0.60'}));
     }
     rockAmt = hblend(rockW, m.h, rh, 0.9);`, 'cascade warm stone faces');
     ground.fragmentShader = insert(ground.fragmentShader, 'dif = mix(dif, floor(dif * 3.0 + 0.5) / 3.0, uWorldToon);',
       'dif = mix(dif, floor(dif * 3.0 + 0.5) / 3.0, uWorldToon * (1.0 - 0.68 * gorge * rockAmt));', 'cascade cliff lighting');
-    // The station's live shadow camera does not reach this gorge. Seat the
-    // overhang with a local contact term and a soft continuation down-sun.
+    // The station's live shadow camera does not reach this gorge. Keep the
+    // contact shadow just under the ledge, aligned with the bed.
     ground.fragmentShader = insert(ground.fragmentShader,
       'float sh = shadowBaked * cs * riderShadow(P) * sceneryShadow;', `float sh = shadowBaked * cs * riderShadow(P) * sceneryShadow;
   if (gorge > 0.0){
     vec3 above = uCascadeLedge - P;
-    float travel = dot(above, uSunDir);
-    float spread = length(above - uSunDir * max(travel, 0.0));
-    float shade = (1.0 - smoothstep(1.05, 3.15, spread)) *
-                  smoothstep(0.0, 1.0, travel) * (1.0 - smoothstep(2.5, 9.0, travel));
-    sh *= 1.0 - shade * rockAmt * 0.64;
+    float along = dot(above.xz, uCascadeLedgeTangent);
+    float depth = dot(above.xz, vec2(-uCascadeLedgeTangent.y, uCascadeLedgeTangent.x));
+    float shade = (1.0 - smoothstep(2.5, 5.8, abs(along))) * (1.0 - smoothstep(1.4, 3.7, abs(depth)));
+    shade *= smoothstep(-0.1, 0.32, above.y) * (1.0 - smoothstep(0.52, 1.22, above.y));
+    sh *= 1.0 - shade * rockAmt * 0.36;
   }`, 'cascade ledge contact light');
     ground.fragmentShader = insert(ground.fragmentShader, 'vec3 col = m.c * (uSunColor * dif * sh + amb',
       `amb *= mix(vec3(1.0), vec3(0.80, 0.87, 1.12), gorge * rockAmt * (1.0 - smoothstep(0.12, 0.56, dif * sh)));
