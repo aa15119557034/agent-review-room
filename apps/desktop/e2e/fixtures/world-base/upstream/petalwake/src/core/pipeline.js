@@ -164,14 +164,16 @@ export class Pipeline {
     }
 
     // 5. god rays from the sun's screen position
-    const sun = this._sun || (this._sun = new THREE.Vector3());
-    sun.copy(U.uSunDir.value).multiplyScalar(1e5).add(camera.position).project(camera);
-    const camDir = camera.getWorldDirection(this._cd || (this._cd = new THREE.Vector3()));
-    const facing = camDir.dot(U.uSunDir.value);
-    this.raysMat.uniforms.tColor.value = this.compRT.texture;
-    this.raysMat.uniforms.uSun.value.set(sun.x * 0.5 + 0.5, sun.y * 0.5 + 0.5, Math.max(0, (facing - 0.15) / 0.85));
-    this.raysMat.uniforms.uAspect.value = this.size.x / this.size.y;
-    this._blit(this.raysMat, this.raysRT);
+    if (p.rays !== 0) {
+      const sun = this._sun || (this._sun = new THREE.Vector3());
+      sun.copy(U.uSunDir.value).multiplyScalar(1e5).add(camera.position).project(camera);
+      const camDir = camera.getWorldDirection(this._cd || (this._cd = new THREE.Vector3()));
+      const facing = camDir.dot(U.uSunDir.value);
+      this.raysMat.uniforms.tColor.value = this.compRT.texture;
+      this.raysMat.uniforms.uSun.value.set(sun.x * 0.5 + 0.5, sun.y * 0.5 + 0.5, Math.max(0, (facing - 0.15) / 0.85));
+      this.raysMat.uniforms.uAspect.value = this.size.x / this.size.y;
+      this._blit(this.raysMat, this.raysRT);
+    }
 
     // 6. lens + grade
     const f = this.finalMat.uniforms;
@@ -363,15 +365,16 @@ void main(){
   vec2 c = vUv - 0.5;
   float r = length(c * vec2(uRes.x / uRes.y, 1.0)) / (0.5 * length(vec2(uRes.x / uRes.y, 1.0)));
   // chromatic fringe grows toward the edges and with speed
-  vec2 dir = c * uFringe * (0.5 + 1.6 * uSpeed) * (0.25 + r * r * 3.0);
-  vec3 col;
-  col.r = texture(tColor, lens(vUv + dir, k)).r;
-  col.g = texture(tColor, uv).g;
-  col.b = texture(tColor, lens(vUv - dir, k)).b;
+  vec3 col = texture(tColor, uv).rgb;
+  if (uFringe != 0.0) {
+    vec2 dir = c * uFringe * (0.5 + 1.6 * uSpeed) * (0.25 + r * r * 3.0);
+    col.r = texture(tColor, lens(vUv + dir, k)).r;
+    col.b = texture(tColor, lens(vUv - dir, k)).b;
+  }
   if (any(isnan(col)) || any(isinf(col))) col = vec3(0.0);
   vec3 bloom = texture(tBloom, uv).rgb;
   col += bloom * uBloom;
-  col += texture(tRays, uv).rgb * uRays * uSunColor * 0.085;
+  if (uRays != 0.0) col += texture(tRays, uv).rgb * uRays * uSunColor * 0.085;
   col *= uExposure;
   // vignette (natural cos^4-ish falloff)
   float v = 1.0 - uVignette * smoothstep(0.25, 1.15, r) * (0.75 + 0.25 * r);

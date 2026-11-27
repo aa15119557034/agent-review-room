@@ -8,6 +8,9 @@ import { NOISE, NOISE_TEX, ATMOSPHERE, CLOUD_SHADOW, TERRAIN_LOOKUP, WIND, SHADO
 import { SKY_UNIFORMS } from './sky.js';
 
 const CELL = 48;
+const DRAW_CELL = 192;
+// The vertex shader can displace a branch by up to 1.23 m including flutter and the capped wake.
+const WIND_PAD = 1.3;
 
 export class Props {
   static async load(base = './assets') {
@@ -42,21 +45,32 @@ export class Props {
         defines: hasWind ? { HAS_WIND: '' } : {},
         vertexShader: VERT, fragmentShader: FRAG,
       });
-      const mesh = new THREE.InstancedMesh(g, mat, list.length);
-      list.forEach(([x, y, z, yaw, s], i) => {
-        q.setFromAxisAngle(up, yaw);
-        m4.compose(p.set(x, y, z), q, sc.set(s, s, s));
-        mesh.setMatrixAt(i, m4);
+      const cells = new Map();
+      for (const placement of list) {
+        const [x, y, z, yaw, s] = placement;
+        const key = `${Math.floor(x / DRAW_CELL)},${Math.floor(z / DRAW_CELL)}`;
+        let cell = cells.get(key);
+        if (!cell) cells.set(key, cell = []);
+        cell.push(placement);
         // collision discs (same transform the bake used for the shadows)
         const c = Math.cos(yaw), sn = Math.sin(yaw);
         for (const [lx, lz, r, y0, y1] of info.slabs) {
           this._addDisc({ x: (lx * c + lz * sn) * s + x, z: (-lx * sn + lz * c) * s + z, r: r * s * (hasWind ? 0.6 : 0.92), y0: y + y0 * s, y1: y + y1 * s });
         }
-      });
-      mesh.instanceMatrix.needsUpdate = true;
-      mesh.frustumCulled = false;
-      mesh.renderOrder = 300;
-      this.group.add(mesh);
+      }
+      for (const cell of cells.values()) {
+        const mesh = new THREE.InstancedMesh(g, mat, cell.length);
+        cell.forEach(([x, y, z, yaw, s], i) => {
+          q.setFromAxisAngle(up, yaw);
+          m4.compose(p.set(x, y, z), q, sc.set(s, s, s));
+          mesh.setMatrixAt(i, m4);
+        });
+        mesh.instanceMatrix.needsUpdate = true;
+        mesh.computeBoundingSphere();
+        if (hasWind) mesh.boundingSphere.radius += WIND_PAD;
+        mesh.renderOrder = 300;
+        this.group.add(mesh);
+      }
       this.counts[name] = list.length;
       if (name === 'lighthouse' && list.length) this._beacon(list[0], info);
     }

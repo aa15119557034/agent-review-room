@@ -47,6 +47,16 @@ node scripts\prepare-props.cjs --download
 
 默认是傍晚（太阳高 8.5°、方位 255°，参数在 `src/evening.json`）。换太阳方向时，运行 `python3 scripts/bake-evening-light.py` 重烘 `.local/petalwake-*/assets/terrain/light-evening-low.png`。夜景沿用 12°、280° 的阴影，地图由同一脚本加 `--night` 生成。`node scripts/art-preview.cjs prepare` 会生成两张图，需要 numpy、numba、scipy 和 Pillow。两张图只替换太阳阴影所在的 R 通道，AO、岸距和陡度沿用原图。用 `?time=afternoon` 可以看 Petalwake 原来的下午光照。港镇阴影图在场景启动时按所选太阳方向生成。
 
+### GPU 帧时对照
+
+两份 `world-base` 检出须各自准备本地资产并保持干净。在装有 Electron 的机器上运行同一份脚本。
+
+```text
+node scripts/benchmark-render.cjs <Electron 可执行文件> <底分支 world-base> <候选 world-base> <输出目录>
+```
+
+脚本在同一 GPU 上交叉测三轮 A–H。场景时间固定在 5 秒，分辨率为 1440 × 900，DPR 1。各机位预热 60 帧，以 118 个 GPU 样本求每轮 P95，再取三轮中值。输出包括两版首轮同机位 PNG、逐帧 GPU 时间与绘制数据、GPU 时钟和探针启动烘焙时间。
+
 在本目录使用已有 Electron 运行，无需构建桌面应用：
 
 ```bat
