@@ -9,7 +9,7 @@ export const PARSERS = ["raw", "claude-stream-json", "codex-exec-json", "room-js
 export type ParserName = (typeof PARSERS)[number];
 
 /** raw 没有解析器：stdout 原样转发，退出码 0 就算完成 */
-export function createParser(name: ParserName): OutputParser | null {
+export function createParser(name: ParserName, research = false): OutputParser | null {
   switch (name) {
     case "raw":
       return null;
@@ -18,6 +18,6 @@ export function createParser(name: ParserName): OutputParser | null {
     case "codex-exec-json":
       return new CodexExecJsonParser();
     case "room-jsonl":
-      return new RoomJsonlParser();
+      return new RoomJsonlParser(research);
   }
 }

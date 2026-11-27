@@ -1,7 +1,8 @@
 import { createWorkspaceActions } from "./workspace-actions";
+import { createResearchActions } from "./research-actions";
 import type { ContributionType, NodeTestResult, TextSelection } from "@room/schemas";
 import { appendEvents, applyEvent, emptyDraft, type AppState } from "./state";
-import { describeFailure, type RoomClient } from "./client";
+import { ControlFailure, describeFailure, type RoomClient } from "./client";
 import type { Store } from "./store";
 import { createDiscussionActions } from "./discussion-actions";
 import { createChatActions } from "./chat-actions";
@@ -66,6 +67,7 @@ export function createActions(store: Store<AppState>, client: RoomClient) {
       messages,
       contributions,
       approvals,
+      staleApprovalIds: s.currentProjectId === projectId ? s.staleApprovalIds : [],
       runs,
       runEvents,
       draft: s.currentProjectId === projectId ? s.draft : emptyDraft(),
@@ -81,6 +83,7 @@ export function createActions(store: Store<AppState>, client: RoomClient) {
               summaries: [],
               plans: [],
               confirm: null,
+              staleBatchIds: [],
               // 离开的议题：把实时数据留给议题列表（C-38），新议题读完前列表用它的缓存
               board: {
                 ...(s.disc.board.live && s.disc.board.live === s.currentProjectId
@@ -97,7 +100,11 @@ export function createActions(store: Store<AppState>, client: RoomClient) {
     ...disc,
     chat,
     openWorkspace() { store.set(s=>({...s,view:"workspace"})); },
-    workspace: createWorkspaceActions(client, fail),
+    workspace: createWorkspaceActions(client, fail, () => {
+      loadToken++;
+      store.set((s) => ({ ...s, currentProjectId: null, sourceRevision: s.sourceRevision + 1, snapshots: {}, messages: [], approvals: [], runs: [], runEvents: {} }));
+    }),
+    research: createResearchActions(store, client, fail, () => loadToken),
     agentConsole,
     notes,
     packs,
@@ -112,6 +119,7 @@ export function createActions(store: Store<AppState>, client: RoomClient) {
     async start(): Promise<() => void> {
       // 先订阅再查询：查询期间推来的事件不会丢；重复的由 applyEvent 去重
       const unsubscribe = client.onEvent((e) => {
+        if (e.type === "chat.message.updated") store.set((s) => ({ ...s, sourceRevision: s.sourceRevision + 1 }));
         store.set((s) => applyEvent(s, e));
         chat.onChatEvent(e);
         agentConsole.onEvent(e);
@@ -269,6 +277,8 @@ export function createActions(store: Store<AppState>, client: RoomClient) {
     },
 
     async approve(approvalId: string, expectedSnapshotHash: string) {
+      if (store.get().staleApprovalIds.includes(approvalId)) return;
+      const projectId = store.get().currentProjectId;
       try {
         const { approval, run } = await client.command({ type: "approval.approve", approvalId, expectedSnapshotHash });
         store.set((s) => ({
@@ -278,6 +288,10 @@ export function createActions(store: Store<AppState>, client: RoomClient) {
         }));
         return run;
       } catch (err) {
+        if (store.get().currentProjectId !== projectId) return;
+        if (err instanceof ControlFailure && err.code === "stale_snapshot") {
+          store.set((s) => ({ ...s, staleApprovalIds: [...new Set([...s.staleApprovalIds, approvalId])] }));
+        }
         fail(err);
       }
     },

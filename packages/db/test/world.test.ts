@@ -8,7 +8,7 @@ import test, { type TestContext } from "node:test";
 import { fileURLToPath } from "node:url";
 import Database from "better-sqlite3";
 import { WorldScene, WorldSnapshot, type WorldEvent, type WorldSettings } from "@room/schemas";
-import { acquireWorldLock, currentVersion, MIGRATIONS, openDatabase, ulid, WorldStore, WriteQueue, writeTransaction } from "../src/index";
+import { acquireWorldLock, currentVersion, LATEST_SCHEMA_VERSION, MIGRATIONS, openDatabase, ulid, WorldStore, WriteQueue, writeTransaction } from "../src/index";
 
 const settings: WorldSettings = { residents: ["claude", "codex"], dayRealMinutes: 24, dailyCognitionLimit: 60 };
 const generation = { session: "wses_" + ulid(), runSeq: 0 };
@@ -66,7 +66,7 @@ test("v26 migration adds world storage without changing existing records", (t) =
   old.close();
   const migrated = openDatabase(path);
   try {
-    assert.equal(currentVersion(migrated), 27);
+    assert.equal(currentVersion(migrated), LATEST_SCHEMA_VERSION);
     assert.equal((migrated.prepare("SELECT name FROM projects WHERE id = ?").get("proj_world_legacy") as { name: string }).name, "Keep me");
     assert.equal(new WorldStore(migrated).load(), null);
     assert.deepEqual(migrated.pragma("foreign_key_check"), []);

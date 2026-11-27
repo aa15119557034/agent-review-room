@@ -43,6 +43,7 @@ pnpm exec tsx --test apps/desktop/src/renderer/test/*.test.ts
 #   ?mock            预置演示数据
 #   ?mock=empty      空白状态
 #   ?mock&outcome=error   让 Reviewer 调用失败
+#   ?mock&sources        P2-C12 引用/来源预览，切换可读、缺件、撤回；不访问真实服务
 #   聊天（顶栏「聊天」）：?mock 预置一个群聊和一个单聊；没点名时 Codex 会「这条没有回」
 #   秘书控制台（顶栏「秘书」，C-37）：?mock&absent=codex 额度用完、&offline=deepseek 离线、
 #     &unknownQuota=claude 额度读不到（都可以逗号分隔多位）；在讨论室起一轮能看到「正在答」

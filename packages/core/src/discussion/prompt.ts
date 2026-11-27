@@ -7,8 +7,9 @@ import type {
   RoundSummary,
   Turn,
 } from "@room/schemas";
-import { PlanVersion as PlanVersionSchema, RoundSummary as RoundSummarySchema, Stance } from "@room/schemas";
+import { PlanVersion as PlanVersionSchema, RoundSummary as RoundSummarySchema, SourceReferences, Stance } from "@room/schemas";
 import { estimateTokens, sha256Hex } from "../prompt";
+import { wrapChatUntrusted } from "./chat";
 
 export const DISCUSSION_PROMPT_VERSION = "discussion-v4";
 
@@ -20,7 +21,7 @@ type SummaryReport = NonNullable<RoundSummary["report"]>;
 export interface DiscussionHistoryRound {
   readonly round: Round;
   readonly messages: readonly Message[];
-  readonly turns: readonly Turn[];
+  readonly turns: readonly (Turn & { sourceRefs?: Message["sourceRefs"] })[];
   readonly summary: { readonly record: RoundSummary; readonly message: SummaryMessage } | null;
 }
 
@@ -28,6 +29,7 @@ export interface DiscussionHistoryRound {
 export interface DiscussionMaterial {
   readonly name: string;
   readonly content: string;
+  readonly sourceRefs?: Message["sourceRefs"];
 }
 
 export interface DiscussionRecipient {
@@ -46,7 +48,7 @@ export interface DiscussionPromptInput {
   readonly round: Round;
   readonly history: readonly DiscussionHistoryRound[];
   readonly materials: readonly DiscussionMaterial[];
-  readonly plan: PlanVersion | null;
+  readonly plan: (PlanVersion & { sourceRefs?: Message["sourceRefs"] }) | null;
   /** Only text written by the user belongs here; agent proposals stay in untrusted history. */
   readonly userSupplement?: string;
   /** The caller sets this for round.supplement mode "only". */
@@ -59,6 +61,7 @@ export interface DiscussionPrompt extends Pick<
   import("../prompt").AssembledPrompt,
   "content" | "nonce" | "contentHash" | "tokenEstimate" | "adapterVersion"
 > {
+  readonly sourceRefs?: Message["sourceRefs"];
   readonly compressedRounds: readonly CompressedRound[];
   /** C-46：这份 Prompt 带上的项目笔记版本（写摘要 / 没有笔记时为 null） */
   readonly projectNoteId: string | null;
@@ -80,6 +83,7 @@ function block(nonce: string, name: string, content: string): string {
 function historyBlocks(input: DiscussionPromptInput): {
   blocks: string[];
   compressedRounds: CompressedRound[];
+  sourceRefs: NonNullable<Message["sourceRefs"]>;
 } {
   const rounds = [...input.history].sort((a, b) => a.round.index - b.round.index);
   if (new Set(rounds.map((item) => item.round.index)).size !== rounds.length ||
@@ -106,11 +110,13 @@ function historyBlocks(input: DiscussionPromptInput): {
   const recent = new Set(activeRounds.slice(-2).map((item) => item.round.index));
   const blocks: string[] = [];
   const compressedRounds: CompressedRound[] = [];
+  const sourceRefs: NonNullable<Message["sourceRefs"]> = [];
 
   for (const item of activeRounds) {
     const useSummary = input.round.historyMode === "recent_with_summaries" &&
       !recent.has(item.round.index) && item.summary !== null;
     if (useSummary && item.summary) {
+      sourceRefs.push(...(item.summary.message.sourceRefs ?? []));
       blocks.push(block(input.nonce, `第 ${item.round.index} 轮摘要；汇总者 ${item.summary.record.summarizer}`, item.summary.message.content));
       compressedRounds.push({
         roundIndex: item.round.index,
@@ -125,16 +131,18 @@ function historyBlocks(input: DiscussionPromptInput): {
       ? [...item.messages, item.summary.message]
       : item.messages;
     for (const message of fullMessages) {
+      sourceRefs.push(...(message.sourceRefs ?? []));
       const speaker = "sourceAgent" in message ? message.sourceAgent : "human";
       blocks.push(block(input.nonce, `第 ${item.round.index} 轮 ${speaker} 的消息 ${message.id}；类型 ${message.kind}`, message.content));
     }
     for (const turn of item.turns) {
       if (turn.partialText !== null && turn.replyMessageId === null) {
+        sourceRefs.push(...(turn.sourceRefs ?? []));
         blocks.push(block(input.nonce, `第 ${item.round.index} 轮 ${turn.agent} 的未完成发言 ${turn.id}`, turn.partialText));
       }
     }
   }
-  return { blocks, compressedRounds };
+  return { blocks, compressedRounds, sourceRefs };
 }
 
 function assemble(
@@ -150,15 +158,16 @@ function assemble(
   }
   if (recipient.profile.id === recipient.onBehalfOf) throw new Error("an agent cannot substitute for itself");
 
-  const { blocks, compressedRounds } = historyBlocks(input);
+  const { blocks, compressedRounds, sourceRefs } = historyBlocks(input);
   for (const material of input.materials) {
-    blocks.push(block(input.nonce, `附件：${material.name}`, material.content));
+    blocks.push(block(input.nonce, `附件：${material.name}`, material.sourceRefs === undefined ? material.content : wrapChatUntrusted(input.nonce, "资料", material.content)));
   }
   if (input.plan !== null) {
+    sourceRefs.push(...(input.plan.sourceRefs ?? []));
     blocks.push(block(input.nonce, `方案 v${input.plan.version}`, input.plan.content));
   }
   for (const material of recipient.extraMaterials) {
-    blocks.push(block(input.nonce, `额外信息：${material.name}`, material.content));
+    blocks.push(block(input.nonce, `额外信息：${material.name}`, material.sourceRefs === undefined ? material.content : wrapChatUntrusted(input.nonce, "资料", material.content)));
   }
   const note = purpose === "discussion" && recipient.note != null ? recipient.note : null;
   if (note !== null) {
@@ -207,6 +216,7 @@ function assemble(
       ? ["# 用户补充", input.userSupplement, ""]
       : []),
   ].join("\n");
+  const refs = [...new Map([...sourceRefs, ...[...input.materials, ...recipient.extraMaterials].flatMap((material) => material.sourceRefs ?? [])].map((ref) => [JSON.stringify(ref), ref])).values()];
   return Object.freeze({
     content,
     nonce: input.nonce,
@@ -216,6 +226,7 @@ function assemble(
     compressedRounds: Object.freeze(compressedRounds),
     projectNoteId: note === null ? null : note.id,
     differsFromOthers,
+    ...(refs.length === 0 ? {} : { sourceRefs: SourceReferences.parse(refs) }),
   });
 }
 

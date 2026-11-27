@@ -37,6 +37,8 @@ import { assertTransition } from "@room/core";
 import type { SqliteDatabase } from "./database";
 import { ulid } from "./ulid";
 import { writeTransaction, type WriteQueue } from "./write-queue";
+import { chatSourceReference, isChatMessageCurrent, mergeSourceRefs, readSourceRefs, runSourceRefs, sourceRefsCurrent, SourceUnavailableError, validateCurrentSourceRefs, validateSourceRefs } from "./sources";
+import { appendRunEventTx } from "./run-lifecycle";
 
 /**
  * 聊天空间的读写模型（D-31a）。
@@ -103,6 +105,7 @@ export interface ChatMessageRow {
   immersive_deferred: string | null;
   /** C-42c / D-37b（v17）：你这条消息开了「用语音回」；秘书的消息是 NULL */
   reply_as_voice: number | null;
+  source_refs: string | null;
 }
 
 const toChatMessage = (row: ChatMessageRow): ChatMessage => {
@@ -133,6 +136,7 @@ const toChatMessage = (row: ChatMessageRow): ChatMessage => {
     slotId: row.slot_id as string,
     runId: row.run_id as string,
     memoryEntriesUsed: row.memory_entries_used,
+    ...(row.source_refs == null ? {} : { sourceRefs: readSourceRefs(row.source_refs) }),
     // C-42e：旧行（D-31d 之前）这一列是 NULL，省略就是「没有媒体意图」
     ...(row.media_intent === null ? {} : { mediaIntent: JSON.parse(row.media_intent) as MediaIntent }),
     ...(row.immersive_deferred === null ? {} : { immersiveDeferred: JSON.parse(row.immersive_deferred) as ImmersiveDeferral }),
@@ -438,6 +442,7 @@ export function insertChatMessage(db: SqliteDatabase, input: InsertChatMessageIn
   const message = ChatMessageSchema.parse(input.message);
 
   if (message.sender === "user") {
+    if (message.sourceRefs !== undefined) throw new Error("user chat messages cannot supply source references");
     // 引用 / 重新编辑必须指向同一个会话的消息（跨会话引用会让拼 Prompt 和撤回审计读错人）
     for (const referenced of [message.quoteMessageId, message.replacesMessageId]) {
       if (referenced === null) continue;
@@ -485,9 +490,10 @@ export function insertChatMessage(db: SqliteDatabase, input: InsertChatMessageIn
     // 消息已撤回 = 之后的上下文里不再有它，迟到的回答不能落库（契约：撤回瞬间答完的结果丢弃）
     if (parent.state !== "sent") throw new Error("agent reply must answer a message that is still in context");
 
+    const sourceRefs = validateSourceRefs(db, { conversationId: message.conversationId }, message.sourceRefs);
     db.prepare(
       "INSERT INTO chat_messages (id, conversation_id, sender, created_at, agent, text, in_reply_to, slot_id, run_id, " +
-        "memory_entries_used, media_intent, immersive_deferred) VALUES (?, ?, 'agent', ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+        "memory_entries_used, media_intent, immersive_deferred, source_refs) VALUES (?, ?, 'agent', ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
     ).run(
       message.id,
       message.conversationId,
@@ -500,6 +506,7 @@ export function insertChatMessage(db: SqliteDatabase, input: InsertChatMessageIn
       message.memoryEntriesUsed,
       message.mediaIntent === undefined ? null : JSON.stringify(message.mediaIntent),
       message.immersiveDeferred === undefined ? null : JSON.stringify(message.immersiveDeferred),
+      sourceRefs === undefined ? null : JSON.stringify(sourceRefs),
     );
   }
 
@@ -531,8 +538,23 @@ export function retractChatMessage(db: SqliteDatabase, messageId: string, retrac
  * 覆盖到其中任何一条的摘要都该一起标 stale——只按「用户消息 id」查会漏掉切在一问一答之间的摘要（D-41b）。
  */
 export function excludedMessageIdsForRetract(db: SqliteDatabase, messageId: string): string[] {
-  const replies = db.prepare("SELECT id FROM chat_messages WHERE in_reply_to = ?").all(messageId) as { id: string }[];
-  return [messageId, ...replies.map((row) => row.id)];
+  const source = db.prepare("SELECT conversation_id FROM chat_messages WHERE id = ?").get(messageId) as { conversation_id: string } | undefined;
+  if (source === undefined) return [messageId];
+  // Read this conversation's reverse edges once; do not recursively resolve every stored message.
+  const edges = db.prepare(
+    "SELECT id, in_reply_to AS source_id FROM chat_messages WHERE conversation_id = ? AND in_reply_to IS NOT NULL " +
+    "UNION ALL SELECT m.id, json_extract(j.value, '$.source.id') AS source_id FROM chat_messages m, json_each(m.source_refs) j " +
+    "WHERE m.conversation_id = ? AND json_extract(j.value, '$.source.kind') = 'chat_message'",
+  ).all(source.conversation_id, source.conversation_id) as { id: string; source_id: string }[];
+  const dependents = new Map<string, string[]>();
+  for (const edge of edges) {
+    const children = dependents.get(edge.source_id);
+    if (children === undefined) dependents.set(edge.source_id, [edge.id]);
+    else children.push(edge.id);
+  }
+  const excluded = new Set([messageId]);
+  for (const id of excluded) for (const dependent of dependents.get(id) ?? []) excluded.add(dependent);
+  return [...excluded];
 }
 
 interface ChatSummaryRow {
@@ -609,14 +631,13 @@ export function markChatSummariesStale(
   messageIds: readonly string[],
 ): ChatHistorySummary[] {
   if (messageIds.length === 0) return [];
-  const hits = db
-    .prepare(
-      "SELECT * FROM chat_summaries WHERE state = 'current' " +
-        "AND EXISTS (SELECT 1 FROM json_each(source_message_ids) AS j WHERE j.value IN (" +
-        messageIds.map(() => "?").join(", ") +
-        ")) ORDER BY created_at, id",
-    )
-    .all(...messageIds) as ChatSummaryRow[];
+  const excluded = new Set(messageIds);
+  const rows = db.prepare(
+    "SELECT * FROM chat_summaries WHERE state = 'current' AND conversation_id IN " +
+    "(SELECT conversation_id FROM chat_messages WHERE id IN (SELECT value FROM json_each(?))) ORDER BY created_at, id",
+  ).all(JSON.stringify(messageIds)) as ChatSummaryRow[];
+  const hits = rows.filter((row) => (JSON.parse(row.source_message_ids) as string[]).some((id) => excluded.has(id)) ||
+    (runSourceRefs(db, row.run_id) ?? []).some((ref) => ref.source.kind === "chat_message" && excluded.has(ref.source.id)));
   if (hits.length === 0) return [];
   const update = db.prepare("UPDATE chat_summaries SET state = 'stale' WHERE id = ? AND state = 'current'");
   for (const row of hits) update.run(row.id);
@@ -724,6 +745,7 @@ export interface ChatSnapshotRow {
   adapter_version: string;
   token_estimate: number;
   created_at: string;
+  source_refs: string | null;
 }
 
 const toChatSnapshot = (row: ChatSnapshotRow): ChatSnapshot => {
@@ -742,6 +764,7 @@ const toChatSnapshot = (row: ChatSnapshotRow): ChatSnapshot => {
     adapterVersion: row.adapter_version,
     tokenEstimate: row.token_estimate,
     createdAt: row.created_at,
+    ...(row.source_refs == null ? {} : { sourceRefs: readSourceRefs(row.source_refs) }),
   };
   // 可选字段：不传和传 undefined 是两回事，数据库里 NULL 就是没有
   if (row.attachments !== null) snapshot.attachments = JSON.parse(row.attachments) as NonNullable<ChatSnapshot["attachments"]>;
@@ -753,10 +776,11 @@ const toChatSnapshot = (row: ChatSnapshotRow): ChatSnapshot => {
 /** 写一份 Snapshot。**必须在调用方的事务里跑**（和消息、回答位、Run 同一个事务）。 */
 export function insertChatSnapshot(db: SqliteDatabase, snapshot: ChatSnapshot): void {
   const parsed = ChatSnapshotSchema.parse(snapshot);
+  const sourceRefs = validateSourceRefs(db, { conversationId: parsed.conversationId }, parsed.sourceRefs);
   db.prepare(
     "INSERT INTO chat_snapshots (id, purpose, conversation_id, user_message_id, agent, content, content_hash, nonce, " +
       "memory_slot, attachments, image_slot, included_message_ids, included_summary_ids, adapter_version, token_estimate, " +
-      "project_note_id, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+      "project_note_id, created_at, source_refs) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
   ).run(
     parsed.id,
     parsed.purpose,
@@ -775,6 +799,7 @@ export function insertChatSnapshot(db: SqliteDatabase, snapshot: ChatSnapshot): 
     parsed.tokenEstimate,
     parsed.projectNoteId ?? null,
     parsed.createdAt,
+    sourceRefs === undefined ? null : JSON.stringify(sourceRefs),
   );
 }
 
@@ -1009,7 +1034,7 @@ export type ChatRunTerminal =
    * C-42e / D-31d：mediaIntent 是 extractMediaIntent 的合格结果，和这条回答在同一个事务里落库；
    * 调用方一项都没合格就不传（不是传空对象——空对象在契约里不合法）。被丢掉的原始值由调用方记日志
    */
-  | { kind: "answered"; text: string; mediaIntent?: MediaIntent; immersiveDeferred?: ImmersiveDeferral }
+  | { kind: "answered"; text: string; mediaIntent?: MediaIntent; immersiveDeferred?: ImmersiveDeferral; sourceRefs?: AgentChatMessage["sourceRefs"] }
   | { kind: "skipped" }
   | { kind: "absent_quota" }
   | { kind: "failed"; failure: ChatSlotFailure; failureReason?: FailureReason }
@@ -1017,6 +1042,8 @@ export type ChatRunTerminal =
   | { kind: "timed_out" };
 
 export interface FinishChatRunInput {
+  /** Rechecked inside the write queue, including a cancellation that arrived while waiting for it. */
+  signal?: AbortSignal;
   /** main 已授权的自动媒体计划，只在实际落回答的同一事务里持久化。 */
   immersivePlan?: { draw: boolean; speak: boolean };
   runId: string;
@@ -1057,9 +1084,19 @@ export function finishChatRun(
     let slot = run.slotId === null ? null : getChatSlot(db, run.slotId);
     const currentAttempt = slot !== null && slot.runId === run.id && slot.outcome === "running";
 
-    let terminal: ChatRunTerminal = input.terminal;
+    let terminal: ChatRunTerminal = input.signal?.aborted === true ? { kind: "cancelled" } : input.terminal;
     if (currentAttempt && terminal.kind === "skipped" && slot !== null && slot.required) {
       terminal = { kind: "failed", failure: { kind: "skip_not_allowed", message: "单聊或被点名的人必须回答，不能 skip" } };
+    }
+    let sourceRefs: ReturnType<typeof runSourceRefs>;
+    let sourceError: SourceUnavailableError | undefined;
+    if (currentAttempt && terminal.kind === "answered") {
+      try { sourceRefs = validateCurrentSourceRefs(db, { conversationId: run.conversationId }, mergeSourceRefs([terminal.sourceRefs, runSourceRefs(db, run.id)])); }
+      catch (error) {
+        if (!(error instanceof SourceUnavailableError)) throw error;
+        sourceError = error;
+        terminal = { kind: "failed", failureReason: "postprocess", failure: { kind: "run_failed", message: "引用的资料已撤回，请重新生成回答" } };
+      }
     }
 
     const state: RunState =
@@ -1077,7 +1114,7 @@ export function finishChatRun(
 
     let failureReason: FailureReason | null = null;
     if (state === "FAILED") {
-      failureReason = terminal.kind === "absent_quota" ? "quota_exhausted" : input.terminal.kind === "failed" ? (input.terminal.failureReason ?? null) : null;
+      failureReason = terminal.kind === "absent_quota" ? "quota_exhausted" : terminal.kind === "failed" ? (terminal.failureReason ?? null) : null;
       if (failureReason === null) throw new Error("a FAILED chat run needs a failure reason");
     }
 
@@ -1085,6 +1122,9 @@ export function finishChatRun(
     db.prepare(
       "UPDATE chat_runs SET state = ?, substate = NULL, failure_reason = ?, finished_at = ? WHERE id = ? AND state = ?",
     ).run(state, failureReason, finishedAt, input.runId, input.from);
+    if (sourceError !== undefined) {
+      appendRunEventTx(db, run.id, { type: "error", ts: finishedAt, payload: { reason: "postprocess", message: sourceError.message } }, { allowTerminal: true, chat: true });
+    }
 
     let message: AgentChatMessage | null = null;
     if (currentAttempt && slot !== null) {
@@ -1104,6 +1144,7 @@ export function finishChatRun(
           memoryEntriesUsed: run.memoryManifest === null ? null : run.memoryManifest.entries.length,
           ...(terminal.mediaIntent === undefined ? {} : { mediaIntent: terminal.mediaIntent }),
           ...(terminal.immersiveDeferred === undefined ? {} : { immersiveDeferred: terminal.immersiveDeferred }),
+          ...(sourceRefs === undefined ? {} : { sourceRefs }),
         };
         insertChatMessage(db, { message });
         if (input.immersivePlan?.draw || input.immersivePlan?.speak) {
@@ -1155,7 +1196,7 @@ function excludedSourceIds(db: SqliteDatabase, ids: readonly string[]): string[]
   };
   for (const id of ids) {
     const message = getChatMessage(db, id);
-    if (message === null || isExcludedFromContext(message, inReplyToOf)) excluded.push(id);
+    if (message === null || isExcludedFromContext(message, inReplyToOf) || !isChatMessageCurrent(db, id, message.conversationId)) excluded.push(id);
   }
   return excluded;
 }
@@ -1189,7 +1230,7 @@ export function finishChatSummaryRun(
     if (input.summary !== undefined) {
       if (input.summary.conversationId !== run.conversationId) throw new Error("summary is for another conversation");
       if (input.summary.runId !== run.id) throw new Error("summary was written by another run");
-      if (excludedSourceIds(db, input.summary.sourceMessageIds).length === 0) {
+      if (excludedSourceIds(db, input.summary.sourceMessageIds).length === 0 && sourceRefsCurrent(db, { conversationId: run.conversationId }, runSourceRefs(db, run.id))) {
         insertChatSummary(db, input.summary);
         stored = input.summary;
       }
@@ -1497,8 +1538,10 @@ export function createChatToTopic(
     }
     for (const row of rows) {
       const inContext = row.sender === "user" ? row.state === "sent" : row.parentState === "sent";
-      if (!inContext) throw new ChatToTopicConflictError("chat message " + row.id + " is no longer in context");
+      if (!inContext || !isChatMessageCurrent(db, row.id, input.conversationId)) throw new ChatToTopicConflictError("chat message " + row.id + " is no longer in context");
     }
+
+    const sourceRefs = mergeSourceRefs([input.chatMessageIds.filter((id) => getChatMessage(db, id)?.sourceRefs !== undefined).map((id) => chatSourceReference(db, id, input.conversationId, input.createdAt))]);
 
     db.prepare("INSERT INTO projects (id, name, from_conversation_id, created_at) VALUES (?, ?, ?, ?)").run(
       input.projectId,
@@ -1507,8 +1550,8 @@ export function createChatToTopic(
       input.createdAt,
     );
     db.prepare(
-      "INSERT INTO messages (id, project_id, kind, conversation_id, chat_message_ids, content, created_at) " +
-        "VALUES (?, ?, 'chat_material', ?, ?, ?, ?)",
+      "INSERT INTO messages (id, project_id, kind, conversation_id, chat_message_ids, content, created_at, source_refs) " +
+        "VALUES (?, ?, 'chat_material', ?, ?, ?, ?, ?)",
     ).run(
       input.materialId,
       input.projectId,
@@ -1516,6 +1559,7 @@ export function createChatToTopic(
       JSON.stringify(input.chatMessageIds),
       input.content,
       input.createdAt,
+      sourceRefs === undefined ? null : JSON.stringify(sourceRefs),
     );
 
     const project = db.prepare("SELECT * FROM projects WHERE id = ?").get(input.projectId) as Record<string, unknown>;
@@ -1535,6 +1579,7 @@ export function createChatToTopic(
         chatMessageIds: JSON.parse(material["chat_message_ids"] as string) as string[],
         content: material["content"] as string,
         createdAt: material["created_at"] as string,
+        ...(sourceRefs === undefined ? {} : { sourceRefs }),
       },
     };
   });

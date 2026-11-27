@@ -4,12 +4,13 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { after, describe, it } from "node:test";
 import type { AgentAdapter } from "@room/core";
-import { openDatabase, WriteQueue } from "@room/db";
+import { chatSourceReference, createChatToTopic, openDatabase, retractChatMessage, ulid, WriteQueue } from "@room/db";
 import type { ControlEvent } from "@room/schemas";
 import { createDispatcher } from "../src/main/ipc";
 import { NodeService } from "../src/main/nodes";
 import { Repository } from "../src/main/repository";
 import { SettingsStore, type SafeStorageLike } from "../src/main/settings";
+import { sourceChat, SOURCE_TIME as T } from "../../../packages/db/test/source-fixtures";
 
 const dirs: string[] = [];
 after(() => {
@@ -67,10 +68,32 @@ function makeDispatcher(options: { withToken?: boolean } = {}) {
     emit: (event: ControlEvent) => events.push(event),
   });
 
-  return { dispatcher, events, started, db };
+  return { dispatcher, events, started, db, repo, queue };
 }
 
 describe("command validation", () => {
+  it("reports a revoked approval source as stale_snapshot without consuming the approval or dispatching a run", async () => {
+    const { dispatcher, db, repo, queue, started, events } = makeDispatcher({ withToken: true });
+    try {
+      const c = await sourceChat(db, queue);
+      const ref = chatSourceReference(db, c.question.id, c.conversation.id, T);
+      const { project } = await createChatToTopic(db, queue, { projectId: "proj_" + ulid(), materialId: "msg_" + ulid(), conversationId: c.conversation.id, name: "approval sources", chatMessageIds: [c.question.id], content: "Use the source", createdAt: T });
+      const source = await repo.addSource(project.id, "deepseek", "Use the source", [ref]);
+      const contribution = await repo.createContribution({ projectId: project.id, sourceMessageId: source.id, contributionType: "evidence", title: "source", selection: { start: 0, end: 3 } });
+      const { snapshot, approval } = await repo.createSnapshot({ projectId: project.id, contributionIds: [contribution.id], reviewerAgent: "claude-review", taskInstruction: "read" });
+      retractChatMessage(db, c.question.id, T);
+      const result = await dispatcher.handleCommand({ type: "approval.approve", approvalId: approval.id, expectedSnapshotHash: snapshot.contentHash });
+      assert.equal(result.ok, false);
+      if (!result.ok) {
+        assert.equal(result.error, "stale_snapshot");
+        assert.match(result.message, /重新生成 Prompt/);
+      }
+      assert.equal(repo.getApproval(approval.id).state, "READY_FOR_REVIEW");
+      assert.deepEqual(started, []);
+      assert.deepEqual(events, []);
+    } finally { db.close(); }
+  });
+
   it("rejects an unknown command type", async () => {
     const { dispatcher } = makeDispatcher();
     const result = await dispatcher.handleCommand({ type: "nope" });

@@ -405,7 +405,7 @@ export function createDiscussionActions(store: Store<AppState>, client: RoomClie
     /** 盖章：把确认页上看到的每一份内容的 hash 一起交上去 */
     async approveBatch() {
       const c = store.get().disc.confirm;
-      if (!c) return;
+      if (!c || store.get().disc.staleBatchIds.includes(c.batch.id)) return;
       try {
         const { batch } = await client.command({
           type: "batch.approve",
@@ -420,6 +420,10 @@ export function createDiscussionActions(store: Store<AppState>, client: RoomClie
         take(null, batch);
         setDisc((d) => ({ ...d, confirm: null }));
       } catch (err) {
+        if (store.get().currentProjectId !== c.batch.projectId) return;
+        if (err instanceof ControlFailure && err.code === "stale_snapshot") {
+          setDisc((d) => ({ ...d, staleBatchIds: [...new Set([...d.staleBatchIds, c.batch.id])] }));
+        }
         fail(err);
       }
     },

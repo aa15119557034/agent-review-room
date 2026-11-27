@@ -2,6 +2,7 @@ import { createHash } from "node:crypto";
 import type { FailureReason, TurnOutcome } from "@room/schemas";
 import type { SqliteDatabase } from "./database";
 import { appendRunEventTx } from "./run-lifecycle";
+import { runSourceRefs, SourceUnavailableError, validateCurrentSourceRefs } from "./sources";
 import { writeTransaction, type WriteQueue } from "./write-queue";
 
 /**
@@ -140,7 +141,18 @@ export function finishTurnFromRun(
     }
 
     const ts = now();
-    const terminal = input.terminal;
+    let terminal = input.terminal;
+    let sourceRefs: ReturnType<typeof runSourceRefs>;
+    let sourceError: SourceUnavailableError | undefined;
+    if (terminal.kind === "answered") {
+      const { project_id: projectId } = db.prepare("SELECT project_id FROM rounds WHERE id = ?").get(turn.round_id) as { project_id: string };
+      try { sourceRefs = validateCurrentSourceRefs(db, { projectId }, runSourceRefs(db, run.id)); }
+      catch (error) {
+        if (!(error instanceof SourceUnavailableError)) throw error;
+        sourceError = error;
+        terminal = { kind: "failed", failureReason: "postprocess" };
+      }
+    }
     let outcome: TurnOutcomeTerminal;
     let messageId: string | null = null;
 
@@ -150,8 +162,8 @@ export function finishTurnFromRun(
 
       messageId = "msg_" + turn.id.slice(5);
       db.prepare(
-        "INSERT INTO messages (id, project_id, kind, source_agent, run_id, round_id, turn_id, on_behalf_of, content, created_at) " +
-          "SELECT ?, project_id, 'agent_reply', ?, ?, ?, ?, ?, ?, ? FROM rounds WHERE id = ?",
+        "INSERT INTO messages (id, project_id, kind, source_agent, run_id, round_id, turn_id, on_behalf_of, content, created_at, source_refs) " +
+          "SELECT ?, project_id, 'agent_reply', ?, ?, ?, ?, ?, ?, ?, ? FROM rounds WHERE id = ?",
       ).run(
         messageId,
         turn.agent,
@@ -161,6 +173,7 @@ export function finishTurnFromRun(
         turn.on_behalf_of,
         terminal.text,
         ts,
+        sourceRefs === undefined ? null : JSON.stringify(sourceRefs),
         turn.round_id,
       );
 
@@ -174,7 +187,7 @@ export function finishTurnFromRun(
         db,
         run,
         { state: "FAILED", failureReason: terminal.failureReason },
-        { type: "error", payload: { reason: terminal.failureReason } },
+        { type: "error", payload: { reason: terminal.failureReason, ...(sourceError === undefined ? {} : { message: sourceError.message }) } },
         ts,
       );
       setTurnOutcome(db, turn.id, outcome, terminal.partialText ?? null, ts);
@@ -426,7 +439,18 @@ export function finishSummaryFromRun(
     }
 
     const ts = now();
-    const result = input.result;
+    let result = input.result;
+    let sourceRefs: ReturnType<typeof runSourceRefs>;
+    let sourceError: SourceUnavailableError | undefined;
+    if (result.kind === "answered") {
+      const { project_id: projectId } = db.prepare("SELECT project_id FROM rounds WHERE id = ?").get(turn.round_id) as { project_id: string };
+      try { sourceRefs = validateCurrentSourceRefs(db, { projectId }, runSourceRefs(db, run.id)); }
+      catch (error) {
+        if (!(error instanceof SourceUnavailableError)) throw error;
+        sourceError = error;
+        result = { kind: "failed", failureReason: "postprocess" };
+      }
+    }
 
     if (result.kind !== "answered") {
       const quota = result.kind === "failed" && result.failureReason === "quota_exhausted";
@@ -438,7 +462,7 @@ export function finishSummaryFromRun(
           db,
           run,
           { state: "FAILED", failureReason: result.failureReason },
-          { type: "error", payload: { reason: result.failureReason } },
+          { type: "error", payload: { reason: result.failureReason, ...(sourceError === undefined ? {} : { message: sourceError.message }) } },
           ts,
         );
       }
@@ -462,9 +486,9 @@ export function finishSummaryFromRun(
 
     const messageId = "msg_" + turn.id.slice(5);
     db.prepare(
-      "INSERT INTO messages (id, project_id, kind, source_agent, run_id, round_id, turn_id, on_behalf_of, content, created_at) " +
-        "SELECT ?, project_id, 'summary', ?, ?, ?, ?, NULL, ?, ? FROM rounds WHERE id = ?",
-    ).run(messageId, turn.agent, input.runId, turn.round_id, turn.id, result.text, ts, turn.round_id);
+      "INSERT INTO messages (id, project_id, kind, source_agent, run_id, round_id, turn_id, on_behalf_of, content, created_at, source_refs) " +
+        "SELECT ?, project_id, 'summary', ?, ?, ?, ?, NULL, ?, ?, ? FROM rounds WHERE id = ?",
+    ).run(messageId, turn.agent, input.runId, turn.round_id, turn.id, result.text, ts, sourceRefs === undefined ? null : JSON.stringify(sourceRefs), turn.round_id);
 
     // 按"人"算，不按 Turn 算：
     // - 同一个人被打断后重答，只取最新一次

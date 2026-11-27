@@ -8,15 +8,31 @@
  * 这个格式只在本仓库内部使用，由脚本和解析器一起维护。
  */
 import { JsonLinesParser, type ParserOutput, type ParserVerdict } from "./common";
+import { ProjectResearchSource, ResultDisplay, type SourceReference } from "@room/schemas";
 
 export class RoomJsonlParser extends JsonLinesParser {
   private done: string | null = null;
+  private source: SourceReference | null | undefined;
   private error: { message: string; quota: boolean } | null = null;
 
+  constructor(private readonly research = false) { super(); }
+
   protected handleObject(o: Record<string, unknown>, out: ParserOutput[]): void {
-    if (o["type"] === "delta" && typeof o["text"] === "string") {
+    if (o["type"] === "result_display") {
+      const parsed = ResultDisplay.safeParse(o["result"]);
+      if (!parsed.success || Object.keys(o).some((key) => key !== "type" && key !== "result")) this.error = { message: "invalid structured display result", quota: false };
+      else out.push({ kind: "result_display", result: parsed.data });
+    } else if (o["type"] === "delta" && typeof o["text"] === "string") {
       out.push({ kind: "text_delta", text: o["text"] as string });
     } else if (o["type"] === "done" && typeof o["text"] === "string") {
+      if (this.research) {
+        const source = ProjectResearchSource.nullable().safeParse(o["source"]);
+        if (!source.success || this.done !== null || Object.keys(o).some((key) => !["type", "text", "source", "finishReason"].includes(key))) {
+          this.error = { message: "invalid research original", quota: false };
+          return;
+        }
+        this.source = source.data;
+      }
       this.done = o["text"] as string;
     } else if (o["type"] === "error") {
       this.error = {
@@ -31,6 +47,6 @@ export class RoomJsonlParser extends JsonLinesParser {
       return { ok: false, reason: this.error.quota ? "quota_exhausted" : "internal", message: this.error.message.slice(0, 1000) };
     }
     if (this.done === null) return { ok: false, reason: "incomplete_output", message: "输出在 done 之前中断" };
-    return { ok: true, finalText: this.done };
+    return { ok: true, finalText: this.done, ...(this.research ? { source: this.source } : {}) };
   }
 }
