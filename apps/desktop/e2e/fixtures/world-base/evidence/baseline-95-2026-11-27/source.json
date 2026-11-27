@@ -1,0 +1,11 @@
+{
+  "commit": "6a98e2f98b8c436658960397cf349560732e6b90",
+  "fixtureTree": "2c4f571032e26ddfde37cec3cbc29d48975429b5",
+  "sourceDigests": {
+    "src/main.js": "7915b5cc8bd27167b4986cd74e60616f1e55036c85142c6d47f22aa1dd8c9e38",
+    "src/look.js": "536412a0e77232a8cb68918ac481bca594dd3f18d052b5d7b5e72846c2032311",
+    "src/weathering-decals-combined.json": "f56d3993fe83cfa4bd2a47eebe21a2f8a4d838e7e099dec55ef81cf61d55130a",
+    "upstream/sakuragaoka/src/world/shopsA/konbini.js": "c4fe513f66ecc4e4191b44f2f6001fe66aa73e832472a3ce326499548f9fca1d"
+  },
+  "preloadSha256": "6deda8457b5c1f654a1c995ff4b028de29b3b36de7c0c3cc11185033ecef0d83"
+}
