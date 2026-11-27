@@ -199,7 +199,6 @@ function insert(source, needle, replacement, label) {
 
 export function createLook(renderer, camera) {
   const pipeline = new Pipeline(renderer);
-  let selectCascadeLook;
   const toon = { value: 1 };
   // Empty rect until the town is placed: the mask is zero everywhere.
   const townUniforms = {
@@ -552,7 +551,7 @@ void main(){`, 'cascade rock toes');
     water.needsUpdate = true;
   }
 
-  function installCascadeLook(island, rocks, mist, foliage) {
+  function installCascadeLook(scene, island, rocks, mist, foliage) {
     const terrainMesh = island.terrain.mainView.mesh, waterMesh = island.water.mesh;
     const terrain = terrainMesh.material, water = waterMesh.material;
     const cascadeTerrain = terrain.clone(), cascadeWater = water.clone();
@@ -569,11 +568,13 @@ void main(){`, 'cascade rock toes');
       new THREE.Vector3(base.x + 145, top.y + 30, base.z + 145),
     );
     const frustum = new THREE.Frustum(), viewProjection = new THREE.Matrix4(), eye = new THREE.Vector3();
-    selectCascadeLook = () => {
-      camera.getWorldPosition(eye);
+    const before = scene.onBeforeRender;
+    scene.onBeforeRender = function onBeforeRender(activeRenderer, activeScene, view, target) {
+      before.call(this, activeRenderer, activeScene, view, target);
+      view.getWorldPosition(eye);
       const distance = Math.hypot(eye.x - base.x, eye.z - base.z);
       const visible = distance < 550 && frustum
-        .setFromProjectionMatrix(viewProjection.multiplyMatrices(camera.projectionMatrix, camera.matrixWorldInverse))
+        .setFromProjectionMatrix(viewProjection.multiplyMatrices(view.projectionMatrix, view.matrixWorldInverse))
         .intersectsBox(bounds);
       if (visible) lod.value = 1 - THREE.MathUtils.smoothstep(distance, 400, 550);
       terrainMesh.material = visible ? cascadeTerrain : terrain;
@@ -582,9 +583,6 @@ void main(){`, 'cascade rock toes');
       mist.visible = visible;
       if (foliage) foliage.visible = visible;
     };
-    // The initial street reflection bake uses the station view. Selecting
-    // before the draw also keeps per-camera setup out of the render pass.
-    selectCascadeLook();
   }
   return {
     pipeline, applyIsland, installCascadeLook,
@@ -621,7 +619,6 @@ void main(){`, 'cascade rock toes');
     setFlightEffects(value) { pipeline.params.blur = value ? 1 : 0; pipeline.params.rays = value ? 0.55 : 0; pipeline.hasPrev = false; },
     setSize(width, height, ratio) { pipeline.setSize(width, height, ratio); },
     render(scene, dt) {
-      selectCascadeLook?.();
       mat.uniforms.uShOn.value = shBase * camIndoor();
       mat.uniforms.uNear.value = camera.near;
       mat.uniforms.uFar.value = camera.far;

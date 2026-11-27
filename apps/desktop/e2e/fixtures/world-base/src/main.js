@@ -385,7 +385,7 @@ async function init() {
   if (toonEnabled() && signLinesEnabled(worldBase.toon27?.params)) worldBase.toonSigns = markSignMaterials(scene);
   // Round 22: render the zone cubes last, once the whole world (glows, signs, weathering, toon chunks) is final and before the
   // first frame, so every screenshot after worldBase.ready sees the same cubes.
-  look.installCascadeLook(island, cascadeRocks, cascadeMist, worldBase.cascadeFoliage?.group);
+  look.installCascadeLook(scene, island, cascadeRocks, cascadeMist, worldBase.cascadeFoliage?.group);
   if (refl) {
     stage('正在烘焙湿路分区反射…');
     const zonesBake = await bakeStreetZones({ world: worldBase, layout: layoutModule, params: refl, uniforms: station.zones.uniforms,
