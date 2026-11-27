@@ -35,6 +35,12 @@ const smooth = (a, b, x) => { const t = Math.min(1, Math.max(0, (x - a) / (b - a
 /** Gathers flower density into drifts. Returns stats for the evidence. */
 export function applyFlowerDrifts(terrain, worldSize, p) {
   const S = terrain.splatN, cell = worldSize / S, half = worldSize / 2;
+  const regions = p.regions.map(({ bounds, feather, background, patches }) => ({
+    bounds, feather, background,
+    patches: patches.map(([x, z, length, width, angle, density]) => ({
+      x, z, length, width, cos: Math.cos(angle), sin: Math.sin(angle), density,
+    })),
+  }));
   let before = 0, after = 0;
   for (let j = 0; j < S; j++) {
     const z = j * cell - half;
@@ -44,7 +50,20 @@ export function applyFlowerDrifts(terrain, worldSize, p) {
       const x = i * cell - half;
       const n = 0.6 * valueNoise(x / p.scale, z / p.scale, 7) + 0.3 * valueNoise(x / (p.scale * 0.37), z / (p.scale * 0.37), 11)
         + 0.1 * valueNoise(x / (p.scale * 0.12), z / (p.scale * 0.12), 13);
-      const keep = p.floor + (1 - p.floor) * smooth(p.lo, p.hi, n);
+      let keep = p.floor + (1 - p.floor) * smooth(p.lo, p.hi, n);
+      for (const { bounds: [x0, z0, x1, z1], feather, background, patches } of regions) {
+        const fade = smooth(0, feather, Math.min(x - x0, x1 - x, z - z0, z1 - z));
+        if (!fade) continue;
+        const ripple = 0.84 + 0.32 * valueNoise(x / 8, z / 8, 31);
+        let patch = 0;
+        for (const { x: cx, z: cz, length, width, cos, sin, density } of patches) {
+          const dx = x - cx, dz = z - cz;
+          const u = (dx * cos + dz * sin) / length;
+          const v = (dz * cos - dx * sin) / width;
+          patch = Math.max(patch, density * (1 - smooth(0.20, 1.12, (u * u + v * v) * ripple)));
+        }
+        keep += (background + (1 - background) * patch - keep) * fade;
+      }
       const next = Math.round(f * keep * p.gain);
       before += f; after += next;
       terrain.splat[k] = Math.min(255, next);
@@ -165,26 +184,39 @@ uniform vec4 uWbStationSwardRect;
 uniform mat4 uWbWorldToStation;
 ${SWARD_WARMTH}
 void main(){`, label + ' station paint');
-    // The original vegetation coverage controls where the grass paint can appear.
+    s = insert(s, 'vec3 N = terrainN(P.xz, lodN);\n\n  vec4 splat = texture(uSplatTex, uv);', `
+  vec4 splat = texture(uSplatTex, uv);
+  // A continuous distance LOD keeps broad grassy folds from taking their
+  // lighting scale from the adjacent rendered triangles.
+  float swardLod = mix(0.72, 2.35, smoothstep(32.0, 430.0, dist));
+  float swardNormal = smoothstep(0.35, 0.85, splat.a) * uWbGround;
+  vec3 N = terrainN(P.xz, mix(lodN, swardLod, swardNormal));`, label + ' continuous grass normals');
+    // The meadow at the apartment's outer fence suppresses blades in the splat
+    // map. Treat the grass surface independently of that foliage exclusion.
     const floor = 'vec3 meadow = mix(swardFar * mix(vec3(1.0), gDetail, 0.35), swardNear, nearK);';
     s = insert(s, floor, `${floor}
-  float paintCover = smoothstep(0.14, 0.64, splat.a) * uWbGround;`, label + ' painted meadow');
+  vec2 localXZ = (uWbWorldToStation * vec4(P, 1.0)).xz;
+  vec2 alleyX = vec2(-17.0, 14.0);
+  vec2 alleyZ = vec2(-143.0, -131.0);
+  float alleyEdge = min(min(localXZ.x - alleyX.x, alleyX.y - localXZ.x),
+                       min(localXZ.y - alleyZ.x, alleyZ.y - localXZ.y));
+  float alleyLawn = smoothstep(-1.0, 2.5, alleyEdge);
+  float paintCover = max(smoothstep(0.14, 0.64, splat.a), alleyLawn) * uWbGround;`, label + ' painted meadow');
     s = insert(s, 'm.n = mg.n * 0.6 * nearK;', 'm.n = mg.n * 0.6 * nearK * (1.0 - 0.9 * paintCover);', label + ' smooth sward normal');
     const lighting = 'vec3 col = m.c * (uSunColor * dif * sh + amb);';
     s = insert(s, lighting, `${lighting}
   if (paintCover > 0.0 && soft > 0.0) {
-    vec2 localXZ = (uWbWorldToStation * vec4(P, 1.0)).xz;
     vec2 paintXZ = vec2(localXZ.x + 0.43 * localXZ.y, localXZ.y * 0.72);
-    float field = 0.61 * vnoise(paintXZ / 5.0)
-      + 0.30 * vnoise(paintXZ / 21.0 + 37.0)
-      + 0.09 * vnoise(vec2(paintXZ.x, paintXZ.y * 1.65) / 4.5 + 61.0);
-    float tone = 0.60 * smoothstep(0.37, 0.49, field) + 0.40 * smoothstep(0.52, 0.64, field);
+    float field = 0.52 * vnoise(paintXZ / 14.0)
+      + 0.36 * vnoise(paintXZ / 47.0 + 37.0)
+      + 0.12 * vnoise(vec2(paintXZ.x, paintXZ.y * 1.65) / 4.5 + 61.0);
+    float tone = 0.52 * smoothstep(0.34, 0.44, field) + 0.48 * smoothstep(0.52, 0.61, field);
     // Clouds soften the value, while ground, buildings and slopes determine the hue.
     float sunlit = smoothstep(0.18, 0.70, sh / max(cs, 0.05)) * smoothstep(-0.13, 0.12, ndlRaw);
     tone *= mix(0.46, 1.0, sunlit);
     tone *= mix(1.0, 0.70, smoothstep(240.0, 650.0, dist));
     float warmth = 0.64 * swardWarmth(tone);
-    float light = mix(0.39, 0.46, sunlit);
+    float light = mix(0.35, 0.49, sunlit);
     if (uWbStationSwardRect.z > 0.0) {
       vec2 lawnXY = localXZ - uWbStationSwardRect.xy;
       vec2 beyondLawn = max(max(-lawnXY, lawnXY - uWbStationSwardRect.zw), vec2(0.0));
@@ -282,8 +314,16 @@ export function patchPetals(vertexShader, p, shortOpenStems = false) {
   petal = mix(vec3(dot(petal, vec3(0.299, 0.587, 0.114))), petal, ${f(p.petalSat)}) * ${f(p.petalGain)} + ${f(p.petalLift)};`, 'petal palette');
   if (shortOpenStems) {
     const stem = 'float stemH = mix(0.58, 1.04, rnd.x) * shp.w * (0.7 + 0.3 * splat.a);';
+    const regions = p.drift.regions.map(({ bounds: [x0, z0, x1, z1], feather }) =>
+      `smoothstep(0.0, ${f(feather)}, min(min(xz.x - ${f(x0)}, ${f(x1)} - xz.x), min(xz.y - (${f(z0)}), (${f(z1)}) - xz.y)))`);
+    const driftStyle = regions.reduce((a, b) => `max(${a}, ${b})`, '0.0');
     shader = insert(shader, stem, `${stem}
-  stemH *= mix(0.58, 1.0, max(wbTownMask(xz), smoothstep(0.13, 0.38, splat.r)));`, 'short open-meadow stems');
+  stemH *= mix(0.58, 1.0, max(wbTownMask(xz), smoothstep(0.13, 0.38, splat.r)));
+  float wbDriftStyle = ${driftStyle};
+  // Clear low flower silhouettes in the foreground, smaller color accents on the far slope.
+  float wbTallStem = smoothstep(0.76, 0.97, rnd.x);
+  stemH *= mix(1.0, mix(0.56, 0.92, wbTallStem), wbDriftStyle);
+  headR *= mix(1.0, mix(1.12, 0.69, farK), wbDriftStyle);`, 'flower drift silhouettes');
   }
   return shader;
 }

@@ -159,6 +159,31 @@ export function buildFlora(ctx, tx, env) {
   // --------------------------------------------------------------- park extras (provided by park module)
   if (env.parkFlora) env.parkFlora({ addTuft: (x, z, s, k, y) => addTuft(chunk('park'), x, z, s, k, y), addFlower: (x, z, cell, s, y) => addFlower(chunk('park'), x, z, cell, s, y), addMat: (x, z, cell, s, y) => addMat(chunk('park'), x, z, cell, s, y), FLW, TUFT, MAT, r });
 
+  // R4's soil shoulder between the paint line and rail fence is narrow. Low irregular groups
+  // at the fence leave an unobstructed worn strip along the road and gaps between the clumps.
+  const railRoad = L.ROADS.R4, railRoadEdge = railRoad.z + railRoad.halfW;
+  const railVerge = (x, z) => x > railRoad.x0 && x < railRoad.x1 && z > railRoadEdge && z < L.RAIL.corridorZ0;
+  const railPatches = [[-82, 2.2], [-71, 1.3], [-60, 2.5], [-48, 1.7], [-36, 1.3], [-26, 2.8], [-13, 1.8],
+    [3, 2.1], [15, 1.6], [27, 3.2], [38, 2.1], [50, 2.7], [57, 1.45], [65, 2.9], [78, 2.2], [90, 1.7]];
+  const vergeRng = ctx.rng('env-flora-r4-verge');
+  const vergeChunk = chunk('townN');
+  for (const kind of ['tuft', 'flower', 'mat']) {
+    vergeChunk[kind] = vergeChunk[kind].filter(({ x, z }) => {
+      if (!railVerge(x, z)) return true;
+      const pocket = railPatches.some(([center, radius]) => Math.abs(x - center) < radius);
+      return z > railRoadEdge + 0.46 && vergeRng() < (pocket ? 0.65 : 0.12);
+    });
+  }
+  for (const [center, radius] of railPatches) {
+    for (let i = 0; i < Math.ceil(radius * 5); i++) {
+      const x = center + (vergeRng() - 0.5) * 2 * radius;
+      const z = railRoadEdge + 0.77 + vergeRng() * 0.36;
+      if (!railVerge(x, z) || !openOK(x, z) || roadDist(x, z) < 0.63) continue;
+      if (vergeRng() < 0.2) addFlower(vergeChunk, x, z, i % 2 ? FLW.clover : FLW.violet, 0.9);
+      else addTuft(vergeChunk, x, z, 0.70 + vergeRng() * 0.32, vergeRng() < 0.7 ? TUFT.short : TUFT.mixed);
+    }
+  }
+
   // --------------------------------------------------------------- build instanced meshes
   const cardGeo = (n) => {
     const pos = [], uv = [], nrm = [], idx = [];

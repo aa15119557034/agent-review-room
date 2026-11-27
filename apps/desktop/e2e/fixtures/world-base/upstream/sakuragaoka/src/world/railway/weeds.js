@@ -93,6 +93,9 @@ export function buildWeeds(ctx, root, T, E, track, cat, side) {
   // 菜の花 patches along the corridor edges
   const NANOHANA = [[-82, -64], [-44, -36], [58, 70], [96, 112], [-150, -128], [140, 160], [-240, -205], [205, 250], [-330, -300], [300, 340]];
   const inNano = (x) => NANOHANA.some(([a, b]) => x > a && x < b);
+  const fenceRng = ctx.rng('rw-weeds-r4-fence');
+  const fencePockets = [[-85, 3.7], [-73, 2.4], [-60, 4.8], [-42, 3.4], [-27, 2.7],
+    [53, 1.5], [61, 3.3], [71, 2.4], [83, 4.6], [93, 1.8]];
 
   for (const sgn of [1, -1]) {
     const zF = zs(S.fence, sgn);
@@ -106,6 +109,11 @@ export function buildWeeds(ctx, root, T, E, track, cat, side) {
           const z = zF - sgn * (0.08 + Math.pow(r(), 1.6) * 1.05);
           const cell = inNano(x) && r() < 0.42 ? 4 : pickW(MIX_FENCE);
           add(x + (r() - 0.5) * 0.3, gy(x, z), z, cell, near ? 1 : 1.25);
+          if (sgn < 0 && x > L.ROADS.R4.x0 && x < L.ROADS.R4.x1) {
+            const pocket = fencePockets.some(([center, radius]) => Math.abs(x - center) < radius);
+            if (fenceRng() > (pocket ? 0.85 : 0.06)) items.pop();
+            else items[items.length - 1].sy *= cell === 4 ? 0.72 : 0.87;
+          }
         }
         if (!near) continue;
         // drainage channel edges
