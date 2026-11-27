@@ -115,22 +115,26 @@ export function makeMaterial({ gradientMap, aerial, name, map = null, alphaTest 
   // patchAerial reads the vertex position in model space; with instancing the instance matrix has to be applied first.
   const aerialHook = m.onBeforeCompile;
   m.onBeforeCompile = (shader, renderer) => {
-    if (toonCrown && toonEnabled()) applyCrownColors(shader);
+    if (toonCrown && toonEnabled()) applyCrownColors(shader, toonCrown);
     aerialHook.call(m, shader, renderer);
     if (tint) m.userData.tintUniforms = applyTint(shader, tint, height);
     shader.vertexShader = shader.vertexShader.replace('vBkPos = ( modelMatrix * vec4( transformed, 1.0 ) ).xyz;',
       'vec4 bkP = vec4( transformed, 1.0 );\n#ifdef USE_INSTANCING\nbkP = instanceMatrix * bkP;\n#endif\nvBkPos = ( modelMatrix * bkP ).xyz;');
   };
-  m.customProgramCacheKey = () => 'scatter-aerial-lit' + (vegetation ? '-vegetation' : '') + (map ? '-card' : '') + (tint ? '-tint' : '');
+  m.customProgramCacheKey = () => 'scatter-aerial-lit' + (vegetation ? '-vegetation' : '') + (map ? '-card' : '') +
+    (tint ? '-tint' : '') + (toonCrown ? '-' + toonCrown : '');
   return m;
 }
 
 /** Paint the three big values from the crown normals. Keep bark in the common lighting
  * and let the existing aerial fog run after the crown colors have been chosen. */
-function applyCrownColors(shader) {
-  shader.uniforms.uCrownShade = { value: new THREE.Color('#326960') };
-  shader.uniforms.uCrownSide = { value: new THREE.Color('#527f5b') };
-  shader.uniforms.uCrownTop = { value: new THREE.Color('#7d9d63') };
+function applyCrownColors(shader, kind) {
+  const [shade, side, top] = kind === 'cherry'
+    ? ['#986481', '#cf8fb3', '#f0b9ce']
+    : ['#326960', '#527f5b', '#7d9d63'];
+  shader.uniforms.uCrownShade = { value: new THREE.Color(shade) };
+  shader.uniforms.uCrownSide = { value: new THREE.Color(side) };
+  shader.uniforms.uCrownTop = { value: new THREE.Color(top) };
   shader.vertexShader = shader.vertexShader
     .replace('#include <common>', '#include <common>\nattribute float stationCrown;\nvarying float vStationCrown;')
     .replace('#include <begin_vertex>', '#include <begin_vertex>\nvStationCrown = stationCrown;');

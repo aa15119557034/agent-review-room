@@ -17,10 +17,11 @@ export function matureTreeShape({ base, ...shape }) { return JSON.stringify(shap
 
 export async function build(ctx, matureTrees) {
   const L = ctx.L;
+  const smoothCrown = matureTrees !== undefined;
   const T = createSakuraTextures(ctx);
-  const M = createSakuraMaterials(ctx, T);
+  const M = createSakuraMaterials(ctx, T, smoothCrown);
   const noise = createNoise(ctx.rng('sakura-noise'));
-  const env = { rng: ctx.rng, noise, heightAt: L.heightAt };
+  const env = { rng: ctx.rng, noise, heightAt: L.heightAt, smoothCrown };
   const { trees: specs } = makePlacements(ctx);
 
   const root = new THREE.Group(); root.name = 'sakura';
@@ -28,6 +29,12 @@ export async function build(ctx, matureTrees) {
   const published = [];
   const stats = { trees: 0, bark: 0, blob: 0, cards: 0 };
   const blobCells = new Map();
+  const batchCrown = (geo) => {
+    if (!geo) return;
+    const c = geo.boundingSphere.center;
+    const key = Math.floor(c.x / 48) + ',' + Math.floor(c.z / 48);
+    (blobCells.get(key) || blobCells.set(key, []).get(key)).push(geo);
+  };
 
   for (const spec of specs) {
     const painted = spec.kind === 'old' && matureTrees?.get(spec.seed);
@@ -35,9 +42,15 @@ export async function build(ctx, matureTrees) {
     let counts;
     if (painted && painted.shape === matureTreeShape(spec) && painted.groundY === L.heightAt(spec.x, spec.z)) {
       t = painted;
-      counts = painted.counts;
       painted.group.name = 'sakura-' + spec.id;
-      painted.group.children.find(mesh => mesh.userData.role === 'blob').customDepthMaterial = M.blobDepth;
+      // The archived bark, colliders and layout stay in use. The mature crowns
+      // use the same rounded recipe as the railway, street and garden trees.
+      const { blob } = makeTree(spec, env);
+      counts = { bark: painted.counts.bark, blob: blob.tris, cards: 0 };
+      for (const mesh of [...painted.group.children]) {
+        if (mesh.userData.role !== 'bark') painted.group.remove(mesh);
+      }
+      batchCrown(blob.build(true));
       root.add(painted.group);
     } else {
       try { t = makeTree(spec, env); } catch (e) { console.warn('[sakura] tree failed', spec.id, e); continue; }
@@ -50,11 +63,7 @@ export async function build(ctx, matureTrees) {
       // get lines, while the full shading normal rides in uv + colour.b (see canopy.js / materials.js).
       // They are merged per 48 m cell here (not by the core batcher) to keep the dappled shadow material.
       // Cards: no-outline layer (alpha cut-outs).
-      const blobGeo = t.blob.build(true);
-      if (blobGeo) {
-        const c = blobGeo.boundingSphere.center, key = Math.floor(c.x / 48) + ',' + Math.floor(c.z / 48);
-        (blobCells.get(key) || blobCells.set(key, []).get(key)).push(blobGeo);
-      }
+      batchCrown(t.blob.build(true));
       const cardGeo = t.cards.build(true);
       if (cardGeo) { const m = new THREE.Mesh(cardGeo, M.cards); m.castShadow = true; m.receiveShadow = false; ctx.noOutline(m); g.add(m); }
       root.add(g);

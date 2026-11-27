@@ -253,6 +253,95 @@ export function blossomSurface(pads, o) {
   };
 }
 
+const LEAF_EDGE = [[0, 0], [.30, .21], [.72, .14], [1, 0], [.72, -.15], [.27, -.20]];
+
+function solidLeaf(builder, root, axis, face, size, sweep, tone, palette, spec) {
+  const across = new V3().crossVectors(face, axis).normalize();
+  const blade = (u, v) => root.clone().addScaledVector(axis, size * u)
+    .addScaledVector(across, size * v).addScaledVector(face, size * sweep * u * (1.9 - u));
+  const edge = LEAF_EDGE.map(([u, v]) => blade(u, v));
+  const middle = blade(.46, 0);
+  const front = middle.clone().addScaledVector(face, size * .16);
+  const back = middle.clone().addScaledVector(face, -size * .07);
+  if ([...edge, front, back].some(point =>
+    carve(spec, point.x, point.y, point.z, spec.floorAt?.(point.x, point.z)) > .52)) return;
+  const start = builder.count;
+  const write = (p, n, value) => builder.v(p.x, p.y, p.z, n.x, n.y, n.z, n.x, n.z, value, 4 + palette, n.y);
+  for (let i = 0; i < edge.length; i++) {
+    const sign = Math.sign(LEAF_EDGE[i][1]);
+    const n = face.clone().addScaledVector(across, sign * .66).addScaledVector(axis, .14 - sweep).normalize();
+    write(edge[i], n, tone + sign * .18);
+  }
+  write(front, face, tone + .14);
+  write(back, face.clone().negate(), tone - .17);
+  for (let i = 0; i < edge.length; i++) {
+    const next = (i + 1) % edge.length;
+    builder.t(start + edge.length, start + next, start + i);
+    builder.t(start + edge.length + 1, start + i, start + next);
+  }
+}
+
+/** A few readable, folded leaves at each selected branch pad, fitted to the live crown. */
+export function emitCrownFans(builder, surf, pads, canopy, spec) {
+  const lod = spec.lod ?? 0;
+  const limit = lod === 0 ? (spec.kind === 'old' ? 68 : 40) : lod === 1 ? 29 : 13;
+  const spacing = Math.min(.82, Math.max(.49, (spec.padR ?? 1) * .66));
+  const anchors = [];
+  const grouped = new Map();
+  for (const [index, pad] of pads.entries()) {
+    if (pad.layer || pad.c.y > canopy.C.y + canopy.Ry * .64) continue;
+    const group = pad.lobe ?? index % 5;
+    if (!grouped.has(group)) grouped.set(group, []);
+    grouped.get(group).push(pad);
+  }
+  const rows = [...grouped.values()];
+  for (const row of rows) row.sort((a, b) => a.c.y - b.c.y);
+  const count = Math.max(0, ...rows.map(row => row.length));
+  const down = new V3(0, -1, 0);
+  const point = new V3(), surfaceNormal = new V3();
+  for (let rank = 0; rank < count && anchors.length < limit; rank++) {
+    for (const [group, row] of rows.entries()) {
+      const pad = row[rank];
+      if (!pad || anchors.length >= limit) continue;
+      const outward = canopy.normalAt(pad.c).addScaledVector(down, rank % 3 === 0 ? .68 : .26).normalize();
+      // Look up through the broad crown as often as out from its rim.
+      const underneath = lod < 2 && (group + rank) % 3 !== 1 && pad.c.y < canopy.C.y + canopy.Ry * .18;
+      if (underneath) outward.lerp(down, .76).normalize();
+      const target = pad.c.clone().addScaledVector(outward, underneath ? pad.ry * .68 : pad.rx * .42);
+      let best = -1, squaredDistance = (pad.rx * .92 + .3) ** 2;
+      for (let q = 0; q < surf.n; q++) {
+        const index = q * 3;
+        point.fromArray(surf.pos, index);
+        const d2 = point.distanceToSquared(target);
+        if (d2 >= squaredDistance || surfaceNormal.fromArray(surf.nT, index).dot(outward) < .42) continue;
+        best = index;
+        squaredDistance = d2;
+      }
+      if (best < 0) continue;
+      const at = new V3().fromArray(surf.pos, best);
+      if (anchors.some(other => other.distanceToSquared(at) < spacing * spacing)) continue;
+      anchors.push(at);
+      const n = new V3().fromArray(surf.nT, best).normalize();
+      const face = n.clone().lerp(outward, underneath ? .40 : .16).normalize();
+      const axis = underneath && pad.twigDir ? pad.twigDir.clone() : down.clone();
+      axis.addScaledVector(face, -axis.dot(face));
+      if (axis.lengthSq() < .05) {
+        axis.set(at.x - canopy.C.x, 0, at.z - canopy.C.z);
+        if (axis.lengthSq() < .05) axis.set(1, 0, 0);
+        axis.addScaledVector(face, -axis.dot(face));
+      }
+      axis.normalize();
+      const length = underneath ? Math.min(1.30, .48 + pad.rx * .56) : Math.min(.76, .27 + pad.rx * .37);
+      const root = at.clone().addScaledVector(face, -length * .04)
+        .addScaledVector(axis, -length * (underneath ? .08 : .28));
+      for (const [turn, width, tone] of [[-.61, .85, .52], [.11, 1, .69], [.73, .72, .41]]) {
+        const leafAxis = axis.clone().applyAxisAngle(face, turn + ((rank % 3) - 1) * .14);
+        solidLeaf(builder, root, leafAxis, face, length * width, underneath ? .43 : .10, tone, canopy.palId, spec);
+      }
+    }
+  }
+}
+
 // ------------------------------------------------------------------------------------------ cards
 const _t1 = new V3(), _t2 = new V3(), _ru = new V3(), _vv = new V3();
 export function emitCard(B, c, pn, size, rot, cell, col, nrm, aspect = 1) {

@@ -19,7 +19,7 @@
 // Everything is emitted in WORLD space into three GeoBuilders: bark, blob, cards.
 import * as THREE from 'three';
 import { GeoBuilder, tube, bezier, hex, mix3, clamp01 } from './util.js';
-import { blossomSurface, dressSurface, emitCard } from './canopy.js';
+import { blossomSurface, dressSurface, emitCard, emitCrownFans } from './canopy.js';
 import { SUN_DIR } from '../layout.js';
 
 const V3 = THREE.Vector3;
@@ -400,6 +400,7 @@ export function makeTree(spec, env) {
   // extra clusters fused under the shell (own rng: the published pads / skeleton stay unchanged) so the
   // underside seen from below bulges into clumps instead of one smooth ceiling (bulges, not hanging
   // balls: deep folds would become outline depth steps)
+  const smoothCrown = env.smoothCrown;
   const extra = [];
   {
     const r2 = env.rng((spec.seed ?? spec.id) + '-inner');
@@ -416,7 +417,11 @@ export function makeTree(spec, env) {
     }
     // mid / far trees: a core cluster fills the crown (no hidden cavity surface -> the triangles go into a
     // finer, smoother outer mass; seen from below it is a clumpy blossom ceiling)
-    if (Q.fill) extra.push({ c: new V3(C.x, C.y - Ry * 0.12, C.z), rx: Rx * 0.66, ry: Ry * 0.5, rz: Rz * 0.66, layer: 1, jit: -0.1, peach: 0, q: new THREE.Quaternion(), weight: 0.9 });
+    if (Q.fill) {
+      const width = smoothCrown ? .49 : .66;
+      extra.push({ c: new V3(C.x, C.y - Ry * 0.12, C.z), rx: Rx * width, ry: Ry * (smoothCrown ? .38 : .5),
+        rz: Rz * width, layer: 1, jit: -0.1, peach: 0, q: new THREE.Quaternion(), weight: smoothCrown ? .62 : .9 });
+    }
     // plug the upper branch gaps (seen from above they read as craters); side / low gaps stay open
     for (const gd of gapDirs) {
       if (gd.y < Math.cos(1.22)) continue;
@@ -431,20 +436,23 @@ export function makeTree(spec, env) {
   const mass = pads.concat(extra);
   const style = env.blossomStyle; // Optional offline recipe for the two mature, painted trees.
   const surf = blossomSurface(style ? mass.map(p => ({ ...p, rx: p.rx * style.width, rz: p.rz * style.width, ry: p.ry * style.height })) : mass,
-    { h: (spec.meshH ?? Q.h) * (style?.gridScale ?? 1), smooth: style?.smooth ?? Q.smooth, canopy, noise, spec,
-      amp: Q.amp * (style?.billow ?? 1), freq: Q.freq * (style?.frequency ?? 1), groundY: gy });
+    { h: (spec.meshH ?? Q.h) * (smoothCrown ? .98 : (style?.gridScale ?? 1)),
+      smooth: smoothCrown ? 4 : (style?.smooth ?? Q.smooth), canopy, noise, spec,
+      iso: smoothCrown ? .20 : undefined, amp: Q.amp * (smoothCrown ? .28 : (style?.billow ?? 1)),
+      freq: Q.freq * (style?.frequency ?? 1), groundY: gy });
   if (surf) surf.emit(blob);
+  if (surf && smoothCrown) emitCrownFans(blob, surf, pads, canopy, spec);
   const cardBase = Q.cardS * (spec.cardScale ?? 1);
   const density = (spec.cardDensity ?? 1) * Q.cardK;
   const near = (spec.lod ?? 0) === 0;
-  if (surf) dressSurface(cards, surf, {
+  if (surf && !smoothCrown) dressSurface(cards, surf, {
     r, CELL, cardBase, bandColor, pal: PAL.normal, peachCol: PAL.peach, leafCol: PAL.leaf,
     cov: Q.cov * density, covIn: Q.covIn * density, hangP: Q.hang,
     nearBoost: near ? (hb) => 1 + 0.8 * (1 - clamp01((hb - 2.6) / 3.4)) : null,
   });
   // sprigs: thin twigs poking out of pads, carrying a few sprays
   const cc = new V3(), pnv = new V3(), nf = new V3();
-  for (const pad of pads) {
+  for (const pad of smoothCrown ? [] : pads) {
     if (r() > Q.sprig) continue;
     const n0 = canopy.normalAt(pad.c, new V3());
     const d = (pad.twigDir || n0).clone().lerp(n0, 0.6).add(randUnit(r, _tmpv).multiplyScalar(0.3)).normalize();
@@ -594,15 +602,26 @@ function makeWeeping(spec, env) {
   for (const b of branches) tube(bark, b.pts, b.radii, b.seg, tile[0], tile[1], { capEnd: !!b.cap });
   // crown clusters + slim drips where strands leave the crown -> one blossom-mass surface
   for (const p of strandPads) { p.kScale = 1.35; p.yScale = 1.0; }
-  const surf = blossomSurface(pads.concat(strandPads), { h: spec.meshH ?? Q.h * 0.75, canopy, noise, spec, amp: Q.amp * 0.8, freq: Q.freq * 1.1, groundY: gy,
+  // A few attached, tapered strands keep the shrine tree distinct without cut-out speckles.
+  const stylePads = env.smoothCrown
+    ? strands.flatMap((strand, j) => j % 3 ? [] : [0.22, 0.45, 0.68].map(t => {
+      const f = t * (strand.length - 1), i = Math.floor(f);
+      const c = new V3().lerpVectors(strand[i], strand[i + 1], f - i);
+      return { c, rx: 0.23 - t * 0.1, ry: 0.32, rz: 0.21 - t * 0.08,
+        q: new THREE.Quaternion(), seed: j % 7, jit: -0.04, peach: 0, layer: 1 };
+    }))
+    : strandPads;
+  const surf = blossomSurface(pads.concat(stylePads), { h: spec.meshH ?? Q.h * 0.75, canopy, noise, spec,
+    smooth: env.smoothCrown ? 6 : undefined, amp: Q.amp * (env.smoothCrown ? 0.14 : 0.8), freq: Q.freq * 1.1, groundY: gy,
     weights: { t: 0.45, l: 0.15, c: 0.4, up: 0.1 } });
   if (surf) surf.emit(blob);
+  if (surf && env.smoothCrown) emitCrownFans(blob, surf, pads, canopy, spec);
   const cardBase = Q.cardS * 0.85;
-  if (surf) dressSurface(cards, surf, { r, CELL, cardBase, bandColor, pal: PAL.weeping, peachCol: PAL.peach, leafCol: PAL.leaf, cov: Q.cov * 1.1, covIn: Q.covIn, hangP: 0.45 });
+  if (surf && !env.smoothCrown) dressSurface(cards, surf, { r, CELL, cardBase, bandColor, pal: PAL.weeping, peachCol: PAL.peach, leafCol: PAL.leaf, cov: Q.cov * 1.1, covIn: Q.covIn, hangP: 0.45 });
   const nrm = new V3();
   const normFn = (p) => canopy.normalAt(p, nrm);
   const cc = new V3(), pn = new V3();
-  for (const st of strands) {
+  for (const st of env.smoothCrown ? [] : strands) {
     let len = 0; for (let i = 1; i < st.length; i++) len += st[i].distanceTo(st[i - 1]);
     const n = Math.max(3, Math.round((len / 0.15) * Q.cardK));
     for (let k = 0; k < n; k++) {

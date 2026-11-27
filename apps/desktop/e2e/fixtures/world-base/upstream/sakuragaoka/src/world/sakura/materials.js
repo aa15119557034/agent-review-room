@@ -82,6 +82,95 @@ const BAND = /* glsl */`
   }
 `;
 
+const CHERRY_UNDERPAINT = /* glsl */`
+  // Three blades share a short branch. Blades overlap back to front, each with two painted planes.
+  float cherryBlade( vec2 p, vec2 root, vec2 axis, vec2 size, out float fold ) {
+    vec2 q = p - root;
+    float reach = dot( q, axis ) / size.x;
+    float u = clamp( reach, 0.0, 1.0 );
+    float spine = dot( q, vec2( -axis.y, axis.x ) ) - size.y * u * u * 0.44;
+    float profile = sqrt( u * ( 1.0 - u ) ) * ( 2.30 - 0.87 * u );
+    float boundary = max( abs( spine ) - size.y * profile, max( -reach, reach - 1.0 ) * size.x );
+    float aa = clamp( fwidth( boundary ) * 0.7, 0.002, 0.05 );
+    fold = smoothstep( -aa, aa, spine + 0.012 * u );
+    return 1.0 - smoothstep( -aa, aa, boundary );
+  }
+
+  vec3 cherryUnderpaint( vec3 worldPoint, vec3 body, vec3 shadowColor, vec3 midColor ) {
+    vec2 p = ( worldPoint.xz + worldPoint.y * vec2( 0.23, -0.28 ) ) * 1.22;
+    p.x += 0.48 * mod( floor( p.y ), 2.0 );
+    vec2 cell = floor( p );
+    float key = fract( 52.9829189 * fract( dot( cell, vec2( 0.06711056, 0.00583715 ) ) ) );
+    float direction = 6.2831853 * key;
+    vec2 along = vec2( cos( direction ), sin( direction ) );
+    vec2 q = fract( p ) - vec2( 0.46 + key * 0.06, 0.52 - key * 0.05 );
+    q = vec2( dot( q, along ), dot( q, vec2( -along.y, along.x ) ) );
+    q /= 0.80 + 0.28 * fract( key * 13.2 );
+    q.y *= key < 0.5 ? 1.0 : -1.0;
+
+    float foldA, foldB, foldC;
+    float leafA = cherryBlade( q, vec2( -0.13, -0.027 ), vec2( 0.52, -0.854 ), vec2( 0.34, 0.100 ), foldA );
+    float leafB = cherryBlade( q, vec2( -0.20, 0.075 ), vec2( 0.64, 0.768 ), vec2( 0.31, 0.105 ), foldB );
+    float leafC = cherryBlade( q, vec2( -0.11, 0.023 ), vec2( 0.997, 0.077 ), vec2( 0.48, 0.119 ), foldC );
+    float branch = abs( q.y - 0.14 * q.x ) + max( abs( q.x + 0.14 ) - 0.18, 0.0 );
+    float branchAA = clamp( fwidth( branch ), 0.002, 0.04 );
+    vec3 painted = mix( body, shadowColor * 0.58, 0.28 * ( 1.0 - smoothstep( 0.012, 0.012 + branchAA, branch ) ) );
+    vec3 shadedBlade = mix( shadowColor * 0.64, midColor, 0.15 + 0.21 * foldA );
+    vec3 turnedBlade = mix( shadowColor * 0.75, midColor, 0.24 + 0.18 * foldB );
+    vec3 frontBlade = mix( shadowColor * 0.83, midColor, 0.30 + 0.27 * foldC );
+    painted = mix( painted, shadedBlade, leafA * 0.74 );
+    painted = mix( painted, turnedBlade, leafB * 0.76 * smoothstep( 0.19, 0.27, key ) );
+    painted = mix( painted, frontBlade, leafC * 0.86 );
+    return mix( body, painted, 0.45 + 0.55 * smoothstep( 0.13, 0.23, key ) );
+  }
+`;
+
+function stylizedCherry(m, shared) {
+  extend(m, shared, { key: 'sakura-stylized-crown', octNormal: true });
+  const previous = m.onBeforeCompile;
+  const normal = ['#986481', '#cf8fb3', '#f0b9ce'].map(tint => new THREE.Color(tint));
+  const weeping = ['#8c556f', '#c481a5', '#edb1c9'].map(tint => new THREE.Color(tint));
+  m.defines = { ...m.defines, TOON_TREE_CROWN: '' };
+  m.onBeforeCompile = function (shader, renderer) {
+    previous.call(this, shader, renderer);
+    shader.uniforms.uCherryNormal = { value: normal };
+    shader.uniforms.uCherryWeeping = { value: weeping };
+    shader.vertexShader = shader.vertexShader
+      .replace('#include <common>', '#include <common>\nvarying float vStationCrown;')
+      .replace('#include <begin_vertex>', '#include <begin_vertex>\nvStationCrown = 1.0;');
+    shader.fragmentShader = shader.fragmentShader
+      .replace('#include <common>', '#include <common>\nvarying float vStationCrown;\nuniform vec3 uCherryNormal[3], uCherryWeeping[3];' + CHERRY_UNDERPAINT)
+      .replace('#include <opaque_fragment>', `
+        vec3 towardLight = ( viewMatrix * vec4( 0.0, 1.0, 0.0, 0.0 ) ).xyz;
+        #if NUM_DIR_LIGHTS > 0
+          towardLight = normalize( towardLight + directionalLights[0].direction * 0.42 );
+        #endif
+        float value = dot( normal, towardLight );
+        float edge = clamp( fwidth( value ) * 0.65, 0.012, 0.045 );
+        float side = smoothstep( -0.18 - edge, -0.18 + edge, value );
+        float top = smoothstep( 0.35 - edge, 0.35 + edge, value );
+        float leaf = step( 3.5, vColor.g );
+        float weep = mix( step( 1.5, vColor.g ), step( 4.5, vColor.g ), leaf );
+        vec3 shaded = mix( uCherryNormal[0], uCherryWeeping[0], weep );
+        vec3 middle = mix( uCherryNormal[1], uCherryWeeping[1], weep );
+        vec3 sunlit = mix( uCherryNormal[2], uCherryWeeping[2], weep );
+        vec3 cherry = mix( mix( shaded, middle, side ), sunlit, top );
+        float tone = clamp( vColor.r, 0.0, 1.0 );
+        float recess = 0.70 + 0.13 * smoothstep( 0.24, 0.38, tone ) + 0.16 * smoothstep( 0.48, 0.62, tone );
+        float bodyTone = mix( recess, mix( 0.81, 1.09, tone ), smoothstep( -0.55, -0.12, value ) );
+        vec3 cherryBody = cherry * bodyTone;
+        float branchesVisible = smoothstep( 0.09, 0.63, -vColor.b ) * ( 1.0 - smoothstep( 19.0, 35.0, distance( cameraPosition, vPWorld ) ) );
+        cherryBody = mix( cherryBody, cherryUnderpaint( vPWorld, cherryBody, shaded, middle ), branchesVisible );
+        vec3 cherryLeafFace = mix( shaded * 0.88, middle, 0.28 + 0.40 * side );
+        float ridge = smoothstep( 0.40, 0.73, tone );
+        cherryLeafFace = mix( cherryLeafFace, sunlit, ridge * ( 0.30 + 0.28 * top ) );
+        outgoingLight = mix( cherryBody, cherryLeafFace, leaf );
+        #include <opaque_fragment>
+      `);
+  };
+  return m;
+}
+
 // shadow side of the canopy: desaturate toward a soft lavender-grey.
 // lit = how much of this fragment's albedo the sun actually lights (shadow maps + cel ramp included).
 const SHADE = (k) => /* glsl */`
@@ -175,7 +264,7 @@ export function paintedSakuraMaterial(ctx, role, map, alphaTest) {
   return role === 'blob' ? extend(material, ctx.shared, { key: 'sakura-painted-mass', rim: 0.7, shade: 0.28 }) : material;
 }
 
-export function createSakuraMaterials(ctx, T) {
+export function createSakuraMaterials(ctx, T, smoothCrown = false) {
   const { mat, shared, palette: P } = ctx;
   const M = {};
   M.barkOld = mat.toon('#ffffff', { map: T.barkOld, paint: 0.07, name: 'sakura:barkOld' });
@@ -184,8 +273,10 @@ export function createSakuraMaterials(ctx, T) {
   const band = {
     normal: BANDS.normal.map(h => new THREE.Color(h)), weeping: BANDS.weeping.map(h => new THREE.Color(h)), peach: new THREE.Color(BANDS.peach),
   };
-  M.blob = extend(mat.toon('#ffffff', { vertexColors: true, paint: 0.05, name: 'sakura:blob' }), shared,
-    { key: 'sakura-mass1', rim: 0.7, sheen: 0.0, speck: T.speck, speckK: 0.7, octNormal: true, band, envRim: true, shade: 0.28 });
+  M.blob = smoothCrown
+    ? stylizedCherry(mat.toon('#ffffff', { vertexColors: true, paint: 0, name: 'sakura:blob' }), shared)
+    : extend(mat.toon('#ffffff', { vertexColors: true, paint: 0.05, name: 'sakura:blob' }), shared,
+      { key: 'sakura-mass1', rim: 0.7, sheen: 0.0, speck: T.speck, speckK: 0.7, octNormal: true, band, envRim: true, shade: 0.28 });
   // shadow-map material of the blossom masses: world-space noise holes -> dappled shade under the crown
   // (the cards add their own flower-shaped holes). Needs its own (non core-batched) meshes, see sakura.js.
   M.blobDepth = new THREE.MeshDepthMaterial({ depthPacking: THREE.RGBADepthPacking });

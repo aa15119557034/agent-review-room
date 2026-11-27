@@ -258,7 +258,7 @@ export function hedgeGeometry(o = {}) {
   const L = o.length ?? 3, h = o.h ?? 1.0, d = o.d ?? 0.7, seed = (o.seed ?? 3) | 0;
   const sp = o.spacing ?? 0.13;
   const cacheable = !o.ground;
-  const key = cacheable ? JSON.stringify(['h2', L, h, d, seed, sp, o.colors || null, o.puff ?? null, o.puffAmp ?? null, o.lumps ?? null, o.round ?? null, o.normalBlend ?? null, o.dark ?? null]) : null;
+  const key = cacheable ? JSON.stringify(['h2', L, h, d, seed, sp, o.colors || null, o.puff ?? null, o.puffAmp ?? null, o.lumps ?? null, o.round ?? null, o.normalBlend ?? null, o.dark ?? null, o.surfaceUV ?? false]) : null;
   if (key && _cache.has(key)) return _cache.get(key);
   const a = d / 2;
   const rTop = Math.min(h * 0.45, Math.max(0.14, a * (o.round ?? 0.85)));  // top edge rounding (vertical)
@@ -327,7 +327,17 @@ export function hedgeGeometry(o = {}) {
   blendNormals(g, base, o.normalBlend ?? 0.5);
   bakeColors(g, { colors: o.colors, H: h, seed, puffH: ph, valley: vl, dark: o.dark ?? 0.13 });
   if (o.ground) for (let i = 0; i < n; i++) pos.setY(i, pos.getY(i) + o.ground(pos.getX(i)));
-  g.setAttribute('uv', new THREE.BufferAttribute(new Float32Array(n * 2), 2));
+  const uv = new Float32Array(n * 2);
+  if (o.surfaceUV) {
+    // Metre coordinates around the original profile. Leaf paint stays continuous
+    // across the upper edge and retains its scale on each clipped hedge.
+    let travel = 0;
+    for (let j = 0; j < np; j++) {
+      if (j > 0) travel += Math.hypot((prof[j][0] - prof[j - 1][0]) * a, prof[j][1] - prof[j - 1][1]);
+      for (let i = 0; i < nr; i++) uv.set([xs[i][0], travel], (i * np + j) * 2);
+    }
+  }
+  g.setAttribute('uv', new THREE.BufferAttribute(uv, 2));
   g.computeBoundingBox(); g.computeBoundingSphere();
   g.userData.foliage = { H: h, spacing: sp, puff };
   if (key) _cache.set(key, g);

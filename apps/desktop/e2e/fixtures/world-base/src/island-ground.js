@@ -11,7 +11,7 @@ export const SWARD_WARMTH = 'float swardWarmth(float tone) { return smoothstep(0
 //    (R = flower density), so the terrain flower wash, the flower instances and splatAt() agree.
 //  2 petals: hot magenta and red are pulled toward pastel; the far flower wash gets the same.
 //  3 sward: the far grass mottling is gathered into three soft value steps (painted patches).
-//  4 rock: cliff strata lose photographic contrast and settle into three flat value steps.
+//  4 stone and mountains: broad painted values with a few world-space joints and strokes.
 // ?ground=off installs nothing.
 export const groundEnabled = () => new URLSearchParams(location.search).get('ground') !== 'off';
 
@@ -70,11 +70,81 @@ float wbGStep3(float x, float w){
   return (i + smoothstep(0.5 - w, 0.5 + w, t)) / 2.0;
 }`;
 
+const PAINTED_STONE = `
+float wbPaintHash(vec2 tile) {
+  vec3 n = fract(tile.xyx * vec3(0.1031, 0.11369, 0.13787));
+  n += dot(n, n.yzx + 19.19);
+  return fract((n.x + n.y) * n.z);
+}
+
+vec3 wbPaving(vec2 xz, float footprint, float flag) {
+  vec2 tileSize = mix(vec2(0.55, 0.38), vec2(1.17, 0.84), flag);
+  vec2 grid = vec2(xz.x + 0.16*xz.y, xz.y - 0.16*xz.x) / tileSize;
+  float row = floor(grid.y);
+  grid.x += 0.50*mod(row, 2.0) + 0.19*(wbPaintHash(vec2(97.0, row)) - 0.5);
+  vec2 tile = floor(grid);
+  vec2 uv = fract(grid);
+  float tone = wbPaintHash(tile);
+  float detail = 1.0 - smoothstep(0.10, 0.41, footprint / tileSize.y);
+  vec3 low = mix(vec3(0.155, 0.161, 0.171), vec3(0.239, 0.226, 0.205), flag);
+  vec3 mid = mix(vec3(0.185, 0.188, 0.191), vec3(0.276, 0.258, 0.229), flag);
+  vec3 high = mix(vec3(0.212, 0.210, 0.203), vec3(0.307, 0.280, 0.247), flag);
+  vec3 face = tone < 0.24 ? low : (tone < 0.71 ? mid : high);
+
+  // Slightly clipped corners and uneven starts leave broken ink between the painted faces.
+  vec2 tip = abs(uv - 0.5);
+  float roundCorner = (tip.x + tip.y - mix(0.84, 0.92, flag)) * 0.7;
+  float edge = 0.5 - max(max(tip.x, tip.y), 0.5 + roundCorner);
+  float aa = max(footprint / tileSize.y, 0.007);
+  float joint = (1.0 - smoothstep(0.008, 0.012 + aa, edge)) *
+                smoothstep(0.28, 0.55, tone + mix(0.4, -0.05, uv.x));
+  float lineY = 0.20 + 0.59*wbPaintHash(tile + vec2(7.0, 17.0));
+  float stroke = (1.0 - smoothstep(0.010, 0.012 + aa, abs(uv.y - lineY - 0.15*(uv.x - 0.5)))) *
+                 smoothstep(0.16, 0.30, uv.x) * (1.0 - smoothstep(0.41, 0.71, uv.x));
+  return mix(mid, face, detail) * (1.0 - detail*(0.19*joint + 0.12*stroke*step(0.86, tone)));
+}
+
+vec3 wbPackedEarth(vec2 xz, float footprint, float stoneHeight) {
+  // The original cobble height channel locates each stone and seam. Paint the faces without normal-map relief.
+  float field = 0.79*vnoise(xz / 1.35 + 37.0) + 0.21*stoneHeight;
+  float tone = wbGStep3((field - 0.24) / 0.56, 0.10);
+  vec3 mid = vec3(0.310, 0.256, 0.193);
+  vec3 earth = tone < 0.5 ? mix(vec3(0.263, 0.212, 0.157), mid, tone*2.0)
+                          : mix(mid, vec3(0.350, 0.290, 0.221), tone*2.0 - 1.0);
+  float aa = clamp(0.32*footprint, 0.014, 0.075);
+  float face = smoothstep(0.32 - aa, 0.32 + aa, stoneHeight);
+  float lip = smoothstep(0.34 - aa, 0.39, stoneHeight) * (1.0 - smoothstep(0.44, 0.46 + aa, stoneHeight));
+  float detail = 1.0 - smoothstep(0.09, 0.30, footprint);
+  vec3 grout = vec3(0.195, 0.159, 0.122);
+  vec2 grid = xz / vec2(0.63, 0.45);
+  vec2 cell = floor(grid);
+  vec2 uv = fract(grid);
+  float n = wbPaintHash(cell + 53.0);
+  float y = uv.y - mix(0.23, 0.67, n) - 0.27*(uv.x - 0.5);
+  float mark = (1.0 - smoothstep(0.011, 0.024 + footprint, abs(y))) *
+               smoothstep(0.19, 0.36, uv.x) * (1.0 - smoothstep(0.48, 0.72, uv.x));
+  earth *= 1.0 + detail*(0.12*lip - 0.20*mark*step(0.74, n));
+  return mix(grout, earth, mix(0.72, face, detail));
+}
+
+float wbMountainStroke(vec3 p, float footprint) {
+  // Broken diagonal marks stay attached to the rock face, with no bands drawn across the whole slope.
+  vec2 grid = vec2(dot(p.xz, vec2(0.72, -0.69)),
+                  p.y + dot(p.xz, vec2(0.19, -0.12))) / vec2(47.0, 29.0);
+  vec2 tile = floor(grid);
+  vec2 uv = fract(grid);
+  float n = wbPaintHash(tile + vec2(5.0, 67.0));
+  float y = uv.y - mix(0.24, 0.63, n) - mix(-0.38, 0.18, n)*(uv.x - 0.5);
+  float line = 1.0 - smoothstep(0.013, 0.035 + footprint / 29.0, abs(y));
+  return line * smoothstep(0.13, 0.34, uv.x) * (1.0 - smoothstep(0.52, 0.84, uv.x)) *
+         step(0.56, n) * (1.0 - smoothstep(0.75, 2.8, footprint));
+}`;
+
 /** Terrain and the transition ring (which copied the terrain shader). */
 export function patchGroundShader(material, p, label, painted = null, paintExposure = 1) {
   let s = material.fragmentShader;
   material.uniforms.uWbGround = material.uniforms.uWbGround || { value: 1 };
-  s = insert(s, 'void main(){', `uniform float uWbGround;\n${STEP3}\nvoid main(){`, label + ' entry');
+  s = insert(s, 'void main(){', `uniform float uWbGround;\n${STEP3}\n${PAINTED_STONE}\nvoid main(){`, label + ' entry');
   // sward: painted patches instead of continuous mottling
   s = insert(s, 'float mott = ntexA(P.xz * 0.55).r * 0.5 + nzA.b * 0.3 + nzB.a * 0.2;',
     `float mott = ntexA(P.xz * 0.55).r * 0.5 + nzA.b * 0.3 + nzB.a * 0.2;
@@ -157,6 +227,38 @@ void main(){`, label + ' station paint');
   }`, label + ' rock paint');
   s = insert(s, 'vec3 rn = normalize(N + nx * b.x + nz * b.z + ny * b.y);',
     `vec3 rn = normalize(N + (nx * b.x + nz * b.z + ny * b.y) * (1.0 - uWbGround * ${f(p.rockFlatten)}));`, label + ' rock normal');
+  // The town mask and the original height blend still define each paved surface's edge.
+  s = insert(s, 'm.c = mix(m.c, mp.c, paved);', `float flag = saturate(town.g / max(town.r + town.g, 1e-3));
+    float footprint = max(length(dPx.xz), length(dPy.xz));
+    vec3 stonePaint = earth < 1.0 ? wbPaving(P.xz, footprint, flag) : vec3(0.0);
+    vec3 dirtPaint = earth > 0.0 ? wbPackedEarth(P.xz, footprint, mc.h) : vec3(0.0);
+    mp.c = mix(mp.c, mix(stonePaint, dirtPaint, earth), uWbGround);
+    mp.n *= 1.0 - uWbGround;
+    m.c = mix(m.c, mp.c, paved);`, label + ' painted stone road');
+  const lightStart = 'float cs = cloudShadow(P.xz, uTime);';
+  s = insert(s, lightStart, `
+  // Far mountain values follow terrain relief at a broad scale, replacing triplanar photo relief.
+  float mountain = smoothstep(130.0, 300.0, dist) * smoothstep(75.0, 155.0, P.y)
+                 * smoothstep(0.17, 0.64, rockAmt) * uWbGround;
+  if (mountain > 0.0) {
+    vec3 macroN = terrainN(P.xz, max(lodN, mix(2.7, 3.5, smoothstep(170.0, 620.0, dist))));
+    vec3 ridgeN = normalize(mix(macroN, N, 0.27));
+    float relief = dot(ridgeN, normalize(vec3(-0.55, 0.71, 0.39)));
+    float tone = wbGStep3((relief - 0.06) / 0.62, 0.075);
+    vec3 granite = tone < 0.5 ? mix(vec3(0.112, 0.129, 0.156), vec3(0.185, 0.199, 0.218), tone*2.0)
+                              : mix(vec3(0.185, 0.199, 0.218), vec3(0.278, 0.287, 0.298), tone*2.0 - 1.0);
+    granite *= 1.0 - 0.17*wbMountainStroke(P, max(length(dPx), length(dPy)));
+    m.c = mix(m.c, granite, mountain);
+    Nw = normalize(mix(Nw, ridgeN, mountain));
+    m.r = mix(m.r, 0.94, mountain);
+  }
+  ${lightStart}`, label + ' distant mountain paint');
+  s = insert(s, 'float cav = mix(1.0, 0.55 + 0.45 * m.h, 0.7 * max(max(rockAmt, lowW), paved));',
+    `float paintedStone = max(mountain, paved * uWbGround);
+  float cav = mix(1.0, 0.55 + 0.45 * m.h, 0.7 * max(max(rockAmt, lowW), paved) * (1.0 - paintedStone));`,
+    label + ' flat stone shading');
+  s = insert(s, 'float specMask = max(rockAmt, lowW);',
+    'float specMask = max(rockAmt, lowW) * (1.0 - 0.96 * paintedStone);', label + ' remove stone relief gloss');
   // Round 4: aerial perspective. Distant land settles toward the sky colour along the view ray and
   // loses saturation, so far hills read as a soft layer behind the town instead of a grey-green wall.
   if (p.hazeAmt > 0) s = insert(s, 'col = applyAtmosphere(col, P);',

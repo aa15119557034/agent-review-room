@@ -24,3 +24,14 @@ blender --background station-foliage.blend --python-exit-code 1 --python build-f
 python paint-sprays.py
 blender --background --factory-startup --python-exit-code 1 --python build-foliage.py -- --build-source
 ```
+
+## 港镇行道树和岛上樱花
+
+[street-crowns.blend](./street-crowns.blend) 另有两个场景。行道树和岛上散布樱花保留旧 GLB 的原始枝干、尺寸和原点。行道树为 516 个三角面，较小的叶团沿枝尖错开，两条新增的细枝从树冠下露出。岛上樱花为 388 个三角面，树冠由重叠的圆润叶团构成。
+
+要从旧资产和树冠配方重建可编辑源文件与 GLB，运行下面第一条命令。手工编辑并保存后，用第二条命令只重新导出 GLB。
+
+```text
+blender --background --factory-startup --python-exit-code 1 --python build-street-crowns.py -- --build-source
+blender --background street-crowns.blend --python-exit-code 1 --python build-street-crowns.py
+```

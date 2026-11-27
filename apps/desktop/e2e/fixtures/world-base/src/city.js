@@ -82,9 +82,10 @@ export async function createCity({ scene, station, island, skyline }) {
   signTeal.userData.wbSign = true;
   ownedMaterials.add(signTeal);
   H.signTeal = signTeal;
-  // Close-up plants own one cutout atlas; their branches reuse the station wood.
+  // Close-up plants own their paint and cutout atlases; branches reuse station wood.
   const plants = createTownPlants({ root, frame, materials: M, gradientMap: ctx.mat.gradientMap });
   ownedMaterials.add(plants.material); ownedTextures.add(plants.texture);
+  ownedMaterials.add(plants.canopyMaterial); ownedTextures.add(plants.canopyMap);
   const dispose = () => {
     if (disposed) return; disposed = true; root.removeFromParent();
     root.traverse(object => { if (object.isMesh) { geometries.add(object.geometry); if (object.isInstancedMesh) object.dispose(); if (object.userData.wbDoorGlow) ownedMaterials.add(object.material); if (object.customDepthMaterial) ownedMaterials.add(object.customDepthMaterial); } });
@@ -339,7 +340,7 @@ export async function createCity({ scene, station, island, skyline }) {
     stats.newTexturePixels = stats.plants.newTexturePixels + H.apartmentSurfaces.stats.sourcePixels;
     stats.ownedTextureRGBA8WithMipsEstimateBytes = stats.plants.textureRGBA8WithMipsEstimateBytes + H.apartmentSurfaces.stats.estimatedRGBA8MipBytes; stats.textureCacheEntriesAdded = 0;
     stats.laundryItems = H.laundry.count; stats.suppressedPhysicsCalls = suppressedPhysicsCalls;
-    stats.ownership = 'City owns geometry, far/leaf instances, material clones and one plant atlas; apartmentSurfaces independently owns four PBR materials/nine maps. Borrow station atlases, far facade textures and gradient maps. Dispose before station.';
+    stats.ownership = 'City owns geometry, far/leaf instances, material clones, sprig atlas and hedge paint. Apartment surfaces own their maps. Borrow station atlases, far facade textures and gradient maps. Dispose before station.';
     stats.limitation = 'Background only: no new physics or navigable interiors. Foundations and stairs are CPU checked; camera composition and visible CDLOD contacts need GPU acceptance.';
     scene.add(root); root.updateWorldMatrix(true, true);
     return { root, placements, vegetationClearAreas, laundryPortal: stationArt.portal, stats, dispose };
